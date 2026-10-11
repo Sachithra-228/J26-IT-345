@@ -8,8 +8,10 @@ import { isCvFeatureEnabled } from "@/lib/c3/config";
 import { getC3Text } from "@/lib/c3/i18n";
 import type { CareerProfile } from "@/lib/c3/validation";
 import { CareerGuidanceTool } from "./career-guidance-tool";
+import { MockInterview } from "./mock-interview";
 
 type SaveState = "idle" | "saving" | "saved" | "deleted" | "error" | "limited";
+type Tab = "readiness" | "interview";
 
 /** Student dashboard section: on-device analysis, optional consent-based save and erase. */
 export function CareerGuidanceSection() {
@@ -20,6 +22,7 @@ export function CareerGuidanceSection() {
   const [consent, setConsent] = useState(false);
   const [saveState, setSaveState] = useState<SaveState>("idle");
   const [savedAt, setSavedAt] = useState<string | null>(null);
+  const [tab, setTab] = useState<Tab>("readiness");
 
   useEffect(() => {
     let cancelled = false;
@@ -86,6 +89,38 @@ export function CareerGuidanceSection() {
         <p className="mt-1 max-w-3xl text-sm text-slate-600 dark:text-slate-300">{t.toolSubtitle}</p>
       </header>
 
+      <div role="tablist" aria-label={t.toolTitle} className="flex gap-1 border-b border-slate-200 dark:border-slate-700">
+        {(
+          [
+            ["readiness", t.tabReadiness],
+            ["interview", t.tabInterview]
+          ] as const
+        ).map(([id, name]) => (
+          <button
+            key={id}
+            type="button"
+            role="tab"
+            id={`c3-tab-${id}`}
+            aria-selected={tab === id}
+            aria-controls={`c3-panel-${id}`}
+            onClick={() => setTab(id)}
+            className={`border-b-2 px-4 py-3 text-sm font-medium transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary ${
+              tab === id
+                ? "border-primary text-primary"
+                : "border-transparent text-slate-500 hover:text-slate-700 dark:text-slate-400 dark:hover:text-slate-300"
+            }`}
+          >
+            {name}
+          </button>
+        ))}
+      </div>
+
+      {/* Both panels stay mounted so answers in one tab survive switching to the other. */}
+      <div role="tabpanel" id="c3-panel-interview" aria-labelledby="c3-tab-interview" hidden={tab !== "interview"}>
+        <MockInterview levels={last?.skills ?? null} targetRoleIds={last?.targetRoleIds ?? []} />
+      </div>
+
+      <div role="tabpanel" id="c3-panel-readiness" aria-labelledby="c3-tab-readiness" hidden={tab !== "readiness"} className="space-y-6">
       <CareerGuidanceTool initialProfile={initialProfile} cvEnabled={isCvFeatureEnabled()} onResult={onResult} />
 
       <Card>
@@ -123,6 +158,7 @@ export function CareerGuidanceSection() {
           </p>
         </div>
       </Card>
+      </div>
     </div>
   );
 }

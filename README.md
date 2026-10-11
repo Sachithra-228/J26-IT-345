@@ -393,6 +393,8 @@ The folders below exist so each member can start immediately and keep work separ
 | Admin / faculty section *Career Readiness Insights* (anonymous aggregates, groups < 5 hidden) | `src/components/c3/career-insights-admin.tsx` | Done - tested; not viewable in demo mode (see C3.8) |
 | English / Sinhala / Tamil | `src/lib/c3/i18n.ts` + taxonomy labels | Done - **needs native-speaker review** |
 | Evaluation: P@K, R@K, NDCG@K, paired bootstrap, 5-fold CV over ads, lambda sensitivity, extraction, plan statistics, latency | `ml/c3/evaluation/`, `scripts/c3/benchmark.ts`, `docs/c3/evidence/` | Done - **synthetic** |
+| **Mock interview** (FR13): 77-question bank (57 technical on all 26 skills, 8 behavioural STAR, 12 role scenarios), questions chosen from the student's top readiness gaps, rule-based rubric feedback (key points 40%, structure 20%, depth 15%, evidence 15%, clarity 10%) with reasons, session summary | `src/lib/c3/interview*.ts`, `src/components/c3/mock-interview.tsx` (tab in *Career Readiness*) | Done - on-device, nothing stored; questions need lecturer review; rubric not yet validated against human ratings |
+| AI Career Assistant (FR12), LLM interview feedback | - | **Not done** |
 | Real job ads, real students, SUS study | - | **Not done** - needs data collection / ethics approval |
 
 #### C3.2 Architecture and model
@@ -484,6 +486,7 @@ Requirement wording is from the C3 work plan; map it to the proposal's FR/NFR ID
 | English / Sinhala / Tamil | `i18n.ts`, taxonomy | component tests in all three | Done - review pending |
 | "Guidance, not a guarantee"; synthetic label everywhere | UI banner, API `warning`, model JSON, evidence JSON | component + API tests | Done |
 | AES-256 at rest if CVs are ever stored | - | CVs are never stored, so not needed now | N/A - required before any CV storage |
+| Career-specific mock interview with structured feedback (FR13) | `interview.ts`, `interview-bank.ts`, `mock-interview.tsx` | `c3-interview.test.ts`, `c3-interview-component.test.tsx` | Done - rubric agreement with lecturer ratings still to be measured |
 | SUS >= target, user evaluation | - | - | Open - needs ethics approval |
 
 #### C3.5 Interfaces
@@ -521,8 +524,8 @@ PII is stripped before any processing; the analysis runs on the student's device
 
 - **Needs real data / ethics approval:** real public job ads (collector built but not run), a hand-annotated extraction test set, career-adviser relevance judgements, a consented student pilot, SUS study, and native-speaker review of Sinhala / Tamil.
 - **Needs supervisor / staff input:** C3 proposal targets (none are in this repo), the role list and taxonomy, mapping of illustrative modules to real SLIIT module codes, effort-hour estimates, and verification of every resource link (they were not re-checked online).
-- **Known technical limits:** rule-based extraction misses unseen terms and ignores negation ("no experience in X"); names without a "Name:" label cannot be detected (hence CV text is never stored); readiness measures skill coverage, not hiring likelihood; the rate limiter is per instance; in demo mode the platform always signs in the demo *student* and redirects `/dashboard/admin`, so the staff aggregate view can only be seen with a real admin login (it is covered by tests).
-- **AI-use disclosure (C3).** The C3 code, tests, synthetic data generators, taxonomy draft, Gap-to-Action content, translations and this section were produced with AI assistance (Claude Code, October 2026) and must be reviewed by the C3 owner, who should be able to explain every part. Verification performed: 54 pytest + 338 Jest tests, a Python/TypeScript parity test with mutation checks, typecheck, lint, a byte-reproducibility re-run, and a browser check of the student page in demo mode.
+- **Known technical limits:** rule-based extraction misses unseen terms and ignores negation ("no experience in X"); names without a "Name:" label cannot be detected (hence CV text is never stored); readiness measures skill coverage, not hiring likelihood; the rate limiter is per instance; in demo mode the platform always signs in the demo *student* and redirects `/dashboard/admin`, so the staff aggregate view can only be seen with a real admin login (it is covered by tests). The mock-interview rubric checks coverage of key points and answer structure, not whether every statement is technically correct; it is a practice aid, not a hiring prediction, and its questions and weights must be reviewed by a lecturer and validated against human ratings (Cohen's kappa / ICC) before results are reported.
+- **AI-use disclosure (C3).** The C3 code, tests, synthetic data generators, taxonomy draft, Gap-to-Action content, mock-interview questions and rubric, translations and this section were produced with AI assistance (Claude Code, October 2026) and must be reviewed by the C3 owner, who should be able to explain every part. Verification performed: 54 pytest + 356 Jest tests, a Python/TypeScript parity test with mutation checks, typecheck, lint, a byte-reproducibility re-run, and a browser check of the student page in demo mode.
 
 | Folder | Contents |
 | --- | --- |
