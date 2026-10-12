@@ -1,0 +1,1618 @@
+{
+ "schemaVersion": "1.0.0",
+ "provenance": "Hand-authored Gap-to-Action content (October 2026, AI-assisted). Modules are ILLUSTRATIVE placeholders to be mapped to the real SLIIT IT curriculum; resource links are well-known public pages that were not re-checked online; effort hours are indicative estimates, not measurements. Review with SLIIT career-guidance staff before use.",
+ "prerequisites": [
+  {
+   "from": "python",
+   "to": "machine_learning",
+   "minLevel": 2
+  },
+  {
+   "from": "statistics",
+   "to": "machine_learning",
+   "minLevel": 1
+  },
+  {
+   "from": "databases_sql",
+   "to": "data_analysis",
+   "minLevel": 1
+  },
+  {
+   "from": "javascript_ts",
+   "to": "frontend",
+   "minLevel": 1
+  },
+  {
+   "from": "prog_oop",
+   "to": "backend_api",
+   "minLevel": 1
+  },
+  {
+   "from": "prog_oop",
+   "to": "mobile",
+   "minLevel": 1
+  },
+  {
+   "from": "prog_oop",
+   "to": "test_automation",
+   "minLevel": 1
+  },
+  {
+   "from": "testing_manual",
+   "to": "test_automation",
+   "minLevel": 1
+  },
+  {
+   "from": "linux",
+   "to": "containers",
+   "minLevel": 1
+  },
+  {
+   "from": "version_control",
+   "to": "devops_cicd",
+   "minLevel": 1
+  },
+  {
+   "from": "linux",
+   "to": "devops_cicd",
+   "minLevel": 1
+  },
+  {
+   "from": "networking",
+   "to": "security",
+   "minLevel": 1
+  },
+  {
+   "from": "linux",
+   "to": "cloud",
+   "minLevel": 1
+  },
+  {
+   "from": "networking",
+   "to": "cloud",
+   "minLevel": 1
+  },
+  {
+   "from": "agile",
+   "to": "project_management",
+   "minLevel": 1
+  }
+ ],
+ "actions": [
+  {
+   "id": "M-OOP",
+   "type": "Module",
+   "title": "Object-Oriented Programming module (revisit)",
+   "description": "Re-work the module labs: classes, interfaces, inheritance, exceptions, collections.",
+   "effortHours": 30,
+   "provider": "Illustrative - map to the actual SLIIT IT curriculum module",
+   "teaches": [
+    {
+     "skillId": "prog_oop",
+     "toLevel": 2
+    }
+   ],
+   "evidences": []
+  },
+  {
+   "id": "M-DB",
+   "type": "Module",
+   "title": "Database Management Systems module (revisit)",
+   "description": "Normalisation, joins, transactions and indexing with the lab database.",
+   "effortHours": 30,
+   "provider": "Illustrative - map to the actual SLIIT IT curriculum module",
+   "teaches": [
+    {
+     "skillId": "databases_sql",
+     "toLevel": 2
+    }
+   ],
+   "evidences": []
+  },
+  {
+   "id": "M-WEB",
+   "type": "Module",
+   "title": "Web Technologies module (revisit)",
+   "description": "HTML, CSS and JavaScript fundamentals.",
+   "effortHours": 30,
+   "provider": "Illustrative - map to the actual SLIIT IT curriculum module",
+   "teaches": [
+    {
+     "skillId": "frontend",
+     "toLevel": 1
+    },
+    {
+     "skillId": "javascript_ts",
+     "toLevel": 1
+    }
+   ],
+   "evidences": []
+  },
+  {
+   "id": "M-NET",
+   "type": "Module",
+   "title": "Computer Networks module (revisit)",
+   "description": "TCP/IP, subnetting, routing and switching labs.",
+   "effortHours": 30,
+   "provider": "Illustrative - map to the actual SLIIT IT curriculum module",
+   "teaches": [
+    {
+     "skillId": "networking",
+     "toLevel": 2
+    }
+   ],
+   "evidences": []
+  },
+  {
+   "id": "M-SE",
+   "type": "Module",
+   "title": "Software Engineering module",
+   "description": "Process models, requirements, UML and testing basics.",
+   "effortHours": 30,
+   "provider": "Illustrative - map to the actual SLIIT IT curriculum module",
+   "teaches": [
+    {
+     "skillId": "agile",
+     "toLevel": 1
+    },
+    {
+     "skillId": "business_analysis",
+     "toLevel": 1
+    },
+    {
+     "skillId": "testing_manual",
+     "toLevel": 1
+    }
+   ],
+   "evidences": []
+  },
+  {
+   "id": "M-ML",
+   "type": "Module",
+   "title": "Machine Learning elective",
+   "description": "Supervised and unsupervised learning, evaluation and a coursework project.",
+   "effortHours": 60,
+   "provider": "Illustrative - map to the actual SLIIT IT curriculum module",
+   "teaches": [
+    {
+     "skillId": "machine_learning",
+     "toLevel": 2
+    }
+   ],
+   "evidences": []
+  },
+  {
+   "id": "M-DS",
+   "type": "Module",
+   "title": "Data Science / Analytics elective",
+   "description": "Data wrangling, visualisation and descriptive statistics.",
+   "effortHours": 60,
+   "provider": "Illustrative - map to the actual SLIIT IT curriculum module",
+   "teaches": [
+    {
+     "skillId": "data_analysis",
+     "toLevel": 2
+    },
+    {
+     "skillId": "statistics",
+     "toLevel": 1
+    }
+   ],
+   "evidences": []
+  },
+  {
+   "id": "M-SEC",
+   "type": "Module",
+   "title": "Information Security elective",
+   "description": "Threats, cryptography, secure coding and security management.",
+   "effortHours": 60,
+   "provider": "Illustrative - map to the actual SLIIT IT curriculum module",
+   "teaches": [
+    {
+     "skillId": "security",
+     "toLevel": 2
+    }
+   ],
+   "evidences": []
+  },
+  {
+   "id": "M-MOB",
+   "type": "Module",
+   "title": "Mobile Application Development elective",
+   "description": "Native or cross-platform app development with a coursework app.",
+   "effortHours": 60,
+   "provider": "Illustrative - map to the actual SLIIT IT curriculum module",
+   "teaches": [
+    {
+     "skillId": "mobile",
+     "toLevel": 2
+    }
+   ],
+   "evidences": []
+  },
+  {
+   "id": "M-CLOUD",
+   "type": "Module",
+   "title": "Cloud / Distributed Systems elective",
+   "description": "Cloud service models, virtualisation and containers.",
+   "effortHours": 60,
+   "provider": "Illustrative - map to the actual SLIIT IT curriculum module",
+   "teaches": [
+    {
+     "skillId": "cloud",
+     "toLevel": 1
+    },
+    {
+     "skillId": "containers",
+     "toLevel": 1
+    }
+   ],
+   "evidences": []
+  },
+  {
+   "id": "M-HCI",
+   "type": "Module",
+   "title": "Human-Computer Interaction elective",
+   "description": "User-centred design, prototyping and usability evaluation.",
+   "effortHours": 45,
+   "provider": "Illustrative - map to the actual SLIIT IT curriculum module",
+   "teaches": [
+    {
+     "skillId": "ui_ux",
+     "toLevel": 2
+    }
+   ],
+   "evidences": []
+  },
+  {
+   "id": "M-PM",
+   "type": "Module",
+   "title": "IT Project Management module",
+   "description": "Planning, estimation, risk and agile delivery.",
+   "effortHours": 45,
+   "provider": "Illustrative - map to the actual SLIIT IT curriculum module",
+   "teaches": [
+    {
+     "skillId": "project_management",
+     "toLevel": 2
+    },
+    {
+     "skillId": "agile",
+     "toLevel": 2
+    }
+   ],
+   "evidences": []
+  },
+  {
+   "id": "M-STAT",
+   "type": "Module",
+   "title": "Probability and Statistics module (revisit)",
+   "description": "Distributions, hypothesis tests and regression.",
+   "effortHours": 30,
+   "provider": "Illustrative - map to the actual SLIIT IT curriculum module",
+   "teaches": [
+    {
+     "skillId": "statistics",
+     "toLevel": 2
+    }
+   ],
+   "evidences": []
+  },
+  {
+   "id": "M-QA",
+   "type": "Module",
+   "title": "Software Quality Assurance elective",
+   "description": "Test design techniques, QA processes and an introduction to automation.",
+   "effortHours": 45,
+   "provider": "Illustrative - map to the actual SLIIT IT curriculum module",
+   "teaches": [
+    {
+     "skillId": "testing_manual",
+     "toLevel": 2
+    },
+    {
+     "skillId": "test_automation",
+     "toLevel": 1
+    }
+   ],
+   "evidences": []
+  },
+  {
+   "id": "M-COMM",
+   "type": "Module",
+   "title": "Professional Skills / Technical Writing module",
+   "description": "Reports, presentations and teamwork.",
+   "effortHours": 20,
+   "provider": "Illustrative - map to the actual SLIIT IT curriculum module",
+   "teaches": [
+    {
+     "skillId": "communication",
+     "toLevel": 2
+    }
+   ],
+   "evidences": []
+  },
+  {
+   "id": "R-MDN",
+   "type": "Resource",
+   "title": "MDN Web Docs - Learn web development",
+   "description": "",
+   "effortHours": 40,
+   "url": "https://developer.mozilla.org/en-US/docs/Learn",
+   "provider": "Mozilla (free)",
+   "teaches": [
+    {
+     "skillId": "frontend",
+     "toLevel": 2
+    },
+    {
+     "skillId": "javascript_ts",
+     "toLevel": 1
+    }
+   ],
+   "evidences": []
+  },
+  {
+   "id": "R-JSINFO",
+   "type": "Resource",
+   "title": "The Modern JavaScript Tutorial",
+   "description": "",
+   "effortHours": 40,
+   "url": "https://javascript.info/",
+   "provider": "javascript.info (free)",
+   "teaches": [
+    {
+     "skillId": "javascript_ts",
+     "toLevel": 2
+    }
+   ],
+   "evidences": []
+  },
+  {
+   "id": "R-TSHB",
+   "type": "Resource",
+   "title": "TypeScript Handbook",
+   "description": "",
+   "effortHours": 15,
+   "url": "https://www.typescriptlang.org/docs/handbook/intro.html",
+   "provider": "Microsoft (free)",
+   "teaches": [
+    {
+     "skillId": "javascript_ts",
+     "toLevel": 2
+    }
+   ],
+   "evidences": []
+  },
+  {
+   "id": "R-PYTUT",
+   "type": "Resource",
+   "title": "The Python Tutorial",
+   "description": "",
+   "effortHours": 15,
+   "url": "https://docs.python.org/3/tutorial/",
+   "provider": "Python Software Foundation (free)",
+   "teaches": [
+    {
+     "skillId": "python",
+     "toLevel": 1
+    }
+   ],
+   "evidences": []
+  },
+  {
+   "id": "R-KAGGLE-PY",
+   "type": "Resource",
+   "title": "Kaggle Learn: Python and Pandas",
+   "description": "",
+   "effortHours": 20,
+   "url": "https://www.kaggle.com/learn",
+   "provider": "Kaggle (free)",
+   "teaches": [
+    {
+     "skillId": "python",
+     "toLevel": 2
+    },
+    {
+     "skillId": "data_analysis",
+     "toLevel": 1
+    }
+   ],
+   "evidences": []
+  },
+  {
+   "id": "R-KAGGLE-ML",
+   "type": "Resource",
+   "title": "Kaggle Learn: Intro to Machine Learning",
+   "description": "",
+   "effortHours": 15,
+   "url": "https://www.kaggle.com/learn",
+   "provider": "Kaggle (free)",
+   "teaches": [
+    {
+     "skillId": "machine_learning",
+     "toLevel": 1
+    }
+   ],
+   "evidences": []
+  },
+  {
+   "id": "R-PGTUT",
+   "type": "Resource",
+   "title": "PostgreSQL tutorial (official documentation)",
+   "description": "",
+   "effortHours": 15,
+   "url": "https://www.postgresql.org/docs/current/tutorial.html",
+   "provider": "PostgreSQL Global Development Group (free)",
+   "teaches": [
+    {
+     "skillId": "databases_sql",
+     "toLevel": 2
+    }
+   ],
+   "evidences": []
+  },
+  {
+   "id": "R-MONGO",
+   "type": "Resource",
+   "title": "MongoDB University introductory courses",
+   "description": "",
+   "effortHours": 15,
+   "url": "https://learn.mongodb.com/",
+   "provider": "MongoDB (free)",
+   "teaches": [
+    {
+     "skillId": "nosql",
+     "toLevel": 2
+    }
+   ],
+   "evidences": []
+  },
+  {
+   "id": "R-PROGIT",
+   "type": "Resource",
+   "title": "Pro Git book",
+   "description": "",
+   "effortHours": 15,
+   "url": "https://git-scm.com/book/en/v2",
+   "provider": "git-scm.com (free)",
+   "teaches": [
+    {
+     "skillId": "version_control",
+     "toLevel": 2
+    }
+   ],
+   "evidences": []
+  },
+  {
+   "id": "R-DOCKER",
+   "type": "Resource",
+   "title": "Docker: Get started",
+   "description": "",
+   "effortHours": 12,
+   "url": "https://docs.docker.com/get-started/",
+   "provider": "Docker (free)",
+   "teaches": [
+    {
+     "skillId": "containers",
+     "toLevel": 2
+    }
+   ],
+   "evidences": []
+  },
+  {
+   "id": "R-GHA",
+   "type": "Resource",
+   "title": "GitHub Actions documentation and quickstart",
+   "description": "",
+   "effortHours": 15,
+   "url": "https://docs.github.com/en/actions",
+   "provider": "GitHub (free)",
+   "teaches": [
+    {
+     "skillId": "devops_cicd",
+     "toLevel": 2
+    }
+   ],
+   "evidences": []
+  },
+  {
+   "id": "R-LINUX",
+   "type": "Resource",
+   "title": "Linux Journey",
+   "description": "",
+   "effortHours": 20,
+   "url": "https://linuxjourney.com/",
+   "provider": "linuxjourney.com (free)",
+   "teaches": [
+    {
+     "skillId": "linux",
+     "toLevel": 2
+    }
+   ],
+   "evidences": []
+  },
+  {
+   "id": "R-AWS-CPE",
+   "type": "Resource",
+   "title": "AWS Cloud Practitioner Essentials (Skill Builder)",
+   "description": "",
+   "effortHours": 8,
+   "url": "https://skillbuilder.aws/",
+   "provider": "Amazon Web Services (free course)",
+   "teaches": [
+    {
+     "skillId": "cloud",
+     "toLevel": 1
+    }
+   ],
+   "evidences": []
+  },
+  {
+   "id": "R-MSLEARN-AZ",
+   "type": "Resource",
+   "title": "Microsoft Learn: Azure Fundamentals learning path",
+   "description": "",
+   "effortHours": 10,
+   "url": "https://learn.microsoft.com/en-us/training/",
+   "provider": "Microsoft (free)",
+   "teaches": [
+    {
+     "skillId": "cloud",
+     "toLevel": 1
+    }
+   ],
+   "evidences": []
+  },
+  {
+   "id": "R-NETACAD",
+   "type": "Resource",
+   "title": "Cisco Networking Academy free courses",
+   "description": "",
+   "effortHours": 40,
+   "url": "https://www.netacad.com/",
+   "provider": "Cisco (free)",
+   "teaches": [
+    {
+     "skillId": "networking",
+     "toLevel": 2
+    }
+   ],
+   "evidences": []
+  },
+  {
+   "id": "R-OWASP",
+   "type": "Resource",
+   "title": "OWASP Top 10",
+   "description": "",
+   "effortHours": 8,
+   "url": "https://owasp.org/www-project-top-ten/",
+   "provider": "OWASP Foundation (free)",
+   "teaches": [
+    {
+     "skillId": "security",
+     "toLevel": 1
+    }
+   ],
+   "evidences": []
+  },
+  {
+   "id": "R-ISTQB-SYL",
+   "type": "Resource",
+   "title": "ISTQB Foundation Level syllabus",
+   "description": "",
+   "effortHours": 20,
+   "url": "https://www.istqb.org/",
+   "provider": "ISTQB (free syllabus)",
+   "teaches": [
+    {
+     "skillId": "testing_manual",
+     "toLevel": 2
+    }
+   ],
+   "evidences": []
+  },
+  {
+   "id": "R-SELENIUM",
+   "type": "Resource",
+   "title": "Selenium WebDriver documentation",
+   "description": "",
+   "effortHours": 15,
+   "url": "https://www.selenium.dev/documentation/",
+   "provider": "Selenium project (free)",
+   "teaches": [
+    {
+     "skillId": "test_automation",
+     "toLevel": 2
+    }
+   ],
+   "evidences": []
+  },
+  {
+   "id": "R-PLAYWRIGHT",
+   "type": "Resource",
+   "title": "Playwright: getting started",
+   "description": "",
+   "effortHours": 12,
+   "url": "https://playwright.dev/docs/intro",
+   "provider": "Microsoft (free)",
+   "teaches": [
+    {
+     "skillId": "test_automation",
+     "toLevel": 2
+    }
+   ],
+   "evidences": []
+  },
+  {
+   "id": "R-SCRUM",
+   "type": "Resource",
+   "title": "The Scrum Guide",
+   "description": "",
+   "effortHours": 3,
+   "url": "https://scrumguides.org/",
+   "provider": "Schwaber and Sutherland (free)",
+   "teaches": [
+    {
+     "skillId": "agile",
+     "toLevel": 1
+    }
+   ],
+   "evidences": []
+  },
+  {
+   "id": "R-FIGMA",
+   "type": "Resource",
+   "title": "Figma Learn",
+   "description": "",
+   "effortHours": 10,
+   "url": "https://help.figma.com/hc/en-us",
+   "provider": "Figma (free)",
+   "teaches": [
+    {
+     "skillId": "ui_ux",
+     "toLevel": 1
+    }
+   ],
+   "evidences": []
+  },
+  {
+   "id": "R-KHAN-STATS",
+   "type": "Resource",
+   "title": "Khan Academy: Statistics and probability",
+   "description": "",
+   "effortHours": 30,
+   "url": "https://www.khanacademy.org/math/statistics-probability",
+   "provider": "Khan Academy (free)",
+   "teaches": [
+    {
+     "skillId": "statistics",
+     "toLevel": 2
+    }
+   ],
+   "evidences": []
+  },
+  {
+   "id": "R-FCC-DSA",
+   "type": "Resource",
+   "title": "freeCodeCamp: JavaScript Algorithms and Data Structures",
+   "description": "",
+   "effortHours": 40,
+   "url": "https://www.freecodecamp.org/learn",
+   "provider": "freeCodeCamp (free)",
+   "teaches": [
+    {
+     "skillId": "problem_solving",
+     "toLevel": 2
+    }
+   ],
+   "evidences": []
+  },
+  {
+   "id": "R-SPRING",
+   "type": "Resource",
+   "title": "Spring Boot guides",
+   "description": "",
+   "effortHours": 20,
+   "url": "https://spring.io/guides",
+   "provider": "Spring (free)",
+   "teaches": [
+    {
+     "skillId": "backend_api",
+     "toLevel": 2
+    }
+   ],
+   "evidences": []
+  },
+  {
+   "id": "R-ANDROID",
+   "type": "Resource",
+   "title": "Android Developers: free courses",
+   "description": "",
+   "effortHours": 40,
+   "url": "https://developer.android.com/courses",
+   "provider": "Google (free)",
+   "teaches": [
+    {
+     "skillId": "mobile",
+     "toLevel": 2
+    }
+   ],
+   "evidences": []
+  },
+  {
+   "id": "R-FLUTTER",
+   "type": "Resource",
+   "title": "Flutter documentation and codelabs",
+   "description": "",
+   "effortHours": 30,
+   "url": "https://docs.flutter.dev/",
+   "provider": "Google (free)",
+   "teaches": [
+    {
+     "skillId": "mobile",
+     "toLevel": 2
+    }
+   ],
+   "evidences": []
+  },
+  {
+   "id": "R-MSLEARN-PBI",
+   "type": "Resource",
+   "title": "Microsoft Learn: Power BI learning paths",
+   "description": "",
+   "effortHours": 25,
+   "url": "https://learn.microsoft.com/en-us/training/",
+   "provider": "Microsoft (free)",
+   "teaches": [
+    {
+     "skillId": "data_analysis",
+     "toLevel": 2
+    }
+   ],
+   "evidences": []
+  },
+  {
+   "id": "R-PY-HOWTO",
+   "type": "Resource",
+   "title": "Python documentation: HOWTOs",
+   "description": "",
+   "effortHours": 10,
+   "url": "https://docs.python.org/3/howto/index.html",
+   "provider": "Python Software Foundation (free)",
+   "teaches": [
+    {
+     "skillId": "python",
+     "toLevel": 2
+    }
+   ],
+   "evidences": []
+  },
+  {
+   "id": "R-PROBLEM",
+   "type": "Resource",
+   "title": "Weekly practice on a free competitive-programming site",
+   "description": "",
+   "effortHours": 20,
+   "provider": "Any free judge (e.g. HackerRank, LeetCode free tier)",
+   "teaches": [
+    {
+     "skillId": "problem_solving",
+     "toLevel": 1
+    }
+   ],
+   "evidences": []
+  },
+  {
+   "id": "R-COMMS",
+   "type": "Resource",
+   "title": "Join a university debating, Toastmasters-style or writing club",
+   "description": "",
+   "effortHours": 15,
+   "provider": "Campus clubs (free)",
+   "teaches": [
+    {
+     "skillId": "communication",
+     "toLevel": 1
+    }
+   ],
+   "evidences": []
+  },
+  {
+   "id": "R-BA-INTRO",
+   "type": "Resource",
+   "title": "Requirements engineering basics: user stories and use cases",
+   "description": "",
+   "effortHours": 10,
+   "provider": "Software Engineering module notes and free online guides",
+   "teaches": [
+    {
+     "skillId": "business_analysis",
+     "toLevel": 1
+    }
+   ],
+   "evidences": []
+  },
+  {
+   "id": "R-PM-INTRO",
+   "type": "Resource",
+   "title": "Project management basics: scope, schedule, risk",
+   "description": "",
+   "effortHours": 10,
+   "provider": "IT Project Management module notes and free online guides",
+   "teaches": [
+    {
+     "skillId": "project_management",
+     "toLevel": 1
+    }
+   ],
+   "evidences": []
+  },
+  {
+   "id": "P-FULLSTACK",
+   "type": "Project",
+   "title": "Build and deploy a full-stack web app (REST API + database + front end)",
+   "description": "Put it on GitHub with a README and a live demo link.",
+   "effortHours": 60,
+   "teaches": [],
+   "evidences": [
+    {
+     "skillId": "backend_api",
+     "level": 2
+    },
+    {
+     "skillId": "frontend",
+     "level": 2
+    },
+    {
+     "skillId": "databases_sql",
+     "level": 2
+    },
+    {
+     "skillId": "javascript_ts",
+     "level": 2
+    }
+   ]
+  },
+  {
+   "id": "P-OSS",
+   "type": "Project",
+   "title": "Get pull requests merged into an open-source project",
+   "description": "Issues, reviews and CI in a real project.",
+   "effortHours": 40,
+   "teaches": [],
+   "evidences": [
+    {
+     "skillId": "version_control",
+     "level": 3
+    },
+    {
+     "skillId": "communication",
+     "level": 2
+    }
+   ]
+  },
+  {
+   "id": "P-OOP-DESIGN",
+   "type": "Project",
+   "title": "Refactor a coursework project with SOLID principles and design patterns",
+   "description": "Include a short design write-up with UML.",
+   "effortHours": 40,
+   "teaches": [],
+   "evidences": [
+    {
+     "skillId": "prog_oop",
+     "level": 3
+    },
+    {
+     "skillId": "problem_solving",
+     "level": 2
+    }
+   ]
+  },
+  {
+   "id": "P-DSA",
+   "type": "Project",
+   "title": "Solve and publish 60+ graded algorithm problems",
+   "description": "",
+   "effortHours": 30,
+   "teaches": [],
+   "evidences": [
+    {
+     "skillId": "problem_solving",
+     "level": 3
+    }
+   ]
+  },
+  {
+   "id": "P-MOBILE",
+   "type": "Project",
+   "title": "Publish a mobile app to a store or an open testing track",
+   "description": "",
+   "effortHours": 60,
+   "teaches": [],
+   "evidences": [
+    {
+     "skillId": "mobile",
+     "level": 3
+    }
+   ]
+  },
+  {
+   "id": "P-FRONTEND",
+   "type": "Project",
+   "title": "Build an accessible, tested single-page app with a component library",
+   "description": "",
+   "effortHours": 40,
+   "teaches": [],
+   "evidences": [
+    {
+     "skillId": "frontend",
+     "level": 3
+    },
+    {
+     "skillId": "javascript_ts",
+     "level": 3
+    }
+   ]
+  },
+  {
+   "id": "P-DASHBOARD",
+   "type": "Project",
+   "title": "Publish a dashboard on open Sri Lankan data (e.g. Department of Census and Statistics tables)",
+   "description": "",
+   "effortHours": 30,
+   "teaches": [],
+   "evidences": [
+    {
+     "skillId": "data_analysis",
+     "level": 3
+    },
+    {
+     "skillId": "databases_sql",
+     "level": 2
+    }
+   ]
+  },
+  {
+   "id": "P-ML",
+   "type": "Project",
+   "title": "End-to-end machine-learning project on a public dataset with an evaluation report",
+   "description": "",
+   "effortHours": 60,
+   "teaches": [],
+   "evidences": [
+    {
+     "skillId": "machine_learning",
+     "level": 3
+    },
+    {
+     "skillId": "python",
+     "level": 3
+    }
+   ]
+  },
+  {
+   "id": "P-STATS",
+   "type": "Project",
+   "title": "Statistical analysis report (hypothesis tests, regression) on a public dataset",
+   "description": "",
+   "effortHours": 25,
+   "teaches": [],
+   "evidences": [
+    {
+     "skillId": "statistics",
+     "level": 3
+    }
+   ]
+  },
+  {
+   "id": "P-PIPELINE",
+   "type": "Project",
+   "title": "CI/CD pipeline that tests, containerises and deploys an app",
+   "description": "",
+   "effortHours": 40,
+   "teaches": [],
+   "evidences": [
+    {
+     "skillId": "devops_cicd",
+     "level": 3
+    },
+    {
+     "skillId": "containers",
+     "level": 2
+    }
+   ]
+  },
+  {
+   "id": "P-K8S",
+   "type": "Project",
+   "title": "Deploy a multi-service app on Kubernetes in a free cloud tier",
+   "description": "",
+   "effortHours": 40,
+   "teaches": [],
+   "evidences": [
+    {
+     "skillId": "containers",
+     "level": 3
+    },
+    {
+     "skillId": "cloud",
+     "level": 2
+    }
+   ]
+  },
+  {
+   "id": "P-HOMELAB",
+   "type": "Project",
+   "title": "Linux home-lab: configure DNS, web server and firewall on virtual machines",
+   "description": "",
+   "effortHours": 40,
+   "teaches": [],
+   "evidences": [
+    {
+     "skillId": "linux",
+     "level": 3
+    },
+    {
+     "skillId": "networking",
+     "level": 2
+    }
+   ]
+  },
+  {
+   "id": "P-NETLAB",
+   "type": "Project",
+   "title": "Network design lab (Packet Tracer or GNS3) with VLANs and routing",
+   "description": "",
+   "effortHours": 40,
+   "teaches": [],
+   "evidences": [
+    {
+     "skillId": "networking",
+     "level": 3
+    }
+   ]
+  },
+  {
+   "id": "P-CTF",
+   "type": "Project",
+   "title": "Complete capture-the-flag challenges and publish write-ups",
+   "description": "",
+   "effortHours": 40,
+   "teaches": [],
+   "evidences": [
+    {
+     "skillId": "security",
+     "level": 3
+    }
+   ]
+  },
+  {
+   "id": "P-TESTSUITE",
+   "type": "Project",
+   "title": "Automated UI and API test suite for an open-source web app, running in CI",
+   "description": "",
+   "effortHours": 30,
+   "teaches": [],
+   "evidences": [
+    {
+     "skillId": "test_automation",
+     "level": 3
+    },
+    {
+     "skillId": "testing_manual",
+     "level": 2
+    }
+   ]
+  },
+  {
+   "id": "P-TESTPLAN",
+   "type": "Project",
+   "title": "Write a full test plan and test cases for a real app and log defects",
+   "description": "",
+   "effortHours": 25,
+   "teaches": [],
+   "evidences": [
+    {
+     "skillId": "testing_manual",
+     "level": 3
+    }
+   ]
+  },
+  {
+   "id": "P-BA-CASE",
+   "type": "Project",
+   "title": "Requirements case study: BRD, user stories and BPMN for a campus process",
+   "description": "",
+   "effortHours": 30,
+   "teaches": [],
+   "evidences": [
+    {
+     "skillId": "business_analysis",
+     "level": 3
+    },
+    {
+     "skillId": "communication",
+     "level": 2
+    }
+   ]
+  },
+  {
+   "id": "P-UX-CASE",
+   "type": "Project",
+   "title": "UX case study: user research, wireframes and a tested Figma prototype",
+   "description": "",
+   "effortHours": 40,
+   "teaches": [],
+   "evidences": [
+    {
+     "skillId": "ui_ux",
+     "level": 3
+    }
+   ]
+  },
+  {
+   "id": "P-AGILE-TEAM",
+   "type": "Project",
+   "title": "Run your group project in Scrum with a JIRA board and retrospectives",
+   "description": "",
+   "effortHours": 20,
+   "teaches": [],
+   "evidences": [
+    {
+     "skillId": "agile",
+     "level": 2
+    },
+    {
+     "skillId": "project_management",
+     "level": 1
+    }
+   ]
+  },
+  {
+   "id": "P-PM-PLAN",
+   "type": "Project",
+   "title": "Plan and track a club or hackathon event (schedule, risk log, status reports)",
+   "description": "",
+   "effortHours": 25,
+   "teaches": [],
+   "evidences": [
+    {
+     "skillId": "project_management",
+     "level": 2
+    }
+   ]
+  },
+  {
+   "id": "P-PRESENT",
+   "type": "Project",
+   "title": "Give a technical talk at a university IT club or community meetup",
+   "description": "",
+   "effortHours": 10,
+   "teaches": [],
+   "evidences": [
+    {
+     "skillId": "communication",
+     "level": 3
+    }
+   ]
+  },
+  {
+   "id": "P-CLOUD-DEPLOY",
+   "type": "Project",
+   "title": "Deploy an app on a free cloud tier with monitoring",
+   "description": "",
+   "effortHours": 20,
+   "teaches": [],
+   "evidences": [
+    {
+     "skillId": "cloud",
+     "level": 2
+    }
+   ]
+  },
+  {
+   "id": "P-PY-AUTO",
+   "type": "Project",
+   "title": "Automate a real task with Python scripts and publish them on GitHub",
+   "description": "",
+   "effortHours": 20,
+   "teaches": [],
+   "evidences": [
+    {
+     "skillId": "python",
+     "level": 2
+    }
+   ]
+  },
+  {
+   "id": "P-NOSQL",
+   "type": "Project",
+   "title": "Add a MongoDB or Redis feature (document store or cache) to an app",
+   "description": "",
+   "effortHours": 15,
+   "teaches": [],
+   "evidences": [
+    {
+     "skillId": "nosql",
+     "level": 2
+    }
+   ]
+  },
+  {
+   "id": "P-API",
+   "type": "Project",
+   "title": "REST API with authentication, validation and automated tests",
+   "description": "",
+   "effortHours": 40,
+   "teaches": [],
+   "evidences": [
+    {
+     "skillId": "backend_api",
+     "level": 3
+    }
+   ]
+  },
+  {
+   "id": "P-SQL-PERF",
+   "type": "Project",
+   "title": "Design and tune a database: schema, indexes and query plans, with a write-up",
+   "description": "",
+   "effortHours": 25,
+   "teaches": [],
+   "evidences": [
+    {
+     "skillId": "databases_sql",
+     "level": 3
+    }
+   ]
+  },
+  {
+   "id": "P-AGILE-LEAD",
+   "type": "Project",
+   "title": "Act as Scrum Master for a student team for two or more sprints",
+   "description": "",
+   "effortHours": 20,
+   "teaches": [],
+   "evidences": [
+    {
+     "skillId": "agile",
+     "level": 3
+    }
+   ]
+  },
+  {
+   "id": "P-BA-LITE",
+   "type": "Project",
+   "title": "Document requirements and use cases for a small client or club system",
+   "description": "",
+   "effortHours": 15,
+   "teaches": [],
+   "evidences": [
+    {
+     "skillId": "business_analysis",
+     "level": 2
+    }
+   ]
+  },
+  {
+   "id": "P-UX-LITE",
+   "type": "Project",
+   "title": "Redesign one screen of an existing app and test it with five users",
+   "description": "",
+   "effortHours": 15,
+   "teaches": [],
+   "evidences": [
+    {
+     "skillId": "ui_ux",
+     "level": 2
+    }
+   ]
+  },
+  {
+   "id": "P-PM-LEAD",
+   "type": "Project",
+   "title": "Lead delivery of a multi-month student or community project end to end",
+   "description": "",
+   "effortHours": 40,
+   "teaches": [],
+   "evidences": [
+    {
+     "skillId": "project_management",
+     "level": 3
+    }
+   ]
+  },
+  {
+   "id": "P-OOP-MINI",
+   "type": "Project",
+   "title": "Build a small OO application (e.g. inventory system) with unit tests",
+   "description": "",
+   "effortHours": 20,
+   "teaches": [],
+   "evidences": [
+    {
+     "skillId": "prog_oop",
+     "level": 2
+    }
+   ]
+  },
+  {
+   "id": "P-LINUX-MINI",
+   "type": "Project",
+   "title": "Run your development work on Linux for a month with shell scripts",
+   "description": "",
+   "effortHours": 15,
+   "teaches": [],
+   "evidences": [
+    {
+     "skillId": "linux",
+     "level": 2
+    }
+   ]
+  },
+  {
+   "id": "P-STATS-MINI",
+   "type": "Project",
+   "title": "Analyse a small survey dataset and report descriptive statistics",
+   "description": "",
+   "effortHours": 10,
+   "teaches": [],
+   "evidences": [
+    {
+     "skillId": "statistics",
+     "level": 2
+    }
+   ]
+  },
+  {
+   "id": "P-ML-MINI",
+   "type": "Project",
+   "title": "Train and evaluate a baseline model on a Kaggle dataset",
+   "description": "",
+   "effortHours": 15,
+   "teaches": [],
+   "evidences": [
+    {
+     "skillId": "machine_learning",
+     "level": 2
+    }
+   ]
+  },
+  {
+   "id": "P-SEC-MINI",
+   "type": "Project",
+   "title": "Run a vulnerability scan on your own app and fix the findings",
+   "description": "",
+   "effortHours": 15,
+   "teaches": [],
+   "evidences": [
+    {
+     "skillId": "security",
+     "level": 2
+    }
+   ]
+  },
+  {
+   "id": "P-GIT-MINI",
+   "type": "Project",
+   "title": "Use branches and pull requests for every coursework project",
+   "description": "",
+   "effortHours": 5,
+   "teaches": [],
+   "evidences": [
+    {
+     "skillId": "version_control",
+     "level": 2
+    }
+   ]
+  },
+  {
+   "id": "P-JS-MINI",
+   "type": "Project",
+   "title": "Build a small interactive web tool in vanilla JavaScript or TypeScript",
+   "description": "",
+   "effortHours": 15,
+   "teaches": [],
+   "evidences": [
+    {
+     "skillId": "javascript_ts",
+     "level": 2
+    }
+   ]
+  },
+  {
+   "id": "P-COMM-MINI",
+   "type": "Project",
+   "title": "Write and present your project report to your study group",
+   "description": "",
+   "effortHours": 5,
+   "teaches": [],
+   "evidences": [
+    {
+     "skillId": "communication",
+     "level": 2
+    }
+   ]
+  },
+  {
+   "id": "P-DSA-MINI",
+   "type": "Project",
+   "title": "Implement core data structures (list, stack, map, graph) with tests",
+   "description": "",
+   "effortHours": 15,
+   "teaches": [],
+   "evidences": [
+    {
+     "skillId": "problem_solving",
+     "level": 2
+    }
+   ]
+  },
+  {
+   "id": "P-DEVOPS-MINI",
+   "type": "Project",
+   "title": "Add automated build and test to one of your repositories",
+   "description": "",
+   "effortHours": 10,
+   "teaches": [],
+   "evidences": [
+    {
+     "skillId": "devops_cicd",
+     "level": 2
+    }
+   ]
+  },
+  {
+   "id": "C-AWS-CP",
+   "type": "Certification",
+   "title": "AWS Certified Cloud Practitioner",
+   "description": "",
+   "effortHours": 40,
+   "provider": "Amazon Web Services (paid exam)",
+   "teaches": [],
+   "evidences": [
+    {
+     "skillId": "cloud",
+     "level": 2
+    }
+   ]
+  },
+  {
+   "id": "C-AZ-900",
+   "type": "Certification",
+   "title": "Microsoft Azure Fundamentals (AZ-900)",
+   "description": "",
+   "effortHours": 30,
+   "provider": "Microsoft (paid exam)",
+   "teaches": [],
+   "evidences": [
+    {
+     "skillId": "cloud",
+     "level": 2
+    }
+   ]
+  },
+  {
+   "id": "C-CCNA",
+   "type": "Certification",
+   "title": "Cisco CCNA",
+   "description": "",
+   "effortHours": 120,
+   "provider": "Cisco (paid exam)",
+   "teaches": [],
+   "evidences": [
+    {
+     "skillId": "networking",
+     "level": 3
+    }
+   ]
+  },
+  {
+   "id": "C-SECPLUS",
+   "type": "Certification",
+   "title": "CompTIA Security+",
+   "description": "",
+   "effortHours": 80,
+   "provider": "CompTIA (paid exam)",
+   "teaches": [],
+   "evidences": [
+    {
+     "skillId": "security",
+     "level": 2
+    }
+   ]
+  },
+  {
+   "id": "C-ISTQB",
+   "type": "Certification",
+   "title": "ISTQB Certified Tester Foundation Level",
+   "description": "",
+   "effortHours": 40,
+   "provider": "ISTQB member boards (paid exam)",
+   "teaches": [],
+   "evidences": [
+    {
+     "skillId": "testing_manual",
+     "level": 2
+    }
+   ]
+  },
+  {
+   "id": "C-PSM",
+   "type": "Certification",
+   "title": "Professional Scrum Master I (PSM I)",
+   "description": "",
+   "effortHours": 20,
+   "provider": "Scrum.org (paid exam)",
+   "teaches": [],
+   "evidences": [
+    {
+     "skillId": "agile",
+     "level": 2
+    }
+   ]
+  },
+  {
+   "id": "C-GDA",
+   "type": "Certification",
+   "title": "Google Data Analytics Professional Certificate",
+   "description": "",
+   "effortHours": 150,
+   "provider": "Google via Coursera (paid; financial aid available)",
+   "teaches": [],
+   "evidences": [
+    {
+     "skillId": "data_analysis",
+     "level": 2
+    }
+   ]
+  },
+  {
+   "id": "C-OCP",
+   "type": "Certification",
+   "title": "Oracle Certified Professional: Java SE Developer",
+   "description": "",
+   "effortHours": 100,
+   "provider": "Oracle (paid exam)",
+   "teaches": [],
+   "evidences": [
+    {
+     "skillId": "prog_oop",
+     "level": 3
+    }
+   ]
+  },
+  {
+   "id": "C-CAPM",
+   "type": "Certification",
+   "title": "PMI Certified Associate in Project Management (CAPM)",
+   "description": "",
+   "effortHours": 60,
+   "provider": "PMI (paid exam)",
+   "teaches": [],
+   "evidences": [
+    {
+     "skillId": "project_management",
+     "level": 2
+    }
+   ]
+  },
+  {
+   "id": "C-GH-FOUND",
+   "type": "Certification",
+   "title": "GitHub Foundations",
+   "description": "",
+   "effortHours": 15,
+   "provider": "GitHub (paid exam)",
+   "teaches": [],
+   "evidences": [
+    {
+     "skillId": "version_control",
+     "level": 2
+    }
+   ]
+  }
+ ]
+}

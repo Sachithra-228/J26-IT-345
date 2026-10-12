@@ -1,0 +1,27 @@
+{
+ "warning": "Timings are REAL measurements on the machine below; inputs are synthetic profiles and CVs.",
+ "generatedAt": "2026-10-10T07:49:47.089Z",
+ "generatedBy": "npm run c3:benchmark",
+ "modelVersion": "c3-readiness-v1-synthetic",
+ "machine": {
+  "platform": "win32 10.0.26300",
+  "cpu": "AMD Ryzen 7 5800HS with Radeon Graphics        ",
+  "node": "v22.13.1"
+ },
+ "fullAssessment": {
+  "description": "12 role scores + baseline + gaps + 2 Gap-to-Action plans",
+  "n": 620,
+  "meanMs": 0.05544629032258014,
+  "p50Ms": 0.04390000000000782,
+  "p95Ms": 0.10029999999994743,
+  "maxMs": 0.3328999999999951
+ },
+ "cvExtraction": {
+  "description": "PII stripping + skill extraction, 852 words",
+  "n": 50,
+  "meanMs": 16.436791999999997,
+  "p50Ms": 16.40639999999985,
+  "p95Ms": 17.76679999999999,
+  "maxMs": 18.0711
+ }
+}

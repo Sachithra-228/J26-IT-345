@@ -112,3 +112,86 @@ paths:
       responses:
         "200":
           description: Deleted
+  /api/c3/roles:
+    get:
+      summary: "C3 - evidence-based role profiles and competency taxonomy"
+      description: >
+        Role profiles (TF-IDF skill weights, required levels, share of ads mentioning each skill)
+        and the competency taxonomy (levels, areas, skill labels in English / Sinhala / Tamil).
+        No personal data. The bundled model is trained on SYNTHETIC job advertisements and says so
+        in model.syntheticTraining and model.warning. Roles: student, admin, faculty, super_admin, mentor.
+      responses:
+        "200":
+          description: Model info, taxonomy and 12 role profiles
+        "401":
+          description: Not signed in
+        "403":
+          description: Role not allowed
+        "429":
+          description: Rate limited (30 requests per minute per user; Retry-After header)
+  /api/c3/assessment:
+    get:
+      summary: "C3 - career assessment (role dependent)"
+      description: >
+        student (default) returns the caller's saved answers with results recomputed by the current
+        model ({ assessment: null } if nothing is saved). scope=aggregate returns anonymous cohort
+        statistics only (admin, faculty, super_admin): students per target role, mean readiness,
+        readiness bands, most common gaps and skill coverage; every group smaller than 5 students is
+        hidden (null) and fewer than 5 saved assessments suppresses the whole view. In demo mode the
+        aggregate uses a labelled synthetic cohort (source = synthetic-demo).
+      parameters:
+        - in: query
+          name: scope
+          schema: { type: string, enum: [aggregate] }
+      responses:
+        "200":
+          description: Saved assessment or anonymous aggregate
+        "401":
+          description: Not signed in
+        "403":
+          description: Role not allowed
+        "429":
+          description: Rate limited
+        "503":
+          description: Database temporarily unavailable
+    post:
+      summary: "C3 - save career answers (student only, explicit consent required)"
+      description: >
+        Body { profile: { yearOfStudy: 3|4, targetRoleIds: [1-3 role ids], skills: { skillId: 0-3 } },
+        consent: true, cvText?: string (max 20,000 chars), cvConsent?: true }. Unknown fields are
+        rejected, so client-supplied scores are never accepted; the server recomputes everything.
+        cvText is accepted only when NEXT_PUBLIC_C3_CV_ENABLED=true and with cvConsent; PII is stripped,
+        only the extracted skill ids are kept (as level 1 evidence) and the text is never stored or logged.
+        Stored record: answers, model version and timestamps (no name, no CV text).
+      responses:
+        "201":
+          description: Saved; returns the answers and the recomputed assessment
+        "400":
+          description: Invalid values, missing consent, CV text without cvConsent, or CV feature disabled
+        "403":
+          description: Not a student
+        "429":
+          description: Rate limited (10 saves per minute per user)
+    delete:
+      summary: "C3 - erase the caller's saved career answers (withdraw consent)"
+      responses:
+        "200":
+          description: Deleted
+        "403":
+          description: Not a student
+  /api/c3/plan:
+    post:
+      summary: "C3 - readiness breakdown, ranked gaps and Gap-to-Action plan for one role (compute-only)"
+      description: >
+        Body { profile, roleId }. Returns per-skill readiness contributions, gaps ranked by readiness
+        gain, and a prerequisite-ordered action plan (modules, projects, certifications, resources)
+        with structured "why this" reasons for every step. Nothing is stored. Student only.
+      responses:
+        "200":
+          description: Readiness, gaps and plan (labelled synthetic)
+        "400":
+          description: Invalid profile or unknown role
+        "403":
+          description: Not a student
+        "429":
+          description: Rate limited

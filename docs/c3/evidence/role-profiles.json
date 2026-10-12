@@ -1,0 +1,746 @@
+{
+ "warning": "SYNTHETIC DATA: validates the pipeline, not real-world accuracy.",
+ "generatedAt": "2026-10-10T07:50:28+00:00",
+ "generatedBy": "python ml/c3/run_pipeline.py evaluate",
+ "modelVersion": "c3-readiness-v1-synthetic",
+ "note": "Role profiles derived from SYNTHETIC ads (training split). Weight = normalised TF-IDF; tf = share of ads mentioning the skill.",
+ "roles": [
+  {
+   "id": "software_engineer",
+   "adCount": 33,
+   "skills": [
+    {
+     "skillId": "prog_oop",
+     "weight": 0.17141748222125117,
+     "tf": 0.7727272727272727,
+     "requiredLevel": 2,
+     "adsMentioning": 26
+    },
+    {
+     "skillId": "backend_api",
+     "weight": 0.14452846540223138,
+     "tf": 0.6515151515151515,
+     "requiredLevel": 2,
+     "adsMentioning": 22
+    },
+    {
+     "skillId": "version_control",
+     "weight": 0.10240889882302204,
+     "tf": 0.6212121212121212,
+     "requiredLevel": 2,
+     "adsMentioning": 22
+    },
+    {
+     "skillId": "databases_sql",
+     "weight": 0.10240889882302204,
+     "tf": 0.6212121212121212,
+     "requiredLevel": 2,
+     "adsMentioning": 21
+    },
+    {
+     "skillId": "containers",
+     "weight": 0.07990394071949564,
+     "tf": 0.3181818181818182,
+     "requiredLevel": 1,
+     "adsMentioning": 12
+    },
+    {
+     "skillId": "frontend",
+     "weight": 0.07730592335468191,
+     "tf": 0.3484848484848485,
+     "requiredLevel": 2,
+     "adsMentioning": 14
+    },
+    {
+     "skillId": "javascript_ts",
+     "weight": 0.07659664555806601,
+     "tf": 0.42424242424242425,
+     "requiredLevel": 2,
+     "adsMentioning": 15
+    },
+    {
+     "skillId": "communication",
+     "weight": 0.06016737721797854,
+     "tf": 0.5909090909090909,
+     "requiredLevel": 1,
+     "adsMentioning": 21
+    },
+    {
+     "skillId": "agile",
+     "weight": 0.05275154665139533,
+     "tf": 0.3787878787878788,
+     "requiredLevel": 1,
+     "adsMentioning": 14
+    },
+    {
+     "skillId": "problem_solving",
+     "weight": 0.051976295200116235,
+     "tf": 0.2878787878787879,
+     "requiredLevel": 2,
+     "adsMentioning": 10
+    },
+    {
+     "skillId": "linux",
+     "weight": 0.042236203249706686,
+     "tf": 0.21212121212121213,
+     "requiredLevel": 1,
+     "adsMentioning": 8
+    },
+    {
+     "skillId": "cloud",
+     "weight": 0.03829832277903301,
+     "tf": 0.21212121212121213,
+     "requiredLevel": 1,
+     "adsMentioning": 9
+    }
+   ]
+  },
+  {
+   "id": "frontend_engineer",
+   "adCount": 35,
+   "skills": [
+    {
+     "skillId": "frontend",
+     "weight": 0.26179201128736274,
+     "tf": 0.9285714285714286,
+     "requiredLevel": 3,
+     "adsMentioning": 33
+    },
+    {
+     "skillId": "javascript_ts",
+     "weight": 0.21634843211459087,
+     "tf": 0.9428571428571428,
+     "requiredLevel": 3,
+     "adsMentioning": 33
+    },
+    {
+     "skillId": "version_control",
+     "weight": 0.15264483470558937,
+     "tf": 0.7285714285714285,
+     "requiredLevel": 2,
+     "adsMentioning": 26
+    },
+    {
+     "skillId": "ui_ux",
+     "weight": 0.12291187668227929,
+     "tf": 0.4857142857142857,
+     "requiredLevel": 1,
+     "adsMentioning": 18
+    },
+    {
+     "skillId": "agile",
+     "weight": 0.08343864176869904,
+     "tf": 0.4714285714285714,
+     "requiredLevel": 1,
+     "adsMentioning": 21
+    },
+    {
+     "skillId": "communication",
+     "weight": 0.057308133571723534,
+     "tf": 0.44285714285714284,
+     "requiredLevel": 2,
+     "adsMentioning": 16
+    },
+    {
+     "skillId": "backend_api",
+     "weight": 0.05638597166189352,
+     "tf": 0.2,
+     "requiredLevel": 1,
+     "adsMentioning": 8
+    },
+    {
+     "skillId": "problem_solving",
+     "weight": 0.049170098207861564,
+     "tf": 0.21428571428571427,
+     "requiredLevel": 3,
+     "adsMentioning": 10
+    }
+   ]
+  },
+  {
+   "id": "mobile_developer",
+   "adCount": 38,
+   "skills": [
+    {
+     "skillId": "mobile",
+     "weight": 0.2824389229016507,
+     "tf": 0.7894736842105263,
+     "requiredLevel": 3,
+     "adsMentioning": 32
+    },
+    {
+     "skillId": "prog_oop",
+     "weight": 0.1357034331300818,
+     "tf": 0.5,
+     "requiredLevel": 2,
+     "adsMentioning": 21
+    },
+    {
+     "skillId": "version_control",
+     "weight": 0.12738473250999688,
+     "tf": 0.631578947368421,
+     "requiredLevel": 2,
+     "adsMentioning": 24
+    },
+    {
+     "skillId": "ui_ux",
+     "weight": 0.09616131478305615,
+     "tf": 0.39473684210526316,
+     "requiredLevel": 2,
+     "adsMentioning": 20
+    },
+    {
+     "skillId": "nosql",
+     "weight": 0.09414630763388357,
+     "tf": 0.2631578947368421,
+     "requiredLevel": 1,
+     "adsMentioning": 12
+    },
+    {
+     "skillId": "backend_api",
+     "weight": 0.08213628847347057,
+     "tf": 0.3026315789473684,
+     "requiredLevel": 2,
+     "adsMentioning": 15
+    },
+    {
+     "skillId": "communication",
+     "weight": 0.06556601174768849,
+     "tf": 0.5263157894736842,
+     "requiredLevel": 2,
+     "adsMentioning": 21
+    },
+    {
+     "skillId": "javascript_ts",
+     "weight": 0.04650439561711956,
+     "tf": 0.21052631578947367,
+     "requiredLevel": 2,
+     "adsMentioning": 11
+    },
+    {
+     "skillId": "agile",
+     "weight": 0.03811241007555302,
+     "tf": 0.2236842105263158,
+     "requiredLevel": 2,
+     "adsMentioning": 10
+    },
+    {
+     "skillId": "databases_sql",
+     "weight": 0.03184618312749922,
+     "tf": 0.15789473684210525,
+     "requiredLevel": 2,
+     "adsMentioning": 8
+    }
+   ]
+  },
+  {
+   "id": "qa_engineer",
+   "adCount": 34,
+   "skills": [
+    {
+     "skillId": "testing_manual",
+     "weight": 0.3028101284532408,
+     "tf": 0.8676470588235294,
+     "requiredLevel": 3,
+     "adsMentioning": 30
+    },
+    {
+     "skillId": "test_automation",
+     "weight": 0.2052950023411802,
+     "tf": 0.5882352941176471,
+     "requiredLevel": 2,
+     "adsMentioning": 20
+    },
+    {
+     "skillId": "agile",
+     "weight": 0.09532947206163027,
+     "tf": 0.5735294117647058,
+     "requiredLevel": 2,
+     "adsMentioning": 21
+    },
+    {
+     "skillId": "communication",
+     "weight": 0.08399660314038153,
+     "tf": 0.6911764705882353,
+     "requiredLevel": 2,
+     "adsMentioning": 24
+    },
+    {
+     "skillId": "version_control",
+     "weight": 0.08101757931919192,
+     "tf": 0.4117647058823529,
+     "requiredLevel": 1,
+     "adsMentioning": 17
+    },
+    {
+     "skillId": "prog_oop",
+     "weight": 0.07008496050926245,
+     "tf": 0.2647058823529412,
+     "requiredLevel": 1,
+     "adsMentioning": 13
+    },
+    {
+     "skillId": "databases_sql",
+     "weight": 0.057869699513708524,
+     "tf": 0.29411764705882354,
+     "requiredLevel": 1,
+     "adsMentioning": 13
+    },
+    {
+     "skillId": "devops_cicd",
+     "weight": 0.05289291982413278,
+     "tf": 0.17647058823529413,
+     "requiredLevel": 2,
+     "adsMentioning": 7
+    },
+    {
+     "skillId": "javascript_ts",
+     "weight": 0.05070363483727157,
+     "tf": 0.23529411764705882,
+     "requiredLevel": 1,
+     "adsMentioning": 9
+    }
+   ]
+  },
+  {
+   "id": "devops_engineer",
+   "adCount": 37,
+   "skills": [
+    {
+     "skillId": "containers",
+     "weight": 0.19903255224134353,
+     "tf": 0.8783783783783784,
+     "requiredLevel": 2,
+     "adsMentioning": 35
+    },
+    {
+     "skillId": "devops_cicd",
+     "weight": 0.174536238119332,
+     "tf": 0.7702702702702703,
+     "requiredLevel": 3,
+     "adsMentioning": 29
+    },
+    {
+     "skillId": "linux",
+     "weight": 0.14809777104245073,
+     "tf": 0.8243243243243243,
+     "requiredLevel": 2,
+     "adsMentioning": 31
+    },
+    {
+     "skillId": "cloud",
+     "weight": 0.1342899172235254,
+     "tf": 0.8243243243243243,
+     "requiredLevel": 2,
+     "adsMentioning": 33
+    },
+    {
+     "skillId": "version_control",
+     "weight": 0.096484361833902,
+     "tf": 0.6486486486486487,
+     "requiredLevel": 2,
+     "adsMentioning": 27
+    },
+    {
+     "skillId": "networking",
+     "weight": 0.06762181078819425,
+     "tf": 0.33783783783783783,
+     "requiredLevel": 1,
+     "adsMentioning": 15
+    },
+    {
+     "skillId": "python",
+     "weight": 0.05341231086776912,
+     "tf": 0.2972972972972973,
+     "requiredLevel": 1,
+     "adsMentioning": 14
+    },
+    {
+     "skillId": "security",
+     "weight": 0.05139257619902763,
+     "tf": 0.25675675675675674,
+     "requiredLevel": 1,
+     "adsMentioning": 12
+    },
+    {
+     "skillId": "communication",
+     "weight": 0.0496613265720316,
+     "tf": 0.5405405405405406,
+     "requiredLevel": 2,
+     "adsMentioning": 21
+    },
+    {
+     "skillId": "agile",
+     "weight": 0.025471135112423812,
+     "tf": 0.20270270270270271,
+     "requiredLevel": 1,
+     "adsMentioning": 10
+    }
+   ]
+  },
+  {
+   "id": "data_analyst",
+   "adCount": 38,
+   "skills": [
+    {
+     "skillId": "data_analysis",
+     "weight": 0.24757846468809355,
+     "tf": 0.8026315789473685,
+     "requiredLevel": 2,
+     "adsMentioning": 32
+    },
+    {
+     "skillId": "databases_sql",
+     "weight": 0.2049792357422972,
+     "tf": 0.8026315789473685,
+     "requiredLevel": 2,
+     "adsMentioning": 32
+    },
+    {
+     "skillId": "python",
+     "weight": 0.19481584106604083,
+     "tf": 0.631578947368421,
+     "requiredLevel": 1,
+     "adsMentioning": 25
+    },
+    {
+     "skillId": "statistics",
+     "weight": 0.16380421658355607,
+     "tf": 0.42105263157894735,
+     "requiredLevel": 2,
+     "adsMentioning": 16
+    },
+    {
+     "skillId": "communication",
+     "weight": 0.09547298474253438,
+     "tf": 0.6052631578947368,
+     "requiredLevel": 2,
+     "adsMentioning": 25
+    },
+    {
+     "skillId": "business_analysis",
+     "weight": 0.0933492571774779,
+     "tf": 0.3026315789473684,
+     "requiredLevel": 1,
+     "adsMentioning": 14
+    }
+   ]
+  },
+  {
+   "id": "data_scientist",
+   "adCount": 35,
+   "skills": [
+    {
+     "skillId": "machine_learning",
+     "weight": 0.21895733040511645,
+     "tf": 0.6714285714285714,
+     "requiredLevel": 3,
+     "adsMentioning": 26
+    },
+    {
+     "skillId": "python",
+     "weight": 0.21254078284264774,
+     "tf": 0.9571428571428572,
+     "requiredLevel": 2,
+     "adsMentioning": 35
+    },
+    {
+     "skillId": "statistics",
+     "weight": 0.1760403478052773,
+     "tf": 0.6285714285714286,
+     "requiredLevel": 2,
+     "adsMentioning": 23
+    },
+    {
+     "skillId": "data_analysis",
+     "weight": 0.08565076323509685,
+     "tf": 0.38571428571428573,
+     "requiredLevel": 2,
+     "adsMentioning": 14
+    },
+    {
+     "skillId": "databases_sql",
+     "weight": 0.08141907632522814,
+     "tf": 0.44285714285714284,
+     "requiredLevel": 2,
+     "adsMentioning": 17
+    },
+    {
+     "skillId": "version_control",
+     "weight": 0.07353981087439962,
+     "tf": 0.4,
+     "requiredLevel": 1,
+     "adsMentioning": 17
+    },
+    {
+     "skillId": "problem_solving",
+     "weight": 0.05752973224932996,
+     "tf": 0.2857142857142857,
+     "requiredLevel": 2,
+     "adsMentioning": 13
+    },
+    {
+     "skillId": "cloud",
+     "weight": 0.04890027241193047,
+     "tf": 0.24285714285714285,
+     "requiredLevel": 1,
+     "adsMentioning": 10
+    },
+    {
+     "skillId": "communication",
+     "weight": 0.04542188385097354,
+     "tf": 0.4,
+     "requiredLevel": 2,
+     "adsMentioning": 15
+    }
+   ]
+  },
+  {
+   "id": "business_analyst",
+   "adCount": 38,
+   "skills": [
+    {
+     "skillId": "business_analysis",
+     "weight": 0.34588710063578826,
+     "tf": 0.9210526315789473,
+     "requiredLevel": 3,
+     "adsMentioning": 38
+    },
+    {
+     "skillId": "agile",
+     "weight": 0.19008041380210478,
+     "tf": 0.7236842105263158,
+     "requiredLevel": 2,
+     "adsMentioning": 29
+    },
+    {
+     "skillId": "communication",
+     "weight": 0.15919026777562115,
+     "tf": 0.8289473684210527,
+     "requiredLevel": 3,
+     "adsMentioning": 33
+    },
+    {
+     "skillId": "databases_sql",
+     "weight": 0.08182072543664012,
+     "tf": 0.2631578947368421,
+     "requiredLevel": 1,
+     "adsMentioning": 12
+    },
+    {
+     "skillId": "project_management",
+     "weight": 0.07478416350593642,
+     "tf": 0.15789473684210525,
+     "requiredLevel": 1,
+     "adsMentioning": 8
+    },
+    {
+     "skillId": "data_analysis",
+     "weight": 0.07411866442195462,
+     "tf": 0.19736842105263158,
+     "requiredLevel": 2,
+     "adsMentioning": 9
+    },
+    {
+     "skillId": "ui_ux",
+     "weight": 0.07411866442195462,
+     "tf": 0.19736842105263158,
+     "requiredLevel": 1,
+     "adsMentioning": 9
+    }
+   ]
+  },
+  {
+   "id": "ui_ux_designer",
+   "adCount": 34,
+   "skills": [
+    {
+     "skillId": "ui_ux",
+     "weight": 0.42592338913343797,
+     "tf": 0.9264705882352942,
+     "requiredLevel": 3,
+     "adsMentioning": 33
+    },
+    {
+     "skillId": "communication",
+     "weight": 0.17977691419139916,
+     "tf": 0.7647058823529411,
+     "requiredLevel": 2,
+     "adsMentioning": 27
+    },
+    {
+     "skillId": "frontend",
+     "weight": 0.13557872503729912,
+     "tf": 0.2647058823529412,
+     "requiredLevel": 1,
+     "adsMentioning": 11
+    },
+    {
+     "skillId": "agile",
+     "weight": 0.10402841326055517,
+     "tf": 0.3235294117647059,
+     "requiredLevel": 1,
+     "adsMentioning": 13
+    },
+    {
+     "skillId": "business_analysis",
+     "weight": 0.08112826459684533,
+     "tf": 0.17647058823529413,
+     "requiredLevel": 2,
+     "adsMentioning": 8
+    },
+    {
+     "skillId": "javascript_ts",
+     "weight": 0.07356429378046324,
+     "tf": 0.17647058823529413,
+     "requiredLevel": 1,
+     "adsMentioning": 7
+    }
+   ]
+  },
+  {
+   "id": "network_engineer",
+   "adCount": 36,
+   "skills": [
+    {
+     "skillId": "networking",
+     "weight": 0.3773323470847179,
+     "tf": 0.8055555555555556,
+     "requiredLevel": 2,
+     "adsMentioning": 31
+    },
+    {
+     "skillId": "security",
+     "weight": 0.22770055427526079,
+     "tf": 0.4861111111111111,
+     "requiredLevel": 2,
+     "adsMentioning": 18
+    },
+    {
+     "skillId": "linux",
+     "weight": 0.20437886708636915,
+     "tf": 0.4861111111111111,
+     "requiredLevel": 2,
+     "adsMentioning": 19
+    },
+    {
+     "skillId": "communication",
+     "weight": 0.11645876707872949,
+     "tf": 0.5416666666666666,
+     "requiredLevel": 2,
+     "adsMentioning": 21
+    },
+    {
+     "skillId": "cloud",
+     "weight": 0.07412946447492257,
+     "tf": 0.19444444444444445,
+     "requiredLevel": 1,
+     "adsMentioning": 8
+    }
+   ]
+  },
+  {
+   "id": "cybersecurity_analyst",
+   "adCount": 38,
+   "skills": [
+    {
+     "skillId": "security",
+     "weight": 0.2548496659541682,
+     "tf": 0.75,
+     "requiredLevel": 2,
+     "adsMentioning": 29
+    },
+    {
+     "skillId": "networking",
+     "weight": 0.2459075724119167,
+     "tf": 0.7236842105263158,
+     "requiredLevel": 2,
+     "adsMentioning": 31
+    },
+    {
+     "skillId": "linux",
+     "weight": 0.21670796428577313,
+     "tf": 0.7105263157894737,
+     "requiredLevel": 2,
+     "adsMentioning": 27
+    },
+    {
+     "skillId": "python",
+     "weight": 0.08427531944446733,
+     "tf": 0.27631578947368424,
+     "requiredLevel": 1,
+     "adsMentioning": 13
+    },
+    {
+     "skillId": "cloud",
+     "weight": 0.07641793385897538,
+     "tf": 0.27631578947368424,
+     "requiredLevel": 1,
+     "adsMentioning": 13
+    },
+    {
+     "skillId": "communication",
+     "weight": 0.06361835634262282,
+     "tf": 0.40789473684210525,
+     "requiredLevel": 1,
+     "adsMentioning": 16
+    },
+    {
+     "skillId": "problem_solving",
+     "weight": 0.058223187702076476,
+     "tf": 0.21052631578947367,
+     "requiredLevel": 2,
+     "adsMentioning": 11
+    }
+   ]
+  },
+  {
+   "id": "project_coordinator",
+   "adCount": 38,
+   "skills": [
+    {
+     "skillId": "project_management",
+     "weight": 0.34869453842225895,
+     "tf": 0.7763157894736842,
+     "requiredLevel": 2,
+     "adsMentioning": 31
+    },
+    {
+     "skillId": "agile",
+     "weight": 0.19664851398068736,
+     "tf": 0.7894736842105263,
+     "requiredLevel": 2,
+     "adsMentioning": 32
+    },
+    {
+     "skillId": "communication",
+     "weight": 0.167740812804299,
+     "tf": 0.9210526315789473,
+     "requiredLevel": 3,
+     "adsMentioning": 37
+    },
+    {
+     "skillId": "business_analysis",
+     "weight": 0.1312076316948046,
+     "tf": 0.3684210526315789,
+     "requiredLevel": 1,
+     "adsMentioning": 16
+    },
+    {
+     "skillId": "problem_solving",
+     "weight": 0.0807327135580617,
+     "tf": 0.25,
+     "requiredLevel": 1,
+     "adsMentioning": 12
+    },
+    {
+     "skillId": "data_analysis",
+     "weight": 0.07497578953988833,
+     "tf": 0.21052631578947367,
+     "requiredLevel": 1,
+     "adsMentioning": 9
+    }
+   ]
+  }
+ ]
+}

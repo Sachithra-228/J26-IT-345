@@ -1,0 +1,228 @@
+{
+ "warning": "SYNTHETIC DATA: validates the pipeline, not real-world accuracy.",
+ "generatedAt": "2026-10-10T07:50:28+00:00",
+ "generatedBy": "python ml/c3/run_pipeline.py evaluate",
+ "modelVersion": "c3-readiness-v1-synthetic",
+ "protocol": {
+  "students": {
+   "total": 3000,
+   "train": 2400,
+   "holdout": 600,
+   "split": "stratified 80/20 by hidden career track, seed 42 (synthetic_students.split_indices)"
+  },
+  "ads": {
+   "total": 600,
+   "train": 480,
+   "test": 120,
+   "split": "stratified 80/20 by parsed role, seed 42 (role_profiles.split_ads)"
+  },
+  "relevance": "simulated expert grades 0-3; relevant = grade >= 2",
+  "lambda": 0.5,
+  "kRoles": 3,
+  "kGaps": 5,
+  "gapEvaluation": "primary target role of each hold-out student; students with no labelled gap have no NDCG/recall"
+ },
+ "proposalTargets": {
+  "status": "not stated",
+  "note": "docs/c3/proposal/ is empty and the README names NDCG and SUS without numeric targets for C3. No target is invented here; add the proposal's targets when the C3 proposal is committed."
+ },
+ "holdout": {
+  "roleNdcg": {
+   "metric": "Role recommendation NDCG@3",
+   "proposed": 0.9427810165782943,
+   "baseline": 0.8782785464737464,
+   "studentsScored": 597,
+   "pairedBootstrap": {
+    "meanDifference": 0.06450247010454795,
+    "ci95": [
+     0.05289357041959758,
+     0.07581775404353078
+    ],
+    "pOneSided": 0.0,
+    "resamples": 2000,
+    "n": 597
+   }
+  },
+  "roleP": {
+   "metric": "Role recommendation Precision@3",
+   "proposed": 0.8355555555555555,
+   "baseline": 0.806111111111111,
+   "studentsScored": 600,
+   "pairedBootstrap": {
+    "meanDifference": 0.029444444444444447,
+    "ci95": [
+     0.017777777777777778,
+     0.04111111111111111
+    ],
+    "pOneSided": 0.0,
+    "resamples": 2000,
+    "n": 600
+   }
+  },
+  "roleR": {
+   "metric": "Role recommendation Recall@3",
+   "proposed": 0.5565510651138879,
+   "baseline": 0.5305777842352712,
+   "studentsScored": 581,
+   "pairedBootstrap": {
+    "meanDifference": 0.025973280878616507,
+    "ci95": [
+     0.01385321899844275,
+     0.03930999508237028
+    ],
+    "pOneSided": 0.0,
+    "resamples": 2000,
+    "n": 581
+   }
+  },
+  "gapNdcg": {
+   "metric": "Gap ranking NDCG@5",
+   "proposed": 0.8679000980620059,
+   "baseline": 0.8184155683576022,
+   "studentsScored": 558,
+   "pairedBootstrap": {
+    "meanDifference": 0.049484529704403785,
+    "ci95": [
+     0.04130151163341719,
+     0.05830644654495375
+    ],
+    "pOneSided": 0.0,
+    "resamples": 2000,
+    "n": 558
+   }
+  },
+  "gapP": {
+   "metric": "Gap ranking Precision@5",
+   "proposed": 0.5526881720430107,
+   "baseline": 0.5383512544802866,
+   "studentsScored": 558,
+   "pairedBootstrap": {
+    "meanDifference": 0.01433691756272401,
+    "ci95": [
+     0.010035842293906807,
+     0.018996415770609315
+    ],
+    "pOneSided": 0.0,
+    "resamples": 2000,
+    "n": 558
+   }
+  },
+  "gapR": {
+   "metric": "Gap ranking Recall@5",
+   "proposed": 0.8099207354642138,
+   "baseline": 0.7981008474214996,
+   "studentsScored": 552,
+   "pairedBootstrap": {
+    "meanDifference": 0.011819888042714133,
+    "ci95": [
+     0.00813096675868415,
+     0.015871672862161998
+    ],
+    "pOneSided": 0.0,
+    "resamples": 2000,
+    "n": 552
+   }
+  }
+ },
+ "crossValidation5FoldOverAds": {
+  "roleNdcg": {
+   "proposed": {
+    "mean": 0.9373057686214947,
+    "std": 0.004529502123193742
+   },
+   "baseline": {
+    "mean": 0.8707439595540428,
+    "std": 0.0075926957665141265
+   },
+   "metric": "Role recommendation NDCG@3"
+  },
+  "roleP": {
+   "proposed": {
+    "mean": 0.8283333333333334,
+    "std": 0.006106058517348493
+   },
+   "baseline": {
+    "mean": 0.8014444444444445,
+    "std": 0.004452769979891987
+   },
+   "metric": "Role recommendation Precision@3"
+  },
+  "roleR": {
+   "proposed": {
+    "mean": 0.5497180186422871,
+    "std": 0.005862927551954605
+   },
+   "baseline": {
+    "mean": 0.5265551631386399,
+    "std": 0.003655451519403227
+   },
+   "metric": "Role recommendation Recall@3"
+  },
+  "gapNdcg": {
+   "proposed": {
+    "mean": 0.8600285831878137,
+    "std": 0.027457153545135952
+   },
+   "baseline": {
+    "mean": 0.7975551877185898,
+    "std": 0.02888843788992506
+   },
+   "metric": "Gap ranking NDCG@5"
+  },
+  "gapP": {
+   "proposed": {
+    "mean": 0.5447311827956989,
+    "std": 0.016380202816457134
+   },
+   "baseline": {
+    "mean": 0.5248028673835126,
+    "std": 0.013048564190274194
+   },
+   "metric": "Gap ranking Precision@5"
+  },
+  "gapR": {
+   "proposed": {
+    "mean": 0.7988608090782005,
+    "std": 0.032216392619503806
+   },
+   "baseline": {
+    "mean": 0.7822556710600189,
+    "std": 0.029300705866834215
+   },
+   "metric": "Gap ranking Recall@5"
+  }
+ },
+ "lambdaSensitivityTrainOnly": [
+  {
+   "lambda": 0.0,
+   "roleNdcg": 0.9420497057795023,
+   "gapNdcg": 0.8579831405497262
+  },
+  {
+   "lambda": 0.25,
+   "roleNdcg": 0.9419493922380308,
+   "gapNdcg": 0.8626878346486435
+  },
+  {
+   "lambda": 0.5,
+   "roleNdcg": 0.9390638334351478,
+   "gapNdcg": 0.8635868089946044
+  },
+  {
+   "lambda": 1.0,
+   "roleNdcg": 0.9239891464979635,
+   "gapNdcg": 0.8667042229028109
+  }
+ ],
+ "gapToActionPlans": {
+  "students": 600,
+  "meanSteps": 3.52,
+  "meanEffortHours": 70.19,
+  "medianEffortHours": 70.0,
+  "meanProjectedReadinessGain": 35.31934725285589,
+  "plansWithPrerequisiteSteps": 106,
+  "plansWithUnplannedGaps": 29,
+  "note": "Projected gain assumes the student completes every step; effort hours are hand-entered estimates."
+ },
+ "caveat": "Labels are simulated from the same hidden role templates that generated the ads, so a weighted model that recovers those weights is favoured by construction. These numbers show the pipeline, metrics and statistics work end to end - not that C3 is accurate for real SLIIT students."
+}

@@ -48,7 +48,7 @@ Supervisor: Prof. Dasuni Nawinna - Co-supervisor: Ms. Aruni Premarathne
 | --- | --- | --- | --- |
 | **C1** | Wijesinghe S K (IT23152700) - group leader | Blockchain-based transparent financial aid, AI financial-vulnerability assessment, AI scholarship matching, admin and donor monitoring | **Implemented** (section 6) |
 | **C2** | D. G. A. Indeepa (IT23273412) | AI-powered mental wellness support and early risk detection: bounded conversational assistant, PHQ-9 / GAD-7 self-assessments, optional facial-expression analysis, mood journaling, quality-aware multimodal fusion, confidential counselor referral | Folder structure ready (section 7) |
-| **C3** | K. K. T. C. Kamburugoda (IT23155084) | Explainable AI career guidance: NLP over Sri Lankan IT job advertisements, CV and questionnaire analysis, career-path recommendation with readiness scores, skill-gap prioritisation, Gap-to-Action knowledge graph | Folder structure ready (section 7) |
+| **C3** | K. K. T. C. Kamburugoda (IT23155084) | Explainable AI career guidance: NLP over Sri Lankan IT job advertisements, CV and questionnaire analysis, career-path recommendation with readiness scores, skill-gap prioritisation, Gap-to-Action knowledge graph | **Implemented on synthetic data** (section 7, C3) |
 | **C4** | L. L. E. Harshana (IT23195202) | AI mentor matching and student engagement: dynamic multi-criteria mentor matching, activity recommendation, privacy-aware parent/guardian communication, peer collaboration, engagement and mentorship analytics | Folder structure ready (section 7) |
 
 The platform itself (authentication, role dashboards, notifications, multilingual UI) started as the IT3040 IT Project Management project and is the shared base that all four components plug into.
@@ -370,15 +370,174 @@ The folders below exist so each member can start immediately and keep work separ
 
 ### C3 - Explainable AI career guidance (K. K. T. C. Kamburugoda)
 
-**Scope.** NLP over Sri Lankan IT job advertisements to build evidence-based career requirements; CV upload and structured questionnaire for Year 3/4 IT students; career-path recommendation with transparent readiness scores; skill-gap identification and prioritisation; reasons for every recommendation; a **Gap-to-Action knowledge graph** that turns gaps into development steps. Baseline: transparent unweighted content-based matching. Metrics include NDCG and user evaluation (SUS).
+> **Status: implemented end to end on SYNTHETIC data** (branch `research/c3-career`, October 2026). The SLIIT ethics application is submitted but not approved, so no real student data and no collected job advertisements are used. Every ML number below says **"SYNTHETIC DATA: validates the pipeline, not real-world accuracy"**. Timings and test counts are real.
 
-| Folder | Intended use |
+**Scope.** NLP over Sri Lankan IT job advertisements to build evidence-based role requirements; a questionnaire (and optional CV text) for Year 3/4 IT students; a transparent readiness score per career path; ranked skill gaps; a reason for every number; and a **Gap-to-Action knowledge graph** that turns gaps into an ordered plan of modules, projects, certifications and free resources. Baseline: transparent unweighted content-based matching.
+
+#### C3.1 What is implemented
+
+| Capability | Where | Status |
+| --- | --- | --- |
+| Job-ad schema, collector (allow-listed domains, robots.txt, >= 5 s delay, output only to git-ignored `raw/`), cleaner (PII strip, dedupe, validate) | `ml/c3/src/job-ad-nlp/` | Done - collector **not yet run on any real site** |
+| Ad parser: role from title, level from cue phrases ("strong knowledge of" -> 3), "nice to have", experience, education, certifications | `ad_parser.py` | Done |
+| Competency taxonomy v1.0.0: 26 competencies, 7 areas, levels 0-3, synonyms, EN/SI/TA labels, JSON Schema | `ml/c3/data/reference/competency-taxonomy*.json` | Done - needs academic / industry validation |
+| PII stripping (e-mail, URL, NIC old/new, SL phone, labelled lines, street addresses) before any processing | `pii.py`, `src/lib/c3/extract.ts` | Done |
+| Dictionary + fuzzy skill extractor (longest match first, rapidfuzz ratio >= 90 for terms >= 7 chars) for ads and CVs | `skill_extractor.py`, `extract.ts` | Done |
+| Synthetic data: 600 ads (+ 6 hand-written, labelled), 3,000 students with simulated expert labels, 200 CVs (seed 42) | `ml/c3/data/synthetic/` | Done - **synthetic** |
+| Role profiles: TF-IDF skill weights + median required level from training ads | `role_profiles.py` | Done |
+| Baseline (unweighted overlap) and proposed weighted readiness with per-skill contributions; gap ranking by readiness gain | `readiness.py`, `src/lib/c3/{readiness,gaps}.ts` | Done |
+| Gap-to-Action knowledge graph (Skill, Role, Module, Project, Certification, Resource; requires, prerequisite_of, teaches, evidences) + planner with "why this" reasons | `kg.py`, `src/lib/c3/graph.ts`, `src/lib/c3/model/knowledge-graph.json` | Done - modules are **illustrative**, effort hours are estimates |
+| Python-to-TypeScript parity (readiness, gaps, plans, extraction, fuzzy ratio) | `tests/unit/c3/c3-parity.test.ts` | Done - 293 checks, mutation-checked |
+| API: `/api/c3/roles`, `/api/c3/assessment`, `/api/c3/plan` (role-gated, consent, Zod `.strict()`, rate-limited, erase path) | `src/app/api/c3/` | Done |
+| Student section *Career Readiness* (on-device analysis, optional CV step behind a flag, explanations, plan, consent-based save / delete) | `src/components/c3/career-guidance-*.tsx` | Done - checked in the browser (demo mode) |
+| Admin / faculty section *Career Readiness Insights* (anonymous aggregates, groups < 5 hidden) | `src/components/c3/career-insights-admin.tsx` | Done - tested; not viewable in demo mode (see C3.8) |
+| English / Sinhala / Tamil | `src/lib/c3/i18n.ts` + taxonomy labels | Done - **needs native-speaker review** |
+| Evaluation: P@K, R@K, NDCG@K, paired bootstrap, 5-fold CV over ads, lambda sensitivity, extraction, plan statistics, latency | `ml/c3/evaluation/`, `scripts/c3/benchmark.ts`, `docs/c3/evidence/` | Done - **synthetic** |
+| **Mock interview** (FR13): 77-question bank (57 technical on all 26 skills, 8 behavioural STAR, 12 role scenarios), questions chosen from the student's top readiness gaps, rule-based rubric feedback (key points 40%, structure 20%, depth 15%, evidence 15%, clarity 10%) with reasons, session summary | `src/lib/c3/interview*.ts`, `src/components/c3/mock-interview.tsx` (tab in *Career Readiness*) | Done - on-device, nothing stored; questions need lecturer review; rubric not yet validated against human ratings |
+| AI Career Assistant (FR12), LLM interview feedback | - | **Not done** |
+| Real job ads, real students, SUS study | - | **Not done** - needs data collection / ethics approval |
+
+#### C3.2 Architecture and model
+
+```mermaid
+flowchart LR
+  subgraph "ml/c3 (Python, offline)"
+    ADS["Job ads<br/>(synthetic now; public ads later)"] --> CLEAN["PII strip, parse,<br/>extract skills + levels"]
+    CLEAN --> PROF["TF-IDF role profiles<br/>(train ads only)"]
+    SRC["Hand-authored Gap-to-Action<br/>content + taxonomy"] --> KG["Knowledge graph<br/>(validated, acyclic)"]
+    PROF --> KG
+    PROF --> EVAL["Evaluation vs baseline<br/>(hold-out students)"]
+  end
+  PROF -- "career-model.json" --> TS
+  KG -- "knowledge-graph.json" --> TS
+  PROF -- "parity fixture" --> TEST["Jest parity test"]
+  subgraph "Next.js app"
+    TS["src/lib/c3 runtime<br/>readiness, gaps, planner, extractor"]
+    UI["Student: on-device analysis<br/>(CV text never leaves the browser)"] --> TS
+    API["/api/c3/* role-gated,<br/>consent, rate-limited"] --> TS
+    STAFF["Admin / faculty:<br/>anonymous aggregates"] --> API
+  end
+  API --> DB[(MongoDB<br/>c3_career_assessments<br/>answers only)]
+```
+
+**Readiness (proposed).** For each skill the role's ads ask for, with importance `w` (TF-IDF, sums to 1 per role), required level `Q` and the student's level `L`: attainment `a = min(L/Q, 1)`, shortfall `g = max(Q-L, 0)/Q`, points `= 100·w·(a - λ·g²)`, readiness `= clamp(Σ points, 0, 100)`. The per-skill points **are** the explanation (they add up to the score); the squared shortfall makes a missing important skill cost more than several partial ones. `λ = 0.5` was fixed in advance, not tuned. A skill found in CV text counts as level 1 and never lowers a questionnaire answer. **Gaps** are ranked by the points gained by reaching `Q`. **Baseline:** share of the role's skills the student has at any level, gaps by level shortfall.
+
+**Gap-to-Action planner.** For the top 5 gaps: plan unmet prerequisites first (`prerequisite_of`), then repeatedly pick the action with the best readiness gain per effort hour (ties: less effort, then id); a project or certification needs the student to be at most one level below what it demonstrates. Each step carries structured reasons (gap vs ad requirement, share of ads, points gained, efficiency vs alternatives, prerequisite, proof) rendered in three languages.
+
+| Design decision | Why |
 | --- | --- |
-| `ml/c3/src/job-ad-nlp/` | Job-advertisement collection and NLP |
-| `ml/c3/src/skill-extraction/` | Skill extraction from ads and CVs |
-| `ml/c3/src/knowledge-graph/` | Gap-to-Action knowledge graph |
-| `ml/c3/src/recommender/` | Career and course recommendation, readiness score, explanations |
-| `ml/c3/{data,notebooks,models,evaluation}/`, `src/lib|components|app/api/c3/`, `tests/**/c3/`, `scripts/c3/`, `docs/c3/` | As for C2 |
+| Rules + TF-IDF, not a black-box model | Every weight traces to ad counts that the UI shows; the student sees why. A learned ranker can be compared later on real judgements |
+| Run in TypeScript, on the device | No Python service; ~0.06 ms per assessment; CV text never needs to leave the browser. A parity test keeps it identical to Python |
+| Python is the source of truth | Profiles, graph and fixture are generated by one seeded script; the runtime only reads JSON |
+| Answers-only storage, k = 5 aggregates | Staff need cohort trends, not individuals (data minimisation) |
+
+#### C3.3 Results (SYNTHETIC DATA: validates the pipeline, not real-world accuracy)
+
+Hold-out = 600 synthetic students never used for anything else; relevance = simulated expert grades 0-3 (relevant = grade >= 2); 95% CI from a paired bootstrap (2,000 resamples).
+
+| Metric | Target | Proposed | Baseline | Difference [95% CI] | Status |
+| --- | --- | --- | --- | --- | --- |
+| Role recommendation NDCG@3 | not stated in repo | **0.943** | 0.878 | +0.065 [+0.053, +0.076] | Synthetic |
+| Role recommendation P@3 / R@3 | not stated | 0.836 / 0.557 | 0.806 / 0.531 | +0.029 / +0.026 (CIs exclude 0) | Synthetic |
+| Gap ranking NDCG@5 | not stated | **0.868** | 0.818 | +0.049 [+0.041, +0.058] | Synthetic |
+| Gap ranking P@5 / R@5 | not stated | 0.553 / 0.810 | 0.538 / 0.798 | +0.014 / +0.012 (CIs exclude 0) | Synthetic |
+| 5-fold CV over ads, role NDCG@3 | - | 0.937 ± 0.005 | 0.871 ± 0.008 | stable across ad samples | Synthetic |
+| 5-fold CV over ads, gap NDCG@5 | - | 0.860 ± 0.027 | 0.798 ± 0.029 | | Synthetic |
+| Skill extraction F1: synthetic ads / CVs / 6 hand-written ads | not stated | 0.964 / 0.966 / 1.000 | - | precision 1.00 everywhere (see below) | Synthetic / tiny sample |
+| Inference time, full assessment (12 roles + 2 plans) | - | 0.06 ms mean, 0.10 ms p95 | - | - | **Real** (this laptop) |
+| CV extraction, 852 words | - | 16 ms mean | - | - | **Real** |
+| SUS usability | not stated | not measured | - | - | Open - needs user study |
+
+![C3 ranking comparison](docs/c3/evidence/c3-ranking-comparison.png)
+
+<details>
+<summary><b>How to read these results (important)</b></summary>
+
+- **Optimistic by construction.** The ads and the simulated expert labels come from the same hidden role templates (`ml/c3/src/job-ad-nlp/synthetic_world.py`), so a model that recovers those weights is favoured. The gain over the baseline shows the pipeline and statistics work; its size says nothing about real students.
+- **No targets were invented.** `docs/c3/proposal/` is empty and this README gave no numeric C3 targets; add the proposal's targets and re-read the table against them.
+- **lambda sensitivity (train split only, informational):** raising the gap penalty slightly improves gap ranking (NDCG@5 0.858 -> 0.867 for lambda 0 -> 1) but **lowers** role ranking (0.942 -> 0.924). lambda stays at the pre-set 0.5; real data should decide.
+- **Extraction precision 1.00 is not credible for real ads.** The synthetic text has no distractor terms and uses the extractor's own lexicon (recall < 1 only because of deliberately planted out-of-vocabulary terms such as "SQLite"). The 6 hand-written ads were written by the same author as the synonym list, and one of them ("Network & Security Engineer") was assigned the wrong role from its title. Level-from-cue accuracy (0.99) is optimistic for the same reason.
+- **Plans** (hold-out, primary target): 3.5 steps and ~70 estimated hours on average, +35 projected readiness points if every step is completed; 106 plans include prerequisite steps; 29 contain a gap with no applicable action in the graph.
+- Protocol: one seeded stratified 80/20 student split and one 80/20 ad split; role profiles use training ads only; hold-out students are scored once; nothing was tuned on them.
+
+| Skill extraction | lambda sensitivity (train only) |
+| --- | --- |
+| ![Extraction](docs/c3/evidence/c3-skill-extraction.png) | ![Lambda](docs/c3/evidence/c3-lambda-sensitivity.png) |
+
+Raw evidence: `docs/c3/evidence/` (`recommendation-eval.json`, `extraction-eval.json`, `role-profiles.json`, `runtime-benchmark.json`).
+</details>
+
+#### C3.4 Requirement-to-evidence
+
+Requirement wording is from the C3 work plan; map it to the proposal's FR/NFR IDs when the proposal is committed.
+
+| Requirement | Implementation | Evidence | Status |
+| --- | --- | --- | --- |
+| Analyse Sri Lankan IT job ads into role profiles | `job-ad-nlp/`, `role_profiles.py` | `role-profiles.json`, `test_c3_data_pipeline.py`, `test_c3_models.py` | Done on synthetic ads; real ads not collected |
+| Student skills from questionnaire and optional CV | `career-guidance-tool.tsx`, `extract.ts`, `assessment.ts` | `extraction-eval.json`, `c3-components.test.tsx`, `c3-runtime.test.ts` | Done (CV behind flag, off by default) |
+| Readiness score per target role with per-skill contributions | `readiness.ts` | `c3-parity.test.ts`, `recommendation-eval.json` | Done |
+| Ranked skill gaps with explanations | `gaps.ts`, tool UI | parity + component tests, gap NDCG@5 | Done |
+| Gap-to-Action plan with prerequisite order and "why this" | `kg.py`, `graph.ts` | `test_c3_graph.py`, parity, plan statistics | Done (illustrative modules) |
+| Proposed vs baseline with P/R/NDCG@K, bootstrap CI, 5-fold CV | `ml/c3/evaluation/` | `recommendation-eval.json`, charts, `test_c3_evaluation.py` | Done - synthetic |
+| Python = TypeScript | `run_pipeline.py parity`, `c3-parity.test.ts` | 293 checks, two mutations caught | Done |
+| Role-gated, consent-first, rate-limited API with erase path | `src/app/api/c3/*` | `c3-api.test.ts`, `c3-api-mongo.test.ts` | Done |
+| Data minimisation, no PII in logs or storage, CV never stored | store, routes, `extract.ts` | API tests assert no name / e-mail / CV text is stored or returned | Done |
+| Staff aggregate without individual data | `assessment-store.ts` (k = 5) | API + component tests | Done |
+| English / Sinhala / Tamil | `i18n.ts`, taxonomy | component tests in all three | Done - review pending |
+| "Guidance, not a guarantee"; synthetic label everywhere | UI banner, API `warning`, model JSON, evidence JSON | component + API tests | Done |
+| AES-256 at rest if CVs are ever stored | - | CVs are never stored, so not needed now | N/A - required before any CV storage |
+| Career-specific mock interview with structured feedback (FR13) | `interview.ts`, `interview-bank.ts`, `mock-interview.tsx` | `c3-interview.test.ts`, `c3-interview-component.test.tsx` | Done - rubric agreement with lecturer ratings still to be measured |
+| SUS >= target, user evaluation | - | - | Open - needs ethics approval |
+
+#### C3.5 Interfaces
+
+| Endpoint | Access | Purpose |
+| --- | --- | --- |
+| `GET /api/c3/roles` | student, admin, faculty, super_admin, mentor | Taxonomy and role profiles (weights, required levels, share of ads) |
+| `GET /api/c3/assessment` | student | Own saved answers, results recomputed by the current model |
+| `GET /api/c3/assessment?scope=aggregate` | admin, faculty, super_admin | Anonymous cohort statistics; any group < 5 is hidden |
+| `POST /api/c3/assessment` | student | Save answers; **`consent: true` required**; unknown fields (e.g. a client score) rejected; optional `cvText` only with `NEXT_PUBLIC_C3_CV_ENABLED=true` + `cvConsent` (never stored) |
+| `DELETE /api/c3/assessment` | student | Erase saved answers (withdraw consent) |
+| `POST /api/c3/plan` | student | Readiness breakdown, gaps and Gap-to-Action plan for one role; nothing stored |
+
+All C3 routes: 30 requests / minute / user (saves: 10), `429` with `Retry-After`. The limiter is in-memory per server instance (C1 has none to reuse); a shared store is needed for a hard global limit. Collection `c3_career_assessments`: `userId`, `firebaseUid`, `profile` (`yearOfStudy`, `targetRoleIds`, `skills`), `modelVersion`, `syntheticTraining`, `consentAt`, `updatedAt` - no name, no CV text. Full reference: `docs/openapi.yaml`.
+
+#### C3.6 How to run
+
+```bash
+pip install -r ml/c3/requirements.txt     # Python 3.11+ (tested 3.13)
+npm run c3:ml                             # = python ml/c3/run_pipeline.py: data -> model -> graph -> parity -> evaluate (~15 s, seed 42, byte-reproducible)
+npm run c3:test:py                        # 54 pytest tests (taxonomy, PII, extractor, parser, models, graph, metrics, evidence)
+npx jest tests/unit/c3 tests/integration/c3   # 338 Jest tests (parity, runtime, API, MongoDB path, components)
+npm run c3:benchmark                      # runtime latency -> docs/c3/evidence/runtime-benchmark.json
+```
+
+Single stages: `python ml/c3/run_pipeline.py data|model|graph|parity|evaluate`. Optional CV step in the UI: set `NEXT_PUBLIC_C3_CV_ENABLED=true`. Real ads (after reviewing each site's terms): `python ml/c3/src/job-ad-nlp/collect_ads.py --from-dir <saved ads>` (or `--urls file --allow-domain <site>`), then `clean_ads.py`; output stays in git-ignored `ml/c3/data/raw|private/`.
+
+**Moving to real data later:** collect public ads into `raw/`, clean them, annotate a sample by hand (someone who has not seen the taxonomy) for an honest extraction score, build profiles from them, replace the simulated labels with career-adviser judgements on consented students, re-run `evaluate`, and remove the synthetic warnings only then.
+
+#### C3.7 Privacy and safety
+
+PII is stripped before any processing; the analysis runs on the student's device; nothing is stored without explicit consent; CV text is never stored, sent by the UI, or logged (only extracted skill ids are used); staff see only aggregates with groups below 5 hidden; every result says it is guidance, not a guarantee, and that the model is trained on synthetic ads. If CVs are ever stored, AES-256 encryption at rest and ethics approval are prerequisites.
+
+#### C3.8 Limitations and open work
+
+- **Needs real data / ethics approval:** real public job ads (collector built but not run), a hand-annotated extraction test set, career-adviser relevance judgements, a consented student pilot, SUS study, and native-speaker review of Sinhala / Tamil.
+- **Needs supervisor / staff input:** C3 proposal targets (none are in this repo), the role list and taxonomy, mapping of illustrative modules to real SLIIT module codes, effort-hour estimates, and verification of every resource link (they were not re-checked online).
+- **Known technical limits:** rule-based extraction misses unseen terms and ignores negation ("no experience in X"); names without a "Name:" label cannot be detected (hence CV text is never stored); readiness measures skill coverage, not hiring likelihood; the rate limiter is per instance; in demo mode the platform always signs in the demo *student* and redirects `/dashboard/admin`, so the staff aggregate view can only be seen with a real admin login (it is covered by tests). The mock-interview rubric checks coverage of key points and answer structure, not whether every statement is technically correct; it is a practice aid, not a hiring prediction, and its questions and weights must be reviewed by a lecturer and validated against human ratings (Cohen's kappa / ICC) before results are reported.
+- **AI-use disclosure (C3).** The C3 code, tests, synthetic data generators, taxonomy draft, Gap-to-Action content, mock-interview questions and rubric, translations and this section were produced with AI assistance (Claude Code, October 2026) and must be reviewed by the C3 owner, who should be able to explain every part. Verification performed: 54 pytest + 356 Jest tests, a Python/TypeScript parity test with mutation checks, typecheck, lint, a byte-reproducibility re-run, and a browser check of the student page in demo mode.
+
+| Folder | Contents |
+| --- | --- |
+| `ml/c3/src/job-ad-nlp/` | Ad schema, collector, cleaner, parser, synthetic ad generator and hidden synthetic "world" |
+| `ml/c3/src/skill-extraction/` | PII stripping and skill extractor |
+| `ml/c3/src/recommender/` | Role profiles, readiness and gap ranking, synthetic students |
+| `ml/c3/src/knowledge-graph/` | Graph build / validation and the Gap-to-Action planner |
+| `ml/c3/evaluation/` | Metrics and the evaluation driver |
+| `ml/c3/data/{reference,synthetic,processed}/` | Taxonomy, roles, Gap-to-Action source; synthetic data (`raw/`, `private/` git-ignored) |
+| `src/lib/c3/`, `src/components/c3/`, `src/app/api/c3/` | Runtime, UI, API (`model/` holds generated JSON) |
+| `tests/{unit,integration}/c3/`, `tests/fixtures/c3-readiness-parity.json`, `scripts/c3/` | Tests, parity fixture, benchmark |
+| `docs/c3/evidence/` | Evaluation JSON and charts |
 
 ### C4 - AI mentor matching and student engagement (L. L. E. Harshana)
 

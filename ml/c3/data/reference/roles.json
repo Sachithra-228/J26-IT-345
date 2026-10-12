@@ -1,0 +1,66 @@
+{
+  "schemaVersion": "1.0.0",
+  "provenance": "Hand-authored list of 12 entry-level IT career paths common in Sri Lankan job advertisements for Year 3/4 IT graduates. To be confirmed against the C3 proposal and SLIIT career-guidance staff.",
+  "roles": [
+    {
+      "id": "software_engineer",
+      "label": { "en": "Software Engineer", "si": "මෘදුකාංග ඉංජිනේරු", "ta": "மென்பொருள் பொறியாளர்" },
+      "titleSynonyms": ["software engineer", "associate software engineer", "software developer", "java developer", "full stack developer", "full-stack developer", ".net developer", "backend developer", "back end developer", "software engineering intern", "trainee software engineer"]
+    },
+    {
+      "id": "frontend_engineer",
+      "label": { "en": "Front-end Engineer", "si": "ඉදිරි-අන්ත ඉංජිනේරු", "ta": "முன்-முனை பொறியாளர்" },
+      "titleSynonyms": ["frontend engineer", "front end engineer", "front-end engineer", "frontend developer", "front end developer", "front-end developer", "react developer", "angular developer", "web developer", "ui developer"]
+    },
+    {
+      "id": "mobile_developer",
+      "label": { "en": "Mobile App Developer", "si": "ජංගම යෙදුම් සංවර්ධක", "ta": "மொபைல் செயலி உருவாக்குநர்" },
+      "titleSynonyms": ["mobile developer", "mobile app developer", "mobile application developer", "android developer", "ios developer", "flutter developer", "react native developer", "mobile engineer"]
+    },
+    {
+      "id": "qa_engineer",
+      "label": { "en": "QA Engineer", "si": "QA ඉංජිනේරු", "ta": "QA பொறியாளர்" },
+      "titleSynonyms": ["qa engineer", "associate qa engineer", "quality assurance engineer", "software tester", "test engineer", "qa automation engineer", "sdet", "qa intern", "trainee qa engineer"]
+    },
+    {
+      "id": "devops_engineer",
+      "label": { "en": "DevOps / Cloud Engineer", "si": "DevOps / ක්ලවුඩ් ඉංජිනේරු", "ta": "DevOps / கிளவுட் பொறியாளர்" },
+      "titleSynonyms": ["devops engineer", "associate devops engineer", "cloud engineer", "site reliability engineer", "sre", "platform engineer", "devops intern", "cloud operations engineer"]
+    },
+    {
+      "id": "data_analyst",
+      "label": { "en": "Data Analyst", "si": "දත්ත විශ්ලේෂක", "ta": "தரவு பகுப்பாய்வாளர்" },
+      "titleSynonyms": ["data analyst", "junior data analyst", "business intelligence analyst", "bi analyst", "bi developer", "reporting analyst", "data analytics intern"]
+    },
+    {
+      "id": "data_scientist",
+      "label": { "en": "Data Scientist / ML Engineer", "si": "දත්ත විද්‍යාඥ / ML ඉංජිනේරු", "ta": "தரவு விஞ்ஞானி / ML பொறியாளர்" },
+      "titleSynonyms": ["data scientist", "associate data scientist", "machine learning engineer", "ml engineer", "ai engineer", "ai/ml engineer", "data science intern", "machine learning intern"]
+    },
+    {
+      "id": "business_analyst",
+      "label": { "en": "Business Analyst", "si": "ව්‍යාපාර විශ්ලේෂක", "ta": "வணிக பகுப்பாய்வாளர்" },
+      "titleSynonyms": ["business analyst", "associate business analyst", "it business analyst", "systems analyst", "business systems analyst", "business analyst intern"]
+    },
+    {
+      "id": "ui_ux_designer",
+      "label": { "en": "UI/UX Designer", "si": "UI/UX නිර්මාණකරු", "ta": "UI/UX வடிவமைப்பாளர்" },
+      "titleSynonyms": ["ui/ux designer", "ui ux designer", "ux designer", "ui designer", "product designer", "ux researcher", "ui/ux intern", "ux/ui designer"]
+    },
+    {
+      "id": "network_engineer",
+      "label": { "en": "Network Engineer", "si": "ජාල ඉංජිනේරු", "ta": "வலையமைப்பு பொறியாளர்" },
+      "titleSynonyms": ["network engineer", "associate network engineer", "network administrator", "network support engineer", "noc engineer", "systems and network engineer", "network intern"]
+    },
+    {
+      "id": "cybersecurity_analyst",
+      "label": { "en": "Cybersecurity Analyst", "si": "සයිබර් ආරක්ෂණ විශ්ලේෂක", "ta": "இணையப் பாதுகாப்பு பகுப்பாய்வாளர்" },
+      "titleSynonyms": ["cybersecurity analyst", "cyber security analyst", "security analyst", "soc analyst", "information security analyst", "security engineer", "penetration tester", "cyber security intern"]
+    },
+    {
+      "id": "project_coordinator",
+      "label": { "en": "IT Project Coordinator / Associate PM", "si": "IT ව්‍යාපෘති සම්බන්ධීකාරක", "ta": "IT திட்ட ஒருங்கிணைப்பாளர்" },
+      "titleSynonyms": ["project coordinator", "it project coordinator", "associate project manager", "associate technical project manager", "project management intern", "scrum master", "project associate"]
+    }
+  ]
+}

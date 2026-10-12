@@ -1,0 +1,72 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "unicare-connect/c3/competency-taxonomy/1.0.0",
+  "title": "C3 competency taxonomy",
+  "description": "Versioned schema for the C3 IT competency taxonomy. Bump schemaVersion (semver) on any breaking change and regenerate the exported model.",
+  "type": "object",
+  "required": ["schemaVersion", "taxonomyVersion", "provenance", "levels", "areas", "skills"],
+  "additionalProperties": false,
+  "properties": {
+    "schemaVersion": { "const": "1.0.0" },
+    "taxonomyVersion": { "type": "string", "pattern": "^\\d+\\.\\d+\\.\\d+$" },
+    "provenance": { "type": "string", "minLength": 10 },
+    "levels": {
+      "type": "array",
+      "minItems": 4,
+      "maxItems": 4,
+      "items": {
+        "type": "object",
+        "required": ["level", "label", "descriptor"],
+        "additionalProperties": false,
+        "properties": {
+          "level": { "type": "integer", "minimum": 0, "maximum": 3 },
+          "label": { "$ref": "#/$defs/localised" },
+          "descriptor": { "type": "string" }
+        }
+      }
+    },
+    "areas": {
+      "type": "array",
+      "minItems": 1,
+      "items": {
+        "type": "object",
+        "required": ["id", "label"],
+        "additionalProperties": false,
+        "properties": {
+          "id": { "$ref": "#/$defs/id" },
+          "label": { "$ref": "#/$defs/localised" }
+        }
+      }
+    },
+    "skills": {
+      "type": "array",
+      "minItems": 20,
+      "items": {
+        "type": "object",
+        "required": ["id", "area", "label", "description", "synonyms"],
+        "additionalProperties": false,
+        "properties": {
+          "id": { "$ref": "#/$defs/id" },
+          "area": { "$ref": "#/$defs/id" },
+          "label": { "$ref": "#/$defs/localised" },
+          "description": { "type": "string" },
+          "synonyms": {
+            "type": "array",
+            "minItems": 1,
+            "uniqueItems": true,
+            "items": { "type": "string", "pattern": "^[a-z0-9+#./ -]+$" }
+          }
+        }
+      }
+    }
+  },
+  "$defs": {
+    "id": { "type": "string", "pattern": "^[a-z][a-z0-9_]*$" },
+    "localised": {
+      "type": "object",
+      "required": ["en", "si", "ta"],
+      "additionalProperties": false,
+      "properties": { "en": { "type": "string" }, "si": { "type": "string" }, "ta": { "type": "string" } }
+    }
+  }
+}

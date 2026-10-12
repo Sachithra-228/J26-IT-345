@@ -10,6 +10,7 @@ import { StudentMyApplications } from "./student-my-applications";
 import { StudentCommunications } from "./student-communications";
 import { StudentProfile } from "./student-profile";
 import { StudentAidMatching } from "./student-aid-matching";
+import { CareerGuidanceSection } from "@/components/c3/career-guidance-section";
 
 const STUDENT_SECTIONS: Record<
   string,
@@ -19,6 +20,7 @@ const STUDENT_SECTIONS: Record<
   "financial-aid": StudentFinancialAid,
   "aid-matching": StudentAidMatching,
   career: StudentCareer,
+  "career-guidance": CareerGuidanceSection,
   mentorship: StudentMentorship,
   wellness: StudentWellness,
   "campus-life": StudentCampusLife,
