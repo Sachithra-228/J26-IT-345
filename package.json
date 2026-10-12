@@ -13,7 +13,10 @@
     "test:e2e": "playwright test",
     "c1:eval-matching": "tsx scripts/c1/evaluate-matching.ts",
     "c1:ml": "python ml/synthetic_data.py && python ml/train_vulnerability.py",
-    "c1:chain:test": "npm --prefix blockchain test"
+    "c1:chain:test": "npm --prefix blockchain test",
+    "c3:ml": "python ml/c3/run_pipeline.py",
+    "c3:test:py": "python -m pytest tests/unit/c3 -q",
+    "c3:benchmark": "tsx scripts/c3/benchmark.ts"
   },
   "dependencies": {
     "@svg-maps/sri-lanka": "^2.0.0",

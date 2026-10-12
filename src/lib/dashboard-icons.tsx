@@ -28,6 +28,7 @@ import {
   ClipboardList,
   Link2,
   ListOrdered,
+  Compass,
   type LucideIcon
 } from "lucide-react";
 
@@ -41,6 +42,7 @@ const SECTION_ICONS: Record<string, LucideIcon> = {
   "campus-life": Calendar,
   "my-applications": FileStack,
   "aid-matching": Sparkles,
+  "career-guidance": Compass,
   profile: User,
 
   // Admin / faculty
@@ -50,6 +52,7 @@ const SECTION_ICONS: Record<string, LucideIcon> = {
   "aid-prioritisation": ListOrdered,
   "fund-ledger": Link2,
   "career-services": Briefcase,
+  "career-readiness": Compass,
   "mentorship-program": Users,
   "counselor-support": Heart,
   "peer-support": MessageCircle,

@@ -1,0 +1,7 @@
+# Component C3 (explainable career guidance) - Python 3.11+ (tested on 3.13)
+numpy>=1.26
+pandas>=2.2
+scikit-learn>=1.5
+matplotlib>=3.8
+rapidfuzz>=3.9
+pytest>=8.0

@@ -1,0 +1,76 @@
+{
+ "warning": "SYNTHETIC DATA: validates the pipeline, not real-world accuracy.",
+ "generatedAt": "2026-10-10T07:50:28+00:00",
+ "generatedBy": "python ml/c3/run_pipeline.py evaluate",
+ "modelVersion": "c3-readiness-v1-synthetic",
+ "proposalTargets": {
+  "status": "not stated",
+  "note": "docs/c3/proposal/ is empty and the README names NDCG and SUS without numeric targets for C3. No target is invented here; add the proposal's targets when the C3 proposal is committed."
+ },
+ "syntheticAdsTestSplit": {
+  "precision": 1.0,
+  "recall": 0.9299145299145299,
+  "f1": 0.9636846767050488,
+  "tp": 544,
+  "fp": 0,
+  "fn": 41,
+  "ads": 120,
+  "levelAccuracyOnMatched": 0.9944852941176471,
+  "preferredFlagAccuracyOnMatched": 1.0,
+  "roleFromTitleAccuracy": 1.0,
+  "genericTitlesLeftUnclassified": 11
+ },
+ "syntheticCvs": {
+  "precision": 1.0,
+  "recall": 0.9337774294670846,
+  "f1": 0.9657548125633232,
+  "tp": 2383,
+  "fp": 0,
+  "fn": 169,
+  "cvs": 200
+ },
+ "handWrittenAds": {
+  "precision": 1.0,
+  "recall": 1.0,
+  "f1": 1.0,
+  "tp": 27,
+  "fp": 0,
+  "fn": 0,
+  "ads": 6,
+  "roleFromTitleCorrect": 5,
+  "preferredFlagAccuracyOnMatched": 0.9629629629629629,
+  "perAd": [
+   {
+    "adId": "HW-01",
+    "trueRole": "software_engineer",
+    "parsedRole": "software_engineer"
+   },
+   {
+    "adId": "HW-02",
+    "trueRole": "qa_engineer",
+    "parsedRole": "qa_engineer"
+   },
+   {
+    "adId": "HW-03",
+    "trueRole": "data_analyst",
+    "parsedRole": "data_analyst"
+   },
+   {
+    "adId": "HW-04",
+    "trueRole": "devops_engineer",
+    "parsedRole": "devops_engineer"
+   },
+   {
+    "adId": "HW-05",
+    "trueRole": "ui_ux_designer",
+    "parsedRole": "ui_ux_designer"
+   },
+   {
+    "adId": "HW-06",
+    "trueRole": "network_engineer",
+    "parsedRole": "cybersecurity_analyst"
+   }
+  ]
+ },
+ "caveat": "Synthetic ads and CVs use phrasings drawn from the same lexicon as the extractor (only planted out-of-vocabulary terms are missed) and contain no distractor terms, so precision ~1.0 is optimistic. The 6 hand-written ads are independent of the generator but were written (AI-assisted) by the same author as the synonym list, so they are not a blind test either, and n = 6 is far too few for a reliable estimate. A real estimate needs public ads annotated by someone who has not seen the taxonomy."
+}

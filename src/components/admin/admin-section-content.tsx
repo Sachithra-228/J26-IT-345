@@ -12,6 +12,7 @@ import { AdminPeerSupportModerationSection } from "./admin-peer-support";
 import { AdminCommunicationsSection } from "./admin-communications";
 import { AdminAidPrioritisation } from "./admin-aid-prioritisation";
 import { AdminFundLedgerSection } from "@/components/c1/ledger-section";
+import { CareerInsightsAdmin } from "@/components/c3/career-insights-admin";
 import { adminNavyCardClass } from "./admin-card-theme";
 import { NgoPartnershipSection } from "@/components/shared/ngo-partnership-section";
 import { useAuth } from "@/context/auth-context";
@@ -42,6 +43,8 @@ export function AdminSectionContent({ sectionId }: AdminSectionContentProps) {
         return AdminFundLedgerSection;
       case "career-services":
         return AdminCareerServicesSection;
+      case "career-readiness":
+        return CareerInsightsAdmin;
       case "mentorship-program":
         return AdminMentorshipProgramSection;
       case "counselor-support":

@@ -93,6 +93,17 @@ export const DASHBOARD_ROLE_CONFIG: Record<DashboardRole, DashboardRoleConfig> =
         ]
       },
       {
+        id: "career-guidance",
+        menuLabel: "Career Readiness",
+        icon: "🧭",
+        title: "Career Readiness",
+        items: [
+          "See your readiness for IT roles with the reasons behind every score",
+          "Find the skill gaps that matter most for your target roles",
+          "Follow a Gap-to-Action plan of modules, projects and certifications"
+        ]
+      },
+      {
         id: "mentorship",
         menuLabel: "Mentorship",
         icon: "👥",
@@ -240,6 +251,17 @@ export const DASHBOARD_ROLE_CONFIG: Record<DashboardRole, DashboardRoleConfig> =
           "Job postings from employers",
           "Internship opportunities",
           "Placement statistics"
+        ]
+      },
+      {
+        id: "career-readiness",
+        menuLabel: "Career Readiness Insights",
+        icon: "🧭",
+        title: "Career Readiness Insights",
+        items: [
+          "Anonymous cohort readiness for IT career paths",
+          "Most common skill gaps across students",
+          "Groups smaller than five students are hidden"
         ]
       },
       {
@@ -428,6 +450,17 @@ export const DASHBOARD_ROLE_CONFIG: Record<DashboardRole, DashboardRoleConfig> =
           "Job postings from employers",
           "Internship opportunities",
           "Placement statistics"
+        ]
+      },
+      {
+        id: "career-readiness",
+        menuLabel: "Career Readiness Insights",
+        icon: "🧭",
+        title: "Career Readiness Insights",
+        items: [
+          "Anonymous cohort readiness for IT career paths",
+          "Most common skill gaps across students",
+          "Groups smaller than five students are hidden"
         ]
       },
       {

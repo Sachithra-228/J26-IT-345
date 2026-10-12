@@ -1,0 +1,204 @@
+{
+  "schemaVersion": "1.0.0",
+  "taxonomyVersion": "1.0.0",
+  "provenance": "Hand-authored by the C3 owner (with AI assistance) from common competency terms in Sri Lankan IT job advertisements and the SFIA / ACM IT curriculum vocabulary. Not yet validated by SLIIT academics or industry panel. Sinhala and Tamil labels are machine-assisted drafts that need native-speaker review.",
+  "levels": [
+    { "level": 0, "label": { "en": "None", "si": "නැත", "ta": "இல்லை" }, "descriptor": "No exposure yet." },
+    { "level": 1, "label": { "en": "Basic", "si": "මූලික", "ta": "அடிப்படை" }, "descriptor": "Coursework or tutorial level; can complete guided tasks." },
+    { "level": 2, "label": { "en": "Intermediate", "si": "මධ්‍යම", "ta": "இடைநிலை" }, "descriptor": "Has built working projects independently; can apply it in a team setting." },
+    { "level": 3, "label": { "en": "Advanced", "si": "උසස්", "ta": "மேம்பட்ட" }, "descriptor": "Can design, review and lead work with it; production or internship experience." }
+  ],
+  "areas": [
+    { "id": "software_engineering", "label": { "en": "Software engineering", "si": "මෘදුකාංග ඉංජිනේරු විද්‍යාව", "ta": "மென்பொருள் பொறியியல்" } },
+    { "id": "web_mobile", "label": { "en": "Web and mobile", "si": "වෙබ් සහ ජංගම", "ta": "வலை மற்றும் மொபைல்" } },
+    { "id": "data_ai", "label": { "en": "Data and AI", "si": "දත්ත සහ කෘත්‍රිම බුද්ධිය", "ta": "தரவு மற்றும் செயற்கை நுண்ணறிவு" } },
+    { "id": "cloud_infra", "label": { "en": "Cloud, infrastructure and security", "si": "ක්ලවුඩ්, යටිතල පහසුකම් සහ ආරක්ෂාව", "ta": "கிளவுட், உள்கட்டமைப்பு மற்றும் பாதுகாப்பு" } },
+    { "id": "quality", "label": { "en": "Quality assurance", "si": "තත්ත්ව සහතිකය", "ta": "தர உறுதி" } },
+    { "id": "product_business", "label": { "en": "Product, business and design", "si": "නිෂ්පාදන, ව්‍යාපාර සහ නිර්මාණ", "ta": "தயாரிப்பு, வணிகம் மற்றும் வடிவமைப்பு" } },
+    { "id": "professional", "label": { "en": "Professional skills", "si": "වෘත්තීය කුසලතා", "ta": "தொழில்முறை திறன்கள்" } }
+  ],
+  "skills": [
+    {
+      "id": "prog_oop",
+      "area": "software_engineering",
+      "label": { "en": "Object-oriented programming (Java / C#)", "si": "වස්තු-නැඹුරු ක්‍රමලේඛනය (Java / C#)", "ta": "பொருள் நோக்கு நிரலாக்கம் (Java / C#)" },
+      "description": "Classes, interfaces, inheritance and design principles in a typed OO language.",
+      "synonyms": ["java", "core java", "java se", "c#", "c sharp", "oop", "oop concepts", "object oriented programming", "object-oriented programming", "object oriented design", "design patterns", "solid principles"]
+    },
+    {
+      "id": "python",
+      "area": "software_engineering",
+      "label": { "en": "Python programming", "si": "Python ක්‍රමලේඛනය", "ta": "Python நிரலாக்கம்" },
+      "description": "Writing and structuring Python programs and scripts.",
+      "synonyms": ["python", "python3", "python 3", "python scripting"]
+    },
+    {
+      "id": "javascript_ts",
+      "area": "software_engineering",
+      "label": { "en": "JavaScript / TypeScript", "si": "JavaScript / TypeScript", "ta": "JavaScript / TypeScript" },
+      "description": "Modern JavaScript (ES6+) and TypeScript.",
+      "synonyms": ["javascript", "typescript", "es6", "js", "ecmascript"]
+    },
+    {
+      "id": "problem_solving",
+      "area": "software_engineering",
+      "label": { "en": "Problem solving, data structures and algorithms", "si": "ගැටලු විසඳීම, දත්ත ව්‍යුහ සහ ඇල්ගොරිතම", "ta": "சிக்கல் தீர்வு, தரவு கட்டமைப்புகள் மற்றும் வழிமுறைகள்" },
+      "description": "Analytical thinking, algorithms and data structures.",
+      "synonyms": ["problem solving", "problem-solving skills", "analytical skills", "analytical thinking", "data structures", "algorithms", "critical thinking", "logical thinking"]
+    },
+    {
+      "id": "version_control",
+      "area": "software_engineering",
+      "label": { "en": "Version control (Git)", "si": "අනුවාද පාලනය (Git)", "ta": "பதிப்பு கட்டுப்பாடு (Git)" },
+      "description": "Branching, pull requests and collaborative workflows with Git.",
+      "synonyms": ["git", "github", "gitlab", "bitbucket", "version control", "svn"]
+    },
+    {
+      "id": "frontend",
+      "area": "web_mobile",
+      "label": { "en": "Front-end web development", "si": "ඉදිරි-අන්ත වෙබ් සංවර්ධනය", "ta": "முன்-முனை வலை மேம்பாடு" },
+      "description": "HTML, CSS and component frameworks such as React, Angular or Vue.",
+      "synonyms": ["react", "react.js", "reactjs", "angular", "angularjs", "vue", "vue.js", "next.js", "nextjs", "html", "html5", "css", "css3", "tailwind", "bootstrap", "redux", "front end", "frontend", "front-end development"]
+    },
+    {
+      "id": "backend_api",
+      "area": "web_mobile",
+      "label": { "en": "Back-end and REST APIs", "si": "පසු-අන්ත සහ REST API", "ta": "பின்-முனை மற்றும் REST API" },
+      "description": "Server-side frameworks, REST/GraphQL APIs and microservices.",
+      "synonyms": ["node.js", "nodejs", "node js", "express", "express.js", "spring boot", "springboot", "spring framework", "rest api", "rest apis", "restful", "restful apis", "asp.net", ".net", ".net core", "dotnet", "django", "flask", "fastapi", "laravel", "php", "microservices", "graphql", "back end", "backend"]
+    },
+    {
+      "id": "mobile",
+      "area": "web_mobile",
+      "label": { "en": "Mobile app development", "si": "ජංගම යෙදුම් සංවර්ධනය", "ta": "மொபைல் செயலி மேம்பாடு" },
+      "description": "Native or cross-platform mobile apps (Android, iOS, Flutter, React Native).",
+      "synonyms": ["android", "kotlin", "swift", "ios", "flutter", "dart", "react native", "xamarin", "mobile application development", "mobile app development"]
+    },
+    {
+      "id": "databases_sql",
+      "area": "data_ai",
+      "label": { "en": "Relational databases and SQL", "si": "සම්බන්ධතා දත්ත සමුදාය සහ SQL", "ta": "தொடர்புசார் தரவுத்தளங்கள் மற்றும் SQL" },
+      "description": "Schema design, SQL queries, joins and transactions.",
+      "synonyms": ["sql", "mysql", "postgresql", "postgres", "ms sql", "mssql", "sql server", "oracle database", "oracle db", "pl/sql", "relational database", "relational databases", "database design"]
+    },
+    {
+      "id": "nosql",
+      "area": "data_ai",
+      "label": { "en": "NoSQL databases", "si": "NoSQL දත්ත සමුදාය", "ta": "NoSQL தரவுத்தளங்கள்" },
+      "description": "Document and key-value stores such as MongoDB or Redis.",
+      "synonyms": ["nosql", "mongodb", "mongo db", "redis", "cassandra", "dynamodb", "firestore"]
+    },
+    {
+      "id": "data_analysis",
+      "area": "data_ai",
+      "label": { "en": "Data analysis and visualisation", "si": "දත්ත විශ්ලේෂණය සහ දෘශ්‍යකරණය", "ta": "தரவு பகுப்பாய்வு மற்றும் காட்சிப்படுத்தல்" },
+      "description": "Cleaning, analysing and visualising data with BI tools or pandas.",
+      "synonyms": ["data analysis", "data analytics", "data visualization", "data visualisation", "power bi", "powerbi", "tableau", "looker", "pandas", "ms excel", "microsoft excel", "advanced excel"]
+    },
+    {
+      "id": "machine_learning",
+      "area": "data_ai",
+      "label": { "en": "Machine learning", "si": "යන්ත්‍ර ඉගෙනීම", "ta": "இயந்திர கற்றல்" },
+      "description": "Training and evaluating ML models; deep learning frameworks.",
+      "synonyms": ["machine learning", "ml", "deep learning", "tensorflow", "pytorch", "scikit-learn", "sklearn", "keras", "nlp", "natural language processing", "computer vision", "llm", "llms", "generative ai"]
+    },
+    {
+      "id": "statistics",
+      "area": "data_ai",
+      "label": { "en": "Statistics", "si": "සංඛ්‍යානය", "ta": "புள்ளியியல்" },
+      "description": "Descriptive and inferential statistics, regression and experiments.",
+      "synonyms": ["statistics", "statistical analysis", "statistical modelling", "statistical modeling", "hypothesis testing", "regression analysis", "probability"]
+    },
+    {
+      "id": "cloud",
+      "area": "cloud_infra",
+      "label": { "en": "Cloud platforms", "si": "ක්ලවුඩ් වේදිකා", "ta": "கிளவுட் தளங்கள்" },
+      "description": "Deploying and operating services on AWS, Azure or Google Cloud.",
+      "synonyms": ["aws", "amazon web services", "azure", "microsoft azure", "gcp", "google cloud", "google cloud platform", "cloud computing", "ec2"]
+    },
+    {
+      "id": "devops_cicd",
+      "area": "cloud_infra",
+      "label": { "en": "DevOps and CI/CD", "si": "DevOps සහ CI/CD", "ta": "DevOps மற்றும் CI/CD" },
+      "description": "Build pipelines, automated deployment and infrastructure as code.",
+      "synonyms": ["ci/cd", "ci cd", "devops", "jenkins", "github actions", "gitlab ci", "azure devops", "continuous integration", "continuous delivery", "continuous deployment", "terraform", "ansible", "infrastructure as code"]
+    },
+    {
+      "id": "containers",
+      "area": "cloud_infra",
+      "label": { "en": "Containers (Docker / Kubernetes)", "si": "කන්ටේනර් (Docker / Kubernetes)", "ta": "கொள்கலன்கள் (Docker / Kubernetes)" },
+      "description": "Packaging and orchestrating applications in containers.",
+      "synonyms": ["docker", "kubernetes", "k8s", "containers", "containerization", "containerisation", "helm", "openshift"]
+    },
+    {
+      "id": "linux",
+      "area": "cloud_infra",
+      "label": { "en": "Linux and shell scripting", "si": "Linux සහ shell ස්ක්‍රිප්ට්", "ta": "Linux மற்றும் ஷெல் ஸ்கிரிப்டிங்" },
+      "description": "Linux administration and Bash/PowerShell scripting.",
+      "synonyms": ["linux", "unix", "bash", "shell scripting", "ubuntu", "centos", "red hat", "rhel", "powershell"]
+    },
+    {
+      "id": "networking",
+      "area": "cloud_infra",
+      "label": { "en": "Computer networking", "si": "පරිගණක ජාලකරණය", "ta": "கணினி வலையமைப்பு" },
+      "description": "TCP/IP, routing and switching, LAN/WAN and network services.",
+      "synonyms": ["networking", "computer networks", "tcp/ip", "ccna", "routing", "switching", "lan", "wan", "vlan", "dns", "dhcp", "network administration", "cisco"]
+    },
+    {
+      "id": "security",
+      "area": "cloud_infra",
+      "label": { "en": "Cybersecurity", "si": "සයිබර් ආරක්ෂාව", "ta": "இணையப் பாதுகாப்பு" },
+      "description": "Threats, vulnerability assessment, secure coding and incident response.",
+      "synonyms": ["cybersecurity", "cyber security", "information security", "penetration testing", "vulnerability assessment", "siem", "soc", "owasp", "ethical hacking", "incident response", "iso 27001", "firewall", "firewalls", "security+"]
+    },
+    {
+      "id": "testing_manual",
+      "area": "quality",
+      "label": { "en": "Software testing and QA", "si": "මෘදුකාංග පරීක්ෂණය සහ QA", "ta": "மென்பொருள் சோதனை மற்றும் QA" },
+      "description": "Test design, test cases, defect tracking and QA processes.",
+      "synonyms": ["software testing", "manual testing", "quality assurance", "qa", "test cases", "test case", "test plans", "test plan", "regression testing", "functional testing", "defect tracking", "bug tracking", "uat", "istqb"]
+    },
+    {
+      "id": "test_automation",
+      "area": "quality",
+      "label": { "en": "Test automation", "si": "පරීක්ෂණ ස්වයංක්‍රීයකරණය", "ta": "சோதனை தானியக்கம்" },
+      "description": "Automated UI, API and unit tests in CI.",
+      "synonyms": ["test automation", "automation testing", "automated testing", "selenium", "cypress", "playwright", "junit", "testng", "appium", "jest", "postman", "api testing"]
+    },
+    {
+      "id": "agile",
+      "area": "product_business",
+      "label": { "en": "Agile / Scrum", "si": "Agile / Scrum", "ta": "Agile / Scrum" },
+      "description": "Working in Scrum or Kanban teams, sprints and backlogs.",
+      "synonyms": ["agile", "scrum", "kanban", "agile methodologies", "agile methodology", "sprint planning", "jira"]
+    },
+    {
+      "id": "ui_ux",
+      "area": "product_business",
+      "label": { "en": "UI / UX design", "si": "UI / UX නිර්මාණය", "ta": "UI / UX வடிவமைப்பு" },
+      "description": "User research, wireframes, prototypes and usability.",
+      "synonyms": ["ui/ux", "ux", "ui", "figma", "adobe xd", "wireframing", "wireframes", "prototyping", "user research", "user experience", "user interface design", "usability testing"]
+    },
+    {
+      "id": "business_analysis",
+      "area": "product_business",
+      "label": { "en": "Business and requirements analysis", "si": "ව්‍යාපාර සහ අවශ්‍යතා විශ්ලේෂණය", "ta": "வணிக மற்றும் தேவைகள் பகுப்பாய்வு" },
+      "description": "Eliciting and documenting requirements, process and UML modelling.",
+      "synonyms": ["business analysis", "requirements gathering", "requirement gathering", "requirements analysis", "brd", "srs", "uml", "user stories", "use cases", "process modelling", "process modeling", "bpmn", "gap analysis", "stakeholder management"]
+    },
+    {
+      "id": "project_management",
+      "area": "product_business",
+      "label": { "en": "Project management", "si": "ව්‍යාපෘති කළමනාකරණය", "ta": "திட்ட மேலாண்மை" },
+      "description": "Planning, tracking, risk and stakeholder communication for projects.",
+      "synonyms": ["project management", "project planning", "project coordination", "pmp", "prince2", "risk management", "ms project", "resource planning"]
+    },
+    {
+      "id": "communication",
+      "area": "professional",
+      "label": { "en": "Communication and teamwork", "si": "සන්නිවේදනය සහ කණ්ඩායම් වැඩ", "ta": "தொடர்பாடல் மற்றும் குழுப்பணி" },
+      "description": "Written and spoken English, presentations and collaboration.",
+      "synonyms": ["communication skills", "communication", "verbal communication", "written communication", "english", "presentation skills", "interpersonal skills", "teamwork", "team player"]
+    }
+  ]
+}
