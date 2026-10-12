@@ -1,0 +1,78 @@
+name: Teams PR notification
+
+on:
+  pull_request:
+    types: [closed]
+
+permissions: {}
+
+jobs:
+  notify:
+    if: github.event.pull_request.merged == true
+    runs-on: ubuntu-latest
+    steps:
+      - name: Send "Pull Request Merged" card to Teams
+        env:
+          TEAMS_WEBHOOK_URL: ${{ secrets.TEAMS_WEBHOOK_URL }}
+          PR_TITLE: ${{ github.event.pull_request.title }}
+          PR_NUMBER: ${{ github.event.pull_request.number }}
+          PR_AUTHOR: ${{ github.event.pull_request.user.login }}
+          PR_SOURCE: ${{ github.event.pull_request.head.ref }}
+          PR_TARGET: ${{ github.event.pull_request.base.ref }}
+          PR_CREATED: ${{ github.event.pull_request.created_at }}
+          PR_UPDATED: ${{ github.event.pull_request.updated_at }}
+          PR_MERGED: ${{ github.event.pull_request.merged_at }}
+          PR_URL: ${{ github.event.pull_request.html_url }}
+        run: |
+          if [ -z "$TEAMS_WEBHOOK_URL" ]; then
+            echo "::error::TEAMS_WEBHOOK_URL secret is not set"
+            exit 1
+          fi
+
+          payload=$(jq -n \
+            --arg title "$PR_TITLE" \
+            --arg number "$PR_NUMBER" \
+            --arg author "$PR_AUTHOR" \
+            --arg source "$PR_SOURCE" \
+            --arg target "$PR_TARGET" \
+            --arg created "$PR_CREATED" \
+            --arg updated "$PR_UPDATED" \
+            --arg merged "$PR_MERGED" \
+            --arg url "$PR_URL" \
+            '
+            def ts: sub("T"; " ") | .[0:16] + " UTC";
+            {
+              type: "message",
+              attachments: [{
+                contentType: "application/vnd.microsoft.card.adaptive",
+                contentUrl: null,
+                content: {
+                  "$schema": "http://adaptivecards.io/schemas/adaptive-card.json",
+                  type: "AdaptiveCard",
+                  version: "1.4",
+                  body: [
+                    { type: "TextBlock", text: "✅ Pull Request Merged", weight: "Bolder", size: "Medium", color: "Good" },
+                    { type: "TextBlock", text: "Pull request #\($number) has been merged.", wrap: true },
+                    { type: "FactSet", facts: [
+                      { title: "Title", value: $title },
+                      { title: "PR Number", value: $number },
+                      { title: "Author", value: $author },
+                      { title: "Status", value: "Merged" },
+                      { title: "Source Branch", value: $source },
+                      { title: "Target Branch", value: $target },
+                      { title: "Created", value: ($created | ts) },
+                      { title: "Last Updated", value: ($updated | ts) },
+                      { title: "Merged At", value: ($merged | ts) }
+                    ] }
+                  ],
+                  actions: [
+                    { type: "Action.OpenUrl", title: "View on GitHub", url: $url }
+                  ]
+                }
+              }]
+            }')
+
+          curl --fail-with-body -sS \
+            -H "Content-Type: application/json" \
+            -d "$payload" \
+            "$TEAMS_WEBHOOK_URL"
