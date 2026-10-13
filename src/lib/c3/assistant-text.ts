@@ -58,6 +58,24 @@ const en = {
   reqLineYou: "{skill}: {required} level, in {pct}% of the ads - you: {you}",
   reqMore: "...plus {n} less important skills.",
   reqWhichRole: "Which role do you mean? For example: {examples}.",
+  // learning resources
+  resWhichSkill: "Which skill would you like to learn? For example: \"How do I learn Docker?\" - or run the readiness analysis and I will use your top gaps.",
+  resFromGaps: "Here is how to work on your top gaps:",
+  resIntro: "{skill} (you are {level}):",
+  resLine: "{title} - {type}, about {hours} h, builds it to {level}",
+  resNone: "The knowledge graph has no learning action for {skill} yet.",
+  resTop: "You are already Advanced in {skill} - show it with a project instead.",
+  // certifications
+  certIntro: "Certifications that prove skills for {about}:",
+  certIntroAll: "Certifications in the knowledge graph:",
+  certLine: "{title} - {provider}, about {hours} h of preparation; proves {skills}",
+  certNone: "The knowledge graph has no certification for {about}.",
+  certNote: "Certifications are optional and most exams are paid - a good project can prove a skill just as well.",
+  // mock interview
+  ivNone: "You have not finished a mock interview in this session yet. Try the \"Mock interview\" tab - meanwhile, three tips:",
+  ivFocus: "The mock-interview questions will focus on your top gap, {skill}.",
+  ivResult: "In your mock interview you averaged {score}/100 over {n} answers.",
+  ivWeakest: "Your weakest area was {criterion} ({score}/100). Tip:",
   // help and about
   helpIntro: "I am the C3 career assistant. You can ask me, for example:",
   helpTopics:

@@ -14,10 +14,10 @@ import type { CareerAssessment } from "./assessment";
 import { getAssistantText, type AssistantText } from "./assistant-text";
 import { fuzzRatio, matchTokens, tokenize } from "./extract";
 import { proposedGaps, type SkillGap } from "./gaps";
-import { planForRole, type GapToActionPlan, type StepReason } from "./graph";
+import { getAction, planForRole, type ActionNode, type GapToActionPlan, type StepReason } from "./graph";
 import { fmt, getC3Text, label, type C3Text } from "./i18n";
-import type { SessionSummary } from "./interview";
-import { careerModel, getRole, getSkill, type ActionType, type RoleProfile } from "./model";
+import type { Criterion, SessionSummary } from "./interview";
+import { careerModel, getRole, getSkill, knowledgeGraph, type ActionType, type RoleProfile } from "./model";
 import { readinessBand, type Contribution, type RoleReadiness } from "./readiness";
 
 export type IntentId =
@@ -593,6 +593,138 @@ function requirementsAnswer(b: Build): Line[] {
   return lines;
 }
 
+const MAX_SKILLS_TOLD = 2;
+const MAX_ACTIONS_TOLD = 4;
+const MAX_CERTS_TOLD = 4;
+
+type SkillAction = { action: ActionNode; kind: "teaches" | "evidences"; level: number };
+
+/** Every action in the knowledge graph that teaches or evidences each skill. */
+const ACTIONS_BY_SKILL = (() => {
+  const map = new Map<string, SkillAction[]>();
+  for (const e of knowledgeGraph.edges) {
+    if (e.type !== "teaches" && e.type !== "evidences") continue;
+    const action = getAction(e.from.slice(7));
+    if (!action) continue;
+    const skillId = e.to.slice(6);
+    map.set(skillId, [...(map.get(skillId) ?? []), { action, kind: e.type, level: e.level }]);
+  }
+  return map;
+})();
+
+/** Skills a learning question is about: those named, else the top gaps for the focus role. */
+function skillsAskedAbout(b: Build): string[] {
+  if (b.match.skillIds.length > 0) return b.match.skillIds.slice(0, MAX_SKILLS_TOLD);
+  if (!b.ctx.assessment) return [];
+  return analysisFor(b)
+    .gaps.slice(0, MAX_SKILLS_TOLD)
+    .map((g) => g.skillId);
+}
+
+function resourcesAnswer(b: Build): Line[] {
+  const skills = skillsAskedAbout(b);
+  if (skills.length === 0) return [text(b.a.resWhichSkill)];
+  const levels = b.ctx.assessment?.levels ?? {};
+  const lines: Line[] = [];
+  if (b.match.skillIds.length === 0) lines.push(text(b.a.resFromGaps));
+  for (const skillId of skills) {
+    const current = levels[skillId] ?? 0;
+    // Actions that take the student past their current level, lowest level then least effort first.
+    const options = (ACTIONS_BY_SKILL.get(skillId) ?? [])
+      .filter((o) => o.action.type !== "Certification" && o.level > current)
+      .sort((x, y) => x.level - y.level || x.action.effortHours - y.action.effortHours || x.action.ref.localeCompare(y.action.ref))
+      .slice(0, MAX_ACTIONS_TOLD);
+    const skill = skillName(skillId, b.language);
+    if (options.length === 0) {
+      lines.push(text(fmt(current >= 3 ? b.a.resTop : b.a.resNone, { skill })));
+      continue;
+    }
+    lines.push(text(fmt(b.a.resIntro, { skill, level: levelName(current, b.language) })));
+    for (const o of options) {
+      lines.push(
+        bullet(
+          fmt(b.a.resLine, {
+            title: o.action.title,
+            type: typeName(o.action.type, b.t).toLowerCase(),
+            hours: o.action.effortHours,
+            level: levelName(o.level, b.language)
+          })
+        )
+      );
+    }
+  }
+  lines.push(text(b.t.moduleNote));
+  return lines;
+}
+
+function certificationsAnswer(b: Build): Line[] {
+  const roleId = focusRoleId(b);
+  const role = roleId ? getRole(roleId) : undefined;
+  // Rank certifications by how much the role (if any) values the skill they prove.
+  const weightOf = (skillId: string) => role?.skills.find((x) => x.skillId === skillId)?.weight ?? 0;
+  const wanted = b.match.skillIds.length > 0 ? new Set(b.match.skillIds) : null;
+  const certs = new Map<string, { action: ActionNode; skillIds: string[]; weight: number }>();
+  for (const [skillId, options] of ACTIONS_BY_SKILL) {
+    if (wanted && !wanted.has(skillId)) continue;
+    if (!wanted && role && weightOf(skillId) === 0) continue;
+    for (const o of options) {
+      if (o.action.type !== "Certification") continue;
+      const c = certs.get(o.action.ref) ?? { action: o.action, skillIds: [], weight: 0 };
+      c.skillIds.push(skillId);
+      c.weight = Math.max(c.weight, weightOf(skillId));
+      certs.set(o.action.ref, c);
+    }
+  }
+  const list = [...certs.values()]
+    .sort((x, y) => y.weight - x.weight || x.action.effortHours - y.action.effortHours || x.action.ref.localeCompare(y.action.ref))
+    .slice(0, MAX_CERTS_TOLD);
+  const about = wanted ? [...wanted].map((id) => skillName(id, b.language)).join(", ") : role ? roleName(role.id, b.language) : null;
+  if (list.length === 0) return [text(fmt(b.a.certNone, { about: about ?? "" })), text(b.a.certNote)];
+  const lines: Line[] = [text(about ? fmt(b.a.certIntro, { about }) : b.a.certIntroAll)];
+  for (const c of list) {
+    lines.push(
+      bullet(
+        fmt(b.a.certLine, {
+          title: c.action.title,
+          provider: c.action.provider ?? "",
+          hours: c.action.effortHours,
+          skills: c.skillIds.map((id) => skillName(id, b.language)).join(", ")
+        })
+      )
+    );
+  }
+  lines.push(text(b.a.certNote));
+  return lines;
+}
+
+const CRITERION_TEXT: Record<Criterion, [keyof C3Text, keyof C3Text]> = {
+  keyPoints: ["crKeyPoints", "tipKeyPoints"],
+  structure: ["crStructure", "tipStructure"],
+  depth: ["crDepth", "tipDepth"],
+  evidence: ["crEvidence", "tipEvidence"],
+  clarity: ["crClarity", "tipClarity"]
+};
+
+function interviewAnswer(b: Build): Line[] {
+  const iv = b.ctx.interview;
+  if (!iv || iv.answered === 0) {
+    const lines = [text(b.a.ivNone), bullet(b.t.tipKeyPoints), bullet(b.t.tipStructure), bullet(b.t.tipEvidence)];
+    const gap = b.ctx.assessment ? analysisFor(b).gaps[0] : undefined;
+    if (gap) lines.push(text(fmt(b.a.ivFocus, { skill: skillName(gap.skillId, b.language) })));
+    return lines;
+  }
+  const lines = [text(fmt(b.a.ivResult, { score: iv.average, n: iv.answered }))];
+  if (iv.weakest) {
+    const [name, tip] = CRITERION_TEXT[iv.weakest];
+    lines.push(text(fmt(b.a.ivWeakest, { criterion: b.t[name], score: round(iv.criterionAverages[iv.weakest]) })));
+    lines.push(bullet(b.t[tip]));
+  }
+  if (iv.practiseSkills.length > 0) {
+    lines.push(text(fmt(b.t.ivPractise, { skills: iv.practiseSkills.map((id) => skillName(id, b.language)).join(", ") })));
+  }
+  return lines;
+}
+
 function helpAnswer(b: Build): Line[] {
   return [text(b.a.helpIntro), text(b.a.helpTopics)];
 }
@@ -601,7 +733,7 @@ function aboutAnswer(b: Build): Line[] {
   return [text(b.a.aboutRules), bullet(b.a.aboutPrivacy), bullet(b.a.aboutSynthetic), bullet(b.a.aboutGuidance)];
 }
 
-const BUILDERS: Partial<Record<IntentId, (b: Build) => Line[]>> = {
+const BUILDERS: Record<IntentId, (b: Build) => Line[]> = {
   readiness: readinessAnswer,
   scoreReason: scoreReasonAnswer,
   bestRole: bestRoleAnswer,
@@ -609,6 +741,9 @@ const BUILDERS: Partial<Record<IntentId, (b: Build) => Line[]>> = {
   nextStep: nextStepAnswer,
   compareRoles: compareAnswer,
   roleRequirements: requirementsAnswer,
+  resources: resourcesAnswer,
+  certifications: certificationsAnswer,
+  interview: interviewAnswer,
   about: aboutAnswer,
   help: helpAnswer
 };
@@ -629,9 +764,7 @@ export function answerIntent(
   if (intent.needsAssessment && !ctx.assessment) {
     return { intent: intentId, lines: [text(b.a.needAnalysis)], sources: [], followUps: ["roleRequirements", "about"], grounded: false };
   }
-  const builder = BUILDERS[intentId];
-  if (!builder) return notUnderstood(b);
-  return { intent: intentId, lines: builder(b), sources: intent.sources, followUps: intent.followUps, grounded: true };
+  return { intent: intentId, lines: BUILDERS[intentId](b), sources: intent.sources, followUps: intent.followUps, grounded: true };
 }
 
 /** Matches a free-text question and answers it. */
