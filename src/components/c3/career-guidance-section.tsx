@@ -5,13 +5,16 @@ import { Button } from "@/components/shared/Button";
 import { Card } from "@/components/shared/Card";
 import { useLanguage } from "@/context/language-context";
 import { isCvFeatureEnabled } from "@/lib/c3/config";
+import { getAssistantText } from "@/lib/c3/assistant-text";
 import { getC3Text } from "@/lib/c3/i18n";
+import type { SessionSummary } from "@/lib/c3/interview";
 import type { CareerProfile } from "@/lib/c3/validation";
+import { CareerAssistant } from "./career-assistant";
 import { CareerGuidanceTool } from "./career-guidance-tool";
 import { MockInterview } from "./mock-interview";
 
 type SaveState = "idle" | "saving" | "saved" | "deleted" | "error" | "limited";
-type Tab = "readiness" | "interview";
+type Tab = "readiness" | "interview" | "assistant";
 
 /** Student dashboard section: on-device analysis, optional consent-based save and erase. */
 export function CareerGuidanceSection() {
@@ -23,6 +26,7 @@ export function CareerGuidanceSection() {
   const [saveState, setSaveState] = useState<SaveState>("idle");
   const [savedAt, setSavedAt] = useState<string | null>(null);
   const [tab, setTab] = useState<Tab>("readiness");
+  const [interviewSummary, setInterviewSummary] = useState<SessionSummary | null>(null);
 
   useEffect(() => {
     let cancelled = false;
@@ -93,7 +97,8 @@ export function CareerGuidanceSection() {
         {(
           [
             ["readiness", t.tabReadiness],
-            ["interview", t.tabInterview]
+            ["interview", t.tabInterview],
+            ["assistant", getAssistantText(language).tab]
           ] as const
         ).map(([id, name]) => (
           <button
@@ -115,9 +120,13 @@ export function CareerGuidanceSection() {
         ))}
       </div>
 
-      {/* Both panels stay mounted so answers in one tab survive switching to the other. */}
+      {/* All panels stay mounted so work in one tab survives switching to another. */}
       <div role="tabpanel" id="c3-panel-interview" aria-labelledby="c3-tab-interview" hidden={tab !== "interview"}>
-        <MockInterview levels={last?.skills ?? null} targetRoleIds={last?.targetRoleIds ?? []} />
+        <MockInterview levels={last?.skills ?? null} targetRoleIds={last?.targetRoleIds ?? []} onSummary={setInterviewSummary} />
+      </div>
+
+      <div role="tabpanel" id="c3-panel-assistant" aria-labelledby="c3-tab-assistant" hidden={tab !== "assistant"}>
+        <CareerAssistant profile={last} interview={interviewSummary} />
       </div>
 
       <div role="tabpanel" id="c3-panel-readiness" aria-labelledby="c3-tab-readiness" hidden={tab !== "readiness"} className="space-y-6">

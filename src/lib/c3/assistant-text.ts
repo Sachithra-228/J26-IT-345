@@ -8,6 +8,36 @@
 import type { Language } from "@/context/language-context";
 
 const en = {
+  // chat UI
+  tab: "Career assistant",
+  title: "Career assistant",
+  subtitle:
+    "Ask questions about your readiness, gaps and next steps. Every answer comes from your own analysis and the C3 job-ad model - and says where it came from.",
+  note: "A rule-based helper, not a chatbot: it answers a fixed set of career topics and cannot judge anything outside your C3 results. Ask in English or use the suggestions.",
+  noAnalysisYet: "Tip: run the readiness analysis first - most answers need it. Questions about roles, learning and certifications work without it.",
+  welcome: "Hi! Pick a suggested question below or type your own.",
+  you: "You",
+  assistantName: "Assistant",
+  basedOn: "Based on:",
+  suggestions: "Suggested questions",
+  inputLabel: "Your question",
+  placeholder: "e.g. Why is my readiness low?",
+  send: "Ask",
+  clearChat: "Clear chat",
+  emptyQuestion: "Type a question first.",
+  privacyLine: "Your questions stay on this device. Nothing is sent or saved.",
+  qReadiness: "How ready am I?",
+  qScoreReason: "Why did I get this score?",
+  qBestRole: "Which role suits me best?",
+  qGaps: "What are my biggest skill gaps?",
+  qNextStep: "What should I do first?",
+  qCompareRoles: "Compare my target roles",
+  qRoleRequirements: "What does my target role require?",
+  qResources: "How can I learn my top gap?",
+  qCertifications: "Which certifications would help?",
+  qInterview: "How can I do better in interviews?",
+  qAbout: "How do you work, and is my data private?",
+  qHelp: "What can I ask you?",
   needAnalysis:
     "I need your readiness analysis first. Open the \"Readiness and plan\" tab, rate your skills, choose your target roles and press \"Analyse my readiness\" - then ask me again.",
   unknown:
