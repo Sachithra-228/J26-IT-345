@@ -160,7 +160,7 @@ paths:
         Body { profile: { yearOfStudy: 3|4, targetRoleIds: [1-3 role ids], skills: { skillId: 0-3 } },
         consent: true, cvText?: string (max 20,000 chars), cvConsent?: true }. Unknown fields are
         rejected, so client-supplied scores are never accepted; the server recomputes everything.
-        cvText is accepted only when NEXT_PUBLIC_C3_CV_ENABLED=true and with cvConsent; PII is stripped,
+        cvText is accepted with cvConsent unless NEXT_PUBLIC_C3_CV_ENABLED=false; PII is stripped,
         only the extracted skill ids are kept (as level 1 evidence) and the text is never stored or logged.
         Stored record: answers, model version and timestamps (no name, no CV text).
       responses:

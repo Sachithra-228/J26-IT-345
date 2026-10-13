@@ -69,8 +69,18 @@ describe("CareerGuidanceTool", () => {
     await waitFor(() => expect(Number(screen.getByTestId("c3-score-network_engineer").textContent)).toBeGreaterThan(low));
   });
 
-  it("hides the CV step unless the feature flag is on", () => {
+  it("hides the CV step unless it is enabled", () => {
     render(withLanguage(<CareerGuidanceTool />));
+    expect(screen.queryByText(en.cvTitle)).not.toBeInTheDocument();
+  });
+
+  it("shows the CV step in the student section by default, and hides it when the flag is false", () => {
+    global.fetch = jest.fn().mockResolvedValue({ ok: false, status: 404, json: async () => ({}) }) as unknown as typeof fetch;
+    const { unmount } = render(withLanguage(<CareerGuidanceSection />));
+    expect(screen.getByText(en.cvTitle)).toBeInTheDocument();
+    unmount();
+    process.env.NEXT_PUBLIC_C3_CV_ENABLED = "false";
+    render(withLanguage(<CareerGuidanceSection />));
     expect(screen.queryByText(en.cvTitle)).not.toBeInTheDocument();
   });
 
