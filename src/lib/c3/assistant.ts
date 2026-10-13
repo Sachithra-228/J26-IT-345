@@ -9,10 +9,14 @@
  * from those results, so the assistant cannot invent facts. It runs on-device and
  * sends nothing.
  */
+import type { Language } from "@/context/language-context";
 import type { CareerAssessment } from "./assessment";
+import { getAssistantText, type AssistantText } from "./assistant-text";
 import { fuzzRatio, matchTokens, tokenize } from "./extract";
+import { fmt, getC3Text, label, type C3Text } from "./i18n";
 import type { SessionSummary } from "./interview";
-import { careerModel } from "./model";
+import { careerModel, getRole, getSkill } from "./model";
+import { readinessBand, type Contribution, type RoleReadiness } from "./readiness";
 
 export type IntentId =
   | "readiness"
@@ -265,4 +269,177 @@ export function matchIntent(question: string): RankedIntents {
   }
   const confidence = best.score / (best.score + 1);
   return { intent: confidence >= MIN_CONFIDENCE ? best.intent : "help", confidence, roleIds, skillIds, ranked };
+}
+
+// ---------------------------------------------------------------------------
+// Grounded answers: every fact below is read from the C3 results in the context.
+// ---------------------------------------------------------------------------
+
+type Line = AssistantAnswer["lines"][number];
+
+type Build = {
+  language: Language;
+  t: C3Text;
+  a: AssistantText;
+  ctx: AssistantContext;
+  match: Pick<IntentMatch, "roleIds" | "skillIds">;
+};
+
+const text = (s: string): Line => ({ kind: "text", text: s });
+const bullet = (s: string): Line => ({ kind: "bullet", text: s });
+
+const round = (n: number) => Math.round(n);
+
+function roleName(id: string, language: Language) {
+  const r = getRole(id);
+  return r ? label(r.label, language) : id;
+}
+
+function skillName(id: string, language: Language) {
+  const s = getSkill(id);
+  return s ? label(s.label, language) : id;
+}
+
+function levelName(level: number, language: Language) {
+  const l = careerModel.taxonomy.levels.find((x) => x.level === level);
+  return l ? label(l.label, language) : String(level);
+}
+
+function bandName(score: number, t: C3Text) {
+  const band = readinessBand(score);
+  return band === "strong" ? t.bandStrong : band === "developing" ? t.bandDeveloping : t.bandEarly;
+}
+
+/** The role a question is about: the one named, else the first target, else the best match. */
+function focusRoleId(b: Build): string | null {
+  const named = b.match.roleIds.find((id) => getRole(id));
+  if (named) return named;
+  const a = b.ctx.assessment;
+  return a?.targets[0]?.roleId ?? a?.roles[0]?.roleId ?? null;
+}
+
+function readinessAnswer(b: Build): Line[] {
+  const a = b.ctx.assessment as CareerAssessment;
+  const roleId = focusRoleId(b) as string;
+  const idx = a.roles.findIndex((r) => r.roleId === roleId);
+  const r = a.roles[idx];
+  const base = a.baselineRoles.find((x) => x.roleId === roleId);
+  const lines = [
+    text(fmt(b.a.readinessLine, { role: roleName(roleId, b.language), score: round(r.score), band: bandName(r.score, b.t) })),
+    text(fmt(b.a.readinessRank, { rank: idx + 1, total: a.roles.length }))
+  ];
+  if (base) lines.push(text(fmt(b.a.readinessBaseline, { covered: base.covered, required: base.required })));
+  const others = a.targets.filter((x) => x.roleId !== roleId);
+  if (others.length > 0) {
+    const list = others.map((x) => `${roleName(x.roleId, b.language)} ${round(x.readiness.score)}/100`).join(", ");
+    lines.push(text(fmt(b.a.readinessOthers, { list })));
+  }
+  return lines;
+}
+
+function scoreReasonAnswer(b: Build): Line[] {
+  const a = b.ctx.assessment as CareerAssessment;
+  const roleId = focusRoleId(b) as string;
+  const r = a.roles.find((x) => x.roleId === roleId) as RoleReadiness;
+  const describe = (tpl: string, c: Contribution, points: number) =>
+    fmt(tpl, {
+      skill: skillName(c.skillId, b.language),
+      points: points.toFixed(1),
+      level: levelName(c.level, b.language),
+      required: levelName(c.requiredLevel, b.language)
+    });
+  const plus = r.contributions
+    .filter((c) => c.points > 0)
+    .sort((x, y) => y.points - x.points)
+    .slice(0, 3);
+  // What holds the score back: the points still missing on each skill, largest first.
+  const held = r.contributions
+    .filter((c) => c.level < c.requiredLevel)
+    .sort((x, y) => y.maxPoints - y.points - (x.maxPoints - x.points))
+    .slice(0, 3);
+  const lines = [text(fmt(b.a.reasonIntro, { role: roleName(roleId, b.language), score: round(r.score) }))];
+  if (plus.length > 0) {
+    lines.push(text(b.a.reasonPlusTitle));
+    plus.forEach((c) => lines.push(bullet(describe(b.a.reasonPlus, c, c.points))));
+  }
+  if (held.length > 0) {
+    lines.push(text(b.a.reasonMinusTitle));
+    held.forEach((c) => lines.push(bullet(describe(b.a.reasonHeld, c, c.maxPoints - c.points))));
+  } else {
+    lines.push(text(fmt(b.a.reasonNoMinus, { role: roleName(roleId, b.language) })));
+  }
+  return lines;
+}
+
+function bestRoleAnswer(b: Build): Line[] {
+  const a = b.ctx.assessment as CareerAssessment;
+  const targets = new Set(a.targets.map((x) => x.roleId));
+  const top = a.roles.slice(0, 3);
+  const lines = [text(b.a.bestIntro)];
+  top.forEach((r) =>
+    lines.push(
+      bullet(
+        fmt(b.a.bestLine, {
+          role: roleName(r.roleId, b.language),
+          score: round(r.score),
+          mark: targets.has(r.roleId) ? b.a.targetMark : ""
+        })
+      )
+    )
+  );
+  const best = top[0];
+  if (best) lines.push(text(fmt(targets.has(best.roleId) ? b.a.bestIsTarget : b.a.bestNotTarget, { role: roleName(best.roleId, b.language) })));
+  return lines;
+}
+
+function helpAnswer(b: Build): Line[] {
+  return [text(b.a.helpIntro), text(b.a.helpTopics)];
+}
+
+function aboutAnswer(b: Build): Line[] {
+  return [text(b.a.aboutRules), bullet(b.a.aboutPrivacy), bullet(b.a.aboutSynthetic), bullet(b.a.aboutGuidance)];
+}
+
+const BUILDERS: Partial<Record<IntentId, (b: Build) => Line[]>> = {
+  readiness: readinessAnswer,
+  scoreReason: scoreReasonAnswer,
+  bestRole: bestRoleAnswer,
+  about: aboutAnswer,
+  help: helpAnswer
+};
+
+function notUnderstood(b: Build): AssistantAnswer {
+  return { intent: "help", lines: [text(b.a.unknown), ...helpAnswer(b)], sources: [], followUps: getIntent("help").followUps, grounded: false };
+}
+
+/** Answers one intent from the context (also used directly by the suggested-question buttons). */
+export function answerIntent(
+  intentId: IntentId,
+  ctx: AssistantContext,
+  language: Language,
+  match: Pick<IntentMatch, "roleIds" | "skillIds"> = { roleIds: [], skillIds: [] }
+): AssistantAnswer {
+  const intent = getIntent(intentId);
+  const b: Build = { language, t: getC3Text(language), a: getAssistantText(language), ctx, match };
+  if (intent.needsAssessment && !ctx.assessment) {
+    return { intent: intentId, lines: [text(b.a.needAnalysis)], sources: [], followUps: ["roleRequirements", "about"], grounded: false };
+  }
+  const builder = BUILDERS[intentId];
+  if (!builder) return notUnderstood(b);
+  return { intent: intentId, lines: builder(b), sources: intent.sources, followUps: intent.followUps, grounded: true };
+}
+
+/** Matches a free-text question and answers it. */
+export function answerQuestion(question: string, ctx: AssistantContext, language: Language): AssistantAnswer {
+  const m = matchIntent(question);
+  if (m.confidence < MIN_CONFIDENCE) {
+    return notUnderstood({ language, t: getC3Text(language), a: getAssistantText(language), ctx, match: m });
+  }
+  let intent = m.intent;
+  // On a tie, prefer a topic that can be answered without the analysis if it has not been run.
+  if (!ctx.assessment && getIntent(intent).needsAssessment) {
+    const alt = m.ranked.find((r) => r.score === m.ranked[0].score && !getIntent(r.intent).needsAssessment);
+    if (alt) intent = alt.intent;
+  }
+  return answerIntent(intent, ctx, language, m);
 }
