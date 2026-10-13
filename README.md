@@ -475,7 +475,7 @@ Requirement wording is from the C3 work plan; map it to the proposal's FR/NFR ID
 | Requirement | Implementation | Evidence | Status |
 | --- | --- | --- | --- |
 | Analyse Sri Lankan IT job ads into role profiles | `job-ad-nlp/`, `role_profiles.py` | `role-profiles.json`, `test_c3_data_pipeline.py`, `test_c3_models.py` | Done on synthetic ads; real ads not collected |
-| Student skills from questionnaire and optional CV | `career-guidance-tool.tsx`, `extract.ts`, `assessment.ts` | `extraction-eval.json`, `c3-components.test.tsx`, `c3-runtime.test.ts` | Done (CV step on by default; tested only with own / synthetic CVs until ethics approval) |
+| Student skills from questionnaire and optional CV (pasted text, or an uploaded PDF / Word .docx / .txt file read on the device) | `career-guidance-tool.tsx`, `extract.ts`, `cv-file.ts`, `cv-pdf.ts`, `assessment.ts` | `extraction-eval.json`, `c3-components.test.tsx`, `c3-cv-file.test.ts`, `c3-runtime.test.ts` | Done (CV step on by default; tested only with own / synthetic CVs until ethics approval) |
 | Readiness score per target role with per-skill contributions | `readiness.ts` | `c3-parity.test.ts`, `recommendation-eval.json` | Done |
 | Ranked skill gaps with explanations | `gaps.ts`, tool UI | parity + component tests, gap NDCG@5 | Done |
 | Gap-to-Action plan with prerequisite order and "why this" | `kg.py`, `graph.ts` | `test_c3_graph.py`, parity, plan statistics | Done (illustrative modules) |
@@ -514,7 +514,7 @@ npx jest tests/unit/c3 tests/integration/c3   # 403 Jest tests (parity, runtime,
 npm run c3:benchmark                      # runtime latency -> docs/c3/evidence/runtime-benchmark.json
 ```
 
-Single stages: `python ml/c3/run_pipeline.py data|model|graph|parity|evaluate`. The optional CV step is shown by default; set `NEXT_PUBLIC_C3_CV_ENABLED=false` to hide it. Until ethics approval it is tested only with the developer's own test CV and synthetic CVs, as agreed with the supervisor. Real ads (after reviewing each site's terms): `python ml/c3/src/job-ad-nlp/collect_ads.py --from-dir <saved ads>` (or `--urls file --allow-domain <site>`), then `clean_ads.py`; output stays in git-ignored `ml/c3/data/raw|private/`.
+Single stages: `python ml/c3/run_pipeline.py data|model|graph|parity|evaluate`. The optional CV step is shown by default; set `NEXT_PUBLIC_C3_CV_ENABLED=false` to hide it. Students can paste CV text or upload a PDF, Word (.docx) or .txt file (up to 5 MB); the file is read in the browser (pdf.js for PDFs, loaded only when needed) and never uploaded, and its text goes through the same PII stripping. Scanned image-only PDFs have no text layer and are reported as unreadable. Until ethics approval it is tested only with the developer's own test CV and synthetic CVs, as agreed with the supervisor. Real ads (after reviewing each site's terms): `python ml/c3/src/job-ad-nlp/collect_ads.py --from-dir <saved ads>` (or `--urls file --allow-domain <site>`), then `clean_ads.py`; output stays in git-ignored `ml/c3/data/raw|private/`.
 
 **Moving to real data later:** collect public ads into `raw/`, clean them, annotate a sample by hand (someone who has not seen the taxonomy) for an honest extraction score, build profiles from them, replace the simulated labels with career-adviser judgements on consented students, re-run `evaluate`, and remove the synthetic warnings only then.
 

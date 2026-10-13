@@ -1,10 +1,11 @@
 "use client";
 
-import { FormEvent, useEffect, useId, useMemo, useState } from "react";
+import { FormEvent, useEffect, useId, useMemo, useState, type ChangeEvent } from "react";
 import { Button } from "@/components/shared/Button";
 import { Card } from "@/components/shared/Card";
 import { useLanguage, type Language } from "@/context/language-context";
 import { assessCareer, type CareerAssessment, type SkillSource } from "@/lib/c3/assessment";
+import { CV_FILE_ACCEPT, CvFileError, readCvFile, type CvFileErrorCode } from "@/lib/c3/cv-file";
 import { extractSkills } from "@/lib/c3/extract";
 import { proposedGaps, type SkillGap } from "@/lib/c3/gaps";
 import { planForRole, type GapToActionPlan, type StepReason } from "@/lib/c3/graph";
@@ -95,6 +96,9 @@ export function CareerGuidanceTool({ initialProfile, cvEnabled = false, onResult
   const [cvConsent, setCvConsent] = useState(false);
   const [cvText, setCvText] = useState("");
   const [cv, setCv] = useState<{ skillIds: string[]; redacted: number } | null>(null);
+  const [cvFile, setCvFile] = useState<
+    { state: "reading" } | { state: "loaded"; name: string; truncated: boolean } | { state: "error"; code: CvFileErrorCode } | null
+  >(null);
   const [result, setResult] = useState<CareerAssessment | null>(null);
   const [selected, setSelected] = useState<string | null>(null);
 
@@ -119,11 +123,27 @@ export function CareerGuidanceTool({ initialProfile, cvEnabled = false, onResult
     setCv({ skillIds: ext.skills.map((s) => s.skillId), redacted: Object.values(ext.redactions).reduce((a, b) => a + b, 0) });
   }
 
+  async function onCvFile(e: ChangeEvent<HTMLInputElement>) {
+    const file = e.target.files?.[0];
+    e.target.value = ""; // the same file can be chosen again
+    if (!file || !cvConsent) return;
+    setCvFile({ state: "reading" });
+    try {
+      const { text, truncated } = await readCvFile(file);
+      setCvText(text);
+      setCv(null);
+      setCvFile({ state: "loaded", name: file.name, truncated });
+    } catch (err) {
+      setCvFile({ state: "error", code: err instanceof CvFileError ? err.code : "read" });
+    }
+  }
+
   function clearAll() {
     setTargets([]);
     setSkills({});
     setCvText("");
     setCv(null);
+    setCvFile(null);
     setCvConsent(false);
     setResult(null);
     setSelected(null);
@@ -245,6 +265,7 @@ export function CareerGuidanceTool({ initialProfile, cvEnabled = false, onResult
                   if (!e.target.checked) {
                     setCvText("");
                     setCv(null);
+                    setCvFile(null);
                   }
                 }}
                 className={`mt-0.5 h-4 w-4 rounded border-slate-300 text-primary ${ring}`}
@@ -264,6 +285,35 @@ export function CareerGuidanceTool({ initialProfile, cvEnabled = false, onResult
               autoComplete="off"
               className={`w-full rounded-lg border border-slate-300 bg-white px-3 py-2 text-sm disabled:opacity-50 dark:border-slate-700 dark:bg-slate-900 ${ring}`}
             />
+            <label htmlFor={`${uid}-cv-file`} className="mb-1 mt-3 block text-sm font-medium text-slate-700 dark:text-slate-200">
+              {t.cvUpload}
+            </label>
+            <input
+              id={`${uid}-cv-file`}
+              type="file"
+              accept={CV_FILE_ACCEPT}
+              onChange={(e) => void onCvFile(e)}
+              disabled={!cvConsent || cvFile?.state === "reading"}
+              aria-describedby={`${uid}-cv-file-note`}
+              className={`block w-full text-sm text-slate-600 file:mr-3 file:rounded-lg file:border-0 file:bg-slate-100 file:px-3 file:py-2 file:text-sm file:font-medium file:text-slate-700 hover:file:bg-slate-200 disabled:opacity-50 dark:text-slate-300 dark:file:bg-slate-800 dark:file:text-slate-200 ${ring}`}
+            />
+            <p id={`${uid}-cv-file-note`} className="mt-1 text-xs text-slate-500 dark:text-slate-400">
+              {t.cvUploadNote}
+            </p>
+            {cvFile ? (
+              <p
+                role={cvFile.state === "error" ? "alert" : "status"}
+                data-testid="c3-cv-file-status"
+                className={`mt-2 text-sm ${cvFile.state === "error" ? "text-red-600 dark:text-red-400" : "text-slate-600 dark:text-slate-300"}`}
+              >
+                {cvFile.state === "reading" ? t.cvReading : null}
+                {cvFile.state === "loaded" ? fmt(t.cvFileLoaded, { name: cvFile.name }) : null}
+                {cvFile.state === "loaded" && cvFile.truncated ? ` ${t.cvTruncated}` : null}
+                {cvFile.state === "error"
+                  ? { type: t.cvErrType, size: t.cvErrSize, empty: t.cvErrEmpty, read: t.cvErrRead }[cvFile.code]
+                  : null}
+              </p>
+            ) : null}
             <Button type="button" variant="secondary" onClick={runCv} disabled={!cvConsent || !cvText.trim()} className="mt-3 disabled:opacity-50">
               {t.cvAnalyse}
             </Button>

@@ -1,11 +1,11 @@
-import { render, screen, waitFor, within } from "@testing-library/react";
+import { fireEvent, render, screen, waitFor, within } from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
 import { CareerGuidanceSection } from "@/components/c3/career-guidance-section";
 import { CareerGuidanceTool } from "@/components/c3/career-guidance-tool";
 import { CareerInsightsAdmin } from "@/components/c3/career-insights-admin";
 import { LanguageProvider } from "@/context/language-context";
 import { buildAggregate, demoCohort } from "@/lib/c3/assessment-store";
-import { getC3Text } from "@/lib/c3/i18n";
+import { fmt, getC3Text } from "@/lib/c3/i18n";
 
 const withLanguage = (ui: React.ReactElement) => <LanguageProvider>{ui}</LanguageProvider>;
 const en = getC3Text("en");
@@ -99,6 +99,37 @@ describe("CareerGuidanceTool", () => {
     expect(found).toHaveTextContent("UI / UX design");
     expect(found).toHaveTextContent("Personal details removed before analysis: 3");
     expect(fetchSpy).not.toHaveBeenCalled();
+  });
+
+  it("reads an uploaded CV file on the device into the CV box, then finds its skills", async () => {
+    const fetchSpy = jest.fn();
+    global.fetch = fetchSpy as unknown as typeof fetch;
+    const user = userEvent.setup();
+    render(withLanguage(<CareerGuidanceTool cvEnabled />));
+    const input = screen.getByLabelText(en.cvUpload);
+    expect(input).toBeDisabled();
+    await user.click(screen.getByRole("checkbox", { name: en.cvConsent }));
+    const cvText = ["Name: Nimal Silva", "nimal@example.com", "Skills: Docker, Selenium"].join(String.fromCharCode(10));
+    const file = new File([cvText], "my-cv.txt", { type: "text/plain" });
+    await user.upload(input, file);
+    expect(await screen.findByText(fmt(en.cvFileLoaded, { name: "my-cv.txt" }))).toBeInTheDocument();
+    expect(screen.getByLabelText(en.cvLabel)).toHaveValue(cvText);
+    await user.click(screen.getByRole("button", { name: en.cvAnalyse }));
+    const found = screen.getByTestId("c3-cv-found");
+    expect(found).toHaveTextContent("Containers (Docker / Kubernetes)");
+    expect(found).toHaveTextContent("Test automation");
+    expect(found).toHaveTextContent("Personal details removed before analysis: 2");
+    expect(fetchSpy).not.toHaveBeenCalled();
+  });
+
+  it("explains why a CV file could not be used", async () => {
+    const user = userEvent.setup();
+    render(withLanguage(<CareerGuidanceTool cvEnabled />));
+    await user.click(screen.getByRole("checkbox", { name: en.cvConsent }));
+    const input = screen.getByLabelText(en.cvUpload);
+    fireEvent.change(input, { target: { files: [new File(["x"], "cv.doc", { type: "application/msword" })] } });
+    expect(await screen.findByRole("alert")).toHaveTextContent(en.cvErrType);
+    expect(screen.getByLabelText(en.cvLabel)).toHaveValue("");
   });
 
   it("is available in Sinhala and Tamil", async () => {
