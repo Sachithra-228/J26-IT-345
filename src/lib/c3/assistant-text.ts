@@ -32,6 +32,19 @@ const en = {
   targetMark: " (your target)",
   bestNotTarget: "{role} is not one of your targets, but it fits your skills well - it may be worth a look.",
   bestIsTarget: "Your best match, {role}, is already one of your targets.",
+  // gaps
+  gapsIntro: "Your most valuable skill gaps for {role}, biggest score gain first:",
+  gapLine: "{skill}: {level} → {required}, +{points} points (in {pct}% of the ads)",
+  gapsMore: "...and {n} more, smaller ones - see the full list in the \"Readiness and plan\" tab.",
+  gapSkill: "{skill} for {role}: you are {level} and the ads ask for {required}. Reaching it adds about +{points} points.",
+  gapSkillMet: "You already meet the {skill} level that {role} ads ask for.",
+  gapSkillNotAsked: "{role} ads rarely ask for {skill}, so it does not change this score.",
+  // next steps
+  nextFirst: "Start with \"{title}\" ({type}, about {hours} h). It takes {skill} from {from} to {to}.",
+  nextWhy: "Why this first:",
+  nextThen: "Then:",
+  nextStepLine: "{title} ({type}, about {hours} h)",
+  nextNone: "You do not need any actions for {role} right now - you meet every level its ads ask for.",
   // help and about
   helpIntro: "I am the C3 career assistant. You can ask me, for example:",
   helpTopics:

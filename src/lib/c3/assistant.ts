@@ -13,9 +13,11 @@ import type { Language } from "@/context/language-context";
 import type { CareerAssessment } from "./assessment";
 import { getAssistantText, type AssistantText } from "./assistant-text";
 import { fuzzRatio, matchTokens, tokenize } from "./extract";
+import { proposedGaps, type SkillGap } from "./gaps";
+import { planForRole, type GapToActionPlan, type StepReason } from "./graph";
 import { fmt, getC3Text, label, type C3Text } from "./i18n";
 import type { SessionSummary } from "./interview";
-import { careerModel, getRole, getSkill } from "./model";
+import { careerModel, getRole, getSkill, type ActionType, type RoleProfile } from "./model";
 import { readinessBand, type Contribution, type RoleReadiness } from "./readiness";
 
 export type IntentId =
@@ -392,6 +394,137 @@ function bestRoleAnswer(b: Build): Line[] {
   return lines;
 }
 
+const one = (x: number) => (Math.round(x * 10) / 10).toFixed(1);
+const pct = (x: number) => Math.round(x * 100);
+const MAX_GAPS_TOLD = 5;
+const MAX_STEPS_TOLD = 3;
+
+function typeName(type: ActionType, t: C3Text) {
+  return { Module: t.typeModule, Project: t.typeProject, Certification: t.typeCertification, Resource: t.typeResource }[type];
+}
+
+/** Gaps and plan for the focus role: the stored target analysis, or computed the same way. */
+function analysisFor(b: Build): { role: RoleProfile; gaps: SkillGap[]; plan: GapToActionPlan } {
+  const a = b.ctx.assessment as CareerAssessment;
+  const role = getRole(focusRoleId(b) as string) as RoleProfile;
+  const target = a.targets.find((x) => x.roleId === role.id);
+  if (target) return { role, gaps: target.gaps, plan: target.plan };
+  return { role, gaps: proposedGaps(a.levels, role), plan: planForRole(a.levels, role) };
+}
+
+function stepReason(r: StepReason, roleId: string, b: Build): string {
+  const { t, language } = b;
+  switch (r.code) {
+    case "gap":
+      return fmt(t.reasonGap, {
+        role: roleName(roleId, language),
+        required: levelName(r.requiredLevel, language),
+        skill: skillName(r.skillId, language),
+        level: levelName(r.level, language)
+      });
+    case "adEvidence":
+      return fmt(t.reasonAdEvidence, { skill: skillName(r.skillId, language), pct: pct(r.adShare), n: r.adCount, role: roleName(roleId, language) });
+    case "gain":
+      return fmt(t.reasonGain, { points: one(r.points) });
+    case "efficiency":
+      return r.alternatives > 0
+        ? fmt(t.reasonEfficiency, { k: r.alternatives + 1, hours: r.effortHours })
+        : fmt(t.reasonOnlyOption, { hours: r.effortHours });
+    case "prerequisite":
+      return fmt(t.reasonPrerequisite, { skill: skillName(r.skillId, language), forSkill: skillName(r.forSkillId, language) });
+    case "proof":
+      return fmt(t.reasonProof, { type: typeName(r.actionType, t).toLowerCase() });
+  }
+}
+
+function gapsAnswer(b: Build): Line[] {
+  const { role, gaps } = analysisFor(b);
+  const name = roleName(role.id, b.language);
+  const adShare = (skillId: string) => pct(role.skills.find((s) => s.skillId === skillId)?.tf ?? 0);
+  const lines: Line[] = [];
+  // A skill named in the question gets a direct answer first.
+  for (const skillId of b.match.skillIds) {
+    const gap = gaps.find((g) => g.skillId === skillId);
+    const item = role.skills.find((s) => s.skillId === skillId);
+    const skill = skillName(skillId, b.language);
+    if (gap) {
+      lines.push(
+        text(
+          fmt(b.a.gapSkill, {
+            skill,
+            role: name,
+            level: levelName(gap.level, b.language),
+            required: levelName(gap.requiredLevel, b.language),
+            points: one(gap.gainToRequired)
+          })
+        )
+      );
+    } else if (item) {
+      lines.push(text(fmt(b.a.gapSkillMet, { skill, role: name })));
+    } else {
+      lines.push(text(fmt(b.a.gapSkillNotAsked, { skill, role: name })));
+    }
+  }
+  if (gaps.length === 0) return [...lines, text(fmt(b.t.noGaps, { role: name }))];
+  lines.push(text(fmt(b.a.gapsIntro, { role: name })));
+  for (const g of gaps.slice(0, MAX_GAPS_TOLD)) {
+    lines.push(
+      bullet(
+        fmt(b.a.gapLine, {
+          skill: skillName(g.skillId, b.language),
+          level: levelName(g.level, b.language),
+          required: levelName(g.requiredLevel, b.language),
+          points: one(g.gainToRequired),
+          pct: adShare(g.skillId)
+        })
+      )
+    );
+  }
+  if (gaps.length > MAX_GAPS_TOLD) lines.push(text(fmt(b.a.gapsMore, { n: gaps.length - MAX_GAPS_TOLD })));
+  return lines;
+}
+
+function nextStepAnswer(b: Build): Line[] {
+  const { role, plan } = analysisFor(b);
+  const name = roleName(role.id, b.language);
+  if (plan.steps.length === 0) return [text(fmt(b.a.nextNone, { role: name }))];
+  const [first, ...rest] = plan.steps;
+  const lines: Line[] = [
+    text(
+      fmt(b.a.nextFirst, {
+        title: first.action.title,
+        type: typeName(first.actionType, b.t).toLowerCase(),
+        hours: first.effortHours,
+        skill: skillName(first.skillId, b.language),
+        from: levelName(first.fromLevel, b.language),
+        to: levelName(first.toLevel, b.language)
+      })
+    ),
+    text(b.a.nextWhy),
+    ...first.reasons.map((r) => bullet(stepReason(r, role.id, b)))
+  ];
+  if (rest.length > 0) {
+    lines.push(text(b.a.nextThen));
+    for (const s of rest.slice(0, MAX_STEPS_TOLD - 1)) {
+      lines.push(bullet(fmt(b.a.nextStepLine, { title: s.action.title, type: typeName(s.actionType, b.t).toLowerCase(), hours: s.effortHours })));
+    }
+  }
+  lines.push(
+    text(
+      fmt(b.t.planSummary, {
+        n: plan.steps.length,
+        hours: plan.totalEffortHours,
+        from: round(plan.readiness),
+        to: round(plan.projectedReadiness)
+      })
+    )
+  );
+  if (plan.unplannedGaps.length > 0) {
+    lines.push(text(fmt(b.t.planUnplanned, { skills: plan.unplannedGaps.map((id) => skillName(id, b.language)).join(", ") })));
+  }
+  return lines;
+}
+
 function helpAnswer(b: Build): Line[] {
   return [text(b.a.helpIntro), text(b.a.helpTopics)];
 }
@@ -404,6 +537,8 @@ const BUILDERS: Partial<Record<IntentId, (b: Build) => Line[]>> = {
   readiness: readinessAnswer,
   scoreReason: scoreReasonAnswer,
   bestRole: bestRoleAnswer,
+  gaps: gapsAnswer,
+  nextStep: nextStepAnswer,
   about: aboutAnswer,
   help: helpAnswer
 };
