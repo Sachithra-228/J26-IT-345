@@ -525,6 +525,74 @@ function nextStepAnswer(b: Build): Line[] {
   return lines;
 }
 
+const MAX_REQUIREMENTS_TOLD = 6;
+
+/** Two roles to compare: those named, topped up with the targets and then the best matches. */
+function rolesToCompare(b: Build): string[] {
+  const a = b.ctx.assessment as CareerAssessment;
+  const ids = [...b.match.roleIds, ...a.targets.map((x) => x.roleId), ...a.roles.map((r) => r.roleId)];
+  return [...new Set(ids)].filter((id) => getRole(id)).slice(0, 2);
+}
+
+function compareAnswer(b: Build): Line[] {
+  const a = b.ctx.assessment as CareerAssessment;
+  const [x, y] = rolesToCompare(b);
+  const info = [x, y].map((id) => {
+    const role = getRole(id) as RoleProfile;
+    const score = (a.roles.find((r) => r.roleId === id) as RoleReadiness).score;
+    return { id, name: roleName(id, b.language), score, gaps: proposedGaps(a.levels, role) };
+  });
+  const lines: Line[] = [text(b.a.compareIntro)];
+  for (const r of info) {
+    lines.push(bullet(fmt(b.a.compareLine, { role: r.name, score: round(r.score), band: bandName(r.score, b.t), n: r.gaps.length })));
+  }
+  const diff = round(info[0].score) - round(info[1].score);
+  if (diff === 0) lines.push(text(b.a.compareEqual));
+  else {
+    const [closer, other] = diff > 0 ? info : [info[1], info[0]];
+    lines.push(text(fmt(b.a.compareCloser, { role: closer.name, other: other.name, diff: Math.abs(diff) })));
+  }
+  const ids = (gaps: SkillGap[]) => new Set(gaps.map((g) => g.skillId));
+  const [g0, g1] = [ids(info[0].gaps), ids(info[1].gaps)];
+  const shared = info[0].gaps.filter((g) => g1.has(g.skillId)).slice(0, 4);
+  if (shared.length > 0) {
+    lines.push(text(fmt(b.a.compareShared, { skills: shared.map((g) => skillName(g.skillId, b.language)).join(", ") })));
+  }
+  for (const [r, otherIds] of [
+    [info[0], g1],
+    [info[1], g0]
+  ] as const) {
+    const only = r.gaps.filter((g) => !otherIds.has(g.skillId)).slice(0, 3);
+    if (only.length > 0) {
+      lines.push(text(fmt(b.a.compareOnly, { role: r.name, skills: only.map((g) => skillName(g.skillId, b.language)).join(", ") })));
+    }
+  }
+  return lines;
+}
+
+function requirementsAnswer(b: Build): Line[] {
+  const roleId = focusRoleId(b);
+  const role = roleId ? getRole(roleId) : undefined;
+  if (!role) {
+    const examples = careerModel.roles.slice(0, 4).map((r) => label(r.label, b.language)).join(", ");
+    return [text(fmt(b.a.reqWhichRole, { examples }))];
+  }
+  const levels = b.ctx.assessment?.levels;
+  const lines: Line[] = [text(fmt(b.a.reqIntro, { role: roleName(role.id, b.language), n: role.adCount }))];
+  const top = [...role.skills].sort((x, y) => y.weight - x.weight).slice(0, MAX_REQUIREMENTS_TOLD);
+  for (const item of top) {
+    const vars = {
+      skill: skillName(item.skillId, b.language),
+      required: levelName(item.requiredLevel, b.language),
+      pct: pct(item.tf),
+      you: levelName(levels?.[item.skillId] ?? 0, b.language)
+    };
+    lines.push(bullet(fmt(levels ? b.a.reqLineYou : b.a.reqLine, vars)));
+  }
+  if (role.skills.length > top.length) lines.push(text(fmt(b.a.reqMore, { n: role.skills.length - top.length })));
+  return lines;
+}
+
 function helpAnswer(b: Build): Line[] {
   return [text(b.a.helpIntro), text(b.a.helpTopics)];
 }
@@ -539,6 +607,8 @@ const BUILDERS: Partial<Record<IntentId, (b: Build) => Line[]>> = {
   bestRole: bestRoleAnswer,
   gaps: gapsAnswer,
   nextStep: nextStepAnswer,
+  compareRoles: compareAnswer,
+  roleRequirements: requirementsAnswer,
   about: aboutAnswer,
   help: helpAnswer
 };

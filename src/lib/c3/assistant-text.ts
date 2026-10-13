@@ -45,6 +45,19 @@ const en = {
   nextThen: "Then:",
   nextStepLine: "{title} ({type}, about {hours} h)",
   nextNone: "You do not need any actions for {role} right now - you meet every level its ads ask for.",
+  // compare roles
+  compareIntro: "Side by side, for your current skills:",
+  compareLine: "{role}: {score}/100 ({band}), {n} skill gaps",
+  compareCloser: "You are {diff} points closer to {role} than to {other}.",
+  compareEqual: "You are about equally close to both.",
+  compareShared: "Gaps they share - closing these helps both: {skills}.",
+  compareOnly: "Gaps only for {role}: {skills}.",
+  // role requirements
+  reqIntro: "What {role} job ads ask for most ({n} ads analysed):",
+  reqLine: "{skill}: {required} level, in {pct}% of the ads",
+  reqLineYou: "{skill}: {required} level, in {pct}% of the ads - you: {you}",
+  reqMore: "...plus {n} less important skills.",
+  reqWhichRole: "Which role do you mean? For example: {examples}.",
   // help and about
   helpIntro: "I am the C3 career assistant. You can ask me, for example:",
   helpTopics:
