@@ -40,8 +40,9 @@ export type SourceId = "readiness" | "gaps" | "plan" | "roleProfile" | "graph" |
 export type Intent = {
   id: IntentId;
   /**
-   * Cue words and phrases (lower case). Single words are also matched fuzzily, so
-   * small typos still work; phrases must appear as written.
+   * Cue words and phrases (lower case). Single English words are also matched
+   * fuzzily, so small typos still work; phrases and Sinhala / Tamil cues must
+   * appear as written.
    */
   cues: string[];
   /** True if the answer needs the student's readiness analysis. */
@@ -54,84 +55,84 @@ export type Intent = {
 export const INTENTS: Intent[] = [
   {
     id: "readiness",
-    cues: ["ready", "readiness", "score", "how ready", "my chances", "percentage", "match"],
+    cues: ["ready", "readiness", "score", "how ready", "my chances", "percentage", "match", "සූදානම", "தயார்"],
     needsAssessment: true,
     sources: ["readiness"],
     followUps: ["scoreReason", "gaps", "nextStep"]
   },
   {
     id: "scoreReason",
-    cues: ["why", "explain", "reason", "low", "high", "breakdown", "calculated", "how is", "points"],
+    cues: ["why", "explain", "reason", "low", "high", "breakdown", "calculated", "how is", "points", "ඇයි", "අඩු", "ஏன்", "குறைவு"],
     needsAssessment: true,
     sources: ["readiness", "roleProfile"],
     followUps: ["gaps", "nextStep"]
   },
   {
     id: "bestRole",
-    cues: ["best", "suit", "suits", "suitable", "fit", "which role", "which job", "career for me", "recommend", "should i choose"],
+    cues: ["best", "suit", "suits", "suitable", "fit", "which role", "which job", "career for me", "recommend", "should i choose", "ගැළපෙන", "பொருத்தமான"],
     needsAssessment: true,
     sources: ["readiness"],
     followUps: ["readiness", "compareRoles", "roleRequirements"]
   },
   {
     id: "gaps",
-    cues: ["gap", "gaps", "missing", "lack", "weak", "weakness", "improve", "skills do i need", "what am i missing"],
+    cues: ["gap", "gaps", "missing", "lack", "weak", "weakness", "improve", "skills do i need", "what am i missing", "හිඩැස", "இடைவெளி"],
     needsAssessment: true,
     sources: ["gaps", "roleProfile"],
     followUps: ["nextStep", "resources"]
   },
   {
     id: "nextStep",
-    cues: ["next", "first", "start", "plan", "roadmap", "what should i do", "where do i begin", "step", "steps"],
+    cues: ["next", "first", "start", "plan", "roadmap", "what should i do", "where do i begin", "step", "steps", "ඊළඟ", "මුලින්ම", "அடுத்து", "முதலில்"],
     needsAssessment: true,
     sources: ["plan", "graph"],
     followUps: ["resources", "certifications", "interview"]
   },
   {
     id: "compareRoles",
-    cues: ["compare", "comparison", "versus", "vs", "difference", "better", "between"],
+    cues: ["compare", "comparison", "versus", "vs", "difference", "better", "between", "සසඳ", "ஒப்பிடு"],
     needsAssessment: true,
     sources: ["readiness", "gaps"],
     followUps: ["roleRequirements", "nextStep"]
   },
   {
     id: "roleRequirements",
-    cues: ["require", "requires", "requirement", "requirements", "need for", "needed", "employers want", "ask for", "what does", "skills for"],
+    cues: ["require", "requires", "requirement", "requirements", "need for", "needed", "employers want", "ask for", "what does", "skills for", "අවශ්‍ය", "தேவை"],
     needsAssessment: false,
     sources: ["roleProfile"],
     followUps: ["gaps", "certifications"]
   },
   {
     id: "resources",
-    cues: ["learn", "course", "courses", "resource", "resources", "study", "tutorial", "practice", "project", "projects", "module", "how do i improve", "how can i improve", "get better at"],
+    cues: ["learn", "course", "courses", "resource", "resources", "study", "tutorial", "practice", "project", "projects", "module", "how do i improve", "how can i improve", "get better at", "ඉගෙන", "கற்றுக்"],
     needsAssessment: false,
     sources: ["graph"],
     followUps: ["certifications", "nextStep"]
   },
   {
     id: "certifications",
-    cues: ["certification", "certifications", "certificate", "certified", "cert", "exam"],
+    cues: ["certification", "certifications", "certificate", "certified", "cert", "exam", "සහතික", "சான்றிதழ்"],
     needsAssessment: false,
     sources: ["graph", "roleProfile"],
     followUps: ["resources", "nextStep"]
   },
   {
     id: "interview",
-    cues: ["interview", "interviews", "mock", "answer better", "star"],
+    cues: ["interview", "interviews", "mock", "answer better", "star", "සම්මුඛ", "நேர்காணல்"],
     needsAssessment: false,
     sources: ["interview"],
     followUps: ["gaps", "nextStep"]
   },
   {
     id: "about",
-    cues: ["privacy", "private", "my data", "accurate", "accuracy", "trust", "synthetic", "how does", "how do you work", "guarantee", "who are you"],
+    cues: ["privacy", "private", "my data", "accurate", "accuracy", "trust", "synthetic", "how does", "how do you work", "guarantee", "who are you", "පෞද්ගලික", "දත්ත", "தனிப்பட்ட", "தரவு"],
     needsAssessment: false,
     sources: ["model"],
     followUps: ["help"]
   },
   {
     id: "help",
-    cues: ["help", "what can you", "what can i ask", "hello", "hi", "options"],
+    cues: ["help", "what can you", "what can i ask", "hello", "hi", "options", "උදව්", "உதவி"],
     needsAssessment: false,
     sources: [],
     followUps: ["readiness", "gaps", "nextStep"]
