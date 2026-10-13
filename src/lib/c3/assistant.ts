@@ -62,7 +62,7 @@ export const INTENTS: Intent[] = [
   },
   {
     id: "scoreReason",
-    cues: ["why", "explain", "reason", "low", "high", "breakdown", "calculated", "how is", "points", "ඇයි", "අඩු", "ஏன்", "குறைவு"],
+    cues: ["why", "why did i", "why is", "why am i", "explain", "reason", "low", "high", "breakdown", "calculated", "how is", "points", "ඇයි", "අඩු", "ஏன்", "குறைவு"],
     needsAssessment: true,
     sources: ["readiness", "roleProfile"],
     followUps: ["gaps", "nextStep"]
@@ -104,7 +104,7 @@ export const INTENTS: Intent[] = [
   },
   {
     id: "resources",
-    cues: ["learn", "course", "courses", "resource", "resources", "study", "tutorial", "practice", "project", "projects", "module", "how do i improve", "how can i improve", "get better at", "ඉගෙන", "கற்றுக்"],
+    cues: ["learn", "how can i learn", "how do i learn", "course", "courses", "resource", "resources", "study", "tutorial", "practice", "project", "projects", "module", "how do i improve", "how can i improve", "get better at", "ඉගෙන", "கற்றுக்"],
     needsAssessment: false,
     sources: ["graph"],
     followUps: ["certifications", "nextStep"]
