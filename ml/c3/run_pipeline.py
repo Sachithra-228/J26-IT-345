@@ -4,6 +4,7 @@ C3 end-to-end pipeline (explainable career guidance). Re-runnable and seeded (42
     pip install -r ml/c3/requirements.txt
     python ml/c3/run_pipeline.py            # all stages
     python ml/c3/run_pipeline.py data       # only regenerate synthetic data
+    python ml/c3/run_pipeline.py real       # REAL job ads from the manual sheet (not part of "all")
 
 Stages
   data   synthetic job ads -> cleaned / parsed ads; synthetic students + simulated
@@ -19,6 +20,12 @@ Stages
          for the TypeScript parity test, plus a small synthetic demo cohort for the
          staff aggregate view in demo mode
          -> tests/fixtures/c3-readiness-parity.json, src/lib/c3/model/demo-cohort.json
+
+  real   (opt-in) import the manually collected job-ads sheet export
+         ml/c3/data/raw/job_ads_sheet.csv (git-ignored) and evaluate extraction, role
+         and seniority against the researcher's labels (preliminary, one annotator)
+         -> ml/c3/data/private/* (git-ignored), docs/c3/evidence/real-ads-import.json,
+            docs/c3/evidence/extraction-eval-real.json (aggregate numbers only)
 
 SYNTHETIC DATA: validates the pipeline, not real-world accuracy.
 """
@@ -282,11 +289,22 @@ def stage_evaluate() -> None:
     print(f"evidence written to {C.EVIDENCE_DIR.relative_to(C.ROOT)}")
 
 
-STAGES = {"data": stage_data, "model": stage_model, "graph": stage_graph, "parity": stage_parity, "evaluate": stage_evaluate}
+def stage_real() -> None:
+    import evaluate_real_ads
+    import import_sheet
+
+    if import_sheet.run() is not None:
+        evaluate_real_ads.run()
+
+
+STAGES = {"data": stage_data, "model": stage_model, "graph": stage_graph, "parity": stage_parity, "evaluate": stage_evaluate,
+          "real": stage_real}
+# "real" needs the git-ignored sheet export, so a plain run (and every teammate's) leaves it out.
+DEFAULT_STAGES = ["data", "model", "graph", "parity", "evaluate"]
 
 
 def main(argv: list[str]) -> None:
-    wanted = argv or list(STAGES)
+    wanted = argv or DEFAULT_STAGES
     for name in wanted:
         print(f"== stage: {name}")
         STAGES[name]()
