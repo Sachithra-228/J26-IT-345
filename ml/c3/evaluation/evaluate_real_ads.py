@@ -13,7 +13,8 @@ labels (import_sheet.py):
 
 IMPORTANT: one annotator (the researcher, who knows the taxonomy) labelled the ads,
 so agreement is optimistic; a second, independent annotator is needed for a final
-result. Output (aggregate numbers only): docs/c3/evidence/extraction-eval-real.json
+result. Outputs (aggregate numbers only): docs/c3/evidence/extraction-eval-real.json and
+src/lib/c3/model/data-status.json (the snapshot shown on the admin insights page).
 """
 from __future__ import annotations
 
@@ -25,6 +26,8 @@ import c3_common as C
 from metrics import prf
 
 OUT = C.EVIDENCE_DIR / "extraction-eval-real.json"
+# Small aggregate snapshot read by the admin "Career Readiness Insights" page.
+STATUS_OUT = C.MODEL_OUT.parent / "data-status.json"
 WARNING = ("PRELIMINARY - real public job ads, but ONE annotator (the researcher) who knows the taxonomy "
            "labelled them; agreement is optimistic until an independent second annotator is added.")
 MIN_SUPPORT_PER_SKILL = 3
@@ -116,14 +119,53 @@ def evaluate(ads: list[dict], labels: list[dict], skill_order: list[str]) -> dic
     }
 
 
+def build_data_status(import_report: dict, eval_res: dict, taxonomy_version: str, generated: str) -> dict:
+    """Aggregate numbers only (counts, shares, metrics): no ad text, company names or URLs."""
+    cov = import_report["coverage"]
+    per_role = [{"roleId": e["roleId"], "ads": e["ads"], "target": e["target"]} for e in cov["perRole"] if "target" in e]
+    issues = {k: v["count"] for k, v in import_report["issues"].items() if k != "unmapped_skill"}
+    ext = eval_res["skillExtraction"]
+    return {
+        "generatedAt": generated,
+        "taxonomyVersion": taxonomy_version,
+        "realAds": {
+            "rowsInSheet": import_report["rowsInSheet"],
+            "adsUsed": import_report["adsUsed"],
+            "rowsSkipped": import_report["rowsSkipped"],
+            "issuesToFix": sum(issues.values()),
+            "other": next((e["ads"] for e in cov["perRole"] if e["roleId"] == "other"), 0),
+            "rolesAtTarget": cov["rolesAtTarget"],
+            "perRole": per_role,
+            "sources": cov["sources"],
+        },
+        "realEvaluation": {
+            "ads": eval_res["ads"],
+            "annotators": 1,
+            "developmentSet": True,
+            "precision": ext["micro"]["precision"],
+            "recall": ext["micro"]["recall"],
+            "f1": ext["micro"]["f1"],
+            "f1Ci95": ext["microF1ci95"],
+            "roleFromTitleAccuracy": eval_res["roleFromTitle"]["accuracy"],
+            "seniorityAccuracy": eval_res["seniority"]["accuracy"],
+        },
+    }
+
+
 def run() -> dict | None:
     from import_sheet import CLEAN_OUT, LABELS_OUT
 
     if not (CLEAN_OUT.exists() and LABELS_OUT.exists()):
         print("no imported sheet - run import_sheet.py first")
         return None
+    from datetime import date
+
+    from import_sheet import REPORT_OUT
+
     res = evaluate(C.read_jsonl(CLEAN_OUT), C.read_jsonl(LABELS_OUT), C.skill_ids())
     C.write_json(OUT, res)
+    status = build_data_status(C.load_json(REPORT_OUT), res, C.load_taxonomy()["taxonomyVersion"], date.today().isoformat())
+    C.write_json(STATUS_OUT, status)
     e = res["skillExtraction"]
     m = e["micro"]
     print(f"REAL ADS (preliminary, 1 annotator): {res['ads']} ads, {res['labelledSkills']} labelled skills")
@@ -136,7 +178,7 @@ def run() -> dict | None:
     r = res["roleFromTitle"]
     print(f"  role from title: accuracy {r['accuracy']} ({r['unclassified']} unclassified of {r['adsWithCatalogueRole']})")
     print(f"  seniority: accuracy {res['seniority']['accuracy']}")
-    print(f"  evidence -> {OUT.relative_to(C.ROOT)}")
+    print(f"  evidence -> {OUT.relative_to(C.ROOT)}; admin status -> {STATUS_OUT.relative_to(C.ROOT)}")
     return res
 
 

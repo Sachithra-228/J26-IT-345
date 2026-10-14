@@ -9,7 +9,7 @@ from datetime import date
 import pytest
 
 import c3_common as C
-from evaluate_real_ads import evaluate
+from evaluate_real_ads import build_data_status, evaluate
 from import_sheet import COLUMNS, import_sheet, map_skill_terms, read_sheet, report, validate_rows, label_map
 from skill_extractor import SkillExtractor
 
@@ -163,3 +163,20 @@ def test_real_ads_evaluation_compares_extraction_with_labels():
     lo, hi = res["skillExtraction"]["microF1ci95"]
     assert 0 <= lo <= hi <= 1
     assert "ONE annotator" in res["warning"]
+
+
+def test_admin_data_status_holds_only_aggregates(extractor, taxonomy, roles):
+    rows = [row("JOB001"), row("JOB002", Role_Category="qa_engineer", Job_Title="QA Intern", URL="https://example.com/2",
+                                 Full_Ad_Text=TEXT + " Testing role.", Company="Fictional QA")]
+    result = import_sheet(rows, extractor, taxonomy, roles, TODAY)
+    summary = report(result, roles)
+    ads = [a.to_dict() for a in result["ads"]]
+    status = build_data_status(summary, evaluate(ads, result["labels"], C.skill_ids()), "1.1.0", "2026-10-14")
+    assert status["realAds"]["adsUsed"] == 2
+    per = {r["roleId"]: r for r in status["realAds"]["perRole"]}
+    assert per["software_engineer"]["ads"] == 1 and per["qa_engineer"]["target"] == 25
+    assert len(per) == len(roles)
+    assert 0 <= status["realEvaluation"]["f1"] <= 1 and status["realEvaluation"]["developmentSet"] is True
+    text = json.dumps(status)
+    for secret in ("Fictional", "topjobs", "example.com", "Nimal", "JOB001"):
+        assert secret not in text
