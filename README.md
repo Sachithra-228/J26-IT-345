@@ -380,7 +380,7 @@ The folders below exist so each member can start immediately and keep work separ
 | --- | --- | --- |
 | Job-ad schema, collector (allow-listed domains, robots.txt, >= 5 s delay, output only to git-ignored `raw/`), cleaner (PII strip, dedupe, validate) | `ml/c3/src/job-ad-nlp/` | Done - collector **not yet run on any real site** |
 | Ad parser: role from title, level from cue phrases ("strong knowledge of" -> 3), "nice to have", experience, education, certifications | `ad_parser.py` | Done |
-| Competency taxonomy v1.0.0: 26 competencies, 7 areas, levels 0-3, synonyms, EN/SI/TA labels, JSON Schema | `ml/c3/data/reference/competency-taxonomy*.json` | Done - needs academic / industry validation |
+| Competency taxonomy v1.1.0: 26 competencies, 7 areas, levels 0-3, synonyms (v1.1.0 adds phrases real Sri Lankan ads use, chosen on the 98-ad development set), EN/SI/TA labels, JSON Schema | `ml/c3/data/reference/competency-taxonomy*.json` | Done - needs academic / industry validation |
 | PII stripping (e-mail, URL, NIC old/new, SL phone, labelled lines, street addresses) before any processing | `pii.py`, `src/lib/c3/extract.ts` | Done |
 | Dictionary + fuzzy skill extractor (longest match first, rapidfuzz ratio >= 90 for terms >= 7 chars) for ads and CVs | `skill_extractor.py`, `extract.ts` | Done |
 | Synthetic data: 600 ads (+ 6 hand-written, labelled), 3,000 students with simulated expert labels, 200 CVs (seed 42) | `ml/c3/data/synthetic/` | Done - **synthetic** |
@@ -442,9 +442,9 @@ Hold-out = 600 synthetic students never used for anything else; relevance = simu
 | Role recommendation P@3 / R@3 | not stated | 0.836 / 0.557 | 0.806 / 0.531 | +0.029 / +0.026 (CIs exclude 0) | Synthetic |
 | Gap ranking NDCG@5 | not stated | **0.868** | 0.818 | +0.049 [+0.041, +0.058] | Synthetic |
 | Gap ranking P@5 / R@5 | not stated | 0.553 / 0.810 | 0.538 / 0.798 | +0.014 / +0.012 (CIs exclude 0) | Synthetic |
-| 5-fold CV over ads, role NDCG@3 | - | 0.937 ± 0.005 | 0.871 ± 0.008 | stable across ad samples | Synthetic |
-| 5-fold CV over ads, gap NDCG@5 | - | 0.860 ± 0.027 | 0.798 ± 0.029 | | Synthetic |
-| Skill extraction F1: synthetic ads / CVs / 6 hand-written ads | not stated | 0.964 / 0.966 / 1.000 | - | precision 1.00 everywhere (see below) | Synthetic / tiny sample |
+| 5-fold CV over ads, role NDCG@3 | - | 0.941 ± 0.004 | 0.871 ± 0.008 | stable across ad samples | Synthetic |
+| 5-fold CV over ads, gap NDCG@5 | - | 0.861 ± 0.028 | 0.801 ± 0.029 | | Synthetic |
+| Skill extraction F1: synthetic ads / CVs / 6 hand-written ads | not stated | 0.965 / 0.969 / 1.000 | - | precision 0.996-1.00 (see below) | Synthetic / tiny sample |
 | Inference time, full assessment (12 roles + 2 plans) | - | 0.06 ms mean, 0.10 ms p95 | - | - | **Real** (this laptop) |
 | CV extraction, 852 words | - | 16 ms mean | - | - | **Real** |
 | SUS usability | not stated | not measured | - | - | Open - needs user study |
@@ -456,9 +456,9 @@ Hold-out = 600 synthetic students never used for anything else; relevance = simu
 
 - **Optimistic by construction.** The ads and the simulated expert labels come from the same hidden role templates (`ml/c3/src/job-ad-nlp/synthetic_world.py`), so a model that recovers those weights is favoured. The gain over the baseline shows the pipeline and statistics work; its size says nothing about real students.
 - **No targets were invented.** `docs/c3/proposal/` is empty and this README gave no numeric C3 targets; add the proposal's targets and re-read the table against them.
-- **lambda sensitivity (train split only, informational):** raising the gap penalty slightly improves gap ranking (NDCG@5 0.858 -> 0.867 for lambda 0 -> 1) but **lowers** role ranking (0.942 -> 0.924). lambda stays at the pre-set 0.5; real data should decide.
+- **lambda sensitivity (train split only, informational):** raising the gap penalty slightly improves gap ranking (NDCG@5 0.857 -> 0.867 for lambda 0 -> 1) but **lowers** role ranking (0.943 -> 0.926). lambda stays at the pre-set 0.5; real data should decide.
 - **Extraction precision 1.00 is not credible for real ads.** The synthetic text has no distractor terms and uses the extractor's own lexicon (recall < 1 only because of deliberately planted out-of-vocabulary terms such as "SQLite"). The 6 hand-written ads were written by the same author as the synonym list, and one of them ("Network & Security Engineer") was assigned the wrong role from its title. Level-from-cue accuracy (0.99) is optimistic for the same reason.
-- **Plans** (hold-out, primary target): 3.5 steps and ~70 estimated hours on average, +35 projected readiness points if every step is completed; 106 plans include prerequisite steps; 29 contain a gap with no applicable action in the graph.
+- **Plans** (hold-out, primary target): 3.5 steps and ~70 estimated hours on average, +35 projected readiness points if every step is completed; 105 plans include prerequisite steps; 29 contain a gap with no applicable action in the graph.
 - Protocol: one seeded stratified 80/20 student split and one 80/20 ad split; role profiles use training ads only; hold-out students are scored once; nothing was tuned on them.
 
 | Skill extraction | lambda sensitivity (train only) |

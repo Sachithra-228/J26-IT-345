@@ -1,7 +1,7 @@
 {
   "schemaVersion": "1.0.0",
-  "taxonomyVersion": "1.0.0",
-  "provenance": "Hand-authored by the C3 owner (with AI assistance) from common competency terms in Sri Lankan IT job advertisements and the SFIA / ACM IT curriculum vocabulary. Not yet validated by SLIIT academics or industry panel. Sinhala and Tamil labels are machine-assisted drafts that need native-speaker review.",
+  "taxonomyVersion": "1.1.0",
+  "provenance": "Hand-authored by the C3 owner (with AI assistance) from common competency terms in Sri Lankan IT job advertisements and the SFIA / ACM IT curriculum vocabulary. Not yet validated by SLIIT academics or industry panel. Sinhala and Tamil labels are machine-assisted drafts that need native-speaker review. v1.1.0 (2026-10-14): synonyms added from phrases that 98 real public Sri Lankan job ads actually use (e.g. troubleshooting, collaborate, unit testing, cloud, Oracle, C++), and the bare synonym \"ui\" replaced by \"ui design\" because it matched front-end ads; each change was kept only if it improved agreement with the manual labels on that development set.",
   "levels": [
     { "level": 0, "label": { "en": "None", "si": "නැත", "ta": "இல்லை" }, "descriptor": "No exposure yet." },
     { "level": 1, "label": { "en": "Basic", "si": "මූලික", "ta": "அடிப்படை" }, "descriptor": "Coursework or tutorial level; can complete guided tasks." },
@@ -23,7 +23,7 @@
       "area": "software_engineering",
       "label": { "en": "Object-oriented programming (Java / C#)", "si": "වස්තු-නැඹුරු ක්‍රමලේඛනය (Java / C#)", "ta": "பொருள் நோக்கு நிரலாக்கம் (Java / C#)" },
       "description": "Classes, interfaces, inheritance and design principles in a typed OO language.",
-      "synonyms": ["java", "core java", "java se", "c#", "c sharp", "oop", "oop concepts", "object oriented programming", "object-oriented programming", "object oriented design", "design patterns", "solid principles"]
+      "synonyms": ["java", "core java", "java se", "c#", "c sharp", "oop", "oop concepts", "object oriented programming", "object-oriented programming", "object oriented design", "design patterns", "solid principles", "c++", "c/c++"]
     },
     {
       "id": "python",
@@ -44,7 +44,7 @@
       "area": "software_engineering",
       "label": { "en": "Problem solving, data structures and algorithms", "si": "ගැටලු විසඳීම, දත්ත ව්‍යුහ සහ ඇල්ගොරිතම", "ta": "சிக்கல் தீர்வு, தரவு கட்டமைப்புகள் மற்றும் வழிமுறைகள்" },
       "description": "Analytical thinking, algorithms and data structures.",
-      "synonyms": ["problem solving", "problem-solving skills", "analytical skills", "analytical thinking", "data structures", "algorithms", "critical thinking", "logical thinking"]
+      "synonyms": ["problem solving", "problem-solving skills", "analytical skills", "analytical thinking", "data structures", "algorithms", "critical thinking", "logical thinking", "problem-solving", "troubleshooting", "troubleshoot", "debugging", "analytical mindset"]
     },
     {
       "id": "version_control",
@@ -65,7 +65,7 @@
       "area": "web_mobile",
       "label": { "en": "Back-end and REST APIs", "si": "පසු-අන්ත සහ REST API", "ta": "பின்-முனை மற்றும் REST API" },
       "description": "Server-side frameworks, REST/GraphQL APIs and microservices.",
-      "synonyms": ["node.js", "nodejs", "node js", "express", "express.js", "spring boot", "springboot", "spring framework", "rest api", "rest apis", "restful", "restful apis", "asp.net", ".net", ".net core", "dotnet", "django", "flask", "fastapi", "laravel", "php", "microservices", "graphql", "back end", "backend"]
+      "synonyms": ["node.js", "nodejs", "node js", "express", "express.js", "spring boot", "springboot", "spring framework", "rest api", "rest apis", "restful", "restful apis", "asp.net", ".net", ".net core", "dotnet", "django", "flask", "fastapi", "laravel", "php", "microservices", "graphql", "back end", "backend", "golang"]
     },
     {
       "id": "mobile",
@@ -79,7 +79,7 @@
       "area": "data_ai",
       "label": { "en": "Relational databases and SQL", "si": "සම්බන්ධතා දත්ත සමුදාය සහ SQL", "ta": "தொடர்புசார் தரவுத்தளங்கள் மற்றும் SQL" },
       "description": "Schema design, SQL queries, joins and transactions.",
-      "synonyms": ["sql", "mysql", "postgresql", "postgres", "ms sql", "mssql", "sql server", "oracle database", "oracle db", "pl/sql", "relational database", "relational databases", "database design"]
+      "synonyms": ["sql", "mysql", "postgresql", "postgres", "ms sql", "mssql", "sql server", "oracle database", "oracle db", "pl/sql", "relational database", "relational databases", "database design", "oracle", "db2"]
     },
     {
       "id": "nosql",
@@ -93,14 +93,14 @@
       "area": "data_ai",
       "label": { "en": "Data analysis and visualisation", "si": "දත්ත විශ්ලේෂණය සහ දෘශ්‍යකරණය", "ta": "தரவு பகுப்பாய்வு மற்றும் காட்சிப்படுத்தல்" },
       "description": "Cleaning, analysing and visualising data with BI tools or pandas.",
-      "synonyms": ["data analysis", "data analytics", "data visualization", "data visualisation", "power bi", "powerbi", "tableau", "looker", "pandas", "ms excel", "microsoft excel", "advanced excel"]
+      "synonyms": ["data analysis", "data analytics", "data visualization", "data visualisation", "power bi", "powerbi", "tableau", "looker", "pandas", "ms excel", "microsoft excel", "advanced excel", "excel", "business analytics"]
     },
     {
       "id": "machine_learning",
       "area": "data_ai",
       "label": { "en": "Machine learning", "si": "යන්ත්‍ර ඉගෙනීම", "ta": "இயந்திர கற்றல்" },
       "description": "Training and evaluating ML models; deep learning frameworks.",
-      "synonyms": ["machine learning", "ml", "deep learning", "tensorflow", "pytorch", "scikit-learn", "sklearn", "keras", "nlp", "natural language processing", "computer vision", "llm", "llms", "generative ai"]
+      "synonyms": ["machine learning", "ml", "deep learning", "tensorflow", "pytorch", "scikit-learn", "sklearn", "keras", "nlp", "natural language processing", "computer vision", "llm", "llms", "generative ai", "artificial intelligence", "ai/ml", "ai models", "langchain"]
     },
     {
       "id": "statistics",
@@ -114,7 +114,7 @@
       "area": "cloud_infra",
       "label": { "en": "Cloud platforms", "si": "ක්ලවුඩ් වේදිකා", "ta": "கிளவுட் தளங்கள்" },
       "description": "Deploying and operating services on AWS, Azure or Google Cloud.",
-      "synonyms": ["aws", "amazon web services", "azure", "microsoft azure", "gcp", "google cloud", "google cloud platform", "cloud computing", "ec2"]
+      "synonyms": ["aws", "amazon web services", "azure", "microsoft azure", "gcp", "google cloud", "google cloud platform", "cloud computing", "ec2", "cloud", "cloud platforms", "cloud services"]
     },
     {
       "id": "devops_cicd",
@@ -142,7 +142,7 @@
       "area": "cloud_infra",
       "label": { "en": "Computer networking", "si": "පරිගණක ජාලකරණය", "ta": "கணினி வலையமைப்பு" },
       "description": "TCP/IP, routing and switching, LAN/WAN and network services.",
-      "synonyms": ["networking", "computer networks", "tcp/ip", "ccna", "routing", "switching", "lan", "wan", "vlan", "dns", "dhcp", "network administration", "cisco"]
+      "synonyms": ["networking", "computer networks", "tcp/ip", "ccna", "routing", "switching", "lan", "wan", "vlan", "dns", "dhcp", "network administration", "cisco", "socket programming"]
     },
     {
       "id": "security",
@@ -156,7 +156,7 @@
       "area": "quality",
       "label": { "en": "Software testing and QA", "si": "මෘදුකාංග පරීක්ෂණය සහ QA", "ta": "மென்பொருள் சோதனை மற்றும் QA" },
       "description": "Test design, test cases, defect tracking and QA processes.",
-      "synonyms": ["software testing", "manual testing", "quality assurance", "qa", "test cases", "test case", "test plans", "test plan", "regression testing", "functional testing", "defect tracking", "bug tracking", "uat", "istqb"]
+      "synonyms": ["software testing", "manual testing", "quality assurance", "qa", "test cases", "test case", "test plans", "test plan", "regression testing", "functional testing", "defect tracking", "bug tracking", "uat", "istqb", "unit testing", "integration testing", "test scenarios", "bug reports", "test execution"]
     },
     {
       "id": "test_automation",
@@ -177,14 +177,14 @@
       "area": "product_business",
       "label": { "en": "UI / UX design", "si": "UI / UX නිර්මාණය", "ta": "UI / UX வடிவமைப்பு" },
       "description": "User research, wireframes, prototypes and usability.",
-      "synonyms": ["ui/ux", "ux", "ui", "figma", "adobe xd", "wireframing", "wireframes", "prototyping", "user research", "user experience", "user interface design", "usability testing"]
+      "synonyms": ["ui/ux", "ux", "figma", "adobe xd", "wireframing", "wireframes", "prototyping", "user research", "user experience", "user interface design", "usability testing", "ui design"]
     },
     {
       "id": "business_analysis",
       "area": "product_business",
       "label": { "en": "Business and requirements analysis", "si": "ව්‍යාපාර සහ අවශ්‍යතා විශ්ලේෂණය", "ta": "வணிக மற்றும் தேவைகள் பகுப்பாய்வு" },
       "description": "Eliciting and documenting requirements, process and UML modelling.",
-      "synonyms": ["business analysis", "requirements gathering", "requirement gathering", "requirements analysis", "brd", "srs", "uml", "user stories", "use cases", "process modelling", "process modeling", "bpmn", "gap analysis", "stakeholder management"]
+      "synonyms": ["business analysis", "requirements gathering", "requirement gathering", "requirements analysis", "brd", "srs", "uml", "user stories", "use cases", "process modelling", "process modeling", "bpmn", "gap analysis", "stakeholder management", "process improvement", "business processes"]
     },
     {
       "id": "project_management",
@@ -198,7 +198,7 @@
       "area": "professional",
       "label": { "en": "Communication and teamwork", "si": "සන්නිවේදනය සහ කණ්ඩායම් වැඩ", "ta": "தொடர்பாடல் மற்றும் குழுப்பணி" },
       "description": "Written and spoken English, presentations and collaboration.",
-      "synonyms": ["communication skills", "communication", "verbal communication", "written communication", "english", "presentation skills", "interpersonal skills", "teamwork", "team player"]
+      "synonyms": ["communication skills", "communication", "verbal communication", "written communication", "english", "presentation skills", "interpersonal skills", "teamwork", "team player", "communicate", "collaborate", "collaboration", "collaborative", "interpersonal", "team environment"]
     }
   ]
 }
