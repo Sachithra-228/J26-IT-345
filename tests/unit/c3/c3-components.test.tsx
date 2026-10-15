@@ -256,10 +256,10 @@ describe("CareerGuidanceSection (student dashboard)", () => {
     const user = userEvent.setup();
     render(withLanguage(<CareerGuidanceSection />));
 
-    const saveButton = screen.getByRole("button", { name: en.save });
-    expect(saveButton).toBeDisabled();
+    expect(screen.queryByRole("button", { name: en.save })).not.toBeInTheDocument(); // shown with the results
     await user.click(screen.getByRole("button", { name: en.loadExample }));
     await user.click(screen.getByRole("button", { name: en.analyse }));
+    const saveButton = await screen.findByRole("button", { name: en.save });
     expect(saveButton).toBeDisabled(); // still no consent
     await user.click(screen.getByRole("checkbox", { name: en.consentLabel }));
     await user.click(saveButton);
