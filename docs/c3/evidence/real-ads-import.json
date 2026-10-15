@@ -1,41 +1,26 @@
 {
  "dataset": "Public Sri Lankan IT job advertisements copied manually into the C3 job-ads sheet",
  "warning": "PRELIMINARY: one collector and annotator (the researcher); counts change as collection continues.",
- "rowsInSheet": 99,
- "adsUsed": 98,
- "rowsSkipped": 1,
+ "rowsInSheet": 150,
+ "adsUsed": 150,
+ "rowsSkipped": 0,
  "issues": {
-  "duplicate_ad": {
-   "count": 1,
-   "meaning": "same advertisement as an earlier row (URL, title + company or text) - row skipped",
-   "rowSkipped": true
-  },
-  "bad_id": {
-   "count": 1,
-   "meaning": "Job_ID is not JOB + 3 digits (e.g. JOB099)",
-   "rowSkipped": false
-  },
   "bad_url": {
    "count": 2,
    "meaning": "URL is missing, shortened with '...' or holds two links",
    "rowSkipped": false
   },
-  "bad_value": {
-   "count": 1,
-   "meaning": "value is not one of the sheet's dropdown options",
-   "rowSkipped": false
-  },
   "unmapped_skill": {
-   "count": 6,
+   "count": 7,
    "meaning": "labelled skill matches no taxonomy competency (kept as evidence for the taxonomy)",
    "rowSkipped": false
   }
  },
  "piiRedactions": {
-  "email": 14,
+  "email": 24,
   "url": 3,
   "nic": 0,
-  "phone": 0,
+  "phone": 1,
   "labelled": 0,
   "address": 1
  },
@@ -43,69 +28,15 @@
   "perRole": [
    {
     "roleId": "software_engineer",
-    "ads": 23,
-    "intern": 12,
+    "ads": 25,
+    "intern": 14,
     "associate": 10,
     "senior": 1,
     "target": 25,
-    "stillNeeded": 2
+    "stillNeeded": 0
    },
    {
     "roleId": "frontend_engineer",
-    "ads": 8,
-    "intern": 3,
-    "associate": 4,
-    "senior": 1,
-    "target": 25,
-    "stillNeeded": 17
-   },
-   {
-    "roleId": "mobile_developer",
-    "ads": 5,
-    "intern": 4,
-    "associate": 1,
-    "senior": 0,
-    "target": 25,
-    "stillNeeded": 20
-   },
-   {
-    "roleId": "qa_engineer",
-    "ads": 9,
-    "intern": 5,
-    "associate": 3,
-    "senior": 1,
-    "target": 25,
-    "stillNeeded": 16
-   },
-   {
-    "roleId": "devops_engineer",
-    "ads": 6,
-    "intern": 3,
-    "associate": 2,
-    "senior": 1,
-    "target": 25,
-    "stillNeeded": 19
-   },
-   {
-    "roleId": "data_analyst",
-    "ads": 5,
-    "intern": 4,
-    "associate": 1,
-    "senior": 0,
-    "target": 25,
-    "stillNeeded": 20
-   },
-   {
-    "roleId": "data_scientist",
-    "ads": 5,
-    "intern": 2,
-    "associate": 2,
-    "senior": 1,
-    "target": 25,
-    "stillNeeded": 20
-   },
-   {
-    "roleId": "business_analyst",
     "ads": 9,
     "intern": 3,
     "associate": 5,
@@ -114,47 +45,102 @@
     "stillNeeded": 16
    },
    {
-    "roleId": "ui_ux_designer",
-    "ads": 6,
-    "intern": 3,
-    "associate": 3,
-    "senior": 0,
-    "target": 25,
-    "stillNeeded": 19
-   },
-   {
-    "roleId": "network_engineer",
-    "ads": 8,
-    "intern": 5,
-    "associate": 3,
-    "senior": 0,
-    "target": 25,
-    "stillNeeded": 17
-   },
-   {
-    "roleId": "cybersecurity_analyst",
-    "ads": 6,
-    "intern": 5,
+    "roleId": "mobile_developer",
+    "ads": 7,
+    "intern": 6,
     "associate": 1,
     "senior": 0,
     "target": 25,
-    "stillNeeded": 19
+    "stillNeeded": 18
+   },
+   {
+    "roleId": "qa_engineer",
+    "ads": 25,
+    "intern": 11,
+    "associate": 10,
+    "senior": 4,
+    "target": 25,
+    "stillNeeded": 0
+   },
+   {
+    "roleId": "devops_engineer",
+    "ads": 13,
+    "intern": 6,
+    "associate": 4,
+    "senior": 3,
+    "target": 25,
+    "stillNeeded": 12
+   },
+   {
+    "roleId": "data_analyst",
+    "ads": 9,
+    "intern": 4,
+    "associate": 4,
+    "senior": 1,
+    "target": 25,
+    "stillNeeded": 16
+   },
+   {
+    "roleId": "data_scientist",
+    "ads": 8,
+    "intern": 2,
+    "associate": 3,
+    "senior": 3,
+    "target": 25,
+    "stillNeeded": 17
+   },
+   {
+    "roleId": "business_analyst",
+    "ads": 16,
+    "intern": 6,
+    "associate": 8,
+    "senior": 2,
+    "target": 25,
+    "stillNeeded": 9
+   },
+   {
+    "roleId": "ui_ux_designer",
+    "ads": 10,
+    "intern": 6,
+    "associate": 4,
+    "senior": 0,
+    "target": 25,
+    "stillNeeded": 15
+   },
+   {
+    "roleId": "network_engineer",
+    "ads": 12,
+    "intern": 5,
+    "associate": 7,
+    "senior": 0,
+    "target": 25,
+    "stillNeeded": 13
+   },
+   {
+    "roleId": "cybersecurity_analyst",
+    "ads": 7,
+    "intern": 5,
+    "associate": 2,
+    "senior": 0,
+    "target": 25,
+    "stillNeeded": 18
    },
    {
     "roleId": "project_coordinator",
-    "ads": 8,
-    "intern": 7,
+    "ads": 9,
+    "intern": 8,
     "associate": 0,
     "senior": 1,
     "target": 25,
-    "stillNeeded": 17
+    "stillNeeded": 16
    }
   ],
-  "rolesAtTarget": 0,
+  "rolesAtTarget": 2,
   "sources": {
-   "LinkedIn (manual)": 57,
-   "TopJobs": 19,
-   "Company careers page": 13,
+   "LinkedIn (manual)": 62,
+   "Other": 33,
+   "TopJobs": 27,
+   "Company careers page": 19,
    "XpressJobs": 9
   }
  },
@@ -163,6 +149,7 @@
   "Go": 1,
   "Claude Code": 1,
   "Codex": 1,
-  "OpenCode": 1
+  "OpenCode": 1,
+  "SEO / analytics": 1
  }
 }

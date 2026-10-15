@@ -1,94 +1,95 @@
 {
- "generatedAt": "2026-10-14",
+ "generatedAt": "2026-10-15",
  "taxonomyVersion": "1.1.0",
  "realAds": {
-  "rowsInSheet": 99,
-  "adsUsed": 98,
-  "rowsSkipped": 1,
-  "issuesToFix": 5,
+  "rowsInSheet": 150,
+  "adsUsed": 150,
+  "rowsSkipped": 0,
+  "issuesToFix": 2,
   "other": 0,
-  "rolesAtTarget": 0,
+  "rolesAtTarget": 2,
   "perRole": [
    {
     "roleId": "software_engineer",
-    "ads": 23,
+    "ads": 25,
     "target": 25
    },
    {
     "roleId": "frontend_engineer",
-    "ads": 8,
+    "ads": 9,
     "target": 25
    },
    {
     "roleId": "mobile_developer",
-    "ads": 5,
+    "ads": 7,
     "target": 25
    },
    {
     "roleId": "qa_engineer",
-    "ads": 9,
+    "ads": 25,
     "target": 25
    },
    {
     "roleId": "devops_engineer",
-    "ads": 6,
+    "ads": 13,
     "target": 25
    },
    {
     "roleId": "data_analyst",
-    "ads": 5,
-    "target": 25
-   },
-   {
-    "roleId": "data_scientist",
-    "ads": 5,
-    "target": 25
-   },
-   {
-    "roleId": "business_analyst",
     "ads": 9,
     "target": 25
    },
    {
+    "roleId": "data_scientist",
+    "ads": 8,
+    "target": 25
+   },
+   {
+    "roleId": "business_analyst",
+    "ads": 16,
+    "target": 25
+   },
+   {
     "roleId": "ui_ux_designer",
-    "ads": 6,
+    "ads": 10,
     "target": 25
    },
    {
     "roleId": "network_engineer",
-    "ads": 8,
+    "ads": 12,
     "target": 25
    },
    {
     "roleId": "cybersecurity_analyst",
-    "ads": 6,
+    "ads": 7,
     "target": 25
    },
    {
     "roleId": "project_coordinator",
-    "ads": 8,
+    "ads": 9,
     "target": 25
    }
   ],
   "sources": {
-   "LinkedIn (manual)": 57,
-   "TopJobs": 19,
-   "Company careers page": 13,
+   "LinkedIn (manual)": 62,
+   "Other": 33,
+   "TopJobs": 27,
+   "Company careers page": 19,
    "XpressJobs": 9
   }
  },
  "realEvaluation": {
-  "ads": 98,
+  "ads": 150,
   "annotators": 1,
   "developmentSet": true,
-  "precision": 0.902,
-  "recall": 0.797,
-  "f1": 0.846,
+  "precision": 0.905,
+  "recall": 0.776,
+  "f1": 0.836,
   "f1Ci95": [
-   0.823,
-   0.868
+   0.816,
+   0.854
   ],
-  "roleFromTitleAccuracy": 0.561,
-  "seniorityAccuracy": 0.99
+  "roleFromTitleAccuracy": 0.62,
+  "seniorityAccuracy": 0.967
  }
 }
