@@ -25,7 +25,8 @@ Stages
          ml/c3/data/raw/job_ads_sheet.csv (git-ignored) and evaluate extraction, role
          and seniority against the researcher's labels (preliminary, one annotator)
          -> ml/c3/data/private/* (git-ignored), docs/c3/evidence/real-ads-import.json,
-            docs/c3/evidence/extraction-eval-real.json (aggregate numbers only)
+            docs/c3/evidence/extraction-eval-real.json, src/lib/c3/model/data-status.json and
+            src/lib/c3/model/job-titles.json ("search job sites for" title counts) - aggregate numbers only
 
 SYNTHETIC DATA: validates the pipeline, not real-world accuracy.
 """
@@ -292,9 +293,12 @@ def stage_evaluate() -> None:
 def stage_real() -> None:
     import evaluate_real_ads
     import import_sheet
+    import job_titles
 
-    if import_sheet.run() is not None:
+    result = import_sheet.run()
+    if result is not None:
         evaluate_real_ads.run()
+        job_titles.run(result, datetime.now(timezone.utc).date().isoformat())
 
 
 STAGES = {"data": stage_data, "model": stage_model, "graph": stage_graph, "parity": stage_parity, "evaluate": stage_evaluate,

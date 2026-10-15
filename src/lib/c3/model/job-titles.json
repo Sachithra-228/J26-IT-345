@@ -1,0 +1,332 @@
+{
+ "generatedAt": "2026-10-15",
+ "source": "manually collected public Sri Lankan IT job ads (title counts only)",
+ "adsUsed": 150,
+ "titlesWithoutSearchableName": 6,
+ "roles": {
+  "software_engineer": {
+   "ads": 25,
+   "titles": [
+    {
+     "title": "Software Engineer",
+     "ads": 13
+    },
+    {
+     "title": "Python Developer",
+     "ads": 2
+    },
+    {
+     "title": "Software Engineering",
+     "ads": 2
+    },
+    {
+     "title": "AI and Automation",
+     "ads": 1
+    },
+    {
+     "title": "Backend Developer",
+     "ads": 1
+    },
+    {
+     "title": "Full Stack Developer",
+     "ads": 1
+    }
+   ]
+  },
+  "frontend_engineer": {
+   "ads": 9,
+   "titles": [
+    {
+     "title": "Web Developer",
+     "ads": 3
+    },
+    {
+     "title": "WordPress Developer",
+     "ads": 2
+    },
+    {
+     "title": "Front-End Engineer",
+     "ads": 1
+    },
+    {
+     "title": "Frontend Developer",
+     "ads": 1
+    },
+    {
+     "title": "Full-Stack Web Developer",
+     "ads": 1
+    },
+    {
+     "title": "PHP WordPress Web Developer",
+     "ads": 1
+    }
+   ]
+  },
+  "mobile_developer": {
+   "ads": 7,
+   "titles": [
+    {
+     "title": "Mobile App Developer",
+     "ads": 3
+    },
+    {
+     "title": "Flutter Developer",
+     "ads": 1
+    },
+    {
+     "title": "Mobile Application Developer",
+     "ads": 1
+    },
+    {
+     "title": "Mobile Development",
+     "ads": 1
+    },
+    {
+     "title": "Software Engineer",
+     "ads": 1
+    }
+   ]
+  },
+  "qa_engineer": {
+   "ads": 25,
+   "titles": [
+    {
+     "title": "Quality Assurance",
+     "ads": 8
+    },
+    {
+     "title": "QA Engineer",
+     "ads": 7
+    },
+    {
+     "title": "Quality Assurance Engineer",
+     "ads": 5
+    },
+    {
+     "title": "QA",
+     "ads": 3
+    },
+    {
+     "title": "Quality Engineer",
+     "ads": 1
+    },
+    {
+     "title": "Software QA Engineer",
+     "ads": 1
+    }
+   ]
+  },
+  "devops_engineer": {
+   "ads": 13,
+   "titles": [
+    {
+     "title": "DevOps Engineer",
+     "ads": 7
+    },
+    {
+     "title": "Cloud Engineer",
+     "ads": 4
+    },
+    {
+     "title": "BSS & Fintech Operations",
+     "ads": 1
+    },
+    {
+     "title": "DevOps",
+     "ads": 1
+    }
+   ]
+  },
+  "data_analyst": {
+   "ads": 9,
+   "titles": [
+    {
+     "title": "Business Data Analyst",
+     "ads": 2
+    },
+    {
+     "title": "Data Analyst",
+     "ads": 2
+    },
+    {
+     "title": "Business Analytics",
+     "ads": 1
+    },
+    {
+     "title": "Data Analytics",
+     "ads": 1
+    },
+    {
+     "title": "Data Engineer",
+     "ads": 1
+    },
+    {
+     "title": "IT Service Management",
+     "ads": 1
+    }
+   ]
+  },
+  "data_scientist": {
+   "ads": 8,
+   "titles": [
+    {
+     "title": "AI Engineer",
+     "ads": 2
+    },
+    {
+     "title": "Machine Learning Engineer",
+     "ads": 2
+    },
+    {
+     "title": "AI Context Engineer",
+     "ads": 1
+    },
+    {
+     "title": "Data Scientist",
+     "ads": 1
+    },
+    {
+     "title": "ML Engineer",
+     "ads": 1
+    },
+    {
+     "title": "MLOps",
+     "ads": 1
+    }
+   ]
+  },
+  "business_analyst": {
+   "ads": 16,
+   "titles": [
+    {
+     "title": "Business Analyst",
+     "ads": 14
+    },
+    {
+     "title": "Business Central Support",
+     "ads": 1
+    },
+    {
+     "title": "Product Owner",
+     "ads": 1
+    }
+   ]
+  },
+  "ui_ux_designer": {
+   "ads": 10,
+   "titles": [
+    {
+     "title": "UI/UX Designer",
+     "ads": 4
+    },
+    {
+     "title": "Graphic Design",
+     "ads": 1
+    },
+    {
+     "title": "Graphic Designer",
+     "ads": 1
+    },
+    {
+     "title": "Product Designer",
+     "ads": 1
+    },
+    {
+     "title": "UI/UX Design",
+     "ads": 1
+    },
+    {
+     "title": "UI/UX Engineer",
+     "ads": 1
+    }
+   ]
+  },
+  "network_engineer": {
+   "ads": 12,
+   "titles": [
+    {
+     "title": "Network Engineer",
+     "ads": 2
+    },
+    {
+     "title": "IT Assistant",
+     "ads": 1
+    },
+    {
+     "title": "IT Executive",
+     "ads": 1
+    },
+    {
+     "title": "IT Network Support",
+     "ads": 1
+    },
+    {
+     "title": "IT Support Engineer",
+     "ads": 1
+    },
+    {
+     "title": "System Engineer",
+     "ads": 1
+    }
+   ]
+  },
+  "cybersecurity_analyst": {
+   "ads": 7,
+   "titles": [
+    {
+     "title": "IT Infrastructure & Security",
+     "ads": 2
+    },
+    {
+     "title": "Cybersecurity Product Support",
+     "ads": 1
+    },
+    {
+     "title": "Digital Trust & Privacy",
+     "ads": 1
+    },
+    {
+     "title": "Global IT Infrastructure & Information Security",
+     "ads": 1
+    },
+    {
+     "title": "Information Security Analyst",
+     "ads": 1
+    },
+    {
+     "title": "Security Analyst",
+     "ads": 1
+    }
+   ]
+  },
+  "project_coordinator": {
+   "ads": 9,
+   "titles": [
+    {
+     "title": "Project Management",
+     "ads": 2
+    },
+    {
+     "title": "Business Management",
+     "ads": 1
+    },
+    {
+     "title": "Digital & IT Services",
+     "ads": 1
+    },
+    {
+     "title": "IT Application Support",
+     "ads": 1
+    },
+    {
+     "title": "Management",
+     "ads": 1
+    },
+    {
+     "title": "Project",
+     "ads": 1
+    }
+   ]
+  }
+ }
+}
