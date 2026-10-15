@@ -227,6 +227,7 @@ const en = {
   dsEvalLine: "Skill extraction on {n} real ads: precision {p}, recall {r}, F1 {f1} (95% CI {lo}-{hi}).",
   dsEvalExtra: "Role from the ad title alone: {role}% correct · seniority: {sen}% correct.",
   dsEvalNote: "Preliminary: one person labelled these ads, and the same ads were used to tune the skill dictionary, so the figures are optimistic. New advertisements will be the independent test.",
+  dsHeldOut: "Held-out check on {n} new ads: F1 {f1} (95% CI {lo}-{hi}).",
   // ---- mock interview (FR13)
   tabReadiness: "Readiness and plan",
   tabInterview: "Mock interview",
@@ -513,6 +514,7 @@ const si: C3Text = {
   dsEvalLine: "සැබෑ දැන්වීම් {n} ක කුසලතා හඳුනාගැනීම: precision {p}, recall {r}, F1 {f1} (95% CI {lo}-{hi}).",
   dsEvalExtra: "දැන්වීමේ මාතෘකාවෙන් පමණක් භූමිකාව: {role}% නිවැරදියි · ජ්‍යෙෂ්ඨත්වය: {sen}% නිවැරදියි.",
   dsEvalNote: "මූලික ප්‍රතිඵලයකි: මෙම දැන්වීම් label කළේ එක් අයෙකු පමණක් වන අතර කුසලතා ශබ්දකෝෂය සකස් කිරීමටද මෙම දැන්වීම්ම භාවිත කළ නිසා අංක තරමක් ඉහළ විය හැක. නව දැන්වීම් ස්වාධීන පරීක්ෂණය වනු ඇත.",
+  dsHeldOut: "නව දැන්වීම් {n} ක held-out පරීක්ෂාව: F1 {f1} (95% CI {lo}-{hi}).",
   tabReadiness: "සූදානම සහ සැලැස්ම",
   tabInterview: "ආදර්ශ සම්මුඛ පරීක්ෂණය",
   ivTitle: "ආදර්ශ සම්මුඛ පරීක්ෂණ පුහුණුව",
@@ -796,6 +798,7 @@ const ta: C3Text = {
   dsEvalLine: "{n} உண்மையான விளம்பரங்களில் திறன் கண்டறிதல்: precision {p}, recall {r}, F1 {f1} (95% CI {lo}-{hi}).",
   dsEvalExtra: "விளம்பரத் தலைப்பிலிருந்து மட்டும் பணிப்பாத்திரம்: {role}% சரி · மூப்பு நிலை: {sen}% சரி.",
   dsEvalNote: "ஆரம்பநிலை முடிவு: இந்த விளம்பரங்களை ஒருவர் மட்டுமே label செய்தார், அதே விளம்பரங்கள் திறன் அகராதியைச் சரிசெய்யவும் பயன்பட்டதால் எண்கள் சற்று அதிகமாக இருக்கலாம். புதிய விளம்பரங்கள் சுயாதீன சோதனையாக இருக்கும்.",
+  dsHeldOut: "{n} புதிய விளம்பரங்களில் held-out சரிபார்ப்பு: F1 {f1} (95% CI {lo}-{hi}).",
   tabReadiness: "தயார்நிலை மற்றும் திட்டம்",
   tabInterview: "மாதிரி நேர்காணல்",
   ivTitle: "மாதிரி நேர்காணல் பயிற்சி",

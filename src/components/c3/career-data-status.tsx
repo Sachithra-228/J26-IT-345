@@ -139,6 +139,11 @@ export function CareerDataStatus({ status = dataStatus }: { status?: DataStatus 
               {t.dsCiNote}
             </span>
           </p>
+          {ev.heldOut ? (
+            <p data-testid="c3-ds-heldout" className="mt-3 rounded-xl border border-emerald-200 bg-emerald-50 px-3 py-2 text-sm text-emerald-900 dark:border-emerald-900 dark:bg-emerald-950/40 dark:text-emerald-100">
+              ✅ {fmt(t.dsHeldOut, { n: ev.heldOut.ads, f1: two(ev.heldOut.f1), lo: two(ev.heldOut.f1Ci95[0]), hi: two(ev.heldOut.f1Ci95[1]) })}
+            </p>
+          ) : null}
           <p className="mt-3 text-sm">{fmt(t.dsEvalExtra, { role: pct(ev.roleFromTitleAccuracy), sen: pct(ev.seniorityAccuracy) })}</p>
           <p className="mt-2 text-xs text-slate-500">{t.dsEvalNote}</p>
         </div>

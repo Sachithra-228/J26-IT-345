@@ -375,6 +375,18 @@ describe("CareerDataStatus (admin)", () => {
     expect(screen.getByTestId("c3-data-status")).toBeInTheDocument();
   });
 
+  it("shows the held-out check only when there are held-out ads", () => {
+    const { unmount } = render(withLanguage(<CareerDataStatus status={status} />));
+    expect(screen.queryByTestId("c3-ds-heldout")).not.toBeInTheDocument();
+    unmount();
+    const withHeldOut: DataStatus = {
+      ...status,
+      realEvaluation: { ...status.realEvaluation, heldOut: { ads: 52, f1: 0.819, f1Ci95: [0.786, 0.85], devLastJobNumber: 98 } }
+    };
+    render(withLanguage(<CareerDataStatus status={withHeldOut} />));
+    expect(screen.getByTestId("c3-ds-heldout")).toHaveTextContent(fmt(en.dsHeldOut, { n: 52, f1: "0.82", lo: "0.79", hi: "0.85" }));
+  });
+
   it("is available in Sinhala", async () => {
     window.localStorage.setItem("unicare-language", "si");
     render(withLanguage(<CareerDataStatus status={status} />));

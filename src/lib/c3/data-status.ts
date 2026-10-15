@@ -31,6 +31,8 @@ export type DataStatus = {
     f1Ci95: [number, number];
     roleFromTitleAccuracy: number | null;
     seniorityAccuracy: number | null;
+    /** Ads after the development set (never used for tuning): the honest estimate. */
+    heldOut?: { ads: number; f1: number; f1Ci95: [number, number]; devLastJobNumber: number } | null;
   };
 };
 
