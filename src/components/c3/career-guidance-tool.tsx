@@ -4,6 +4,7 @@ import { memo, useCallback, useEffect, useId, useMemo, useRef, useState, type Ch
 import { Button } from "@/components/shared/Button";
 import { Card } from "@/components/shared/Card";
 import { useLanguage, type Language } from "@/context/language-context";
+import { checkAgainstAd, type AdCheck } from "@/lib/c3/ad-check";
 import { assessCareer, type CareerAssessment, type SkillSource } from "@/lib/c3/assessment";
 import { CV_FILE_ACCEPT, CvFileError, readCvFile, type CvFileErrorCode } from "@/lib/c3/cv-file";
 import { extractSkills } from "@/lib/c3/extract";
@@ -962,6 +963,7 @@ const Results = memo(function Results({
       {detail ? (
         <>
           <JobTitlesCard roleId={detail.roleId} ctx={ctx} />
+          <AdCheckCard levels={result.levels} onSelect={onSelect} ctx={ctx} />
           <Breakdown readiness={detail.readiness} sources={result.sources} ctx={ctx} />
           <Gaps gaps={detail.gaps} roleId={detail.roleId} ctx={ctx} />
           <BackgroundTips background={background} roleId={detail.roleId} topGapSkillId={detail.gaps[0]?.skillId ?? null} ctx={ctx} />
@@ -1003,6 +1005,141 @@ function JobTitlesCard({ roleId, ctx }: { roleId: string; ctx: Ctx }) {
           <p className="mt-3 text-xs text-slate-600 dark:text-slate-300">{fmt(t.jtHint, { role, n: ads })}</p>
         </>
       )}
+    </section>
+  );
+}
+
+/**
+ * "Check me against this job ad": paste one ad, see which of its skills you have, what to
+ * learn first and which role it is closest to. The ad text stays in this component's state.
+ */
+function AdCheckCard({ levels, onSelect, ctx }: { levels: SkillLevels; onSelect: (id: string) => void; ctx: Ctx }) {
+  const { t, language } = ctx;
+  const uid = useId();
+  const [text, setText] = useState("");
+  const [check, setCheck] = useState<AdCheck | null>(null);
+  const haveList = check?.skills.filter((s) => s.have) ?? [];
+  const missingList = check?.skills.filter((s) => !s.have) ?? [];
+
+  return (
+    <section data-testid="c3-ad-check" aria-labelledby={`${uid}-ac`} className="rounded-2xl border border-teal-200 bg-gradient-to-br from-teal-50 to-emerald-50 p-4 dark:border-teal-900 dark:from-teal-950/40 dark:to-emerald-950/40">
+      <h3 id={`${uid}-ac`} className="flex items-center gap-2 text-base font-semibold text-teal-900 dark:text-teal-100">
+        <span aria-hidden="true">📋</span>
+        {t.acTitle}
+      </h3>
+      <p className="mt-1 text-sm text-slate-600 dark:text-slate-300">{t.acIntro}</p>
+      <label htmlFor={`${uid}-ac-text`} className="mb-1 mt-3 block text-sm font-medium text-slate-700 dark:text-slate-200">
+        {t.acLabel}
+      </label>
+      <textarea
+        id={`${uid}-ac-text`}
+        value={text}
+        onChange={(e) => setText(e.target.value)}
+        rows={5}
+        maxLength={20_000}
+        autoComplete="off"
+        aria-describedby={`${uid}-ac-privacy`}
+        className={`w-full rounded-xl border border-slate-300 bg-white px-3 py-2 text-sm dark:border-slate-700 dark:bg-slate-900 ${ring}`}
+      />
+      <p id={`${uid}-ac-privacy`} className="mt-1 text-xs text-slate-500 dark:text-slate-400">
+        🔒 {t.acPrivacy}
+      </p>
+      <div className="mt-3 flex flex-wrap gap-2">
+        <Button type="button" onClick={() => setCheck(checkAgainstAd(text, levels))} disabled={!text.trim()} className="disabled:opacity-50">
+          {t.acButton}
+        </Button>
+        {text || check ? (
+          <Button
+            type="button"
+            variant="ghost"
+            onClick={() => {
+              setText("");
+              setCheck(null);
+            }}
+          >
+            {t.acClear}
+          </Button>
+        ) : null}
+      </div>
+
+      {check ? (
+        <div data-testid="c3-ad-check-result" role="status" className="mt-4 space-y-4 rounded-xl bg-white p-4 shadow-sm dark:bg-slate-900">
+          {check.skills.length === 0 ? (
+            <p className="text-sm">{t.acNone}</p>
+          ) : (
+            <>
+              {!check.enoughSkills ? <p className="text-sm text-amber-700 dark:text-amber-300">{fmt(t.acTooFew, { n: check.skills.length })}</p> : null}
+              <div>
+                <p data-testid="c3-ad-check-match" className="text-sm font-semibold">
+                  {fmt(t.acMatch, { have: check.have, n: check.skills.length })}
+                </p>
+                <div
+                  className="mt-2 h-2.5 overflow-hidden rounded-full bg-slate-100 dark:bg-slate-800"
+                  role="progressbar"
+                  aria-label={t.acTitle}
+                  aria-valuetext={fmt(t.acMatch, { have: check.have, n: check.skills.length })}
+                  aria-valuemin={0}
+                  aria-valuemax={check.skills.length}
+                  aria-valuenow={check.have}
+                >
+                  <div className="h-full rounded-full bg-emerald-500" style={{ width: `${(check.match ?? 0) * 100}%` }} />
+                </div>
+              </div>
+
+              <div className="grid gap-4 sm:grid-cols-2">
+                <div>
+                  <h4 className="text-sm font-semibold text-emerald-800 dark:text-emerald-300">✅ {t.acHave} ({haveList.length})</h4>
+                  <ul data-testid="c3-ad-check-have" className="mt-2 flex flex-wrap gap-1.5">
+                    {haveList.map((s) => (
+                      <li key={s.skillId} className="rounded-full bg-emerald-100 px-2.5 py-0.5 text-xs text-emerald-900 dark:bg-emerald-900/50 dark:text-emerald-100">
+                        {skillName(s.skillId, language)} · {levelName(s.level, language)}
+                      </li>
+                    ))}
+                  </ul>
+                </div>
+                <div>
+                  <h4 className="text-sm font-semibold text-amber-800 dark:text-amber-300">📚 {t.acMissing} ({missingList.length})</h4>
+                  <ul data-testid="c3-ad-check-missing" className="mt-2 space-y-1.5">
+                    {missingList.map((s) => (
+                      <li key={s.skillId} className="rounded-lg border border-amber-200 bg-amber-50 px-2.5 py-1.5 text-xs dark:border-amber-900 dark:bg-amber-950/40">
+                        <span className="font-medium text-slate-800 dark:text-slate-100">{skillName(s.skillId, language)}</span>
+                        <span className="block text-slate-600 dark:text-slate-300">
+                          {s.nextAction ? fmt(t.acNext, { action: s.nextAction.title, h: s.nextAction.effortHours }) : t.acNoAction}
+                        </span>
+                      </li>
+                    ))}
+                  </ul>
+                </div>
+              </div>
+
+              <div>
+                <h4 className="text-sm font-semibold">{t.acClosest}</h4>
+                {check.closestRoles.length ? (
+                  <>
+                    <div data-testid="c3-ad-check-roles" className="mt-2 flex flex-wrap gap-2">
+                      {check.closestRoles.map((r) => (
+                        <button
+                          key={r.roleId}
+                          type="button"
+                          onClick={() => onSelect(r.roleId)}
+                          className={`flex items-center gap-1.5 rounded-full border border-teal-300 bg-teal-50 px-3 py-1 text-sm font-medium text-teal-900 hover:bg-teal-100 dark:border-teal-800 dark:bg-teal-950/40 dark:text-teal-100 ${ring}`}
+                        >
+                          <span aria-hidden="true">{ROLE_ICONS[r.roleId] ?? "💼"}</span>
+                          {roleName(r.roleId, language)}
+                        </button>
+                      ))}
+                    </div>
+                    <p className="mt-1 text-xs text-slate-500 dark:text-slate-400">{t.acClosestHint}</p>
+                  </>
+                ) : (
+                  <p className="mt-1 text-sm">{t.acNoRole}</p>
+                )}
+              </div>
+            </>
+          )}
+          <p className="text-xs text-slate-500 dark:text-slate-400">{t.acNote}</p>
+        </div>
+      ) : null}
     </section>
   );
 }
