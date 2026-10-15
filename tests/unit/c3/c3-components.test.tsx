@@ -10,6 +10,13 @@ import { collectionProgress, dataStatus, type DataStatus } from "@/lib/c3/data-s
 import { fmt, getC3Text } from "@/lib/c3/i18n";
 
 const withLanguage = (ui: React.ReactElement) => <LanguageProvider>{ui}</LanguageProvider>;
+
+type User = ReturnType<typeof userEvent.setup>;
+/** Step 1 needs 1-3 target roles before Next. */
+async function chooseRoleAndNext(user: User, role = "QA Engineer") {
+  await user.click(screen.getByRole("checkbox", { name: role }));
+  await user.click(screen.getByRole("button", { name: /Next/ }));
+}
 const en = getC3Text("en");
 
 afterEach(() => {
@@ -51,24 +58,91 @@ describe("CareerGuidanceTool", () => {
     expect(screen.getByRole("heading", { name: /Why DevOps \/ Cloud Engineer scored/ })).toBeInTheDocument();
   });
 
-  it("asks for 1 to 3 target roles", async () => {
+  it("asks for 1 to 3 target roles before moving on", async () => {
     const user = userEvent.setup();
     render(withLanguage(<CareerGuidanceTool />));
-    await user.click(screen.getByRole("button", { name: en.analyse }));
+    await user.click(screen.getByRole("button", { name: /Next/ }));
     expect(screen.getByRole("alert")).toHaveTextContent(en.targetError);
     expect(screen.queryByTestId("c3-results")).not.toBeInTheDocument();
+    expect(screen.getByRole("heading", { name: en.stepAbout })).toBeVisible();
+    // a fourth role cannot be chosen
+    for (const r of ["QA Engineer", "Business Analyst", "Data Analyst"]) await user.click(screen.getByRole("checkbox", { name: r }));
+    expect(screen.getByRole("checkbox", { name: "Network Engineer" })).toBeDisabled();
+    expect(screen.getByText(fmt(en.rolesChosen, { n: 3 }))).toBeInTheDocument();
   });
 
   it("higher skill levels give a higher readiness for the role", async () => {
     const user = userEvent.setup();
     render(withLanguage(<CareerGuidanceTool />));
-    await user.click(screen.getByRole("checkbox", { name: "Network Engineer" }));
+    await chooseRoleAndNext(user, "Network Engineer");
     await user.click(screen.getByRole("button", { name: en.analyse }));
     const low = Number((await screen.findByTestId("c3-score-network_engineer")).textContent);
-    await user.selectOptions(screen.getByLabelText("Computer networking"), "3");
-    await user.selectOptions(screen.getByLabelText("Cybersecurity"), "2");
+    await user.click(screen.getByRole("button", { name: new RegExp(en.editAnswers) }));
+    await user.click(screen.getByRole("button", { name: /Cloud, infrastructure and security/ }));
+    await user.click(within(screen.getByRole("radiogroup", { name: "Computer networking" })).getByRole("radio", { name: "3 - Advanced" }));
+    await user.click(within(screen.getByRole("radiogroup", { name: "Cybersecurity" })).getByRole("radio", { name: "2 - Intermediate" }));
     await user.click(screen.getByRole("button", { name: en.analyse }));
     await waitFor(() => expect(Number(screen.getByTestId("c3-score-network_engineer").textContent)).toBeGreaterThan(low));
+  });
+
+  it("keeps the caveats in one short visible line with the full notes under More info", () => {
+    render(withLanguage(<CareerGuidanceTool />));
+    const line = screen.getByText(en.notesShort);
+    expect(line).toBeVisible();
+    expect(line.textContent).toMatch(/guarantee/);
+    expect(line.textContent).toMatch(/synthetic/);
+    const more = screen.getByText(en.moreInfo).closest("details") as HTMLElement;
+    expect(within(more).getByText(en.syntheticNote)).toBeInTheDocument();
+    expect(within(more).getByText(en.privacyNote)).toBeInTheDocument();
+  });
+
+  it("rates skills with a keyboard-friendly 0-3 radio group and counts rated skills per area", async () => {
+    const user = userEvent.setup();
+    render(withLanguage(<CareerGuidanceTool />));
+    await chooseRoleAndNext(user);
+    const group = screen.getByRole("radiogroup", { name: "Python programming" });
+    const none = within(group).getByRole("radio", { name: "0 - None" });
+    expect(none).toHaveAttribute("aria-checked", "true");
+    none.focus();
+    await user.keyboard("{ArrowRight}{ArrowRight}");
+    expect(within(group).getByRole("radio", { name: "2 - Intermediate" })).toHaveAttribute("aria-checked", "true");
+    expect(within(group).getByRole("radio", { name: "2 - Intermediate" })).toHaveFocus();
+    expect(screen.getByRole("button", { name: /Software engineering/ })).toHaveTextContent(fmt(en.rated, { x: 1, y: 5 }));
+  });
+
+  it("moves to the results, focuses them and hides the baseline until Research view is on", async () => {
+    const user = userEvent.setup();
+    render(withLanguage(<CareerGuidanceTool />));
+    await user.click(screen.getByRole("button", { name: en.loadExample }));
+    await user.click(screen.getByRole("button", { name: en.analyse }));
+    expect(await screen.findByTestId("c3-results")).toBeVisible();
+    expect(screen.getByRole("heading", { name: en.stepResults })).toHaveFocus();
+    expect(screen.queryByText(/Simple overlap/)).not.toBeInTheDocument();
+    await user.click(screen.getByRole("switch", { name: en.researchView }));
+    expect(screen.getAllByText(/Simple overlap/).length).toBe(12);
+    // the per-skill points stay visible; the formula is one click away
+    expect(within(screen.getByTestId("c3-breakdown")).getAllByText(/pts$/).length).toBeGreaterThan(2);
+    expect(screen.getByText(en.calcTitle)).toBeInTheDocument();
+  });
+
+  it("starts CV-found skills at Basic without counting them as questionnaire answers", async () => {
+    const results: Array<{ sources: Record<string, string> }> = [];
+    const user = userEvent.setup();
+    render(withLanguage(<CareerGuidanceTool cvEnabled onResult={(_p, a) => results.push(a)} />));
+    await chooseRoleAndNext(user, "DevOps / Cloud Engineer");
+    await user.click(screen.getByRole("checkbox", { name: en.cvConsent }));
+    await user.click(screen.getByLabelText(en.cvLabel));
+    await user.paste("Skills: Docker and Kubernetes");
+    await user.click(screen.getByRole("button", { name: en.cvAnalyse }));
+    expect(screen.getByText(en.cvPrefilled)).toBeInTheDocument();
+    await user.click(screen.getByRole("button", { name: /Next/ }));
+    await user.click(screen.getByRole("button", { name: /Cloud, infrastructure and security/ }));
+    const group = screen.getByRole("radiogroup", { name: /Containers \(Docker \/ Kubernetes\)/ });
+    expect(within(group).getByRole("radio", { name: "1 - Basic" })).toHaveAttribute("aria-checked", "true");
+    expect(screen.getAllByText(en.cvBadge).length).toBeGreaterThan(0);
+    await user.click(screen.getByRole("button", { name: en.analyse }));
+    expect(results[0].sources.containers).toBe("cv");
+    expect(within(screen.getByTestId("c3-breakdown")).getAllByText(en.fromCv).length).toBeGreaterThan(0);
   });
 
   it("hides the CV step unless it is enabled", () => {
@@ -79,11 +153,13 @@ describe("CareerGuidanceTool", () => {
   it("shows the CV step in the student section by default, and hides it when the flag is false", () => {
     global.fetch = jest.fn().mockResolvedValue({ ok: false, status: 404, json: async () => ({}) }) as unknown as typeof fetch;
     const { unmount } = render(withLanguage(<CareerGuidanceSection />));
-    expect(screen.getByText(en.cvTitle)).toBeInTheDocument();
+    expect(screen.getByRole("button", { name: new RegExp(en.stepCv) })).toBeInTheDocument();
+    expect(screen.getByText(fmt(en.stepOf, { n: 1, total: 4 }))).toBeInTheDocument();
     unmount();
     process.env.NEXT_PUBLIC_C3_CV_ENABLED = "false";
     render(withLanguage(<CareerGuidanceSection />));
-    expect(screen.queryByText(en.cvTitle)).not.toBeInTheDocument();
+    expect(screen.queryByRole("button", { name: new RegExp(en.stepCv) })).not.toBeInTheDocument();
+    expect(screen.getByText(fmt(en.stepOf, { n: 1, total: 3 }))).toBeInTheDocument();
   });
 
   it("needs consent before analysing CV text, strips PII and keeps it on the device", async () => {
@@ -91,6 +167,7 @@ describe("CareerGuidanceTool", () => {
     global.fetch = fetchSpy as unknown as typeof fetch;
     const user = userEvent.setup();
     render(withLanguage(<CareerGuidanceTool cvEnabled />));
+    await chooseRoleAndNext(user);
     const box = screen.getByLabelText(en.cvLabel);
     expect(box).toBeDisabled();
     await user.click(screen.getByRole("checkbox", { name: en.cvConsent }));
@@ -108,6 +185,7 @@ describe("CareerGuidanceTool", () => {
     global.fetch = fetchSpy as unknown as typeof fetch;
     const user = userEvent.setup();
     render(withLanguage(<CareerGuidanceTool cvEnabled />));
+    await chooseRoleAndNext(user);
     const input = screen.getByLabelText(en.cvUpload);
     expect(input).toBeDisabled();
     await user.click(screen.getByRole("checkbox", { name: en.cvConsent }));
@@ -127,6 +205,7 @@ describe("CareerGuidanceTool", () => {
   it("explains why a CV file could not be used", async () => {
     const user = userEvent.setup();
     render(withLanguage(<CareerGuidanceTool cvEnabled />));
+    await chooseRoleAndNext(user);
     await user.click(screen.getByRole("checkbox", { name: en.cvConsent }));
     const input = screen.getByLabelText(en.cvUpload);
     fireEvent.change(input, { target: { files: [new File(["x"], "cv.doc", { type: "application/msword" })] } });
@@ -137,16 +216,37 @@ describe("CareerGuidanceTool", () => {
   it("is available in Sinhala and Tamil", async () => {
     window.localStorage.setItem("unicare-language", "si");
     const { unmount } = render(withLanguage(<CareerGuidanceTool />));
-    expect(await screen.findByRole("button", { name: getC3Text("si").analyse })).toBeInTheDocument();
+    expect(await screen.findByRole("button", { name: getC3Text("si").loadExample })).toBeInTheDocument();
+    expect(screen.getByText(getC3Text("si").notesShort)).toBeInTheDocument();
     expect(screen.getByText(getC3Text("si").guidanceNote)).toBeInTheDocument();
     unmount();
     window.localStorage.setItem("unicare-language", "ta");
     render(withLanguage(<CareerGuidanceTool />));
-    expect(await screen.findByRole("button", { name: getC3Text("ta").analyse })).toBeInTheDocument();
+    expect(await screen.findByRole("button", { name: getC3Text("ta").loadExample })).toBeInTheDocument();
+    expect(screen.getByRole("heading", { name: getC3Text("ta").stepAbout })).toBeInTheDocument();
   });
 });
 
 describe("CareerGuidanceSection (student dashboard)", () => {
+  it("lets a student erase saved answers before running a new analysis", async () => {
+    const fetchMock = jest.fn(async (_url: string, init?: RequestInit) => {
+      if (init?.method === "DELETE") return { ok: true, status: 200, json: async () => ({ deleted: true }) };
+      return {
+        ok: true,
+        status: 200,
+        json: async () => ({ savedAt: "2026-10-10T10:00:00Z", profile: { yearOfStudy: 3, targetRoleIds: ["qa_engineer"], skills: { testing_manual: 2 } } })
+      };
+    });
+    global.fetch = fetchMock as unknown as typeof fetch;
+    const user = userEvent.setup();
+    render(withLanguage(<CareerGuidanceSection />));
+    await user.click(await screen.findByRole("button", { name: en.deleteSaved }));
+    await waitFor(() => expect(screen.getByText(en.deletedNote)).toBeInTheDocument());
+    expect(fetchMock.mock.calls.some(([, init]) => init?.method === "DELETE")).toBe(true);
+    // the saved answers were loaded into the skills step
+    expect(screen.getByRole("heading", { name: en.stepSkills })).toBeVisible();
+  });
+
   it("saves only the answers, and only after consent", async () => {
     const fetchMock = jest.fn(async (url: string, init?: RequestInit) => {
       if (init?.method === "POST") return { ok: true, status: 201, json: async () => ({ savedAt: "2026-10-10T10:00:00Z" }) };
