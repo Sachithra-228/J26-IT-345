@@ -157,9 +157,13 @@ paths:
     post:
       summary: "C3 - save career answers (student only, explicit consent required)"
       description: >
-        Body { profile: { yearOfStudy: 3|4, targetRoleIds: [1-3 role ids], skills: { skillId: 0-3 } },
-        consent: true, cvText?: string (max 20,000 chars), cvConsent?: true }. Unknown fields are
-        rejected, so client-supplied scores are never accepted; the server recomputes everything.
+        Body { profile: { yearOfStudy: 3|4, targetRoleIds: [1-3 role ids], skills: { skillId: 0-3 },
+        background?: { specialisation?: IT|SE|DS|CSNE|CS|ISE|IM|Other, internship?: completed|doing|notStarted,
+        projects?: 0|1-2|3-5|6+ } }, consent: true, cvText?: string (max 20,000 chars), cvConsent?: true }.
+        Unknown fields are rejected (including unknown keys or values inside background), so client-supplied
+        scores are never accepted; the server recomputes everything. background is optional context only:
+        it is stored with the answers but never used for readiness, gaps or plans; profiles saved without it
+        still load.
         cvText is accepted with cvConsent unless NEXT_PUBLIC_C3_CV_ENABLED=false; PII is stripped,
         only the extracted skill ids are kept (as level 1 evidence) and the text is never stored or logged.
         Stored record: answers, model version and timestamps (no name, no CV text).

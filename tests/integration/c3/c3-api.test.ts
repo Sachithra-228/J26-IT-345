@@ -216,3 +216,23 @@ describe("rate limiting", () => {
     expect((await POST(json("/api/c3/assessment", "POST", { profile, consent: true }))).status).toBe(201);
   });
 });
+
+describe("academic background (context only)", () => {
+  it("stores and returns background, with the same scores as without it", async () => {
+    const background = { specialisation: "SE", internship: "notStarted", projects: "1-2" };
+    const res = await POST(json("/api/c3/assessment", "POST", { profile: { ...profile, background }, consent: true }));
+    expect(res.status).toBe(201);
+    const withBg = await res.json();
+    const mine = await (await GET(req("/api/c3/assessment"))).json();
+    expect(mine.profile.background).toEqual(background);
+    await DELETE(req("/api/c3/assessment", { method: "DELETE" }));
+    const plain = await (await POST(json("/api/c3/assessment", "POST", { profile, consent: true }))).json();
+    expect(withBg.assessment.roles).toEqual(plain.assessment.roles);
+  });
+
+  it("rejects unknown background values and keys", async () => {
+    for (const background of [{ specialisation: "Physics" }, { projects: "10" }, { gpa: 3.9 }]) {
+      expect((await POST(json("/api/c3/assessment", "POST", { profile: { ...profile, background }, consent: true }))).status).toBe(400);
+    }
+  });
+});
