@@ -12,7 +12,14 @@ import { planForRole, type GapToActionPlan, type StepReason } from "@/lib/c3/gra
 import { fmt, getC3Text, label, type C3Text } from "@/lib/c3/i18n";
 import { careerModel, getRole, getSkill, type ActionType, type RoleProfile } from "@/lib/c3/model";
 import { proposedReadiness, readinessBand, type RoleReadiness, type SkillLevels } from "@/lib/c3/readiness";
-import type { CareerProfile } from "@/lib/c3/validation";
+import {
+  backgroundTips,
+  backgroundTipText,
+  commonRolesFor,
+  orderRolesForSpecialisation,
+  specialisationName
+} from "@/lib/c3/specialisation-roles";
+import { INTERNSHIP_STATUSES, PROJECT_COUNTS, SPECIALISATIONS, type Background, type CareerProfile } from "@/lib/c3/validation";
 
 const ring = "focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-1 dark:focus-visible:ring-offset-slate-900";
 
@@ -135,6 +142,7 @@ export function CareerGuidanceTool({ initialProfile, cvEnabled = false, onResult
   const ctx: Ctx = useMemo(() => ({ t, language }), [t, language]);
   const uid = useId();
   const [year, setYear] = useState<3 | 4>(3);
+  const [background, setBackground] = useState<Background>({});
   const [targets, setTargets] = useState<string[]>([]);
   const [skills, setSkills] = useState<SkillLevels>({});
   const [targetError, setTargetError] = useState(false);
@@ -173,6 +181,7 @@ export function CareerGuidanceTool({ initialProfile, cvEnabled = false, onResult
 
   function load(profile: CareerProfile) {
     setYear(profile.yearOfStudy);
+    setBackground(profile.background ?? {});
     setTargets(profile.targetRoleIds);
     setSkills(profile.skills);
     setTargetError(false);
@@ -223,6 +232,7 @@ export function CareerGuidanceTool({ initialProfile, cvEnabled = false, onResult
 
   function clearAll() {
     setTargets([]);
+    setBackground({});
     setSkills({});
     setCvText("");
     setCv(null);
@@ -252,7 +262,13 @@ export function CareerGuidanceTool({ initialProfile, cvEnabled = false, onResult
       return;
     }
     const answers = Object.fromEntries(Object.entries(skills).filter(([, v]) => v > 0));
-    const profile: CareerProfile = { yearOfStudy: year, targetRoleIds: targets, skills: answers };
+    const chosen = Object.fromEntries(Object.entries(background).filter(([, v]) => v !== undefined)) as Background;
+    const profile: CareerProfile = {
+      yearOfStudy: year,
+      targetRoleIds: targets,
+      skills: answers,
+      ...(Object.keys(chosen).length ? { background: chosen } : {})
+    };
     const res = assessCareer(profile, cv?.skillIds ?? []);
     setResult(res);
     setSelected(targets[0]);
@@ -260,6 +276,45 @@ export function CareerGuidanceTool({ initialProfile, cvEnabled = false, onResult
     onResult?.({ ...profile, skills: merged }, res);
     goTo("results");
   }
+
+  /** Optional single-choice chips: click again to clear. A render function (not a component) so focus survives re-renders. */
+  function chipGroup<K extends keyof Background>(field: K, groupLabel: string, options: ReadonlyArray<{ value: NonNullable<Background[K]>; text: string }>) {
+    const id = `${uid}-bg-${String(field)}`;
+    return (
+      <div className="mt-4">
+        <p id={id} className="mb-2 text-sm font-medium text-slate-700 dark:text-slate-200">
+          {groupLabel}
+        </p>
+        <div role="radiogroup" aria-labelledby={id} className="flex flex-wrap gap-2">
+          {options.map((o) => {
+            const on = background[field] === o.value;
+            return (
+              <button
+                key={String(o.value)}
+                type="button"
+                role="radio"
+                aria-checked={on}
+                onClick={() => setBackground((cur) => ({ ...cur, [field]: on ? undefined : o.value }))}
+                className={`rounded-full border px-3 py-1.5 text-xs font-medium transition ${ring} ${
+                  on
+                    ? "border-violet-500 bg-violet-600 text-white shadow-sm dark:border-violet-400 dark:bg-violet-500"
+                    : "border-slate-200 bg-white text-slate-700 hover:border-violet-300 dark:border-slate-700 dark:bg-slate-900 dark:text-slate-200"
+                }`}
+              >
+                {o.text}
+              </button>
+            );
+          })}
+        </div>
+      </div>
+    );
+  }
+
+  const common = new Set(commonRolesFor(background.specialisation));
+  const orderedRoles = orderRolesForSpecialisation(
+    careerModel.roles.map((r) => r.id),
+    background.specialisation
+  ).map((id) => getRole(id) as RoleProfile);
 
   const headingProps = (id: StepId) => ({
     ref: (el: HTMLHeadingElement | null) => {
@@ -378,22 +433,37 @@ export function CareerGuidanceTool({ initialProfile, cvEnabled = false, onResult
               ))}
             </div>
           </div>
+          <div className="mt-5 rounded-2xl border border-violet-100 bg-violet-50/50 p-4 dark:border-violet-900/60 dark:bg-violet-950/20">
+            <h4 className="text-sm font-semibold text-slate-800 dark:text-slate-100">{t.bgTitle}</h4>
+            <p className="mt-0.5 text-xs text-slate-500 dark:text-slate-400">{t.bgHint}</p>
+            {chipGroup("specialisation", t.bgSpecialisation, SPECIALISATIONS.map((v) => ({ value: v, text: specialisationName(v, t) })))}
+            {chipGroup(
+              "internship",
+              t.bgInternship,
+              INTERNSHIP_STATUSES.map((v) => ({ value: v, text: { completed: t.intCompleted, doing: t.intDoing, notStarted: t.intNotStarted }[v] }))
+            )}
+            {chipGroup("projects", t.bgProjects, PROJECT_COUNTS.map((v) => ({ value: v, text: v })))}
+          </div>
           <fieldset className="mt-5" aria-describedby={`${uid}-roles-help${targetError ? ` ${uid}-target-error` : ""}`}>
             <legend className="text-sm font-medium text-slate-700 dark:text-slate-200">{t.targetRoles}</legend>
             <p id={`${uid}-roles-help`} className="mt-1 text-xs text-slate-500 dark:text-slate-400">
               {t.rolesHelp} <span className="font-semibold text-indigo-600 dark:text-indigo-300">{fmt(t.rolesChosen, { n: targets.length })}</span>
             </p>
             <div className="mt-3 grid grid-cols-1 gap-2 sm:grid-cols-2 lg:grid-cols-3">
-              {careerModel.roles.map((r) => {
+              {orderedRoles.map((r) => {
                 const checked = targets.includes(r.id);
                 const order = targets.indexOf(r.id);
                 const disabled = !checked && targets.length >= 3;
+                const isCommon = common.has(r.id);
                 return (
                   <button
                     key={r.id}
                     type="button"
                     role="checkbox"
                     aria-checked={checked}
+                    aria-label={label(r.label, language)}
+                    aria-describedby={isCommon ? `${uid}-common-badge` : undefined}
+                    data-testid={`c3-role-chip-${r.id}`}
                     disabled={disabled}
                     onClick={() => toggleTarget(r.id)}
                     className={`flex items-center gap-2 rounded-xl border px-3 py-2.5 text-left text-sm transition disabled:cursor-not-allowed disabled:opacity-40 ${ring} ${
@@ -405,7 +475,12 @@ export function CareerGuidanceTool({ initialProfile, cvEnabled = false, onResult
                     <span aria-hidden="true" className="text-lg leading-none">
                       {ROLE_ICONS[r.id] ?? "💼"}
                     </span>
-                    <span className="flex-1">{label(r.label, language)}</span>
+                    <span className="flex-1">
+                      {label(r.label, language)}
+                      {isCommon ? (
+                        <span className="mt-0.5 block text-[11px] font-medium text-violet-700 dark:text-violet-300">★ {t.commonBadge}</span>
+                      ) : null}
+                    </span>
                     {checked ? (
                       <span aria-hidden="true" className="flex h-5 w-5 items-center justify-center rounded-full bg-indigo-600 text-[11px] font-bold text-white">
                         {order + 1}
@@ -415,6 +490,11 @@ export function CareerGuidanceTool({ initialProfile, cvEnabled = false, onResult
                 );
               })}
             </div>
+            {common.size ? (
+              <span id={`${uid}-common-badge`} hidden>
+                {t.commonBadge}
+              </span>
+            ) : null}
             {targetError ? (
               <p id={`${uid}-target-error`} role="alert" className="mt-3 text-sm font-medium text-red-600 dark:text-red-400">
                 ▲ {t.targetError}
@@ -627,6 +707,8 @@ export function CareerGuidanceTool({ initialProfile, cvEnabled = false, onResult
         {result ? (
           <div className="space-y-5">
             <Results
+              year={year}
+              background={background}
               result={result}
               selected={selected}
               onSelect={setSelected}
@@ -746,6 +828,8 @@ function ScoreRing({ score, size = 112 }: { score: number; size?: number }) {
 }
 
 const Results = memo(function Results({
+  year,
+  background,
   result,
   selected,
   onSelect,
@@ -754,6 +838,8 @@ const Results = memo(function Results({
   onResearchView,
   ctx
 }: {
+  year: 3 | 4;
+  background: Background;
   result: CareerAssessment;
   selected: string | null;
   onSelect: (id: string) => void;
@@ -792,6 +878,9 @@ const Results = memo(function Results({
               <p className="mt-2 max-w-md text-sm text-white/90">{heroMsg}</p>
             </div>
           </div>
+          <p data-testid="c3-year-context" className="mt-4 rounded-xl bg-white/15 px-3 py-2 text-xs text-white">
+            🎓 {year === 3 ? t.yearContext3 : t.yearContext4}
+          </p>
         </div>
       ) : null}
 
@@ -873,6 +962,7 @@ const Results = memo(function Results({
         <>
           <Breakdown readiness={detail.readiness} sources={result.sources} ctx={ctx} />
           <Gaps gaps={detail.gaps} roleId={detail.roleId} ctx={ctx} />
+          <BackgroundTips background={background} roleId={detail.roleId} topGapSkillId={detail.gaps[0]?.skillId ?? null} ctx={ctx} />
           <Plan plan={detail.plan} ctx={ctx} />
         </>
       ) : null}
@@ -1010,6 +1100,32 @@ function Gaps({ gaps, roleId, ctx }: { gaps: SkillGap[]; roleId: string; ctx: Ct
         </ol>
       )}
     </Card>
+  );
+}
+
+/** Text tips from the academic background. Context only: the plan below is unchanged. */
+function BackgroundTips({ background, roleId, topGapSkillId, ctx }: { background: Background; roleId: string; topGapSkillId: string | null; ctx: Ctx }) {
+  const { t, language } = ctx;
+  const tips = backgroundTips(background, roleId, topGapSkillId);
+  if (tips.length === 0) return null;
+  return (
+    <section data-testid="c3-background-tips" className="rounded-2xl border border-violet-200 bg-gradient-to-br from-violet-50 to-indigo-50 p-4 dark:border-violet-900 dark:from-violet-950/40 dark:to-indigo-950/40">
+      <h3 className="flex items-center gap-2 text-base font-semibold text-violet-900 dark:text-violet-100">
+        <span aria-hidden="true">🎓</span>
+        {t.bgTipsTitle}
+      </h3>
+      <ul className="mt-2 space-y-1.5 text-sm text-slate-700 dark:text-slate-200">
+        {tips.map((tip) => (
+          <li key={tip.code} className="flex gap-2">
+            <span aria-hidden="true" className="text-violet-500">
+              •
+            </span>
+            <span>{backgroundTipText(tip, t, language)}</span>
+          </li>
+        ))}
+      </ul>
+      <p className="mt-2 text-xs text-slate-500 dark:text-slate-400">{t.bgTipsNote}</p>
+    </section>
   );
 }
 
