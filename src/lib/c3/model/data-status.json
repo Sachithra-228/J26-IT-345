@@ -1,5 +1,5 @@
 {
- "generatedAt": "2026-10-15",
+ "generatedAt": "2026-10-16",
  "taxonomyVersion": "1.1.0",
  "realAds": {
   "rowsInSheet": 150,
@@ -90,6 +90,15 @@
    0.854
   ],
   "roleFromTitleAccuracy": 0.62,
-  "seniorityAccuracy": 0.967
+  "seniorityAccuracy": 0.967,
+  "heldOut": {
+   "ads": 52,
+   "f1": 0.819,
+   "f1Ci95": [
+    0.786,
+    0.85
+   ],
+   "devLastJobNumber": 98
+  }
  }
 }

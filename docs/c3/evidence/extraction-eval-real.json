@@ -321,5 +321,121 @@
    "intern <- senior": 1
   }
  },
- "syntheticComparison": "Synthetic-ad extraction F1 is about 0.96 (docs/c3/evidence/extraction-eval.json); the gap shows how optimistic synthetic text is."
+ "syntheticComparison": "Synthetic-ad extraction F1 is about 0.96 (docs/c3/evidence/extraction-eval.json); the gap shows how optimistic synthetic text is.",
+ "splits": {
+  "devLastJobNumber": 98,
+  "rule": "development = JOB001-JOB098 (used to tune the v1.1.0 synonyms); heldOut = every later ad (never used for tuning)",
+  "adsWithoutJobNumber": 0,
+  "all": {
+   "ads": 150,
+   "precision": 0.905,
+   "recall": 0.776,
+   "f1": 0.836,
+   "f1Ci95": [
+    0.816,
+    0.854
+   ],
+   "macroF1OverAds": 0.811,
+   "recallRequired": 0.778,
+   "recallPreferred": 0.684,
+   "roleFromTitleAccuracy": 0.62,
+   "seniorityAccuracy": 0.967,
+   "weakestSkills": [
+    {
+     "skillId": "statistics",
+     "f1": 0.0
+    },
+    {
+     "skillId": "project_management",
+     "f1": 0.522
+    },
+    {
+     "skillId": "business_analysis",
+     "f1": 0.655
+    },
+    {
+     "skillId": "nosql",
+     "f1": 0.667
+    },
+    {
+     "skillId": "problem_solving",
+     "f1": 0.742
+    }
+   ]
+  },
+  "development": {
+   "ads": 98,
+   "precision": 0.902,
+   "recall": 0.797,
+   "f1": 0.846,
+   "f1Ci95": [
+    0.823,
+    0.868
+   ],
+   "macroF1OverAds": 0.82,
+   "recallRequired": 0.8,
+   "recallPreferred": 0.688,
+   "roleFromTitleAccuracy": 0.561,
+   "seniorityAccuracy": 0.98,
+   "weakestSkills": [
+    {
+     "skillId": "statistics",
+     "f1": 0.0
+    },
+    {
+     "skillId": "project_management",
+     "f1": 0.5
+    },
+    {
+     "skillId": "business_analysis",
+     "f1": 0.647
+    },
+    {
+     "skillId": "test_automation",
+     "f1": 0.667
+    },
+    {
+     "skillId": "ui_ux",
+     "f1": 0.737
+    }
+   ]
+  },
+  "heldOut": {
+   "ads": 52,
+   "precision": 0.91,
+   "recall": 0.744,
+   "f1": 0.819,
+   "f1Ci95": [
+    0.786,
+    0.85
+   ],
+   "macroF1OverAds": 0.793,
+   "recallRequired": 0.745,
+   "recallPreferred": 0.667,
+   "roleFromTitleAccuracy": 0.731,
+   "seniorityAccuracy": 0.942,
+   "weakestSkills": [
+    {
+     "skillId": "statistics",
+     "f1": 0.0
+    },
+    {
+     "skillId": "nosql",
+     "f1": 0.571
+    },
+    {
+     "skillId": "frontend",
+     "f1": 0.6
+    },
+    {
+     "skillId": "problem_solving",
+     "f1": 0.632
+    },
+    {
+     "skillId": "backend_api",
+     "f1": 0.643
+    }
+   ]
+  }
+ }
 }

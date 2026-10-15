@@ -9,7 +9,7 @@ from datetime import date
 import pytest
 
 import c3_common as C
-from evaluate_real_ads import build_data_status, evaluate
+from evaluate_real_ads import DEV_LAST_JOB_NUMBER, build_data_status, evaluate, evaluate_with_splits, job_number, split_labels
 from import_sheet import COLUMNS, import_sheet, map_skill_terms, read_sheet, report, validate_rows, label_map
 from skill_extractor import SkillExtractor
 
@@ -180,3 +180,51 @@ def test_admin_data_status_holds_only_aggregates(extractor, taxonomy, roles):
     text = json.dumps(status)
     for secret in ("Fictional", "topjobs", "example.com", "Nimal", "JOB001"):
         assert secret not in text
+
+
+def _ad(ad_id, found):
+    return {"ad_id": ad_id, "skills": [{"skill_id": s, "preferred": False} for s in found]}
+
+
+def _label(ad_id, required):
+    return {"ad_id": ad_id, "role_id": "software_engineer", "seniority": "intern", "required": required,
+            "preferred": [], "parsed_role_id": "software_engineer", "parsed_seniority": "intern"}
+
+
+def test_job_numbers_and_the_development_held_out_rule():
+    assert DEV_LAST_JOB_NUMBER == 98
+    assert [job_number(x) for x in ("JOB001", "JOB098", "JOB99", "job150", " JOB100 ", "JOBX", "")] == [1, 98, 99, 150, 100, None, None]
+    parts = split_labels([_label(i, []) for i in ("JOB001", "JOB098", "JOB099", "JOB150", "JOBX")])
+    assert [x["ad_id"] for x in parts["development"]] == ["JOB001", "JOB098"]
+    assert [x["ad_id"] for x in parts["heldOut"]] == ["JOB099", "JOB150"]
+    assert [x["ad_id"] for x in parts["unsplit"]] == ["JOBX"]
+
+
+def test_evaluation_reports_each_split_and_keeps_the_old_fields():
+    ads = [_ad("JOB001", ["python"]), _ad("JOB098", ["databases_sql"]), _ad("JOB099", ["cloud"]), _ad("JOB120", []), _ad("JOBX", ["linux"])]
+    labels = [_label("JOB001", ["python"]), _label("JOB098", ["databases_sql", "statistics"]), _label("JOB099", ["cloud"]),
+              _label("JOB120", ["linux"]), _label("JOBX", ["linux"])]
+    res = evaluate_with_splits(ads, labels, C.skill_ids())
+    # the top-level result is still the evaluation of every ad
+    assert res["ads"] == 5 and res["skillExtraction"]["micro"] == evaluate(ads, labels, C.skill_ids())["skillExtraction"]["micro"]
+    sp = res["splits"]
+    assert sp["devLastJobNumber"] == 98 and sp["adsWithoutJobNumber"] == 1
+    assert sp["all"]["ads"] == 5
+    assert sp["development"]["ads"] == 2
+    assert sp["development"]["recall"] == 0.667  # 2 of 3 labelled skills found (statistics missed)
+    assert sp["development"]["precision"] == 1.0
+    assert sp["heldOut"]["ads"] == 2 and sp["heldOut"]["recall"] == 0.5
+    assert len(sp["heldOut"]["f1Ci95"]) == 2 and "weakestSkills" in sp["heldOut"]
+
+
+def test_an_empty_held_out_set_is_null_everywhere(extractor, taxonomy, roles):
+    ads = [_ad("JOB001", ["python"])]
+    labels = [_label("JOB001", ["python"])]
+    res = evaluate_with_splits(ads, labels, C.skill_ids())
+    assert res["splits"]["heldOut"] is None
+    rows = [row("JOB001")]
+    summary = report(import_sheet(rows, extractor, taxonomy, roles, TODAY), roles)
+    assert build_data_status(summary, res, "1.1.0", "2026-10-16")["realEvaluation"]["heldOut"] is None
+    res2 = evaluate_with_splits(ads + [_ad("JOB120", ["cloud"])], labels + [_label("JOB120", ["cloud"])], C.skill_ids())
+    held = build_data_status(summary, res2, "1.1.0", "2026-10-16")["realEvaluation"]["heldOut"]
+    assert held == {"ads": 1, "f1": 1.0, "f1Ci95": held["f1Ci95"], "devLastJobNumber": 98}

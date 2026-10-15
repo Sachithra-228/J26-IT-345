@@ -11,6 +11,10 @@ labels (import_sheet.py):
   * role from title - the parser's title-based role vs the manual Role_Category
   * seniority from title / experience - parser vs manual Seniority
 
+Development / held-out split: the taxonomy v1.1.0 synonyms were chosen by looking at
+the first 98 ads (JOB001-JOB098, the development set). Every later ad (JOB099 onward)
+is the held-out test set; its numbers are the honest estimate. See DEV_LAST_JOB_NUMBER.
+
 IMPORTANT: one annotator (the researcher, who knows the taxonomy) labelled the ads,
 so agreement is optimistic; a second, independent annotator is needed for a final
 result. Outputs (aggregate numbers only): docs/c3/evidence/extraction-eval-real.json and
@@ -18,6 +22,7 @@ src/lib/c3/model/data-status.json (the snapshot shown on the admin insights page
 """
 from __future__ import annotations
 
+import re
 from collections import Counter, defaultdict
 
 import numpy as np
@@ -31,6 +36,11 @@ STATUS_OUT = C.MODEL_OUT.parent / "data-status.json"
 WARNING = ("PRELIMINARY - real public job ads, but ONE annotator (the researcher) who knows the taxonomy "
            "labelled them; agreement is optimistic until an independent second annotator is added.")
 MIN_SUPPORT_PER_SKILL = 3
+
+# The synonyms of taxonomy v1.1.0 were tuned on ads JOB001-JOB098 (the development set).
+# Ads with a higher number are the HELD-OUT test set: never look at them to change
+# synonyms, parser rules or labels, or their numbers stop being an honest test.
+DEV_LAST_JOB_NUMBER = 98
 
 
 def _micro(pairs: list[tuple[set, set]]) -> dict:
@@ -119,6 +129,58 @@ def evaluate(ads: list[dict], labels: list[dict], skill_order: list[str]) -> dic
     }
 
 
+def job_number(ad_id: str) -> int | None:
+    """JOB001 -> 1, JOB99 -> 99; None when the ID has no number."""
+    m = re.fullmatch(r"\s*JOB0*(\d+)\s*", ad_id or "", re.IGNORECASE)
+    return int(m.group(1)) if m else None
+
+
+def split_labels(labels: list[dict], dev_last: int = DEV_LAST_JOB_NUMBER) -> dict:
+    """Splits labelled ads into development (number <= dev_last) and held-out (number > dev_last)."""
+    out: dict[str, list[dict]] = {"development": [], "heldOut": [], "unsplit": []}
+    for lab in labels:
+        n = job_number(lab["ad_id"])
+        out["unsplit" if n is None else "development" if n <= dev_last else "heldOut"].append(lab)
+    return out
+
+
+def split_summary(ads: list[dict], labels: list[dict], skill_order: list[str]) -> dict | None:
+    """The headline numbers for one split; None when it has no ads."""
+    if not labels:
+        return None
+    ids = {lab["ad_id"] for lab in labels}
+    res = evaluate([a for a in ads if a["ad_id"] in ids], labels, skill_order)
+    e = res["skillExtraction"]
+    return {
+        "ads": res["ads"],
+        "precision": e["micro"]["precision"],
+        "recall": e["micro"]["recall"],
+        "f1": e["micro"]["f1"],
+        "f1Ci95": e["microF1ci95"],
+        "macroF1OverAds": e["macroF1OverAds"],
+        "recallRequired": e["recallRequired"],
+        "recallPreferred": e["recallPreferred"],
+        "roleFromTitleAccuracy": res["roleFromTitle"]["accuracy"],
+        "seniorityAccuracy": res["seniority"]["accuracy"],
+        "weakestSkills": [{"skillId": s["skillId"], "f1": s["f1"]} for s in e["perSkill"][:5]],
+    }
+
+
+def evaluate_with_splits(ads: list[dict], labels: list[dict], skill_order: list[str], dev_last: int = DEV_LAST_JOB_NUMBER) -> dict:
+    """evaluate() on all ads (top-level fields unchanged) plus "splits": all / development / heldOut."""
+    res = evaluate(ads, labels, skill_order)
+    parts = split_labels(labels, dev_last)
+    res["splits"] = {
+        "devLastJobNumber": dev_last,
+        "rule": f"development = JOB001-JOB{dev_last:03d} (used to tune the v1.1.0 synonyms); heldOut = every later ad (never used for tuning)",
+        "adsWithoutJobNumber": len(parts["unsplit"]),
+        "all": split_summary(ads, labels, skill_order),
+        "development": split_summary(ads, parts["development"], skill_order),
+        "heldOut": split_summary(ads, parts["heldOut"], skill_order),
+    }
+    return res
+
+
 def build_data_status(import_report: dict, eval_res: dict, taxonomy_version: str, generated: str) -> dict:
     """Aggregate numbers only (counts, shares, metrics): no ad text, company names or URLs."""
     cov = import_report["coverage"]
@@ -148,8 +210,17 @@ def build_data_status(import_report: dict, eval_res: dict, taxonomy_version: str
             "f1Ci95": ext["microF1ci95"],
             "roleFromTitleAccuracy": eval_res["roleFromTitle"]["accuracy"],
             "seniorityAccuracy": eval_res["seniority"]["accuracy"],
+            "heldOut": _held_out_status(eval_res),
         },
     }
+
+
+def _held_out_status(eval_res: dict) -> dict | None:
+    splits = eval_res.get("splits") or {}
+    held = splits.get("heldOut")
+    if not held:
+        return None
+    return {"ads": held["ads"], "f1": held["f1"], "f1Ci95": held["f1Ci95"], "devLastJobNumber": splits["devLastJobNumber"]}
 
 
 def run() -> dict | None:
@@ -162,7 +233,7 @@ def run() -> dict | None:
 
     from import_sheet import REPORT_OUT
 
-    res = evaluate(C.read_jsonl(CLEAN_OUT), C.read_jsonl(LABELS_OUT), C.skill_ids())
+    res = evaluate_with_splits(C.read_jsonl(CLEAN_OUT), C.read_jsonl(LABELS_OUT), C.skill_ids())
     C.write_json(OUT, res)
     status = build_data_status(C.load_json(REPORT_OUT), res, C.load_taxonomy()["taxonomyVersion"], date.today().isoformat())
     C.write_json(STATUS_OUT, status)
@@ -178,6 +249,17 @@ def run() -> dict | None:
     r = res["roleFromTitle"]
     print(f"  role from title: accuracy {r['accuracy']} ({r['unclassified']} unclassified of {r['adsWithCatalogueRole']})")
     print(f"  seniority: accuracy {res['seniority']['accuracy']}")
+    sp = res["splits"]
+    print(f"  split (dev = JOB001-JOB{sp['devLastJobNumber']:03d}, held-out = later ads):")
+    for name in ("all", "development", "heldOut"):
+        x = sp[name]
+        if x is None:
+            print(f"    {name:<12} no ads")
+            continue
+        print(f"    {name:<12} {x['ads']:>4} ads  P {x['precision']:.3f} R {x['recall']:.3f} F1 {x['f1']:.3f} "
+              f"[95% CI {x['f1Ci95'][0]:.3f}, {x['f1Ci95'][1]:.3f}]  role-from-title {x['roleFromTitleAccuracy']}")
+    if sp["adsWithoutJobNumber"]:
+        print(f"  WARNING: {sp['adsWithoutJobNumber']} ad(s) have a Job_ID without a number and are in neither split")
     print(f"  evidence -> {OUT.relative_to(C.ROOT)}; admin status -> {STATUS_OUT.relative_to(C.ROOT)}")
     return res
 
