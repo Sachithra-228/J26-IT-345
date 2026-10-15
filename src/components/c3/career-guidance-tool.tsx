@@ -10,6 +10,7 @@ import { extractSkills } from "@/lib/c3/extract";
 import { proposedGaps, type SkillGap } from "@/lib/c3/gaps";
 import { planForRole, type GapToActionPlan, type StepReason } from "@/lib/c3/graph";
 import { fmt, getC3Text, label, type C3Text } from "@/lib/c3/i18n";
+import { titlesForRole } from "@/lib/c3/job-titles";
 import { careerModel, getRole, getSkill, type ActionType, type RoleProfile } from "@/lib/c3/model";
 import { proposedReadiness, readinessBand, type RoleReadiness, type SkillLevels } from "@/lib/c3/readiness";
 import {
@@ -960,6 +961,7 @@ const Results = memo(function Results({
 
       {detail ? (
         <>
+          <JobTitlesCard roleId={detail.roleId} ctx={ctx} />
           <Breakdown readiness={detail.readiness} sources={result.sources} ctx={ctx} />
           <Gaps gaps={detail.gaps} roleId={detail.roleId} ctx={ctx} />
           <BackgroundTips background={background} roleId={detail.roleId} topGapSkillId={detail.gaps[0]?.skillId ?? null} ctx={ctx} />
@@ -969,6 +971,41 @@ const Results = memo(function Results({
     </section>
   );
 });
+
+/** The titles real ads use for this role, so students know what to search for on job sites. */
+function JobTitlesCard({ roleId, ctx }: { roleId: string; ctx: Ctx }) {
+  const { t, language } = ctx;
+  const { ads, titles } = titlesForRole(roleId);
+  const role = roleName(roleId, language);
+  return (
+    <section data-testid="c3-job-titles" className="rounded-2xl border border-sky-200 bg-gradient-to-br from-sky-50 to-indigo-50 p-4 dark:border-sky-900 dark:from-sky-950/40 dark:to-indigo-950/40">
+      <h3 className="flex items-center gap-2 text-base font-semibold text-sky-900 dark:text-sky-100">
+        <span aria-hidden="true">🔎</span>
+        {t.jtTitle}
+      </h3>
+      {titles.length === 0 ? (
+        <p className="mt-2 text-sm text-slate-600 dark:text-slate-300">{fmt(t.jtNone, { role })}</p>
+      ) : (
+        <>
+          <ul className="mt-3 flex flex-wrap gap-2">
+            {titles.map((x) => (
+              <li
+                key={x.title}
+                className="flex items-center gap-2 rounded-full border border-sky-200 bg-white py-1 pl-3 pr-1 text-sm shadow-sm dark:border-sky-800 dark:bg-slate-900"
+              >
+                <span className="font-medium text-slate-800 dark:text-slate-100">{x.title}</span>
+                <span className="rounded-full bg-sky-100 px-2 py-0.5 text-[11px] font-semibold text-sky-800 dark:bg-sky-900/60 dark:text-sky-200">
+                  {x.ads === 1 ? t.jtAd : fmt(t.jtAds, { n: x.ads })}
+                </span>
+              </li>
+            ))}
+          </ul>
+          <p className="mt-3 text-xs text-slate-600 dark:text-slate-300">{fmt(t.jtHint, { role, n: ads })}</p>
+        </>
+      )}
+    </section>
+  );
+}
 
 /** Levels 1-3 as blocks: filled = you have it, amber = still needed, empty = not needed. */
 function LevelBar({ you, needed, ctx }: { you: number; needed: number; ctx: Ctx }) {

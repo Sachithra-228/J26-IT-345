@@ -7,6 +7,7 @@ import { CareerInsightsAdmin } from "@/components/c3/career-insights-admin";
 import { LanguageProvider } from "@/context/language-context";
 import { buildAggregate, demoCohort } from "@/lib/c3/assessment-store";
 import { collectionProgress, dataStatus, type DataStatus } from "@/lib/c3/data-status";
+import { jobTitles, titlesForRole } from "@/lib/c3/job-titles";
 import { fmt, getC3Text } from "@/lib/c3/i18n";
 
 const withLanguage = (ui: React.ReactElement) => <LanguageProvider>{ui}</LanguageProvider>;
@@ -123,6 +124,23 @@ describe("CareerGuidanceTool", () => {
     // the per-skill points stay visible; the formula is one click away
     expect(within(screen.getByTestId("c3-breakdown")).getAllByText(/pts$/).length).toBeGreaterThan(2);
     expect(screen.getByText(en.calcTitle)).toBeInTheDocument();
+  });
+
+  it("shows the job titles real ads use for the selected role, before the breakdown", async () => {
+    const user = userEvent.setup();
+    render(withLanguage(<CareerGuidanceTool />));
+    await user.click(screen.getByRole("button", { name: en.loadExample }));
+    await user.click(screen.getByRole("button", { name: en.analyse }));
+    const card = await screen.findByTestId("c3-job-titles");
+    const qa = titlesForRole("qa_engineer");
+    expect(qa.titles.length).toBeGreaterThan(0);
+    expect(within(card).getAllByRole("listitem")).toHaveLength(qa.titles.length);
+    expect(card).toHaveTextContent(`${qa.titles[0].title}${fmt(en.jtAds, { n: qa.titles[0].ads })}`);
+    expect(card).toHaveTextContent(fmt(en.jtHint, { role: "QA Engineer", n: qa.ads }));
+    expect(card.compareDocumentPosition(screen.getByTestId("c3-breakdown")) & Node.DOCUMENT_POSITION_FOLLOWING).toBeTruthy();
+    // titles only: no URLs, IDs or e-mail addresses ship with the app
+    expect(JSON.stringify(jobTitles)).not.toMatch(/https?:|@|JOB\d/);
+    expect(titlesForRole("no_such_role")).toEqual({ ads: 0, titles: [] });
   });
 
   it("starts CV-found skills at Basic without counting them as questionnaire answers", async () => {
