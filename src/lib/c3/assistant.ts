@@ -18,6 +18,8 @@ import { getAction, planForRole, type ActionNode, type GapToActionPlan, type Ste
 import { fmt, getC3Text, label, type C3Text } from "./i18n";
 import type { Criterion, SessionSummary } from "./interview";
 import { careerModel, getRole, getSkill, knowledgeGraph, type ActionType, type RoleProfile } from "./model";
+import { backgroundTips, backgroundTipText } from "./specialisation-roles";
+import type { Background } from "./validation";
 import { readinessBand, type Contribution, type RoleReadiness } from "./readiness";
 
 export type IntentId =
@@ -149,6 +151,8 @@ export function getIntent(id: IntentId): Intent {
 export type AssistantContext = {
   assessment: CareerAssessment | null;
   interview: SessionSummary | null;
+  /** Academic background - context only: it adds tips, never changes a number. */
+  background?: Background;
 };
 
 export type IntentMatch = {
@@ -485,10 +489,18 @@ function gapsAnswer(b: Build): Line[] {
   return lines;
 }
 
+/** Background tips (context only), appended to the "what next" answer. */
+function backgroundLines(b: Build, roleId: string, topGap: string | null): Line[] {
+  const tips = backgroundTips(b.ctx.background, roleId, topGap);
+  if (tips.length === 0) return [];
+  return [text(b.a.nextBackground), ...tips.map((tip) => bullet(backgroundTipText(tip, b.t, b.language)))];
+}
+
 function nextStepAnswer(b: Build): Line[] {
-  const { role, plan } = analysisFor(b);
+  const { role, plan, gaps } = analysisFor(b);
   const name = roleName(role.id, b.language);
-  if (plan.steps.length === 0) return [text(fmt(b.a.nextNone, { role: name }))];
+  const extra = backgroundLines(b, role.id, gaps[0]?.skillId ?? null);
+  if (plan.steps.length === 0) return [text(fmt(b.a.nextNone, { role: name })), ...extra];
   const [first, ...rest] = plan.steps;
   const lines: Line[] = [
     text(
@@ -523,7 +535,7 @@ function nextStepAnswer(b: Build): Line[] {
   if (plan.unplannedGaps.length > 0) {
     lines.push(text(fmt(b.t.planUnplanned, { skills: plan.unplannedGaps.map((id) => skillName(id, b.language)).join(", ") })));
   }
-  return lines;
+  return [...lines, ...extra];
 }
 
 const MAX_REQUIREMENTS_TOLD = 6;

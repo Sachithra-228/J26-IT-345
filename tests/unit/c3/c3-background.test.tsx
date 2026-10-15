@@ -2,6 +2,7 @@ import { render, screen, within } from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
 import { CareerGuidanceTool } from "@/components/c3/career-guidance-tool";
 import { LanguageProvider } from "@/context/language-context";
+import { answerIntent } from "@/lib/c3/assistant";
 import { assessCareer } from "@/lib/c3/assessment";
 import { getC3Text } from "@/lib/c3/i18n";
 import { ROLE_IDS } from "@/lib/c3/model";
@@ -121,5 +122,18 @@ describe("background in the wizard", () => {
     await user.click(await screen.findByRole("button", { name: /Back/ }));
     expect(screen.getByRole("radio", { name: en.specCS })).toHaveAttribute("aria-checked", "true");
     expect(screen.getAllByRole("checkbox")[0]).toHaveAttribute("aria-label", "Cybersecurity Analyst");
+  });
+});
+
+describe("background in the assistant (context only)", () => {
+  it("adds the tips to the 'what next' answer without changing anything else", () => {
+    const assessment = assessCareer(base as CareerProfile);
+    const plain = answerIntent("nextStep", { assessment, interview: null }, "en");
+    const withBg = answerIntent("nextStep", { assessment, interview: null, background: { internship: "notStarted" } }, "en");
+    expect(withBg.lines.slice(0, plain.lines.length)).toEqual(plain.lines);
+    expect(withBg.lines.map((l) => l.text)).toContain(en.tipInternshipFind);
+    expect(answerIntent("readiness", { assessment, interview: null, background: { internship: "notStarted" } }, "en").lines).toEqual(
+      answerIntent("readiness", { assessment, interview: null }, "en").lines
+    );
   });
 });

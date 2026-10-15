@@ -67,7 +67,8 @@ export function CareerAssistant({ profile, interview }: Props) {
   const endRef = useRef<HTMLDivElement>(null);
 
   const assessment = useMemo(() => (profile ? assessCareer(profile) : null), [profile]);
-  const ctx = useMemo<AssistantContext>(() => ({ assessment, interview }), [assessment, interview]);
+  const background = profile?.background;
+  const ctx = useMemo<AssistantContext>(() => ({ assessment, interview, background }), [assessment, interview, background]);
 
   function ask(question: string, intent: IntentId | null) {
     setTurns((all) => [...all, { id: nextId.current++, question, intent, ctx }]);

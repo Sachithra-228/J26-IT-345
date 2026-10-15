@@ -74,6 +74,7 @@ const en = {
   nextThen: "Then:",
   nextStepLine: "{title} ({type}, about {hours} h)",
   nextNone: "You do not need any actions for {role} right now - you meet every level its ads ask for.",
+  nextBackground: "Based on your background:",
   // compare roles
   compareIntro: "Side by side, for your current skills:",
   compareLine: "{role}: {score}/100 ({band}), {n} skill gaps",
@@ -189,6 +190,7 @@ const si: AssistantText = {
   nextThen: "ඉන්පසු:",
   nextStepLine: "{title} ({type}, පැය {hours} ක් පමණ)",
   nextNone: "දැනට {role} සඳහා කිසිදු ක්‍රියාවක් අවශ්‍ය නැත - එහි දැන්වීම් ඉල්ලන සෑම මට්ටමක්ම ඔබ සපුරා ඇත.",
+  nextBackground: "ඔබේ පසුබිම අනුව:",
   compareIntro: "ඔබේ වත්මන් කුසලතා අනුව, පැත්තෙන් පැත්තට:",
   compareLine: "{role}: {score}/100 ({band}), කුසලතා හිඩැස් {n}",
   compareCloser: "ඔබ {other} ට වඩා {role} ට ලකුණු {diff} කින් සමීපයි.",
@@ -296,6 +298,7 @@ const ta: AssistantText = {
   nextThen: "பிறகு:",
   nextStepLine: "{title} ({type}, சுமார் {hours} மணி)",
   nextNone: "தற்போது {role} பணிக்கு எந்தச் செயலும் தேவையில்லை - அதன் விளம்பரங்கள் கேட்கும் ஒவ்வொரு நிலையையும் நீங்கள் பூர்த்தி செய்கிறீர்கள்.",
+  nextBackground: "உங்கள் பின்னணியின் அடிப்படையில்:",
   compareIntro: "உங்கள் தற்போதைய திறன்களின்படி, அருகருகே:",
   compareLine: "{role}: {score}/100 ({band}), {n} திறன் இடைவெளிகள்",
   compareCloser: "{other} ஐ விட {role} க்கு நீங்கள் {diff} புள்ளிகள் நெருக்கமாக உள்ளீர்கள்.",
