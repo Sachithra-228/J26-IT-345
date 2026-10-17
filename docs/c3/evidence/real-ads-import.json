@@ -1,0 +1,155 @@
+{
+ "dataset": "Public Sri Lankan IT job advertisements copied manually into the C3 job-ads sheet",
+ "warning": "PRELIMINARY: one collector and annotator (the researcher); counts change as collection continues.",
+ "rowsInSheet": 150,
+ "adsUsed": 150,
+ "rowsSkipped": 0,
+ "issues": {
+  "bad_url": {
+   "count": 2,
+   "meaning": "URL is missing, shortened with '...' or holds two links",
+   "rowSkipped": false
+  },
+  "unmapped_skill": {
+   "count": 7,
+   "meaning": "labelled skill matches no taxonomy competency (kept as evidence for the taxonomy)",
+   "rowSkipped": false
+  }
+ },
+ "piiRedactions": {
+  "email": 24,
+  "url": 3,
+  "nic": 0,
+  "phone": 1,
+  "labelled": 0,
+  "address": 1
+ },
+ "coverage": {
+  "perRole": [
+   {
+    "roleId": "software_engineer",
+    "ads": 25,
+    "intern": 14,
+    "associate": 10,
+    "senior": 1,
+    "target": 25,
+    "stillNeeded": 0
+   },
+   {
+    "roleId": "frontend_engineer",
+    "ads": 9,
+    "intern": 3,
+    "associate": 5,
+    "senior": 1,
+    "target": 25,
+    "stillNeeded": 16
+   },
+   {
+    "roleId": "mobile_developer",
+    "ads": 7,
+    "intern": 6,
+    "associate": 1,
+    "senior": 0,
+    "target": 25,
+    "stillNeeded": 18
+   },
+   {
+    "roleId": "qa_engineer",
+    "ads": 25,
+    "intern": 11,
+    "associate": 10,
+    "senior": 4,
+    "target": 25,
+    "stillNeeded": 0
+   },
+   {
+    "roleId": "devops_engineer",
+    "ads": 13,
+    "intern": 6,
+    "associate": 4,
+    "senior": 3,
+    "target": 25,
+    "stillNeeded": 12
+   },
+   {
+    "roleId": "data_analyst",
+    "ads": 9,
+    "intern": 4,
+    "associate": 4,
+    "senior": 1,
+    "target": 25,
+    "stillNeeded": 16
+   },
+   {
+    "roleId": "data_scientist",
+    "ads": 8,
+    "intern": 2,
+    "associate": 3,
+    "senior": 3,
+    "target": 25,
+    "stillNeeded": 17
+   },
+   {
+    "roleId": "business_analyst",
+    "ads": 16,
+    "intern": 6,
+    "associate": 8,
+    "senior": 2,
+    "target": 25,
+    "stillNeeded": 9
+   },
+   {
+    "roleId": "ui_ux_designer",
+    "ads": 10,
+    "intern": 6,
+    "associate": 4,
+    "senior": 0,
+    "target": 25,
+    "stillNeeded": 15
+   },
+   {
+    "roleId": "network_engineer",
+    "ads": 12,
+    "intern": 5,
+    "associate": 7,
+    "senior": 0,
+    "target": 25,
+    "stillNeeded": 13
+   },
+   {
+    "roleId": "cybersecurity_analyst",
+    "ads": 7,
+    "intern": 5,
+    "associate": 2,
+    "senior": 0,
+    "target": 25,
+    "stillNeeded": 18
+   },
+   {
+    "roleId": "project_coordinator",
+    "ads": 9,
+    "intern": 8,
+    "associate": 0,
+    "senior": 1,
+    "target": 25,
+    "stillNeeded": 16
+   }
+  ],
+  "rolesAtTarget": 2,
+  "sources": {
+   "LinkedIn (manual)": 62,
+   "Other": 33,
+   "TopJobs": 27,
+   "Company careers page": 19,
+   "XpressJobs": 9
+  }
+ },
+ "unmappedSkillTerms": {
+  "Management Skills": 2,
+  "Go": 1,
+  "Claude Code": 1,
+  "Codex": 1,
+  "OpenCode": 1,
+  "SEO / analytics": 1
+ }
+}

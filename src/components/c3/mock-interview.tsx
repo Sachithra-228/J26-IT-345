@@ -12,7 +12,8 @@ import {
   type AnswerFeedback,
   type Criterion,
   type CriterionResult,
-  type SelectedQuestion
+  type SelectedQuestion,
+  type SessionSummary
 } from "@/lib/c3/interview";
 import { careerModel, getRole, getSkill, type RoleProfile } from "@/lib/c3/model";
 import type { SkillLevels } from "@/lib/c3/readiness";
@@ -101,10 +102,12 @@ type Props = {
   /** Skill levels from the readiness analysis (null if it has not been run yet). */
   levels?: SkillLevels | null;
   targetRoleIds?: string[];
+  /** Called with the summary when an interview is finished (used by the career assistant). */
+  onSummary?: (summary: SessionSummary) => void;
 };
 
 /** Rule-based mock interview (FR13). Runs on-device; answers are never sent or stored. */
-export function MockInterview({ levels = null, targetRoleIds = [] }: Props) {
+export function MockInterview({ levels = null, targetRoleIds = [], onSummary }: Props) {
   const { language } = useLanguage();
   const t = getC3Text(language);
   const uid = useId();
@@ -137,6 +140,10 @@ export function MockInterview({ levels = null, targetRoleIds = [] }: Props) {
     () => summariseSession(results.map((r) => ({ question: r.selected.question, feedback: r.feedback }))),
     [results]
   );
+
+  useEffect(() => {
+    if (phase === "summary" && summary.answered > 0) onSummary?.(summary);
+  }, [phase, summary, onSummary]);
 
   function start(nextRound = round) {
     const role = getRole(roleId) as RoleProfile;
