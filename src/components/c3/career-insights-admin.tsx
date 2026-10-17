@@ -6,6 +6,8 @@ import { useLanguage } from "@/context/language-context";
 import type { CareerAggregate } from "@/lib/c3/assessment-store";
 import { fmt, getC3Text, label } from "@/lib/c3/i18n";
 import { getRole, getSkill } from "@/lib/c3/model";
+import { BANDS, BarChart, StackedBar, StatTile } from "./c3-charts";
+import { CareerDataStatus } from "./career-data-status";
 
 /** Admin / faculty section: anonymous cohort statistics only (groups below the minimum size are hidden). */
 export function CareerInsightsAdmin() {
@@ -38,6 +40,7 @@ export function CareerInsightsAdmin() {
     return s ? label(s.label, language) : id;
   };
   const show = (n: number | null) => (n === null ? t.aggHidden : String(n));
+  const bandNames = [t.bandStrong, t.bandDeveloping, t.bandEarly];
 
   return (
     <div className="space-y-4">
@@ -69,16 +72,13 @@ export function CareerInsightsAdmin() {
               {t.aggDemo}
             </p>
           ) : null}
-          <Card>
-            <p className="text-sm text-slate-600 dark:text-slate-300">{t.aggStudents}</p>
-            <p data-testid="c3-agg-students" className="text-3xl font-semibold">
-              {data.students}
-            </p>
-            {!data.suppressed ? (
-              <p className="text-xs text-slate-500">{fmt(t.aggYears, { y3: show(data.byYear.year3), y4: show(data.byYear.year4) })}</p>
-            ) : null}
-            <p className="mt-2 text-xs text-slate-500">{fmt(t.aggModel, { version: data.modelVersion })}</p>
-          </Card>
+
+          <div className="grid gap-3 sm:grid-cols-3">
+            <StatTile icon="🎓" accent="blue" label={t.aggStudents} value={data.students} testId="c3-agg-students"
+              sub={fmt(t.aggModel, { version: data.modelVersion })} />
+            <StatTile icon="3" accent="violet" label={t.year3} value={data.suppressed ? t.aggHidden : show(data.byYear.year3)} />
+            <StatTile icon="4" accent="orange" label={t.year4} value={data.suppressed ? t.aggHidden : show(data.byYear.year4)} />
+          </div>
 
           {data.suppressed ? (
             <Card>
@@ -89,62 +89,124 @@ export function CareerInsightsAdmin() {
           ) : (
             <>
               <Card>
-                <div className="overflow-x-auto">
-                  <table data-testid="c3-agg-roles" className="w-full min-w-[32rem] text-left text-sm">
+                <h3 className="text-base font-semibold">{t.aggChartReadiness}</h3>
+                <div className="mt-4">
+                  <BarChart
+                    testId="c3-agg-chart"
+                    max={100}
+                    rows={[...data.roles]
+                      .sort((a, b) => (b.meanReadiness ?? -1) - (a.meanReadiness ?? -1))
+                      .map((r) => ({
+                        id: r.roleId,
+                        label: role(r.roleId),
+                        value: r.meanReadiness,
+                        valueText: r.meanReadiness === null ? t.aggHidden : String(Math.round(r.meanReadiness)),
+                        tooltip:
+                          r.meanReadiness === null
+                            ? `${role(r.roleId)}: ${t.aggHidden}`
+                            : fmt(t.aggTipRole, { role: role(r.roleId), n: Math.round(r.meanReadiness), k: show(r.targetedBy) })
+                      }))}
+                  />
+                </div>
+
+                <div className="mt-6 overflow-x-auto">
+                  <table data-testid="c3-agg-roles" className="w-full min-w-[34rem] text-left text-sm">
                     <thead className="text-xs uppercase text-slate-500">
                       <tr>
                         <th className="py-2 pr-3">{t.aggRole}</th>
                         <th className="py-2 pr-3">{t.aggTargeted}</th>
                         <th className="py-2 pr-3">{t.aggMean}</th>
-                        <th className="py-2">{t.aggBands}</th>
+                        <th className="w-2/5 py-2">{t.aggBands}</th>
                       </tr>
                     </thead>
                     <tbody>
                       {data.roles.map((r) => (
                         <tr key={r.roleId} className="border-t border-slate-100 dark:border-slate-800">
                           <td className="py-2 pr-3">{role(r.roleId)}</td>
-                          <td className="py-2 pr-3">{show(r.targetedBy)}</td>
-                          <td className="py-2 pr-3">{r.meanReadiness === null ? t.aggHidden : Math.round(r.meanReadiness)}</td>
-                          <td className="py-2">{r.bands ? `${r.bands.strong} / ${r.bands.developing} / ${r.bands.early}` : t.aggHidden}</td>
+                          <td className="py-2 pr-3 tabular-nums">{show(r.targetedBy)}</td>
+                          <td className="py-2 pr-3 tabular-nums">{r.meanReadiness === null ? t.aggHidden : Math.round(r.meanReadiness)}</td>
+                          <td className="py-2">
+                            {r.bands ? (
+                              <div className="flex items-center gap-2">
+                                <div className="flex-1">
+                                  <StackedBar
+                                    height="h-2.5"
+                                    legend={false}
+                                    ariaLabel={`${role(r.roleId)}: ${t.aggBands}`}
+                                    segments={[r.bands.strong, r.bands.developing, r.bands.early].map((value, i) => ({
+                                      id: String(i),
+                                      label: bandNames[i],
+                                      value,
+                                      color: BANDS[i]
+                                    }))}
+                                  />
+                                </div>
+                                <span className="whitespace-nowrap text-xs tabular-nums text-slate-500">
+                                  {`${r.bands.strong} / ${r.bands.developing} / ${r.bands.early}`}
+                                </span>
+                              </div>
+                            ) : (
+                              t.aggHidden
+                            )}
+                          </td>
                         </tr>
                       ))}
                     </tbody>
                   </table>
                 </div>
-              </Card>
-
-              <Card>
-                <h3 className="text-base font-semibold">{t.aggGaps}</h3>
-                <ol className="mt-2 space-y-1 text-sm">
-                  {data.commonGaps.map((g) => (
-                    <li key={g.skillId} className="flex justify-between gap-3">
-                      <span>{skill(g.skillId)}</span>
-                      <span className="text-slate-500">{fmt(t.aggGapStudents, { n: g.students, pct: Math.round(g.share * 100) })}</span>
-                    </li>
-                  ))}
-                </ol>
-              </Card>
-
-              <Card>
-                <h3 className="text-base font-semibold">{t.aggCoverage}</h3>
-                <ul className="mt-3 grid gap-2 sm:grid-cols-2">
-                  {data.skillCoverage.map((s) => (
-                    <li key={s.skillId} className="text-sm">
-                      <div className="flex justify-between">
-                        <span>{skill(s.skillId)}</span>
-                        <span className="text-slate-500">{Math.round(s.shareAtLeastBasic * 100)}%</span>
-                      </div>
-                      <div className="mt-1 h-1.5 w-full overflow-hidden rounded-full bg-slate-100 dark:bg-slate-800" aria-hidden="true">
-                        <div className="h-full bg-primary" style={{ width: `${s.shareAtLeastBasic * 100}%` }} />
-                      </div>
+                <ul className="mt-3 flex flex-wrap gap-x-4 gap-y-1 text-xs text-slate-600 dark:text-slate-300">
+                  {bandNames.map((name, i) => (
+                    <li key={name} className="flex items-center gap-1.5">
+                      <span aria-hidden="true" className={`h-2.5 w-2.5 rounded-sm ${BANDS[i]}`} />
+                      {name}
                     </li>
                   ))}
                 </ul>
               </Card>
+
+              <div className="space-y-4">
+                <Card>
+                  <h3 className="text-base font-semibold">{t.aggGaps}</h3>
+                  <div className="mt-4">
+                    <BarChart
+                      testId="c3-agg-gaps"
+                      max={Math.max(0.01, ...data.commonGaps.map((g) => g.share))}
+                      rows={data.commonGaps.map((g) => ({
+                        id: g.skillId,
+                        label: skill(g.skillId),
+                        value: g.share,
+                        valueText: `${Math.round(g.share * 100)}%`,
+                        tooltip: fmt(t.aggTipGap, { skill: skill(g.skillId), n: g.students, pct: Math.round(g.share * 100) })
+                      }))}
+                    />
+                  </div>
+                </Card>
+                <Card>
+                  <h3 className="text-base font-semibold">{t.aggCoverage}</h3>
+                  <div className="mt-4">
+                    <BarChart
+                      testId="c3-agg-coverage"
+                      max={1}
+                      rows={[...data.skillCoverage]
+                        .sort((a, b) => b.shareAtLeastBasic - a.shareAtLeastBasic)
+                        .map((c) => ({
+                          id: c.skillId,
+                          label: skill(c.skillId),
+                          value: c.shareAtLeastBasic,
+                          valueText: `${Math.round(c.shareAtLeastBasic * 100)}%`,
+                          tooltip: fmt(t.aggTipCoverage, { skill: skill(c.skillId), pct: Math.round(c.shareAtLeastBasic * 100) })
+                        }))}
+                    />
+                  </div>
+                </Card>
+              </div>
             </>
           )}
         </>
       )}
+
+      {/* Built into the app, so it shows even when the cohort figures cannot be loaded. */}
+      <CareerDataStatus />
     </div>
   );
 }

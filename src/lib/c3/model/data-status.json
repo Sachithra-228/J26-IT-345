@@ -1,0 +1,104 @@
+{
+ "generatedAt": "2026-10-16",
+ "taxonomyVersion": "1.1.0",
+ "realAds": {
+  "rowsInSheet": 150,
+  "adsUsed": 150,
+  "rowsSkipped": 0,
+  "issuesToFix": 2,
+  "other": 0,
+  "rolesAtTarget": 2,
+  "perRole": [
+   {
+    "roleId": "software_engineer",
+    "ads": 25,
+    "target": 25
+   },
+   {
+    "roleId": "frontend_engineer",
+    "ads": 9,
+    "target": 25
+   },
+   {
+    "roleId": "mobile_developer",
+    "ads": 7,
+    "target": 25
+   },
+   {
+    "roleId": "qa_engineer",
+    "ads": 25,
+    "target": 25
+   },
+   {
+    "roleId": "devops_engineer",
+    "ads": 13,
+    "target": 25
+   },
+   {
+    "roleId": "data_analyst",
+    "ads": 9,
+    "target": 25
+   },
+   {
+    "roleId": "data_scientist",
+    "ads": 8,
+    "target": 25
+   },
+   {
+    "roleId": "business_analyst",
+    "ads": 16,
+    "target": 25
+   },
+   {
+    "roleId": "ui_ux_designer",
+    "ads": 10,
+    "target": 25
+   },
+   {
+    "roleId": "network_engineer",
+    "ads": 12,
+    "target": 25
+   },
+   {
+    "roleId": "cybersecurity_analyst",
+    "ads": 7,
+    "target": 25
+   },
+   {
+    "roleId": "project_coordinator",
+    "ads": 9,
+    "target": 25
+   }
+  ],
+  "sources": {
+   "LinkedIn (manual)": 62,
+   "Other": 33,
+   "TopJobs": 27,
+   "Company careers page": 19,
+   "XpressJobs": 9
+  }
+ },
+ "realEvaluation": {
+  "ads": 150,
+  "annotators": 1,
+  "developmentSet": true,
+  "precision": 0.905,
+  "recall": 0.776,
+  "f1": 0.836,
+  "f1Ci95": [
+   0.816,
+   0.854
+  ],
+  "roleFromTitleAccuracy": 0.62,
+  "seniorityAccuracy": 0.967,
+  "heldOut": {
+   "ads": 52,
+   "f1": 0.819,
+   "f1Ci95": [
+    0.786,
+    0.85
+   ],
+   "devLastJobNumber": 98
+  }
+ }
+}

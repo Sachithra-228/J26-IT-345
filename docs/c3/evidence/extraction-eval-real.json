@@ -1,0 +1,441 @@
+{
+ "warning": "PRELIMINARY - real public job ads, but ONE annotator (the researcher) who knows the taxonomy labelled them; agreement is optimistic until an independent second annotator is added.",
+ "ads": 150,
+ "labelledSkills": 943,
+ "skillExtraction": {
+  "micro": {
+   "precision": 0.905,
+   "recall": 0.776,
+   "f1": 0.836,
+   "tp": 732,
+   "fp": 77,
+   "fn": 211
+  },
+  "microF1ci95": [
+   0.816,
+   0.854
+  ],
+  "macroF1OverAds": 0.811,
+  "recallRequired": 0.778,
+  "recallPreferred": 0.684,
+  "perSkill": [
+   {
+    "skillId": "statistics",
+    "labelled": 0,
+    "precision": 0.0,
+    "recall": 0.0,
+    "f1": 0.0,
+    "tp": 0,
+    "fp": 8,
+    "fn": 0
+   },
+   {
+    "skillId": "project_management",
+    "labelled": 16,
+    "precision": 0.857,
+    "recall": 0.375,
+    "f1": 0.522,
+    "tp": 6,
+    "fp": 1,
+    "fn": 10
+   },
+   {
+    "skillId": "business_analysis",
+    "labelled": 32,
+    "precision": 0.783,
+    "recall": 0.562,
+    "f1": 0.655,
+    "tp": 18,
+    "fp": 5,
+    "fn": 14
+   },
+   {
+    "skillId": "nosql",
+    "labelled": 8,
+    "precision": 0.714,
+    "recall": 0.625,
+    "f1": 0.667,
+    "tp": 5,
+    "fp": 2,
+    "fn": 3
+   },
+   {
+    "skillId": "problem_solving",
+    "labelled": 129,
+    "precision": 0.94,
+    "recall": 0.612,
+    "f1": 0.742,
+    "tp": 79,
+    "fp": 5,
+    "fn": 50
+   },
+   {
+    "skillId": "linux",
+    "labelled": 28,
+    "precision": 1.0,
+    "recall": 0.607,
+    "f1": 0.756,
+    "tp": 17,
+    "fp": 0,
+    "fn": 11
+   },
+   {
+    "skillId": "backend_api",
+    "labelled": 53,
+    "precision": 0.897,
+    "recall": 0.66,
+    "f1": 0.761,
+    "tp": 35,
+    "fp": 4,
+    "fn": 18
+   },
+   {
+    "skillId": "machine_learning",
+    "labelled": 23,
+    "precision": 0.938,
+    "recall": 0.652,
+    "f1": 0.769,
+    "tp": 15,
+    "fp": 1,
+    "fn": 8
+   },
+   {
+    "skillId": "data_analysis",
+    "labelled": 24,
+    "precision": 0.76,
+    "recall": 0.792,
+    "f1": 0.776,
+    "tp": 19,
+    "fp": 6,
+    "fn": 5
+   },
+   {
+    "skillId": "ui_ux",
+    "labelled": 16,
+    "precision": 0.765,
+    "recall": 0.812,
+    "f1": 0.788,
+    "tp": 13,
+    "fp": 4,
+    "fn": 3
+   },
+   {
+    "skillId": "agile",
+    "labelled": 37,
+    "precision": 0.775,
+    "recall": 0.838,
+    "f1": 0.805,
+    "tp": 31,
+    "fp": 9,
+    "fn": 6
+   },
+   {
+    "skillId": "test_automation",
+    "labelled": 19,
+    "precision": 0.75,
+    "recall": 0.947,
+    "f1": 0.837,
+    "tp": 18,
+    "fp": 6,
+    "fn": 1
+   },
+   {
+    "skillId": "testing_manual",
+    "labelled": 45,
+    "precision": 0.844,
+    "recall": 0.844,
+    "f1": 0.844,
+    "tp": 38,
+    "fp": 7,
+    "fn": 7
+   },
+   {
+    "skillId": "security",
+    "labelled": 36,
+    "precision": 0.882,
+    "recall": 0.833,
+    "f1": 0.857,
+    "tp": 30,
+    "fp": 4,
+    "fn": 6
+   },
+   {
+    "skillId": "version_control",
+    "labelled": 38,
+    "precision": 0.939,
+    "recall": 0.816,
+    "f1": 0.873,
+    "tp": 31,
+    "fp": 2,
+    "fn": 7
+   },
+   {
+    "skillId": "frontend",
+    "labelled": 36,
+    "precision": 1.0,
+    "recall": 0.778,
+    "f1": 0.875,
+    "tp": 28,
+    "fp": 0,
+    "fn": 8
+   },
+   {
+    "skillId": "databases_sql",
+    "labelled": 48,
+    "precision": 0.951,
+    "recall": 0.812,
+    "f1": 0.876,
+    "tp": 39,
+    "fp": 2,
+    "fn": 9
+   },
+   {
+    "skillId": "communication",
+    "labelled": 147,
+    "precision": 0.992,
+    "recall": 0.803,
+    "f1": 0.887,
+    "tp": 118,
+    "fp": 1,
+    "fn": 29
+   },
+   {
+    "skillId": "prog_oop",
+    "labelled": 23,
+    "precision": 0.952,
+    "recall": 0.87,
+    "f1": 0.909,
+    "tp": 20,
+    "fp": 1,
+    "fn": 3
+   },
+   {
+    "skillId": "networking",
+    "labelled": 28,
+    "precision": 0.926,
+    "recall": 0.893,
+    "f1": 0.909,
+    "tp": 25,
+    "fp": 2,
+    "fn": 3
+   },
+   {
+    "skillId": "mobile",
+    "labelled": 12,
+    "precision": 0.917,
+    "recall": 0.917,
+    "f1": 0.917,
+    "tp": 11,
+    "fp": 1,
+    "fn": 1
+   },
+   {
+    "skillId": "devops_cicd",
+    "labelled": 24,
+    "precision": 0.917,
+    "recall": 0.917,
+    "f1": 0.917,
+    "tp": 22,
+    "fp": 2,
+    "fn": 2
+   },
+   {
+    "skillId": "javascript_ts",
+    "labelled": 31,
+    "precision": 1.0,
+    "recall": 0.903,
+    "f1": 0.949,
+    "tp": 28,
+    "fp": 0,
+    "fn": 3
+   },
+   {
+    "skillId": "cloud",
+    "labelled": 38,
+    "precision": 0.925,
+    "recall": 0.974,
+    "f1": 0.949,
+    "tp": 37,
+    "fp": 3,
+    "fn": 1
+   },
+   {
+    "skillId": "python",
+    "labelled": 36,
+    "precision": 0.971,
+    "recall": 0.944,
+    "f1": 0.958,
+    "tp": 34,
+    "fp": 1,
+    "fn": 2
+   },
+   {
+    "skillId": "containers",
+    "labelled": 16,
+    "precision": 1.0,
+    "recall": 0.938,
+    "f1": 0.968,
+    "tp": 15,
+    "fp": 0,
+    "fn": 1
+   }
+  ],
+  "perRoleF1": {
+   "business_analyst": 0.814,
+   "cybersecurity_analyst": 0.845,
+   "data_analyst": 0.716,
+   "data_scientist": 0.824,
+   "devops_engineer": 0.876,
+   "frontend_engineer": 0.843,
+   "mobile_developer": 0.878,
+   "network_engineer": 0.855,
+   "project_coordinator": 0.698,
+   "qa_engineer": 0.826,
+   "software_engineer": 0.886,
+   "ui_ux_designer": 0.742
+  },
+  "perSkillMinSupport": 3
+ },
+ "preferredFlagAgreement": 0.955,
+ "roleFromTitle": {
+  "accuracy": 0.62,
+  "unclassified": 56,
+  "adsWithCatalogueRole": 150,
+  "topConfusions": {
+   "network_engineer <- unclassified": 10,
+   "qa_engineer <- unclassified": 9,
+   "project_coordinator <- unclassified": 8,
+   "software_engineer <- unclassified": 6,
+   "data_analyst <- unclassified": 5,
+   "cybersecurity_analyst <- unclassified": 5,
+   "ui_ux_designer <- unclassified": 5,
+   "data_scientist <- unclassified": 2
+  }
+ },
+ "seniority": {
+  "accuracy": 0.967,
+  "confusions": {
+   "intern <- associate": 2,
+   "associate <- senior": 1,
+   "senior <- associate": 1,
+   "intern <- senior": 1
+  }
+ },
+ "syntheticComparison": "Synthetic-ad extraction F1 is about 0.96 (docs/c3/evidence/extraction-eval.json); the gap shows how optimistic synthetic text is.",
+ "splits": {
+  "devLastJobNumber": 98,
+  "rule": "development = JOB001-JOB098 (used to tune the v1.1.0 synonyms); heldOut = every later ad (never used for tuning)",
+  "adsWithoutJobNumber": 0,
+  "all": {
+   "ads": 150,
+   "precision": 0.905,
+   "recall": 0.776,
+   "f1": 0.836,
+   "f1Ci95": [
+    0.816,
+    0.854
+   ],
+   "macroF1OverAds": 0.811,
+   "recallRequired": 0.778,
+   "recallPreferred": 0.684,
+   "roleFromTitleAccuracy": 0.62,
+   "seniorityAccuracy": 0.967,
+   "weakestSkills": [
+    {
+     "skillId": "statistics",
+     "f1": 0.0
+    },
+    {
+     "skillId": "project_management",
+     "f1": 0.522
+    },
+    {
+     "skillId": "business_analysis",
+     "f1": 0.655
+    },
+    {
+     "skillId": "nosql",
+     "f1": 0.667
+    },
+    {
+     "skillId": "problem_solving",
+     "f1": 0.742
+    }
+   ]
+  },
+  "development": {
+   "ads": 98,
+   "precision": 0.902,
+   "recall": 0.797,
+   "f1": 0.846,
+   "f1Ci95": [
+    0.823,
+    0.868
+   ],
+   "macroF1OverAds": 0.82,
+   "recallRequired": 0.8,
+   "recallPreferred": 0.688,
+   "roleFromTitleAccuracy": 0.561,
+   "seniorityAccuracy": 0.98,
+   "weakestSkills": [
+    {
+     "skillId": "statistics",
+     "f1": 0.0
+    },
+    {
+     "skillId": "project_management",
+     "f1": 0.5
+    },
+    {
+     "skillId": "business_analysis",
+     "f1": 0.647
+    },
+    {
+     "skillId": "test_automation",
+     "f1": 0.667
+    },
+    {
+     "skillId": "ui_ux",
+     "f1": 0.737
+    }
+   ]
+  },
+  "heldOut": {
+   "ads": 52,
+   "precision": 0.91,
+   "recall": 0.744,
+   "f1": 0.819,
+   "f1Ci95": [
+    0.786,
+    0.85
+   ],
+   "macroF1OverAds": 0.793,
+   "recallRequired": 0.745,
+   "recallPreferred": 0.667,
+   "roleFromTitleAccuracy": 0.731,
+   "seniorityAccuracy": 0.942,
+   "weakestSkills": [
+    {
+     "skillId": "statistics",
+     "f1": 0.0
+    },
+    {
+     "skillId": "nosql",
+     "f1": 0.571
+    },
+    {
+     "skillId": "frontend",
+     "f1": 0.6
+    },
+    {
+     "skillId": "problem_solving",
+     "f1": 0.632
+    },
+    {
+     "skillId": "backend_api",
+     "f1": 0.643
+    }
+   ]
+  }
+ }
+}

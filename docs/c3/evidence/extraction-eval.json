@@ -1,6 +1,6 @@
 {
  "warning": "SYNTHETIC DATA: validates the pipeline, not real-world accuracy.",
- "generatedAt": "2026-10-10T07:50:28+00:00",
+ "generatedAt": "2026-10-14T04:13:43+00:00",
  "generatedBy": "python ml/c3/run_pipeline.py evaluate",
  "modelVersion": "c3-readiness-v1-synthetic",
  "proposalTargets": {
@@ -8,25 +8,25 @@
   "note": "docs/c3/proposal/ is empty and the README names NDCG and SUS without numeric targets for C3. No target is invented here; add the proposal's targets when the C3 proposal is committed."
  },
  "syntheticAdsTestSplit": {
-  "precision": 1.0,
-  "recall": 0.9299145299145299,
-  "f1": 0.9636846767050488,
-  "tp": 544,
-  "fp": 0,
-  "fn": 41,
+  "precision": 0.9963570127504554,
+  "recall": 0.935042735042735,
+  "f1": 0.9647266313932982,
+  "tp": 547,
+  "fp": 2,
+  "fn": 38,
   "ads": 120,
-  "levelAccuracyOnMatched": 0.9944852941176471,
-  "preferredFlagAccuracyOnMatched": 1.0,
+  "levelAccuracyOnMatched": 0.9945155393053017,
+  "preferredFlagAccuracyOnMatched": 0.9981718464351006,
   "roleFromTitleAccuracy": 1.0,
   "genericTitlesLeftUnclassified": 11
  },
  "syntheticCvs": {
   "precision": 1.0,
-  "recall": 0.9337774294670846,
-  "f1": 0.9657548125633232,
-  "tp": 2383,
+  "recall": 0.9396551724137931,
+  "f1": 0.9688888888888889,
+  "tp": 2398,
   "fp": 0,
-  "fn": 169,
+  "fn": 154,
   "cvs": 200
  },
  "handWrittenAds": {

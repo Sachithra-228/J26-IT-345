@@ -7,6 +7,7 @@ import { DELETE, GET, POST } from "@/app/api/c3/assessment/route";
 import { POST as postPlan } from "@/app/api/c3/plan/route";
 import { GET as getRoles } from "@/app/api/c3/roles/route";
 import { buildAggregate } from "@/lib/c3/assessment-store";
+import { isCvFeatureEnabled } from "@/lib/c3/config";
 import { resetRateLimits } from "@/lib/c3/rate-limit";
 import { requireSession } from "@/lib/session-auth";
 
@@ -125,7 +126,14 @@ describe("/api/c3/assessment (student, demo mode)", () => {
 describe("CV text handling", () => {
   const cvText = "Name: Kamal Perera\nkamal@example.com 077 123 4567\nSkills: Selenium, Figma";
 
-  it("is refused while the CV feature flag is off (the default)", async () => {
+  it("is on by default and can be switched off", () => {
+    expect(isCvFeatureEnabled()).toBe(true);
+    process.env.NEXT_PUBLIC_C3_CV_ENABLED = "false";
+    expect(isCvFeatureEnabled()).toBe(false);
+  });
+
+  it("is refused while the CV feature flag is off", async () => {
+    process.env.NEXT_PUBLIC_C3_CV_ENABLED = "false";
     const res = await POST(json("/api/c3/assessment", "POST", { profile, consent: true, cvText, cvConsent: true }));
     expect(res.status).toBe(400);
   });
@@ -206,5 +214,25 @@ describe("rate limiting", () => {
     expect(Number(retryAfter)).toBeGreaterThan(0);
     signInAs("student", "another-student");
     expect((await POST(json("/api/c3/assessment", "POST", { profile, consent: true }))).status).toBe(201);
+  });
+});
+
+describe("academic background (context only)", () => {
+  it("stores and returns background, with the same scores as without it", async () => {
+    const background = { specialisation: "SE", internship: "notStarted", projects: "1-2" };
+    const res = await POST(json("/api/c3/assessment", "POST", { profile: { ...profile, background }, consent: true }));
+    expect(res.status).toBe(201);
+    const withBg = await res.json();
+    const mine = await (await GET(req("/api/c3/assessment"))).json();
+    expect(mine.profile.background).toEqual(background);
+    await DELETE(req("/api/c3/assessment", { method: "DELETE" }));
+    const plain = await (await POST(json("/api/c3/assessment", "POST", { profile, consent: true }))).json();
+    expect(withBg.assessment.roles).toEqual(plain.assessment.roles);
+  });
+
+  it("rejects unknown background values and keys", async () => {
+    for (const background of [{ specialisation: "Physics" }, { projects: "10" }, { gpa: 3.9 }]) {
+      expect((await POST(json("/api/c3/assessment", "POST", { profile: { ...profile, background }, consent: true }))).status).toBe(400);
+    }
   });
 });

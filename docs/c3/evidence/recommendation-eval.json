@@ -1,6 +1,6 @@
 {
  "warning": "SYNTHETIC DATA: validates the pipeline, not real-world accuracy.",
- "generatedAt": "2026-10-10T07:50:28+00:00",
+ "generatedAt": "2026-10-14T04:13:43+00:00",
  "generatedBy": "python ml/c3/run_pipeline.py evaluate",
  "modelVersion": "c3-readiness-v1-synthetic",
  "protocol": {
@@ -29,14 +29,14 @@
  "holdout": {
   "roleNdcg": {
    "metric": "Role recommendation NDCG@3",
-   "proposed": 0.9427810165782943,
+   "proposed": 0.9431858361297095,
    "baseline": 0.8782785464737464,
    "studentsScored": 597,
    "pairedBootstrap": {
-    "meanDifference": 0.06450247010454795,
+    "meanDifference": 0.06490728965596311,
     "ci95": [
-     0.05289357041959758,
-     0.07581775404353078
+     0.053383803752835086,
+     0.07620167608764881
     ],
     "pOneSided": 0.0,
     "resamples": 2000,
@@ -45,14 +45,14 @@
   },
   "roleP": {
    "metric": "Role recommendation Precision@3",
-   "proposed": 0.8355555555555555,
+   "proposed": 0.836111111111111,
    "baseline": 0.806111111111111,
    "studentsScored": 600,
    "pairedBootstrap": {
-    "meanDifference": 0.029444444444444447,
+    "meanDifference": 0.03,
     "ci95": [
-     0.017777777777777778,
-     0.04111111111111111
+     0.018333333333333333,
+     0.041666666666666664
     ],
     "pOneSided": 0.0,
     "resamples": 2000,
@@ -61,14 +61,14 @@
   },
   "roleR": {
    "metric": "Role recommendation Recall@3",
-   "proposed": 0.5565510651138879,
+   "proposed": 0.557038730059384,
    "baseline": 0.5305777842352712,
    "studentsScored": 581,
    "pairedBootstrap": {
-    "meanDifference": 0.025973280878616507,
+    "meanDifference": 0.026460945824112778,
     "ci95": [
-     0.01385321899844275,
-     0.03930999508237028
+     0.014151606425702812,
+     0.0397880296696992
     ],
     "pOneSided": 0.0,
     "resamples": 2000,
@@ -77,14 +77,14 @@
   },
   "gapNdcg": {
    "metric": "Gap ranking NDCG@5",
-   "proposed": 0.8679000980620059,
+   "proposed": 0.8677803643887955,
    "baseline": 0.8184155683576022,
    "studentsScored": 558,
    "pairedBootstrap": {
-    "meanDifference": 0.049484529704403785,
+    "meanDifference": 0.04936479603119337,
     "ci95": [
-     0.04130151163341719,
-     0.05830644654495375
+     0.04118361705643379,
+     0.05810276907135592
     ],
     "pOneSided": 0.0,
     "resamples": 2000,
@@ -127,67 +127,67 @@
  "crossValidation5FoldOverAds": {
   "roleNdcg": {
    "proposed": {
-    "mean": 0.9373057686214947,
-    "std": 0.004529502123193742
+    "mean": 0.9406896002638071,
+    "std": 0.004427608852557417
    },
    "baseline": {
-    "mean": 0.8707439595540428,
-    "std": 0.0075926957665141265
+    "mean": 0.8708174005575715,
+    "std": 0.00762187295688836
    },
    "metric": "Role recommendation NDCG@3"
   },
   "roleP": {
    "proposed": {
-    "mean": 0.8283333333333334,
-    "std": 0.006106058517348493
+    "mean": 0.8299999999999998,
+    "std": 0.004753166585823857
    },
    "baseline": {
-    "mean": 0.8014444444444445,
-    "std": 0.004452769979891987
+    "mean": 0.8015555555555556,
+    "std": 0.0046268139585904896
    },
    "metric": "Role recommendation Precision@3"
   },
   "roleR": {
    "proposed": {
-    "mean": 0.5497180186422871,
-    "std": 0.005862927551954605
+    "mean": 0.5513027248139124,
+    "std": 0.004058391647956405
    },
    "baseline": {
-    "mean": 0.5265551631386399,
-    "std": 0.003655451519403227
+    "mean": 0.5267649820059459,
+    "std": 0.004146333808641525
    },
    "metric": "Role recommendation Recall@3"
   },
   "gapNdcg": {
    "proposed": {
-    "mean": 0.8600285831878137,
-    "std": 0.027457153545135952
+    "mean": 0.8608813427027722,
+    "std": 0.028177350909694095
    },
    "baseline": {
-    "mean": 0.7975551877185898,
-    "std": 0.02888843788992506
+    "mean": 0.800529370840343,
+    "std": 0.029349414334565338
    },
    "metric": "Gap ranking NDCG@5"
   },
   "gapP": {
    "proposed": {
-    "mean": 0.5447311827956989,
-    "std": 0.016380202816457134
+    "mean": 0.5453763440860214,
+    "std": 0.016800212642132037
    },
    "baseline": {
-    "mean": 0.5248028673835126,
-    "std": 0.013048564190274194
+    "mean": 0.525663082437276,
+    "std": 0.013971324325865014
    },
    "metric": "Gap ranking Precision@5"
   },
   "gapR": {
    "proposed": {
-    "mean": 0.7988608090782005,
-    "std": 0.032216392619503806
+    "mean": 0.7994957297131211,
+    "std": 0.03254490227762057
    },
    "baseline": {
-    "mean": 0.7822556710600189,
-    "std": 0.029300705866834215
+    "mean": 0.7825961136287223,
+    "std": 0.030617063471312746
    },
    "metric": "Gap ranking Recall@5"
   }
@@ -195,32 +195,32 @@
  "lambdaSensitivityTrainOnly": [
   {
    "lambda": 0.0,
-   "roleNdcg": 0.9420497057795023,
-   "gapNdcg": 0.8579831405497262
+   "roleNdcg": 0.9432592047736659,
+   "gapNdcg": 0.8572465574120627
   },
   {
    "lambda": 0.25,
-   "roleNdcg": 0.9419493922380308,
-   "gapNdcg": 0.8626878346486435
+   "roleNdcg": 0.9434677516325931,
+   "gapNdcg": 0.8629459262980548
   },
   {
    "lambda": 0.5,
-   "roleNdcg": 0.9390638334351478,
-   "gapNdcg": 0.8635868089946044
+   "roleNdcg": 0.9406698095504404,
+   "gapNdcg": 0.8636080417060942
   },
   {
    "lambda": 1.0,
-   "roleNdcg": 0.9239891464979635,
-   "gapNdcg": 0.8667042229028109
+   "roleNdcg": 0.9256287428298796,
+   "gapNdcg": 0.8667839395213253
   }
  ],
  "gapToActionPlans": {
   "students": 600,
-  "meanSteps": 3.52,
-  "meanEffortHours": 70.19,
+  "meanSteps": 3.5183333333333335,
+  "meanEffortHours": 70.14833333333333,
   "medianEffortHours": 70.0,
-  "meanProjectedReadinessGain": 35.31934725285589,
-  "plansWithPrerequisiteSteps": 106,
+  "meanProjectedReadinessGain": 35.1042622787907,
+  "plansWithPrerequisiteSteps": 105,
   "plansWithUnplannedGaps": 29,
   "note": "Projected gain assumes the student completes every step; effort hours are hand-entered estimates."
  },

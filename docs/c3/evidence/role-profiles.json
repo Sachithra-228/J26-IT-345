@@ -1,6 +1,6 @@
 {
  "warning": "SYNTHETIC DATA: validates the pipeline, not real-world accuracy.",
- "generatedAt": "2026-10-10T07:50:28+00:00",
+ "generatedAt": "2026-10-14T04:13:43+00:00",
  "generatedBy": "python ml/c3/run_pipeline.py evaluate",
  "modelVersion": "c3-readiness-v1-synthetic",
  "note": "Role profiles derived from SYNTHETIC ads (training split). Weight = normalised TF-IDF; tf = share of ads mentioning the skill.",
@@ -11,84 +11,84 @@
    "skills": [
     {
      "skillId": "prog_oop",
-     "weight": 0.17141748222125117,
-     "tf": 0.7727272727272727,
+     "weight": 0.18642763833633685,
+     "tf": 0.8636363636363636,
      "requiredLevel": 2,
-     "adsMentioning": 26
+     "adsMentioning": 29
     },
     {
      "skillId": "backend_api",
-     "weight": 0.14452846540223138,
+     "weight": 0.14063839383267518,
      "tf": 0.6515151515151515,
      "requiredLevel": 2,
      "adsMentioning": 22
     },
     {
+     "skillId": "databases_sql",
+     "weight": 0.1069441474266515,
+     "tf": 0.6666666666666666,
+     "requiredLevel": 2,
+     "adsMentioning": 24
+    },
+    {
      "skillId": "version_control",
-     "weight": 0.10240889882302204,
+     "weight": 0.099652501011198,
      "tf": 0.6212121212121212,
      "requiredLevel": 2,
      "adsMentioning": 22
     },
     {
-     "skillId": "databases_sql",
-     "weight": 0.10240889882302204,
-     "tf": 0.6212121212121212,
-     "requiredLevel": 2,
-     "adsMentioning": 21
-    },
-    {
      "skillId": "containers",
-     "weight": 0.07990394071949564,
+     "weight": 0.07775327754582012,
      "tf": 0.3181818181818182,
      "requiredLevel": 1,
      "adsMentioning": 12
     },
     {
      "skillId": "frontend",
-     "weight": 0.07730592335468191,
+     "weight": 0.07522518739887277,
      "tf": 0.3484848484848485,
      "requiredLevel": 2,
      "adsMentioning": 14
     },
     {
      "skillId": "javascript_ts",
-     "weight": 0.07659664555806601,
+     "weight": 0.07453500024563882,
      "tf": 0.42424242424242425,
      "requiredLevel": 2,
      "adsMentioning": 15
     },
     {
      "skillId": "communication",
-     "weight": 0.06016737721797854,
+     "weight": 0.058547935657597805,
      "tf": 0.5909090909090909,
      "requiredLevel": 1,
      "adsMentioning": 21
     },
     {
      "skillId": "agile",
-     "weight": 0.05275154665139533,
+     "weight": 0.05133170668210204,
      "tf": 0.3787878787878788,
      "requiredLevel": 1,
      "adsMentioning": 14
     },
     {
      "skillId": "problem_solving",
-     "weight": 0.051976295200116235,
+     "weight": 0.05057732159525492,
      "tf": 0.2878787878787879,
      "requiredLevel": 2,
      "adsMentioning": 10
     },
     {
      "skillId": "linux",
-     "weight": 0.042236203249706686,
+     "weight": 0.04109939014503267,
      "tf": 0.21212121212121213,
      "requiredLevel": 1,
      "adsMentioning": 8
     },
     {
      "skillId": "cloud",
-     "weight": 0.03829832277903301,
+     "weight": 0.03726750012281941,
      "tf": 0.21212121212121213,
      "requiredLevel": 1,
      "adsMentioning": 9
@@ -163,73 +163,73 @@
    "skills": [
     {
      "skillId": "mobile",
-     "weight": 0.2824389229016507,
+     "weight": 0.26878075837664755,
      "tf": 0.7894736842105263,
      "requiredLevel": 3,
      "adsMentioning": 32
     },
     {
      "skillId": "prog_oop",
-     "weight": 0.1357034331300818,
-     "tf": 0.5,
+     "weight": 0.16992249294064285,
+     "tf": 0.6578947368421053,
      "requiredLevel": 2,
-     "adsMentioning": 21
+     "adsMentioning": 26
     },
     {
      "skillId": "version_control",
-     "weight": 0.12738473250999688,
+     "weight": 0.12122466924137688,
      "tf": 0.631578947368421,
      "requiredLevel": 2,
      "adsMentioning": 24
     },
     {
      "skillId": "ui_ux",
-     "weight": 0.09616131478305615,
+     "weight": 0.09151115167963382,
      "tf": 0.39473684210526316,
      "requiredLevel": 2,
      "adsMentioning": 20
     },
     {
      "skillId": "nosql",
-     "weight": 0.09414630763388357,
+     "weight": 0.08959358612554918,
      "tf": 0.2631578947368421,
      "requiredLevel": 1,
      "adsMentioning": 12
     },
     {
      "skillId": "backend_api",
-     "weight": 0.08213628847347057,
+     "weight": 0.07816434675269571,
      "tf": 0.3026315789473684,
      "requiredLevel": 2,
      "adsMentioning": 15
     },
     {
      "skillId": "communication",
-     "weight": 0.06556601174768849,
+     "weight": 0.06239537447681189,
      "tf": 0.5263157894736842,
      "requiredLevel": 2,
      "adsMentioning": 21
     },
     {
      "skillId": "javascript_ts",
-     "weight": 0.04650439561711956,
+     "weight": 0.04425553883792972,
      "tf": 0.21052631578947367,
      "requiredLevel": 2,
      "adsMentioning": 11
     },
     {
+     "skillId": "databases_sql",
+     "weight": 0.03788270913793028,
+     "tf": 0.19736842105263158,
+     "requiredLevel": 2,
+     "adsMentioning": 11
+    },
+    {
      "skillId": "agile",
-     "weight": 0.03811241007555302,
+     "weight": 0.03626937243078211,
      "tf": 0.2236842105263158,
      "requiredLevel": 2,
      "adsMentioning": 10
-    },
-    {
-     "skillId": "databases_sql",
-     "weight": 0.03184618312749922,
-     "tf": 0.15789473684210525,
-     "requiredLevel": 2,
-     "adsMentioning": 8
     }
    ]
   },
@@ -239,63 +239,63 @@
    "skills": [
     {
      "skillId": "testing_manual",
-     "weight": 0.3028101284532408,
+     "weight": 0.2976115110812267,
      "tf": 0.8676470588235294,
      "requiredLevel": 3,
      "adsMentioning": 30
     },
     {
      "skillId": "test_automation",
-     "weight": 0.2052950023411802,
+     "weight": 0.20177051598727236,
      "tf": 0.5882352941176471,
      "requiredLevel": 2,
      "adsMentioning": 20
     },
     {
      "skillId": "agile",
-     "weight": 0.09532947206163027,
+     "weight": 0.09369286415800444,
      "tf": 0.5735294117647058,
      "requiredLevel": 2,
      "adsMentioning": 21
     },
     {
      "skillId": "communication",
-     "weight": 0.08399660314038153,
+     "weight": 0.08255455692314877,
      "tf": 0.6911764705882353,
      "requiredLevel": 2,
      "adsMentioning": 24
     },
     {
+     "skillId": "prog_oop",
+     "weight": 0.08036203949232272,
+     "tf": 0.3088235294117647,
+     "requiredLevel": 1,
+     "adsMentioning": 15
+    },
+    {
      "skillId": "version_control",
-     "weight": 0.08101757931919192,
+     "weight": 0.07962667671815056,
      "tf": 0.4117647058823529,
      "requiredLevel": 1,
      "adsMentioning": 17
     },
     {
-     "skillId": "prog_oop",
-     "weight": 0.07008496050926245,
-     "tf": 0.2647058823529412,
-     "requiredLevel": 1,
-     "adsMentioning": 13
-    },
-    {
      "skillId": "databases_sql",
-     "weight": 0.057869699513708524,
-     "tf": 0.29411764705882354,
+     "weight": 0.06256381742140403,
+     "tf": 0.3235294117647059,
      "requiredLevel": 1,
-     "adsMentioning": 13
+     "adsMentioning": 15
     },
     {
      "skillId": "devops_cicd",
-     "weight": 0.05289291982413278,
+     "weight": 0.05198485887762865,
      "tf": 0.17647058823529413,
      "requiredLevel": 2,
      "adsMentioning": 7
     },
     {
      "skillId": "javascript_ts",
-     "weight": 0.05070363483727157,
+     "weight": 0.049833159340841794,
      "tf": 0.23529411764705882,
      "requiredLevel": 1,
      "adsMentioning": 9
