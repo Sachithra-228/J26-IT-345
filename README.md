@@ -549,6 +549,43 @@ PII is stripped before any processing; the analysis runs on the student's device
 | `tests/{unit,integration}/c3/`, `tests/fixtures/c3-readiness-parity.json`, `scripts/c3/` | Tests, parity fixture, benchmark |
 | `docs/c3/evidence/` | Evaluation JSON and charts |
 
+#### C3.9 Developer guide
+
+Architecture is in [C3.2](#c32-architecture-and-model) and full run notes in [C3.6](#c36-how-to-run); this is the short version for developers.
+
+**Overview.** C3 has two halves that must agree:
+
+- **Offline Python pipeline (`ml/c3/`)** - builds the taxonomy-based role profiles, the Gap-to-Action knowledge graph and the evaluation evidence. Entry point: `ml/c3/run_pipeline.py`.
+- **Online TypeScript runtime (`src/lib/c3/`)** - readiness, gaps, planner and skill extractor, running in the browser and the `/api/c3/*` routes. It only reads the generated JSON in `src/lib/c3/model/`.
+- **Parity test** - the `parity` stage writes Python reference outputs to `tests/fixtures/c3-readiness-parity.json`; `tests/unit/c3/c3-parity.test.ts` checks that the TypeScript code returns the same results.
+
+**How to run.**
+
+| Command | What it does |
+| --- | --- |
+| `python ml/c3/run_pipeline.py` | Default stages `data`, `model`, `graph`, `parity`, `evaluate`; one stage: `python ml/c3/run_pipeline.py model` |
+| `python ml/c3/run_pipeline.py real` | Not a default stage. Imports `ml/c3/data/raw/job_ads_sheet.csv` and evaluates against the manual labels; if the file does not exist it prints a message and stops |
+| `py -3.13 -m pytest tests/unit/c3 -q` or `npm run c3:test:py` | Python tests |
+| `npm test` | All Jest tests (C3 only: `npx jest tests/unit/c3 tests/integration/c3`) |
+| `npm run build` | Production build (stop `npm run dev` first; both use `.next/`) |
+
+**Model files.** The default stages regenerate `src/lib/c3/model/career-model.json`, `knowledge-graph.json` and `demo-cohort.json`; the `real` stage regenerates `data-status.json` and `job-titles.json`. Never edit them by hand - change the source (taxonomy, roles, Gap-to-Action content, code) and re-run the pipeline, then run the parity test. The current model is `c3-readiness-v1-synthetic` with taxonomy v1.1.0.
+
+**Data rules.**
+
+- `ml/c3/data/raw/` and `ml/c3/data/private/` are git-ignored: the job-ads sheet export, cleaned real ads and labels never go into git. Only aggregate numbers are written to `docs/c3/evidence/` and `src/lib/c3/model/`.
+- Status is Active or Closed (both are used). Rows with an empty required cell, an unknown Role_Category, a repeated Job_ID or a duplicate ad are skipped and reported with their Job_ID.
+- Duplicate ads are detected automatically: same URL (a LinkedIn link is compared by its job id), same title + company, or same ad text. The first row is kept.
+- Collection rule: add new ads at the end and never renumber or reuse a Job_ID (the dev / held-out split depends on it).
+- The real-ad split is by Job_ID (collection order): development = JOB001-JOB098 (used to tune the taxonomy v1.1.0 synonyms), held-out = JOB099 onward. Held-out ads are never used for tuning synonyms, parser rules or labels (`DEV_LAST_JOB_NUMBER` in `ml/c3/evaluation/evaluate_real_ads.py`).
+- The current model files are built from synthetic ads. Synthetic data is always labelled synthetic and never reported as real.
+
+**Ethics rules in the code.**
+
+- No GPA: the profile schema is strict, so a `gpa` field is rejected (`src/lib/c3/validation.ts`, tested in `c3-background.test.tsx`).
+- The academic background (specialisation, internship, projects) is context only: it orders the role list and adds tips, and never changes readiness, gaps or plans (tested).
+- No emotion recognition: the mock interview is text-only and scores answer content and structure; there is no audio, video or camera input.
+
 ### C4 - AI mentor matching and student engagement (L. L. E. Harshana)
 
 **Scope.** Dynamic multi-criteria mentor matching (skill similarity, interest overlap, mentoring language, availability, mentor capacity) that avoids over-allocation; student activity recommendation (clubs, events, workshops, volunteering); privacy-aware, consent-based parent / guardian communication; peer collaboration; engagement and mentorship analytics. Evaluation: recommendation relevance, mentor workload balance, user engagement, and privacy / authorisation testing.
