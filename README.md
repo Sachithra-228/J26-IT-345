@@ -370,7 +370,7 @@ The folders below exist so each member can start immediately and keep work separ
 
 ### C3 - Explainable AI career guidance (K. K. T. C. Kamburugoda)
 
-> **Status: implemented end to end on SYNTHETIC data** (branch `research/c3-career`, October 2026). The SLIIT ethics application is submitted but not approved, so no real student data and no collected job advertisements are used. Every ML number below says **"SYNTHETIC DATA: validates the pipeline, not real-world accuracy"**. Timings and test counts are real.
+> **Status: implemented end to end; role profiles are still built from SYNTHETIC data** (branch `research/c3-career`, October 2026). The SLIIT ethics application is submitted but not approved, so no real student data is used. 255 manually collected public job advertisements are used only for a preliminary evaluation (skill extraction, role from title, job titles) and are labelled **"Real ads, preliminary"**. Every other ML number says **"SYNTHETIC DATA: validates the pipeline, not real-world accuracy"**. Timings and test counts are real.
 
 **Scope.** NLP over Sri Lankan IT job advertisements to build evidence-based role requirements; a questionnaire (and optional CV text) for Year 3/4 IT students; a transparent readiness score per career path; ranked skill gaps; a reason for every number; and a **Gap-to-Action knowledge graph** that turns gaps into an ordered plan of modules, projects, certifications and free resources. Baseline: transparent unweighted content-based matching.
 
