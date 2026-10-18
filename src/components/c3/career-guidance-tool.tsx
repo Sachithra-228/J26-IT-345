@@ -11,6 +11,7 @@ import { extractSkills } from "@/lib/c3/extract";
 import { proposedGaps, type SkillGap } from "@/lib/c3/gaps";
 import { planForRole, type GapToActionPlan, type StepReason } from "@/lib/c3/graph";
 import { fmt, getC3Text, label, type C3Text } from "@/lib/c3/i18n";
+import { normaliseJobs, recommendWithFallback, type JobMatch } from "@/lib/c3/job-recommend";
 import { titlesForRole } from "@/lib/c3/job-titles";
 import { careerModel, getRole, getSkill, type ActionType, type RoleProfile } from "@/lib/c3/model";
 import { proposedReadiness, readinessBand, type RoleReadiness, type SkillLevels } from "@/lib/c3/readiness";
@@ -22,6 +23,7 @@ import {
   specialisationName
 } from "@/lib/c3/specialisation-roles";
 import { INTERNSHIP_STATUSES, PROJECT_COUNTS, SPECIALISATIONS, type Background, type CareerProfile } from "@/lib/c3/validation";
+import type { JobListing } from "@/types";
 
 const ring = "focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-1 dark:focus-visible:ring-offset-slate-900";
 
@@ -964,6 +966,7 @@ const Results = memo(function Results({
         <>
           <JobTitlesCard roleId={detail.roleId} ctx={ctx} />
           <AdCheckCard levels={result.levels} onSelect={onSelect} ctx={ctx} />
+          <JobsForYouCard levels={result.levels} roleId={detail.roleId} ctx={ctx} />
           <Breakdown readiness={detail.readiness} sources={result.sources} ctx={ctx} />
           <Gaps gaps={detail.gaps} roleId={detail.roleId} ctx={ctx} />
           <BackgroundTips background={background} roleId={detail.roleId} topGapSkillId={detail.gaps[0]?.skillId ?? null} ctx={ctx} />
@@ -1141,6 +1144,172 @@ function AdCheckCard({ levels, onSelect, ctx }: { levels: SkillLevels; onSelect:
         </div>
       ) : null}
     </section>
+  );
+}
+
+type JobsState = { status: "idle" } | { status: "loading" } | { status: "error" } | { status: "ready"; jobs: JobListing[] };
+
+/** The student dashboard section that holds the platform's job board. */
+const JOB_BOARD_HREF = "/dashboard/student#career";
+
+/**
+ * "Jobs that fit you": nothing is requested until the student presses the button. Then the
+ * platform job board is fetched once (a plain GET; the student's levels never leave the
+ * browser) and ranked for the selected role.
+ */
+function JobsForYouCard({ levels, roleId, ctx }: { levels: SkillLevels; roleId: string; ctx: Ctx }) {
+  const { t, language } = ctx;
+  const uid = useId();
+  const [state, setState] = useState<JobsState>({ status: "idle" });
+  const alive = useRef(true);
+  useEffect(() => {
+    alive.current = true; // React StrictMode mounts twice in development
+    return () => {
+      alive.current = false;
+    };
+  }, []);
+
+  async function loadJobs() {
+    setState({ status: "loading" });
+    try {
+      if (typeof fetch !== "function") throw new Error("fetch unavailable");
+      const res = await fetch("/api/jobs");
+      if (!res.ok) throw new Error(`HTTP ${res.status}`);
+      const jobs = normaliseJobs(await res.json());
+      if (alive.current) setState({ status: "ready", jobs });
+    } catch {
+      if (alive.current) setState({ status: "error" });
+    }
+  }
+
+  const lists = useMemo(
+    () =>
+      state.status === "ready" || state.status === "error"
+        ? recommendWithFallback(state.status === "ready" ? state.jobs : [], levels, roleId, new Date())
+        : null,
+    [state, levels, roleId]
+  );
+  const role = roleName(roleId, language);
+
+  return (
+    <section data-testid="c3-jobs" aria-labelledby={`${uid}-jf`} aria-busy={state.status === "loading"} className="rounded-2xl border border-emerald-200 bg-gradient-to-br from-emerald-50 to-sky-50 p-4 dark:border-emerald-900 dark:from-emerald-950/40 dark:to-sky-950/40">
+      <h3 id={`${uid}-jf`} className="flex items-center gap-2 text-base font-semibold text-emerald-900 dark:text-emerald-100">
+        <span aria-hidden="true">💼</span>
+        {t.jfTitle}
+      </h3>
+      <p className="mt-1 text-sm text-slate-600 dark:text-slate-300">{fmt(t.jfIntro, { role })}</p>
+      <p className="mt-1 text-xs text-slate-500 dark:text-slate-400">🔒 {t.jfPrivacy}</p>
+
+      {state.status === "idle" ? (
+        <Button type="button" onClick={() => void loadJobs()} className="mt-3">
+          {t.jfShow}
+        </Button>
+      ) : null}
+      {state.status === "loading" ? (
+        <p role="status" className="mt-3 text-sm text-slate-600 dark:text-slate-300">
+          {t.jfLoading}
+        </p>
+      ) : null}
+      {state.status === "error" ? (
+        <p role="alert" data-testid="c3-jobs-error" className="mt-3 text-sm text-red-600 dark:text-red-400">
+          {t.jfError}
+        </p>
+      ) : null}
+      {lists ? (
+        <>
+          {lists.real.length ? (
+            <ul data-testid="c3-jobs-real" className="mt-3 space-y-3">
+              {lists.real.map((m) => (
+                <JobRow key={m.job._id} m={m} roleId={roleId} ctx={ctx} />
+              ))}
+            </ul>
+          ) : state.status === "ready" ? (
+            <p data-testid="c3-jobs-none" className="mt-3 text-sm text-slate-600 dark:text-slate-300">
+              {fmt(t.jfNone, { role })}
+            </p>
+          ) : null}
+          {lists.demo.length ? (
+            <div data-testid="c3-jobs-demo" className="mt-4 rounded-xl border border-dashed border-amber-300 bg-amber-50/60 p-3 dark:border-amber-800 dark:bg-amber-950/20">
+              <h4 className="text-sm font-semibold text-amber-900 dark:text-amber-200">{t.jfDemoHeading}</h4>
+              <p className="mt-0.5 text-xs text-amber-900/80 dark:text-amber-200/80">{t.jfDemoNote}</p>
+              <ul className="mt-3 space-y-3">
+                {lists.demo.map((m) => (
+                  <JobRow key={m.job._id} m={m} roleId={roleId} ctx={ctx} />
+                ))}
+              </ul>
+            </div>
+          ) : null}
+        </>
+      ) : null}
+    </section>
+  );
+}
+
+function JobRow({ m, roleId, ctx }: { m: JobMatch; roleId: string; ctx: Ctx }) {
+  const { t, language } = ctx;
+  const { job } = m;
+  const names = (list: typeof m.haveSkills) => list.map((s) => skillName(s.skillId, language));
+  const typeText = job.type === "internship" ? t.jfTypeInternship : job.type === "part-time" ? t.jfTypePartTime : job.type === "full-time" ? t.jfTypeFullTime : job.type;
+  const reason = [
+    fmt(t.jfClose, { role: roleName(roleId, language) }),
+    m.haveSkills.length ? fmt(t.jfReasonHave, { skills: names(m.haveSkills).slice(0, 3).join(", ") }) : null,
+    m.missingSkills.length ? fmt(t.jfReasonMissing, { skills: names(m.missingSkills).slice(0, 3).join(", ") }) : null
+  ]
+    .filter(Boolean)
+    .join(" · ");
+  const gap = m.missingSkills.find((s) => s.nextAction);
+  const meta = [job.company, typeText, job.location].filter(Boolean).join(" · ");
+
+  return (
+    <li data-testid="c3-job" className="rounded-xl bg-white p-3 text-sm shadow-sm dark:bg-slate-900">
+      <div className="flex flex-wrap items-start justify-between gap-2">
+        <div className="min-w-0">
+          <p className="font-semibold text-slate-900 dark:text-slate-100">{job.title}</p>
+          {meta ? <p className="text-xs text-slate-500 dark:text-slate-400">{meta}</p> : null}
+          {job.applicationDeadline ? <p className="text-xs text-slate-500 dark:text-slate-400">{fmt(t.jfDeadline, { date: job.applicationDeadline })}</p> : null}
+        </div>
+        <div className="flex shrink-0 flex-wrap items-center gap-1.5">
+          {m.isDemo ? (
+            <span data-testid="c3-job-demo-badge" className="rounded-full bg-amber-100 px-2 py-0.5 text-[11px] font-semibold text-amber-900 dark:bg-amber-900/60 dark:text-amber-100">
+              {t.jfDemoBadge}
+            </span>
+          ) : null}
+          <span className="rounded-full bg-emerald-100 px-2.5 py-0.5 text-xs font-semibold text-emerald-900 dark:bg-emerald-900/60 dark:text-emerald-100">
+            {fmt(t.jfMatch, { n: m.matchPercent })}
+          </span>
+        </div>
+      </div>
+      <p className="mt-2 text-xs text-slate-600 dark:text-slate-300">{reason}</p>
+      <div className="mt-2 flex flex-wrap gap-1.5">
+        {m.haveSkills.map((s) => (
+          <span key={s.skillId} className="rounded-full bg-emerald-50 px-2 py-0.5 text-[11px] text-emerald-900 ring-1 ring-emerald-200 dark:bg-emerald-950/40 dark:text-emerald-100 dark:ring-emerald-800">
+            ✓ {skillName(s.skillId, language)}
+          </span>
+        ))}
+        {m.missingSkills.map((s) => (
+          <span key={s.skillId} className="rounded-full bg-amber-50 px-2 py-0.5 text-[11px] text-amber-900 ring-1 ring-amber-200 dark:bg-amber-950/40 dark:text-amber-100 dark:ring-amber-800">
+            + {skillName(s.skillId, language)}
+          </span>
+        ))}
+      </div>
+      <p className="sr-only">
+        {t.jfHave}: {names(m.haveSkills).join(", ") || "-"}. {t.jfMissing}: {names(m.missingSkills).join(", ") || "-"}.
+      </p>
+      {gap?.nextAction ? (
+        <p className="mt-2 rounded-lg bg-amber-50 px-2.5 py-1.5 text-xs text-slate-700 dark:bg-amber-950/30 dark:text-slate-200">
+          📚 {fmt(t.jfGap, { skill: skillName(gap.skillId, language), action: gap.nextAction.title, h: gap.nextAction.effortHours })}
+        </p>
+      ) : null}
+      {!m.isDemo ? (
+        <a
+          href={job.externalUrl || JOB_BOARD_HREF}
+          {...(job.externalUrl ? { target: "_blank", rel: "noopener noreferrer" } : {})}
+          className={`mt-2 inline-block rounded text-xs font-semibold text-primary underline-offset-2 hover:underline ${ring}`}
+        >
+          {job.externalUrl ? t.jfOpenJob : t.jfBoard} →
+        </a>
+      ) : null}
+    </li>
   );
 }
 
