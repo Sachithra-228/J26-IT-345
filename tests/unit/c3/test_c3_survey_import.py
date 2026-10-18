@@ -202,3 +202,20 @@ def test_synthetic_label_and_output_folders(tmp_path, imported):
     s = run(real, tmp_path / "real-out")
     assert s["isSynthetic"] is False and "warning" not in s
     assert CONSENT_YES in s["optionLists"]["consent"]
+
+
+def test_form_options_b4_zero_no_consent_and_year_1_2(tmp_path):
+    """Answers that exist on the real Google Form (checked 18 Oct 2026)."""
+    src = write_fixture(tmp_path / "form_SYNTHETIC.csv")
+    df = pd.read_csv(src, dtype=str, keep_default_na=False)
+    b4, a1, consent = (col(list(df.columns), p) for p in ("B4.", "A1.", "Consent"))
+    df.loc[0, b4] = "0"
+    df.loc[1, consent] = "I do not agree to take part."
+    df.loc[2, a1] = "Year 1 or Year 2 (this survey is not for you - thank you!)"
+    df.to_csv(src, index=False)
+    s = run(src, tmp_path / "out")
+    clean = pd.read_csv(tmp_path / "out" / "form_SYNTHETIC-clean.csv", dtype=str, keep_default_na=False)
+    assert clean.iloc[0]["self_readiness"] == "0"
+    assert "B4" not in s["unknownValues"]
+    assert s["droppedReasons"] == {"no_consent": 2, "not_year_3_or_4": 2}
+    assert "Year 1 or Year 2 (this survey is not for you - thank you!)" in s["droppedYearValues"]

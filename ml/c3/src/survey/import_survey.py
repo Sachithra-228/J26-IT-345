@@ -33,8 +33,8 @@ SYNTHETIC_OUT = C.SYNTHETIC_DIR / "processed"
 PRIVATE_OUT = C.PRIVATE_DIR / "processed"
 
 # ---------------------------------------------------------------------------
-# Option lists. Built from the synthetic test export, because the form itself
-# is not in the repo: check them against the Google Form. Any answer not listed
+# Option lists, checked against the Google Form on 18 Oct 2026. "Other" free text
+# (A2, B5, B6, D3, F3) and any answer not listed
 # here is reported as an unknown value, never dropped silently.
 # ---------------------------------------------------------------------------
 CONSENT_YES = "I have read the information above, I am 18 years or older, and I agree to take part."
@@ -56,7 +56,7 @@ SINGLE = {
     "D2": ["Yes", "No"],
     "F1": ["Less than 2", "2-5", "6-10", "More than 10"],
 }
-SCALES = {"B3": (1, 5), "B4": (1, 10)}
+SCALES = {"B3": (1, 5), "B4": (0, 10)}
 MULTI = {
     "B1": ROLES,
     "B5": ["Lecturers", "Seniors or alumni", "Friends", "Family", "SLIIT career guidance unit / events", "LinkedIn",
@@ -382,8 +382,8 @@ def run(path: Path, out: Path | None = None) -> dict:
         },
         "optionLists": {"consent": [CONSENT_YES], "A1": list(YEARS), **SINGLE, **MULTI,
                         "E1-E3": "taxonomy skill labels (competency-taxonomy.json)",
-                        "B3": "1-5", "B4": "1-10", "F4": list(F4_SCALE), "G1": list(G1_SCALE),
-                        "note": "Built from the synthetic test export - check against the Google Form."},
+                        "B3": "1-5", "B4": "0-10", "F4": list(F4_SCALE), "G1": list(G1_SCALE),
+                        "note": "Checked against the Google Form on 18 Oct 2026."},
     }
     target.mkdir(parents=True, exist_ok=True)
     stem = path.stem

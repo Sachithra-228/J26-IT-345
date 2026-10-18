@@ -202,7 +202,7 @@
   ],
   "E1-E3": "taxonomy skill labels (competency-taxonomy.json)",
   "B3": "1-5",
-  "B4": "1-10",
+  "B4": "0-10",
   "F4": [
    "Not useful",
    "Slightly useful",
@@ -217,6 +217,6 @@
    "Agree",
    "Strongly agree"
   ],
-  "note": "Built from the synthetic test export - check against the Google Form."
+  "note": "Checked against the Google Form on 18 Oct 2026."
  }
 }
