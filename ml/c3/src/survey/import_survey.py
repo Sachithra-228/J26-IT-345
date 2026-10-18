@@ -182,7 +182,9 @@ def safe(text: str) -> tuple[str, int]:
 # ---------------------------------------------------------------------------
 # Import
 # ---------------------------------------------------------------------------
-def import_rows(df: pd.DataFrame, taxonomy: dict) -> tuple[list[dict], dict]:
+def import_rows(df: pd.DataFrame, taxonomy: dict, exclude_specialisations: tuple[str, ...] = ()) -> tuple[list[dict], dict]:
+    """exclude_specialisations: A2 answers outside the target group (e.g. a non-IT degree typed into "Other")."""
+    excluded = {x.strip().lower() for x in exclude_specialisations}
     cols = classify_columns(list(df.columns))
     skill_by_label = {s["label"]["en"]: s["id"] for s in taxonomy["skills"]}
     skill_labels = list(skill_by_label)
@@ -256,6 +258,9 @@ def import_rows(df: pd.DataFrame, taxonomy: dict) -> tuple[list[dict], dict]:
         if year not in YEARS:
             dropped["not_year_3_or_4"] += 1
             dropped_years[year or "(empty)"] += 1
+            continue
+        if cell(row, "A2").lower() in excluded:
+            dropped["excluded_specialisation"] += 1
             continue
 
         rec: dict = {"row_id": f"R{len(kept) + 1:03d}"}
@@ -332,6 +337,7 @@ def import_rows(df: pd.DataFrame, taxonomy: dict) -> tuple[list[dict], dict]:
         "rowsDropped": sum(dropped.values()),
         "droppedReasons": dict(dropped),
         "droppedYearValues": dict(dropped_years),
+        "excludedSpecialisations": sorted(exclude_specialisations),
         "columns": {
             "total": len(df.columns),
             "emptyHeadersIgnored": len(cols["empty"]),
@@ -362,12 +368,12 @@ def output_dir(source: Path, is_synthetic: bool, out: Path | None) -> Path:
     return target
 
 
-def run(path: Path, out: Path | None = None) -> dict:
+def run(path: Path, out: Path | None = None, exclude_specialisations: tuple[str, ...] = ()) -> dict:
     path = Path(path)
     is_synthetic = "SYNTHETIC" in path.name.upper()
     target = output_dir(path, is_synthetic, out)
     df = pd.read_csv(path, dtype=str, keep_default_na=False, encoding="utf-8-sig")
-    rows, info = import_rows(df, C.load_taxonomy())
+    rows, info = import_rows(df, C.load_taxonomy(), tuple(exclude_specialisations))
     summary = {
         "source": path.name,
         "isSynthetic": is_synthetic,
@@ -378,7 +384,7 @@ def run(path: Path, out: Path | None = None) -> dict:
             "usefulness": F4_SCALE,
             "agreement": G1_SCALE,
             "softSkills": SOFT_SKILLS,
-            "rule": "Rows are dropped only for missing consent or a year other than Year 3 / Year 4; flags never drop rows.",
+            "rule": "Rows are dropped only for missing consent, a year other than Year 3 / Year 4, or an A2 answer listed in excludedSpecialisations; flags never drop rows.",
         },
         "optionLists": {"consent": [CONSENT_YES], "A1": list(YEARS), **SINGLE, **MULTI,
                         "E1-E3": "taxonomy skill labels (competency-taxonomy.json)",
@@ -398,8 +404,10 @@ def main(argv: list[str] | None = None) -> None:
     ap = argparse.ArgumentParser(description="Import the C3 career-readiness survey export.")
     ap.add_argument("csv", type=Path)
     ap.add_argument("--out", type=Path, default=None, help="output folder (default: synthetic/processed or private/processed)")
+    ap.add_argument("--exclude-specialisation", action="append", default=[], metavar="A2",
+                    help="drop rows with this A2 answer (outside the target group); can be repeated")
     a = ap.parse_args(argv)
-    s = run(a.csv, a.out)
+    s = run(a.csv, a.out, tuple(a.exclude_specialisation))
     if s["isSynthetic"]:
         print(C.SYNTHETIC_WARNING)
     print(f"rows read {s['rowsRead']} -> kept {s['rowsKept']}, dropped {s['rowsDropped']} {s['droppedReasons']}")

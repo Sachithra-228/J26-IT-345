@@ -7,6 +7,7 @@
  "rowsDropped": 0,
  "droppedReasons": {},
  "droppedYearValues": {},
+ "excludedSpecialisations": [],
  "columns": {
   "total": 65,
   "emptyHeadersIgnored": 0,
@@ -62,7 +63,7 @@
    "Time management": "time_management",
    "Presentation skills": "presentation"
   },
-  "rule": "Rows are dropped only for missing consent or a year other than Year 3 / Year 4; flags never drop rows."
+  "rule": "Rows are dropped only for missing consent, a year other than Year 3 / Year 4, or an A2 answer listed in excludedSpecialisations; flags never drop rows."
  },
  "optionLists": {
   "consent": [

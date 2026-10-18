@@ -219,3 +219,18 @@ def test_form_options_b4_zero_no_consent_and_year_1_2(tmp_path):
     assert "B4" not in s["unknownValues"]
     assert s["droppedReasons"] == {"no_consent": 2, "not_year_3_or_4": 2}
     assert "Year 1 or Year 2 (this survey is not for you - thank you!)" in s["droppedYearValues"]
+
+
+def test_excluded_specialisation_is_dropped_and_reported(tmp_path):
+    """A non-IT degree typed into A2 "Other" (fictional) can be excluded by name, case-insensitively."""
+    src = write_fixture(tmp_path / "spec_SYNTHETIC.csv")
+    df = pd.read_csv(src, dtype=str, keep_default_na=False)
+    df.loc[0, col(list(df.columns), "A2.")] = "Chemistry"
+    df.to_csv(src, index=False)
+    kept_all = run(src, tmp_path / "a")
+    assert kept_all["rowsKept"] == 4 and kept_all["unknownValues"]["A2"] == [{"value": "Chemistry", "count": 1}]
+    s = run(src, tmp_path / "b", ("chemistry",))
+    assert s["rowsKept"] == 3
+    assert s["droppedReasons"]["excluded_specialisation"] == 1
+    assert s["excludedSpecialisations"] == ["chemistry"]
+    assert "A2" not in s["unknownValues"]
