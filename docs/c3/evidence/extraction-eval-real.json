@@ -1,23 +1,23 @@
 {
  "warning": "PRELIMINARY - real public job ads, but ONE annotator (the researcher) who knows the taxonomy labelled them; agreement is optimistic until an independent second annotator is added.",
- "ads": 150,
- "labelledSkills": 943,
+ "ads": 255,
+ "labelledSkills": 1563,
  "skillExtraction": {
   "micro": {
-   "precision": 0.905,
-   "recall": 0.776,
-   "f1": 0.836,
-   "tp": 732,
-   "fp": 77,
-   "fn": 211
+   "precision": 0.906,
+   "recall": 0.747,
+   "f1": 0.819,
+   "tp": 1168,
+   "fp": 121,
+   "fn": 395
   },
   "microF1ci95": [
-   0.816,
-   0.854
+   0.802,
+   0.834
   ],
-  "macroF1OverAds": 0.811,
-  "recallRequired": 0.778,
-  "recallPreferred": 0.684,
+  "macroF1OverAds": 0.785,
+  "recallRequired": 0.747,
+  "recallPreferred": 0.769,
   "perSkill": [
    {
     "skillId": "statistics",
@@ -26,298 +26,298 @@
     "recall": 0.0,
     "f1": 0.0,
     "tp": 0,
-    "fp": 8,
+    "fp": 9,
     "fn": 0
    },
    {
-    "skillId": "project_management",
-    "labelled": 16,
-    "precision": 0.857,
-    "recall": 0.375,
-    "f1": 0.522,
-    "tp": 6,
-    "fp": 1,
-    "fn": 10
+    "skillId": "business_analysis",
+    "labelled": 58,
+    "precision": 0.805,
+    "recall": 0.569,
+    "f1": 0.667,
+    "tp": 33,
+    "fp": 8,
+    "fn": 25
    },
    {
-    "skillId": "business_analysis",
+    "skillId": "project_management",
     "labelled": 32,
-    "precision": 0.783,
+    "precision": 0.857,
     "recall": 0.562,
-    "f1": 0.655,
+    "f1": 0.679,
     "tp": 18,
-    "fp": 5,
+    "fp": 3,
     "fn": 14
    },
    {
-    "skillId": "nosql",
-    "labelled": 8,
-    "precision": 0.714,
-    "recall": 0.625,
-    "f1": 0.667,
-    "tp": 5,
-    "fp": 2,
-    "fn": 3
-   },
-   {
     "skillId": "problem_solving",
-    "labelled": 129,
-    "precision": 0.94,
-    "recall": 0.612,
-    "f1": 0.742,
-    "tp": 79,
-    "fp": 5,
-    "fn": 50
-   },
-   {
-    "skillId": "linux",
-    "labelled": 28,
-    "precision": 1.0,
-    "recall": 0.607,
-    "f1": 0.756,
-    "tp": 17,
-    "fp": 0,
-    "fn": 11
-   },
-   {
-    "skillId": "backend_api",
-    "labelled": 53,
-    "precision": 0.897,
-    "recall": 0.66,
-    "f1": 0.761,
-    "tp": 35,
-    "fp": 4,
-    "fn": 18
-   },
-   {
-    "skillId": "machine_learning",
-    "labelled": 23,
-    "precision": 0.938,
-    "recall": 0.652,
-    "f1": 0.769,
-    "tp": 15,
-    "fp": 1,
-    "fn": 8
+    "labelled": 227,
+    "precision": 0.957,
+    "recall": 0.581,
+    "f1": 0.723,
+    "tp": 132,
+    "fp": 6,
+    "fn": 95
    },
    {
     "skillId": "data_analysis",
-    "labelled": 24,
-    "precision": 0.76,
-    "recall": 0.792,
-    "f1": 0.776,
-    "tp": 19,
-    "fp": 6,
+    "labelled": 34,
+    "precision": 0.722,
+    "recall": 0.765,
+    "f1": 0.743,
+    "tp": 26,
+    "fp": 10,
+    "fn": 8
+   },
+   {
+    "skillId": "machine_learning",
+    "labelled": 40,
+    "precision": 0.926,
+    "recall": 0.625,
+    "f1": 0.746,
+    "tp": 25,
+    "fp": 2,
+    "fn": 15
+   },
+   {
+    "skillId": "linux",
+    "labelled": 50,
+    "precision": 1.0,
+    "recall": 0.6,
+    "f1": 0.75,
+    "tp": 30,
+    "fp": 0,
+    "fn": 20
+   },
+   {
+    "skillId": "nosql",
+    "labelled": 16,
+    "precision": 0.846,
+    "recall": 0.688,
+    "f1": 0.759,
+    "tp": 11,
+    "fp": 2,
     "fn": 5
    },
    {
-    "skillId": "ui_ux",
-    "labelled": 16,
-    "precision": 0.765,
-    "recall": 0.812,
-    "f1": 0.788,
-    "tp": 13,
-    "fp": 4,
-    "fn": 3
+    "skillId": "backend_api",
+    "labelled": 73,
+    "precision": 0.907,
+    "recall": 0.671,
+    "f1": 0.772,
+    "tp": 49,
+    "fp": 5,
+    "fn": 24
    },
    {
-    "skillId": "agile",
-    "labelled": 37,
-    "precision": 0.775,
-    "recall": 0.838,
-    "f1": 0.805,
-    "tp": 31,
-    "fp": 9,
-    "fn": 6
+    "skillId": "ui_ux",
+    "labelled": 40,
+    "precision": 0.811,
+    "recall": 0.75,
+    "f1": 0.779,
+    "tp": 30,
+    "fp": 7,
+    "fn": 10
+   },
+   {
+    "skillId": "testing_manual",
+    "labelled": 58,
+    "precision": 0.789,
+    "recall": 0.776,
+    "f1": 0.783,
+    "tp": 45,
+    "fp": 12,
+    "fn": 13
    },
    {
     "skillId": "test_automation",
     "labelled": 19,
-    "precision": 0.75,
+    "precision": 0.667,
     "recall": 0.947,
-    "f1": 0.837,
+    "f1": 0.783,
     "tp": 18,
-    "fp": 6,
+    "fp": 9,
     "fn": 1
-   },
-   {
-    "skillId": "testing_manual",
-    "labelled": 45,
-    "precision": 0.844,
-    "recall": 0.844,
-    "f1": 0.844,
-    "tp": 38,
-    "fp": 7,
-    "fn": 7
-   },
-   {
-    "skillId": "security",
-    "labelled": 36,
-    "precision": 0.882,
-    "recall": 0.833,
-    "f1": 0.857,
-    "tp": 30,
-    "fp": 4,
-    "fn": 6
-   },
-   {
-    "skillId": "version_control",
-    "labelled": 38,
-    "precision": 0.939,
-    "recall": 0.816,
-    "f1": 0.873,
-    "tp": 31,
-    "fp": 2,
-    "fn": 7
-   },
-   {
-    "skillId": "frontend",
-    "labelled": 36,
-    "precision": 1.0,
-    "recall": 0.778,
-    "f1": 0.875,
-    "tp": 28,
-    "fp": 0,
-    "fn": 8
-   },
-   {
-    "skillId": "databases_sql",
-    "labelled": 48,
-    "precision": 0.951,
-    "recall": 0.812,
-    "f1": 0.876,
-    "tp": 39,
-    "fp": 2,
-    "fn": 9
-   },
-   {
-    "skillId": "communication",
-    "labelled": 147,
-    "precision": 0.992,
-    "recall": 0.803,
-    "f1": 0.887,
-    "tp": 118,
-    "fp": 1,
-    "fn": 29
-   },
-   {
-    "skillId": "prog_oop",
-    "labelled": 23,
-    "precision": 0.952,
-    "recall": 0.87,
-    "f1": 0.909,
-    "tp": 20,
-    "fp": 1,
-    "fn": 3
    },
    {
     "skillId": "networking",
-    "labelled": 28,
-    "precision": 0.926,
-    "recall": 0.893,
-    "f1": 0.909,
-    "tp": 25,
-    "fp": 2,
-    "fn": 3
+    "labelled": 58,
+    "precision": 0.896,
+    "recall": 0.741,
+    "f1": 0.811,
+    "tp": 43,
+    "fp": 5,
+    "fn": 15
    },
    {
-    "skillId": "mobile",
-    "labelled": 12,
-    "precision": 0.917,
-    "recall": 0.917,
-    "f1": 0.917,
-    "tp": 11,
-    "fp": 1,
-    "fn": 1
+    "skillId": "security",
+    "labelled": 66,
+    "precision": 0.855,
+    "recall": 0.803,
+    "f1": 0.828,
+    "tp": 53,
+    "fp": 9,
+    "fn": 13
+   },
+   {
+    "skillId": "agile",
+    "labelled": 62,
+    "precision": 0.85,
+    "recall": 0.823,
+    "f1": 0.836,
+    "tp": 51,
+    "fp": 9,
+    "fn": 11
+   },
+   {
+    "skillId": "frontend",
+    "labelled": 54,
+    "precision": 0.953,
+    "recall": 0.759,
+    "f1": 0.845,
+    "tp": 41,
+    "fp": 2,
+    "fn": 13
+   },
+   {
+    "skillId": "databases_sql",
+    "labelled": 67,
+    "precision": 0.945,
+    "recall": 0.776,
+    "f1": 0.852,
+    "tp": 52,
+    "fp": 3,
+    "fn": 15
    },
    {
     "skillId": "devops_cicd",
-    "labelled": 24,
-    "precision": 0.917,
-    "recall": 0.917,
-    "f1": 0.917,
-    "tp": 22,
-    "fp": 2,
-    "fn": 2
+    "labelled": 46,
+    "precision": 0.884,
+    "recall": 0.826,
+    "f1": 0.854,
+    "tp": 38,
+    "fp": 5,
+    "fn": 8
    },
    {
-    "skillId": "javascript_ts",
-    "labelled": 31,
-    "precision": 1.0,
-    "recall": 0.903,
-    "f1": 0.949,
-    "tp": 28,
-    "fp": 0,
+    "skillId": "communication",
+    "labelled": 250,
+    "precision": 0.995,
+    "recall": 0.776,
+    "f1": 0.872,
+    "tp": 194,
+    "fp": 1,
+    "fn": 56
+   },
+   {
+    "skillId": "version_control",
+    "labelled": 61,
+    "precision": 0.962,
+    "recall": 0.82,
+    "f1": 0.885,
+    "tp": 50,
+    "fp": 2,
+    "fn": 11
+   },
+   {
+    "skillId": "prog_oop",
+    "labelled": 26,
+    "precision": 0.92,
+    "recall": 0.885,
+    "f1": 0.902,
+    "tp": 23,
+    "fp": 2,
     "fn": 3
    },
    {
     "skillId": "cloud",
-    "labelled": 38,
-    "precision": 0.925,
-    "recall": 0.974,
-    "f1": 0.949,
-    "tp": 37,
-    "fp": 3,
-    "fn": 1
+    "labelled": 73,
+    "precision": 0.904,
+    "recall": 0.904,
+    "f1": 0.904,
+    "tp": 66,
+    "fp": 7,
+    "fn": 7
    },
    {
-    "skillId": "python",
-    "labelled": 36,
-    "precision": 0.971,
-    "recall": 0.944,
-    "f1": 0.958,
-    "tp": 34,
+    "skillId": "javascript_ts",
+    "labelled": 47,
+    "precision": 0.976,
+    "recall": 0.872,
+    "f1": 0.921,
+    "tp": 41,
+    "fp": 1,
+    "fn": 6
+   },
+   {
+    "skillId": "mobile",
+    "labelled": 21,
+    "precision": 0.95,
+    "recall": 0.905,
+    "f1": 0.927,
+    "tp": 19,
     "fp": 1,
     "fn": 2
    },
    {
+    "skillId": "python",
+    "labelled": 54,
+    "precision": 0.981,
+    "recall": 0.944,
+    "f1": 0.962,
+    "tp": 51,
+    "fp": 1,
+    "fn": 3
+   },
+   {
     "skillId": "containers",
-    "labelled": 16,
+    "labelled": 31,
     "precision": 1.0,
-    "recall": 0.938,
-    "f1": 0.968,
-    "tp": 15,
+    "recall": 0.935,
+    "f1": 0.967,
+    "tp": 29,
     "fp": 0,
-    "fn": 1
+    "fn": 2
    }
   ],
   "perRoleF1": {
-   "business_analyst": 0.814,
-   "cybersecurity_analyst": 0.845,
-   "data_analyst": 0.716,
-   "data_scientist": 0.824,
-   "devops_engineer": 0.876,
-   "frontend_engineer": 0.843,
-   "mobile_developer": 0.878,
-   "network_engineer": 0.855,
-   "project_coordinator": 0.698,
+   "business_analyst": 0.791,
+   "cybersecurity_analyst": 0.771,
+   "data_analyst": 0.768,
+   "data_scientist": 0.806,
+   "devops_engineer": 0.882,
+   "frontend_engineer": 0.846,
+   "mobile_developer": 0.836,
+   "network_engineer": 0.824,
+   "project_coordinator": 0.728,
    "qa_engineer": 0.826,
-   "software_engineer": 0.886,
-   "ui_ux_designer": 0.742
+   "software_engineer": 0.881,
+   "ui_ux_designer": 0.711
   },
   "perSkillMinSupport": 3
  },
- "preferredFlagAgreement": 0.955,
+ "preferredFlagAgreement": 0.963,
  "roleFromTitle": {
-  "accuracy": 0.62,
-  "unclassified": 56,
-  "adsWithCatalogueRole": 150,
+  "accuracy": 0.529,
+  "unclassified": 116,
+  "adsWithCatalogueRole": 255,
   "topConfusions": {
-   "network_engineer <- unclassified": 10,
+   "network_engineer <- unclassified": 27,
+   "project_coordinator <- unclassified": 18,
+   "ui_ux_designer <- unclassified": 17,
+   "cybersecurity_analyst <- unclassified": 11,
    "qa_engineer <- unclassified": 9,
-   "project_coordinator <- unclassified": 8,
+   "data_analyst <- unclassified": 8,
    "software_engineer <- unclassified": 6,
-   "data_analyst <- unclassified": 5,
-   "cybersecurity_analyst <- unclassified": 5,
-   "ui_ux_designer <- unclassified": 5,
-   "data_scientist <- unclassified": 2
+   "data_scientist <- unclassified": 6
   }
  },
  "seniority": {
-  "accuracy": 0.967,
+  "accuracy": 0.957,
   "confusions": {
-   "intern <- associate": 2,
-   "associate <- senior": 1,
-   "senior <- associate": 1,
+   "associate <- senior": 4,
+   "intern <- associate": 3,
+   "senior <- associate": 3,
    "intern <- senior": 1
   }
  },
@@ -327,55 +327,55 @@
   "rule": "development = JOB001-JOB098 (used to tune the v1.1.0 synonyms); heldOut = every later ad (never used for tuning)",
   "adsWithoutJobNumber": 0,
   "all": {
-   "ads": 150,
-   "precision": 0.905,
-   "recall": 0.776,
-   "f1": 0.836,
+   "ads": 255,
+   "precision": 0.906,
+   "recall": 0.747,
+   "f1": 0.819,
    "f1Ci95": [
-    0.816,
-    0.854
+    0.802,
+    0.834
    ],
-   "macroF1OverAds": 0.811,
-   "recallRequired": 0.778,
-   "recallPreferred": 0.684,
-   "roleFromTitleAccuracy": 0.62,
-   "seniorityAccuracy": 0.967,
+   "macroF1OverAds": 0.785,
+   "recallRequired": 0.747,
+   "recallPreferred": 0.769,
+   "roleFromTitleAccuracy": 0.529,
+   "seniorityAccuracy": 0.957,
    "weakestSkills": [
     {
      "skillId": "statistics",
      "f1": 0.0
     },
     {
-     "skillId": "project_management",
-     "f1": 0.522
-    },
-    {
      "skillId": "business_analysis",
-     "f1": 0.655
-    },
-    {
-     "skillId": "nosql",
      "f1": 0.667
     },
     {
+     "skillId": "project_management",
+     "f1": 0.679
+    },
+    {
      "skillId": "problem_solving",
-     "f1": 0.742
+     "f1": 0.723
+    },
+    {
+     "skillId": "data_analysis",
+     "f1": 0.743
     }
    ]
   },
   "development": {
    "ads": 98,
    "precision": 0.902,
-   "recall": 0.797,
-   "f1": 0.846,
+   "recall": 0.802,
+   "f1": 0.849,
    "f1Ci95": [
-    0.823,
-    0.868
+    0.826,
+    0.872
    ],
-   "macroF1OverAds": 0.82,
-   "recallRequired": 0.8,
-   "recallPreferred": 0.688,
-   "roleFromTitleAccuracy": 0.561,
+   "macroF1OverAds": 0.824,
+   "recallRequired": 0.805,
+   "recallPreferred": 0.722,
+   "roleFromTitleAccuracy": 0.551,
    "seniorityAccuracy": 0.98,
    "weakestSkills": [
     {
@@ -384,56 +384,56 @@
     },
     {
      "skillId": "project_management",
-     "f1": 0.5
-    },
-    {
-     "skillId": "business_analysis",
-     "f1": 0.647
+     "f1": 0.545
     },
     {
      "skillId": "test_automation",
      "f1": 0.667
     },
     {
-     "skillId": "ui_ux",
-     "f1": 0.737
+     "skillId": "business_analysis",
+     "f1": 0.667
+    },
+    {
+     "skillId": "linux",
+     "f1": 0.741
     }
    ]
   },
   "heldOut": {
-   "ads": 52,
-   "precision": 0.91,
-   "recall": 0.744,
-   "f1": 0.819,
+   "ads": 157,
+   "precision": 0.909,
+   "recall": 0.715,
+   "f1": 0.8,
    "f1Ci95": [
-    0.786,
-    0.85
+    0.779,
+    0.822
    ],
-   "macroF1OverAds": 0.793,
-   "recallRequired": 0.745,
-   "recallPreferred": 0.667,
-   "roleFromTitleAccuracy": 0.731,
-   "seniorityAccuracy": 0.942,
+   "macroF1OverAds": 0.76,
+   "recallRequired": 0.714,
+   "recallPreferred": 0.875,
+   "roleFromTitleAccuracy": 0.516,
+   "seniorityAccuracy": 0.943,
    "weakestSkills": [
     {
      "skillId": "statistics",
      "f1": 0.0
     },
     {
-     "skillId": "nosql",
-     "f1": 0.571
+     "skillId": "data_analysis",
+     "f1": 0.667
     },
     {
-     "skillId": "frontend",
-     "f1": 0.6
+     "skillId": "business_analysis",
+     "f1": 0.667
     },
     {
      "skillId": "problem_solving",
-     "f1": 0.632
+     "f1": 0.672
     },
     {
-     "skillId": "backend_api",
-     "f1": 0.643
+     "skillId": "machine_learning",
+     "f1": 0.698
     }
    ]
   }
