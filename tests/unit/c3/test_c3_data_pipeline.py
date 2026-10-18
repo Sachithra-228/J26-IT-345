@@ -127,6 +127,43 @@ def test_role_classification(roles):
     assert classify_role("Graduate Trainee - Technology", roles) is None
 
 
+@pytest.mark.parametrize("title, role", [
+    ("Intern QA", "qa_engineer"),
+    ("Intern - Quality Assurance (QA)", "qa_engineer"),
+    ("Quality Assurance Intern", "qa_engineer"),
+    ("Software Development Intern", "software_engineer"),
+    ("Python Developer - Intern", "software_engineer"),
+    ("Intern WordPress Developer", "frontend_engineer"),
+    ("UI / UX Engineer", "ui_ux_designer"),
+    ("Intern - Business Analytics", "data_analyst"),
+    ("Intern - Cyber - Digital Trust & Privacy", "cybersecurity_analyst"),
+    ("Intern System Support Engineer", "network_engineer"),
+    ("Technology & NOC Internship", "network_engineer"),
+    ("Intern - Project Management", "project_coordinator"),
+])
+def test_real_ad_title_synonyms(roles, title, role):
+    """Fictional titles in the style of the development real ads (JOB001-JOB098)."""
+    assert classify_role(title, roles) == role
+
+
+def test_real_ad_title_synonyms_keep_old_decisions(roles):
+    assert classify_role("Business Analyst / Quality Assurance", roles) == "business_analyst"
+    assert classify_role("Aqatech Engineer", roles) is None  # "qa" only as a whole word
+    assert classify_role("Junior Graphic Designer", roles) is None
+    for generic in ("Graduate Trainee - Technology", "Technology Associate", "IT Executive"):
+        assert classify_role(generic, roles) is None  # synthetic generic titles stay unmatched
+
+
+def test_real_ad_title_synonyms_do_not_change_the_synthetic_corpus(roles):
+    """The synthetic generator ignores realAdTitleSynonyms, and they classify every synthetic title as before."""
+    plain = [{k: v for k, v in r.items() if k != "realAdTitleSynonyms"} for r in roles]
+    assert any("realAdTitleSynonyms" in r for r in roles)
+    corpus = generate_corpus(roles, C.SEED)
+    assert corpus == generate_corpus(plain, C.SEED)
+    for title in {a["title"] for a in corpus}:
+        assert classify_role(title, roles) == classify_role(title, plain), title
+
+
 def test_experience_years():
     assert experience_years("- 2+ years of industry experience.") == 2
     assert experience_years("Experience: 1-3 years in support") == 1

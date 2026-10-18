@@ -298,18 +298,18 @@
  },
  "preferredFlagAgreement": 0.963,
  "roleFromTitle": {
-  "accuracy": 0.529,
-  "unclassified": 116,
+  "accuracy": 0.675,
+  "unclassified": 78,
   "adsWithCatalogueRole": 255,
   "topConfusions": {
-   "network_engineer <- unclassified": 27,
-   "project_coordinator <- unclassified": 18,
-   "ui_ux_designer <- unclassified": 17,
-   "cybersecurity_analyst <- unclassified": 11,
-   "qa_engineer <- unclassified": 9,
-   "data_analyst <- unclassified": 8,
-   "software_engineer <- unclassified": 6,
-   "data_scientist <- unclassified": 6
+   "network_engineer <- unclassified": 22,
+   "project_coordinator <- unclassified": 16,
+   "ui_ux_designer <- unclassified": 11,
+   "data_scientist <- unclassified": 6,
+   "data_analyst <- unclassified": 6,
+   "devops_engineer <- unclassified": 5,
+   "cybersecurity_analyst <- unclassified": 4,
+   "mobile_developer <- software_engineer": 3
   }
  },
  "seniority": {
@@ -338,7 +338,7 @@
    "macroF1OverAds": 0.785,
    "recallRequired": 0.747,
    "recallPreferred": 0.769,
-   "roleFromTitleAccuracy": 0.529,
+   "roleFromTitleAccuracy": 0.675,
    "seniorityAccuracy": 0.957,
    "weakestSkills": [
     {
@@ -375,7 +375,7 @@
    "macroF1OverAds": 0.824,
    "recallRequired": 0.805,
    "recallPreferred": 0.722,
-   "roleFromTitleAccuracy": 0.551,
+   "roleFromTitleAccuracy": 0.816,
    "seniorityAccuracy": 0.98,
    "weakestSkills": [
     {
@@ -412,7 +412,7 @@
    "macroF1OverAds": 0.76,
    "recallRequired": 0.714,
    "recallPreferred": 0.875,
-   "roleFromTitleAccuracy": 0.516,
+   "roleFromTitleAccuracy": 0.586,
    "seniorityAccuracy": 0.943,
    "weakestSkills": [
     {

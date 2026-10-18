@@ -454,7 +454,7 @@ Hold-out = 600 synthetic students never used for anything else; relevance = simu
 | Skill extraction on **255 real public ads** vs the researcher's labels | not stated | P 0.906 / R 0.747 / **F1 0.819** [95% CI 0.802, 0.834] | - | synthetic F1 0.965 | **Real ads, preliminary** (1 annotator) |
 | ↳ development set: the first 98 ads (used to choose the v1.1.0 synonyms) | - | P 0.902 / R 0.802 / F1 0.849 [0.826, 0.872] (taxonomy v1.0.0: F1 0.786, measured before JOB066 and JOB091 were found to be duplicates and replaced with new ads on 18 Oct) | - | - | Real ads, optimistic |
 | ↳ **held-out: the 157 ads added later** (JOB099 onward, not seen when tuning; reported automatically by `run_pipeline.py real` from `DEV_LAST_JOB_NUMBER = 98` and shown on the admin status card) | - | P 0.909 / R 0.715 / **F1 0.800** [0.779, 0.822] | - | - | **Real ads, the honest estimate** |
-| Role from ad title / seniority on the same ads | - | 0.529 (116 of 255 titles unclassified) / 0.957 | - | - | **Real ads, preliminary** |
+| Role from ad title / seniority on the same ads | - | 0.675 (78 of 255 titles unclassified; development 0.816, held-out 0.586 - was 0.551 / 0.516 before the real-ad title synonyms, which come only from the development ads) / 0.957 | - | - | **Real ads, preliminary** |
 | SUS usability | not stated | not measured | - | - | Open - needs user study |
 
 ![C3 ranking comparison](docs/c3/evidence/c3-ranking-comparison.png)
@@ -517,7 +517,7 @@ All C3 routes: 30 requests / minute / user (saves: 10), `429` with `Retry-After`
 ```bash
 pip install -r ml/c3/requirements.txt     # Python 3.11+ (tested 3.13)
 npm run c3:ml                             # = python ml/c3/run_pipeline.py: data -> model -> graph -> parity -> evaluate (~15 s, seed 42, byte-reproducible)
-npm run c3:test:py                        # 91 pytest tests (taxonomy, PII, extractor, parser, models, graph, metrics, evidence, real-ads import, dev / held-out split, job titles, survey import)
+npm run c3:test:py                        # 106 pytest tests (taxonomy, PII, extractor, parser, models, graph, metrics, evidence, real-ads import, dev / held-out split, job titles, survey import)
 npx jest tests/unit/c3 tests/integration/c3   # 445 Jest tests (parity, runtime, API, MongoDB path, components, wizard, mock interview, assistant, CV file reading, admin data status, academic background, job-ad check)
 npm run c3:benchmark                      # runtime latency -> docs/c3/evidence/runtime-benchmark.json
 ```
@@ -533,9 +533,10 @@ PII is stripped before any processing; the analysis runs on the student's device
 #### C3.8 Limitations and open work
 
 - **Needs real data / ethics approval:** real public job ads (collector built but not run), a hand-annotated extraction test set, career-adviser relevance judgements, a consented student pilot, SUS study, and native-speaker review of Sinhala / Tamil.
+- **IT support titles:** IT support titles (IT support engineer, system support engineer, systems engineer, NOC) are mapped to Network Engineer until IT Support has its own role with 25 intern / associate ads.
 - **Needs supervisor / staff input:** C3 proposal targets (none are in this repo), the role list and taxonomy, mapping of illustrative modules to real SLIIT module codes, effort-hour estimates, and verification of every resource link (they were not re-checked online).
 - **Known technical limits:** rule-based extraction misses unseen terms and ignores negation ("no experience in X"); names without a "Name:" label cannot be detected (hence CV text is never stored); readiness measures skill coverage, not hiring likelihood; the rate limiter is per instance; in demo mode the platform always signs in the demo *student* and redirects `/dashboard/admin`, so the staff aggregate view can only be seen with a real admin login (it is covered by tests). The mock-interview rubric checks coverage of key points and answer structure, not whether every statement is technically correct; it is a practice aid, not a hiring prediction, and its questions and weights must be reviewed by a lecturer and validated against human ratings (Cohen's kappa / ICC) before results are reported. The career assistant is rule-based: it only answers its 12 topics (anything else gets "I could not match that" and suggestions), it can misread an unusual question, and its intent accuracy has not been measured on real student questions; it was checked with jsdom component tests, not in the browser, because the local dashboard required a real sign-in.
-- **AI-use disclosure (C3).** The C3 code, tests, synthetic data generators, taxonomy draft, Gap-to-Action content, mock-interview questions and rubric, career-assistant intents and answer templates, translations and this section were produced with AI assistance (Claude Code, October 2026) and must be reviewed by the C3 owner, who should be able to explain every part. Verification performed: 91 pytest + 445 Jest tests, a Python/TypeScript parity test with mutation checks, typecheck, lint, a byte-reproducibility re-run, and a browser check of the student page in demo mode.
+- **AI-use disclosure (C3).** The C3 code, tests, synthetic data generators, taxonomy draft, Gap-to-Action content, mock-interview questions and rubric, career-assistant intents and answer templates, translations and this section were produced with AI assistance (Claude Code, October 2026) and must be reviewed by the C3 owner, who should be able to explain every part. Verification performed: 106 pytest + 445 Jest tests, a Python/TypeScript parity test with mutation checks, typecheck, lint, a byte-reproducibility re-run, and a browser check of the student page in demo mode.
 
 | Folder | Contents |
 | --- | --- |
