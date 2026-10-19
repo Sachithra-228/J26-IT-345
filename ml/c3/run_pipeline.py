@@ -28,6 +28,11 @@ Stages
             docs/c3/evidence/extraction-eval-real.json, src/lib/c3/model/data-status.json and
             src/lib/c3/model/job-titles.json ("search job sites for" title counts) - aggregate numbers only
 
+  real-profiles  (opt-in, after "real") role profiles v2 from the real intern / associate ads with
+         the v1 method, compared with v1 - PRELIMINARY, descriptive only; v1 and the app are unchanged
+         -> docs/c3/evidence/career-model-v2-real-preliminary.json, career-requirements-v2.csv
+            (proposal Appendix 3, for expert review), role-profiles-v1-vs-v2.json
+
 SYNTHETIC DATA: validates the pipeline, not real-world accuracy.
 """
 from __future__ import annotations
@@ -301,9 +306,15 @@ def stage_real() -> None:
         job_titles.run(result, datetime.now(timezone.utc).date().isoformat())
 
 
+def stage_real_profiles() -> None:
+    import real_profiles
+
+    real_profiles.run()
+
+
 STAGES = {"data": stage_data, "model": stage_model, "graph": stage_graph, "parity": stage_parity, "evaluate": stage_evaluate,
-          "real": stage_real}
-# "real" needs the git-ignored sheet export, so a plain run (and every teammate's) leaves it out.
+          "real": stage_real, "real-profiles": stage_real_profiles}
+# "real" and "real-profiles" need the git-ignored sheet data, so a plain run (and every teammate's) leaves them out.
 DEFAULT_STAGES = ["data", "model", "graph", "parity", "evaluate"]
 
 
