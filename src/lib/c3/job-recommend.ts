@@ -118,3 +118,50 @@ export function normaliseJobs(data: unknown): JobListing[] {
       applicationDeadline: typeof j.applicationDeadline === "string" ? j.applicationDeadline : ""
     }));
 }
+
+/**
+ * For the Career job board: the check for one job WITHOUT removing anything - the
+ * deadline is ignored (feed jobs carry their publication date there) and so is the
+ * distance to the role. Null when the job names fewer than MIN_JOB_SKILLS skills.
+ */
+export function annotateJob(job: JobListing, levels: SkillLevels, roleId: string): JobMatch | null {
+  const role = getRole(roleId);
+  if (!role) return null;
+  const check = checkAgainstAd([job.title, ...(job.requirements ?? [])].join(". "), levels);
+  if (check.skills.length < MIN_JOB_SKILLS || check.match === null) return null;
+  return {
+    job,
+    matchPercent: Math.round(check.match * 100),
+    haveSkills: check.skills.filter((s) => s.have),
+    missingSkills: check.skills.filter((s) => !s.have),
+    similarity: roleSimilarity(check.skills.map((s) => s.skillId), role),
+    isDemo: isDemoJob(job)
+  };
+}
+
+/**
+ * "Best match" order for the job board. Keeps every job: real jobs (platform + feed)
+ * before demo jobs, then scored jobs by match %, then closeness to the role, then the
+ * original order; jobs without a score keep their original order at the end of their group.
+ */
+export function bestMatchOrder(jobs: JobListing[], scores: Map<string, JobMatch | null>): JobListing[] {
+  return jobs
+    .map((job, index) => ({ job, index, score: scores.get(job._id) ?? null, demo: isDemoJob(job) }))
+    .sort(
+      (a, b) =>
+        Number(a.demo) - Number(b.demo) ||
+        Number(b.score !== null) - Number(a.score !== null) ||
+        (b.score?.matchPercent ?? 0) - (a.score?.matchPercent ?? 0) ||
+        (b.score?.similarity ?? 0) - (a.score?.similarity ?? 0) ||
+        a.index - b.index
+    )
+    .map((x) => x.job);
+}
+
+/** True when at least one real (non-demo) job is scored and close to the role. */
+export function hasRealMatch(jobs: JobListing[], scores: Map<string, JobMatch | null>): boolean {
+  return jobs.some((j) => {
+    const s = scores.get(j._id);
+    return !isDemoJob(j) && s != null && s.similarity >= MIN_ROLE_SIMILARITY;
+  });
+}

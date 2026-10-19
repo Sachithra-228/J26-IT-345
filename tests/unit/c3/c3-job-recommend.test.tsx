@@ -136,7 +136,7 @@ describe("Jobs that fit you (UI)", () => {
     await waitFor(() => expect(within(card).getAllByTestId("c3-job")).toHaveLength(3));
     expect(within(card).queryByTestId("c3-jobs-demo")).not.toBeInTheDocument();
     const rows = within(card).getAllByTestId("c3-job");
-    expect(rows.map((r) => r.querySelector("p")?.textContent).sort()).toEqual(["Automation Tester", "QA Engineer", "QA Intern"]);
+    expect(rows.map((r) => r.querySelector("h4")?.textContent).sort()).toEqual(["Automation Tester", "QA Engineer", "QA Intern"]);
     const first = rows[0];
     expect(first).toHaveTextContent("100% match"); // the example profile has every skill of the first job
     expect(within(first).getByRole("link", { name: /Open in the job board/ })).toHaveAttribute("href", "/dashboard/student#career");
