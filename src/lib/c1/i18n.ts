@@ -108,6 +108,11 @@ const en = {
   adminTitle: "Fund transparency & disbursement",
   donorTitle: "Where your funds went",
   viewPublic: "Open public ledger",
+  reportTitle: "Audit report",
+  reportBody:
+    "Download every event with its transaction hash, the totals and the integrity fingerprint. The JSON version lets an auditor recompute the fingerprint.",
+  reportCsv: "Download report (CSV)",
+  reportJson: "Download for verification (JSON)",
   // ---- student sharing
   shareTitle: "Share with the welfare office (optional)",
   shareBody:
@@ -234,6 +239,11 @@ const si: C1Text = {
   adminTitle: "අරමුදල් විනිවිදභාවය සහ ගෙවීම්",
   donorTitle: "ඔබේ අරමුදල් ගිය තැන",
   viewPublic: "පොදු ලෙජරය විවෘත කරන්න",
+  reportTitle: "විගණන වාර්තාව",
+  reportBody:
+    "සෑම සිදුවීමක්ම එහි ගනුදෙනු hash එක, එකතුව සහ අඛණ්ඩතා ඇඟිලි සලකුණ සමඟ බාගන්න. JSON පිටපතෙන් විගණකයෙකුට ඇඟිලි සලකුණ නැවත ගණනය කළ හැක.",
+  reportCsv: "වාර්තාව බාගන්න (CSV)",
+  reportJson: "සත්‍යාපනය සඳහා බාගන්න (JSON)",
   shareTitle: "සුභසාධන කාර්යාලය සමඟ බෙදාගන්න (අමතර)",
   shareBody:
     "ඔබ බෙදාගැනීමට තෝරා ගත්තොත්, ඔබේ පිළිතුරු ආරක්ෂිතව ගබඩා වන අතර සුභසාධන කාර්යාලයට පෙනෙන්නේ ඔබේ අවශ්‍යතා දර්ශකය සහ ප්‍රධාන සාධක පමණි - සවිස්තර අගයන් නොවේ. ඕනෑම වේලාවක මකා දැමිය හැක.",
@@ -356,6 +366,11 @@ const ta: C1Text = {
   adminTitle: "நிதி வெளிப்படைத்தன்மை மற்றும் வழங்கல்",
   donorTitle: "உங்கள் நிதி எங்கு சென்றது",
   viewPublic: "பொது பேரேட்டைத் திறக்கவும்",
+  reportTitle: "தணிக்கை அறிக்கை",
+  reportBody:
+    "ஒவ்வொரு நிகழ்வையும் அதன் பரிவர்த்தனை hash, மொத்தங்கள் மற்றும் ஒருமைப்பாட்டு கைரேகையுடன் பதிவிறக்கவும். JSON பதிப்பின் மூலம் தணிக்கையாளர் கைரேகையை மீண்டும் கணக்கிடலாம்.",
+  reportCsv: "அறிக்கையைப் பதிவிறக்கவும் (CSV)",
+  reportJson: "சரிபார்ப்புக்குப் பதிவிறக்கவும் (JSON)",
   shareTitle: "நலத்துறை அலுவலகத்துடன் பகிரவும் (விருப்பம்)",
   shareBody:
     "நீங்கள் பகிர முடிவு செய்தால், உங்கள் பதில்கள் பாதுகாப்பாகச் சேமிக்கப்படும்; நலத்துறை அலுவலகம் உங்கள் தேவை குறியீட்டையும் முக்கிய காரணிகளையும் மட்டுமே காணும் - விரிவான எண்களை அல்ல. எப்போது வேண்டுமானாலும் நீக்கலாம்.",

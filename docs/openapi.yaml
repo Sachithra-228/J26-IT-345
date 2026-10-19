@@ -77,6 +77,22 @@ paths:
           description: Ledger meta, summary, recent events and digest
         "502":
           description: Live chain unreachable or misconfigured
+  /api/c1/ledger/report:
+    get:
+      summary: "C1 - downloadable donor audit report (FR08, read-only, pseudonymous)"
+      description: >
+        Every ledger event with its transaction hash (and Sepolia Etherscan link when live),
+        the totals and the same SHA-256 integrity fingerprint as /api/c1/ledger. CSV is for
+        donors; JSON includes the full event log so an auditor can recompute the fingerprint.
+      parameters:
+        - in: query
+          name: format
+          schema: { type: string, enum: [csv, json], default: csv }
+      responses:
+        "200":
+          description: Report file (Content-Disposition attachment)
+        "502":
+          description: Live chain unreachable or misconfigured
   /api/c1/assessments:
     get:
       summary: "C1 - assessments (role dependent)"

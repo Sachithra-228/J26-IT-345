@@ -151,6 +151,19 @@ describe("LedgerExplorer", () => {
     expect(document.body.textContent).toMatch(/0x[0-9a-f]{6}…[0-9a-f]{4}/);
   });
 
+  it("offers the audit report as CSV and JSON downloads", async () => {
+    mockFetchOnce(response);
+    render(withLanguage(<LedgerExplorer variant="donor" />));
+
+    const csv = await screen.findByRole("link", { name: "Download report (CSV)" });
+    expect(csv).toHaveAttribute("href", "/api/c1/ledger/report?format=csv");
+    expect(csv).toHaveAttribute("download");
+    expect(screen.getByRole("link", { name: "Download for verification (JSON)" })).toHaveAttribute(
+      "href",
+      "/api/c1/ledger/report?format=json"
+    );
+  });
+
   it("marks live data differently from a simulation", async () => {
     mockFetchOnce({ ...response, meta: { ...response.meta, source: "live", network: "sepolia", chainId: 11155111 } });
     render(withLanguage(<LedgerExplorer />));
