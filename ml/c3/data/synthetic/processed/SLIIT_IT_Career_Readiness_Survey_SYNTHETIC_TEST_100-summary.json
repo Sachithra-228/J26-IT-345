@@ -1,0 +1,223 @@
+{
+ "source": "SLIIT_IT_Career_Readiness_Survey_SYNTHETIC_TEST_100.csv",
+ "isSynthetic": true,
+ "warning": "SYNTHETIC DATA: validates the pipeline, not real-world accuracy.",
+ "rowsRead": 100,
+ "rowsKept": 100,
+ "rowsDropped": 0,
+ "droppedReasons": {},
+ "droppedYearValues": {},
+ "excludedSpecialisations": [],
+ "columns": {
+  "total": 65,
+  "emptyHeadersIgnored": 0,
+  "unrecognised": [],
+  "missingQuestions": []
+ },
+ "datesMissing": 100,
+ "piiRedactions": {
+  "G2": 0,
+  "unknownValues": 0
+ },
+ "flags": {
+  "straight_line_c": 0,
+  "straight_line_g1": 7,
+  "straight_line_f4": 6,
+  "b2_not_in_b1": 0,
+  "d3_none_with_certificate": 0,
+  "b5_no_guidance_with_sources": 0,
+  "b6_not_sure_with_industries": 0,
+  "e3_not_in_e2": 0
+ },
+ "rowsWithAnyFlag": 12,
+ "flagCountDistribution": {
+  "0": 88,
+  "1": 11,
+  "2": 1
+ },
+ "unknownValues": {},
+ "mappings": {
+  "skillLevels": {
+   "0 - None": 0,
+   "1 - Basic": 1,
+   "2 - Intermediate": 2,
+   "3 - Advanced": 3
+  },
+  "usefulness": {
+   "Not useful": 1,
+   "Slightly useful": 2,
+   "Moderately useful": 3,
+   "Very useful": 4,
+   "Extremely useful": 5
+  },
+  "agreement": {
+   "Strongly disagree": 1,
+   "Disagree": 2,
+   "Neutral": 3,
+   "Agree": 4,
+   "Strongly agree": 5
+  },
+  "softSkills": {
+   "Adaptability": "adaptability",
+   "Leadership": "leadership",
+   "Time management": "time_management",
+   "Presentation skills": "presentation"
+  },
+  "rule": "Rows are dropped only for missing consent, a year other than Year 3 / Year 4, or an A2 answer listed in excludedSpecialisations; flags never drop rows."
+ },
+ "optionLists": {
+  "consent": [
+   "I have read the information above, I am 18 years or older, and I agree to take part."
+  ],
+  "A1": [
+   "Year 3",
+   "Year 4"
+  ],
+  "A2": [
+   "Information Technology",
+   "Software Engineering",
+   "Data Science",
+   "Computer Systems & Network Engineering",
+   "Cyber Security",
+   "Information Systems Engineering",
+   "Interactive Media"
+  ],
+  "A3": [
+   "Completed",
+   "Currently doing it",
+   "Not started yet"
+  ],
+  "A4": [
+   "English",
+   "Sinhala",
+   "Tamil"
+  ],
+  "A5": [
+   "Yes, within 2 years of graduating",
+   "Yes, later in my career",
+   "Not sure yet",
+   "No"
+  ],
+  "B2": [
+   "Software Engineer",
+   "Front-end Engineer",
+   "Mobile App Developer",
+   "QA Engineer",
+   "DevOps / Cloud Engineer",
+   "Data Analyst",
+   "Data Scientist / ML Engineer",
+   "Business Analyst",
+   "UI/UX Designer",
+   "Network Engineer",
+   "Cybersecurity Analyst",
+   "IT Project Coordinator / Associate PM",
+   "Not sure yet"
+  ],
+  "D1": [
+   "0",
+   "1-2",
+   "3-5",
+   "6 or more"
+  ],
+  "D2": [
+   "Yes",
+   "No"
+  ],
+  "F1": [
+   "Less than 2",
+   "2-5",
+   "6-10",
+   "More than 10"
+  ],
+  "B1": [
+   "Software Engineer",
+   "Front-end Engineer",
+   "Mobile App Developer",
+   "QA Engineer",
+   "DevOps / Cloud Engineer",
+   "Data Analyst",
+   "Data Scientist / ML Engineer",
+   "Business Analyst",
+   "UI/UX Designer",
+   "Network Engineer",
+   "Cybersecurity Analyst",
+   "IT Project Coordinator / Associate PM",
+   "Not sure yet"
+  ],
+  "B5": [
+   "Lecturers",
+   "Seniors or alumni",
+   "Friends",
+   "Family",
+   "SLIIT career guidance unit / events",
+   "LinkedIn",
+   "YouTube / online courses",
+   "Job advertisement sites",
+   "I do not get any guidance"
+  ],
+  "B6": [
+   "Software product company",
+   "IT services / outsourcing",
+   "Banking and finance",
+   "Telecommunications",
+   "Healthcare",
+   "Education / EdTech",
+   "Retail / e-commerce",
+   "Government / public sector",
+   "Start-up",
+   "Research / academia",
+   "Not sure yet"
+  ],
+  "D3": [
+   "AWS Certified Cloud Practitioner",
+   "Microsoft Azure Fundamentals (AZ-900)",
+   "Cisco CCNA",
+   "CompTIA Security+",
+   "ISTQB Certified Tester Foundation Level",
+   "Professional Scrum Master (PSM I)",
+   "Google Data Analytics Professional Certificate",
+   "Oracle Java SE certification",
+   "GitHub Foundations",
+   "PMI CAPM",
+   "None"
+  ],
+  "F2": [
+   "SLIIT modules or electives",
+   "Free online courses and tutorials",
+   "Professional certifications",
+   "Building personal projects",
+   "Internships",
+   "Mentoring by industry professionals",
+   "Open-source contributions",
+   "Workshops / bootcamps"
+  ],
+  "F3": [
+   "Lack of time",
+   "Not knowing where to start / what to learn first",
+   "Not knowing which skills employers want",
+   "Cost of courses or exams",
+   "No mentor or guidance",
+   "Low confidence",
+   "Lack of internet or a suitable computer",
+   "Nothing - I am on track"
+  ],
+  "E1-E3": "taxonomy skill labels (competency-taxonomy.json)",
+  "B3": "1-5",
+  "B4": "0-10",
+  "F4": [
+   "Not useful",
+   "Slightly useful",
+   "Moderately useful",
+   "Very useful",
+   "Extremely useful"
+  ],
+  "G1": [
+   "Strongly disagree",
+   "Disagree",
+   "Neutral",
+   "Agree",
+   "Strongly agree"
+  ],
+  "note": "Checked against the Google Form on 18 Oct 2026."
+ }
+}

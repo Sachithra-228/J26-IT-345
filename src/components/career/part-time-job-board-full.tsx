@@ -11,6 +11,7 @@ import {
 } from "lucide-react";
 import { Card } from "@/components/shared/Card";
 import { Badge } from "@/components/shared/Badge";
+import { useJobMatch } from "@/components/c3/use-job-match";
 import type { JobListing } from "@/types";
 
 const typeAccentClass: Record<JobListing["type"], string> = {
@@ -65,6 +66,7 @@ export function PartTimeJobBoardFull() {
   const [jobLocation, setJobLocation] = useState("");
   const [jobTab, setJobTab] = useState<"all" | "campus" | "remotive">("all");
   const [loading, setLoading] = useState(true);
+  const jobMatch = useJobMatch(jobs); // C3: only active when the student opened the board from their C3 result
 
   useEffect(() => {
     let cancelled = false;
@@ -122,7 +124,9 @@ export function PartTimeJobBoardFull() {
     return filteredJobs;
   }, [campusJobs, filteredJobs, jobTab, remotiveJobs]);
 
-  const featuredJobs = jobsByTab.slice(0, 3);
+  const orderJobs = jobMatch.order;
+  const shownJobs = useMemo(() => orderJobs(jobsByTab), [orderJobs, jobsByTab]);
+  const featuredJobs = shownJobs.slice(0, 3);
 
   const tabStats = [
     { id: "all" as const, label: "All jobs", count: filteredJobs.length, icon: Briefcase },
@@ -195,11 +199,13 @@ export function PartTimeJobBoardFull() {
                 </button>
               );
             })}
+            {jobMatch.sortControl}
           </div>
         </div>
       </div>
 
       <div className="p-5">
+        {jobMatch.banner}
         {loading ? (
           <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
             {Array.from({ length: 6 }).map((_, index) => (
@@ -209,7 +215,7 @@ export function PartTimeJobBoardFull() {
               />
             ))}
           </div>
-        ) : jobsByTab.length === 0 ? (
+        ) : shownJobs.length === 0 ? (
           <div className="rounded-2xl border border-dashed border-slate-300 bg-slate-50/70 px-6 py-12 text-center dark:border-slate-700 dark:bg-slate-800/40">
             <p className="text-sm font-medium text-slate-700 dark:text-slate-200">No jobs match your current filters.</p>
             <p className="mt-1 text-xs text-slate-500">Try changing the source tab or quick filters above.</p>
@@ -250,6 +256,7 @@ export function PartTimeJobBoardFull() {
 
                           <h5 className="line-clamp-2 text-base font-semibold text-slate-900 dark:text-white">{job.title}</h5>
                           <p className="mt-1 text-sm text-slate-600 dark:text-slate-300">{job.company}</p>
+                          {jobMatch.badge(job)}
 
                           <div className="mt-3 space-y-1.5 text-xs text-slate-500 dark:text-slate-400">
                             <p className="flex items-center gap-1.5">
@@ -281,7 +288,7 @@ export function PartTimeJobBoardFull() {
             )}
 
             <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
-              {jobsByTab.map((job) => {
+              {shownJobs.map((job) => {
                 const deadlineDays = getDaysUntil(job.applicationDeadline || "");
                 const remote = isRemoteJob(job.location || "");
                 const href = getApplyUrl(job);
@@ -301,6 +308,7 @@ export function PartTimeJobBoardFull() {
                     </div>
 
                     <p className="text-sm font-medium text-slate-700 dark:text-slate-300">{job.company}</p>
+                    {jobMatch.badge(job)}
 
                     <div className="mt-2 space-y-1 text-xs text-slate-500 dark:text-slate-400">
                       <p className="flex items-center gap-1.5">
@@ -341,6 +349,7 @@ export function PartTimeJobBoardFull() {
             </div>
           </>
         )}
+        {!loading && jobTab === "all" ? jobMatch.samples : null}
       </div>
     </Card>
   );

@@ -1,8 +1,10 @@
 "use client";
 
+import { ArrowUpRight, Briefcase } from "lucide-react";
 import { memo, useCallback, useEffect, useId, useMemo, useRef, useState, type ChangeEvent, type KeyboardEvent, type ReactNode } from "react";
 import { Button } from "@/components/shared/Button";
 import { Card } from "@/components/shared/Card";
+import { C3JobCard, SampleJobsHeading } from "./c3-job-card";
 import { useLanguage, type Language } from "@/context/language-context";
 import { checkAgainstAd, type AdCheck } from "@/lib/c3/ad-check";
 import { assessCareer, type CareerAssessment, type SkillSource } from "@/lib/c3/assessment";
@@ -11,6 +13,8 @@ import { extractSkills } from "@/lib/c3/extract";
 import { proposedGaps, type SkillGap } from "@/lib/c3/gaps";
 import { planForRole, type GapToActionPlan, type StepReason } from "@/lib/c3/graph";
 import { fmt, getC3Text, label, type C3Text } from "@/lib/c3/i18n";
+import { saveJobMatchContext } from "@/lib/c3/job-match-context";
+import { normaliseJobs, recommendWithFallback } from "@/lib/c3/job-recommend";
 import { titlesForRole } from "@/lib/c3/job-titles";
 import { careerModel, getRole, getSkill, type ActionType, type RoleProfile } from "@/lib/c3/model";
 import { proposedReadiness, readinessBand, type RoleReadiness, type SkillLevels } from "@/lib/c3/readiness";
@@ -22,6 +26,7 @@ import {
   specialisationName
 } from "@/lib/c3/specialisation-roles";
 import { INTERNSHIP_STATUSES, PROJECT_COUNTS, SPECIALISATIONS, type Background, type CareerProfile } from "@/lib/c3/validation";
+import type { JobListing } from "@/types";
 
 const ring = "focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-1 dark:focus-visible:ring-offset-slate-900";
 
@@ -964,6 +969,7 @@ const Results = memo(function Results({
         <>
           <JobTitlesCard roleId={detail.roleId} ctx={ctx} />
           <AdCheckCard levels={result.levels} onSelect={onSelect} ctx={ctx} />
+          <JobsForYouCard levels={result.levels} roleId={detail.roleId} rankedRoleIds={result.roles.map((r) => r.roleId)} ctx={ctx} />
           <Breakdown readiness={detail.readiness} sources={result.sources} ctx={ctx} />
           <Gaps gaps={detail.gaps} roleId={detail.roleId} ctx={ctx} />
           <BackgroundTips background={background} roleId={detail.roleId} topGapSkillId={detail.gaps[0]?.skillId ?? null} ctx={ctx} />
@@ -1141,6 +1147,143 @@ function AdCheckCard({ levels, onSelect, ctx }: { levels: SkillLevels; onSelect:
         </div>
       ) : null}
     </section>
+  );
+}
+
+type JobsState = { status: "idle" } | { status: "loading" } | { status: "error" } | { status: "ready"; jobs: JobListing[] };
+
+/** How many jobs the results card shows; the full ranked list is on the Career job board. */
+const CARD_TOP_JOBS = 3;
+
+/** The student dashboard section that holds the platform's job board. */
+const JOB_BOARD_HREF = "/dashboard/student#career";
+
+/**
+ * "Jobs that fit you": nothing is requested until the student presses the button. Then the
+ * platform job board is fetched once (a plain GET; the student's levels never leave the
+ * browser) and ranked for the selected role.
+ */
+function JobsForYouCard({ levels, roleId, rankedRoleIds, ctx }: { levels: SkillLevels; roleId: string; rankedRoleIds: string[]; ctx: Ctx }) {
+  const { t, language } = ctx;
+  const uid = useId();
+  const [state, setState] = useState<JobsState>({ status: "idle" });
+  // the student's other top-ranked roles, for "Jobs for your other suggested roles"
+  const otherRoles = rankedRoleIds.filter((id) => id !== roleId).slice(0, 3).join(",");
+  const alive = useRef(true);
+  useEffect(() => {
+    alive.current = true; // React StrictMode mounts twice in development
+    return () => {
+      alive.current = false;
+    };
+  }, []);
+
+  async function loadJobs() {
+    setState({ status: "loading" });
+    try {
+      if (typeof fetch !== "function") throw new Error("fetch unavailable");
+      const res = await fetch("/api/jobs");
+      if (!res.ok) throw new Error(`HTTP ${res.status}`);
+      const jobs = normaliseJobs(await res.json());
+      if (alive.current) setState({ status: "ready", jobs });
+    } catch {
+      if (alive.current) setState({ status: "error" });
+    }
+  }
+
+  const lists = useMemo(
+    () =>
+      state.status === "ready" || state.status === "error"
+        ? recommendWithFallback(state.status === "ready" ? state.jobs : [], levels, roleId, new Date(), {
+            top: CARD_TOP_JOBS,
+            otherRoleIds: otherRoles.split(",").filter(Boolean)
+          })
+        : null,
+    [state, levels, roleId, otherRoles]
+  );
+  const role = roleName(roleId, language);
+
+  return (
+    <Card>
+      <section data-testid="c3-jobs" aria-labelledby={`${uid}-jf`} aria-busy={state.status === "loading"}>
+        <div className="flex flex-wrap items-start justify-between gap-3">
+          <div className="min-w-0">
+            <h3 id={`${uid}-jf`} className="flex items-center gap-2 text-base font-semibold">
+              <Briefcase className="h-4 w-4 text-primary" aria-hidden="true" />
+              {t.jfTitle}
+            </h3>
+            <p className="mt-1 text-sm text-slate-600 dark:text-slate-300">{fmt(t.jfIntro, { role })}</p>
+          </div>
+          {/* Saves {roleId, levels} in this tab's sessionStorage only - never in the URL - then opens Career. */}
+          <a
+            href={JOB_BOARD_HREF}
+            data-testid="c3-see-in-career"
+            onClick={() => saveJobMatchContext(roleId, levels)}
+            aria-describedby={`${uid}-jm-note`}
+            className={`inline-flex shrink-0 items-center gap-1.5 rounded-lg border border-slate-200 px-3 py-1.5 text-sm font-medium text-primary hover:border-primary/40 hover:bg-primary/5 dark:border-slate-700 ${ring}`}
+          >
+            {t.jmSeeInCareer}
+            <ArrowUpRight className="h-3.5 w-3.5" aria-hidden="true" />
+          </a>
+        </div>
+        <p id={`${uid}-jm-note`} className="mt-2 text-xs text-slate-500 dark:text-slate-400">
+          {t.jfPrivacy} {fmt(t.jmSeeNote, { role })}
+        </p>
+
+        {state.status === "idle" ? (
+          <Button type="button" onClick={() => void loadJobs()} className="mt-4">
+            {t.jfShow}
+          </Button>
+        ) : null}
+        {state.status === "loading" ? (
+          <div role="status" className="mt-4 grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
+            <span className="sr-only">{t.jfLoading}</span>
+            {Array.from({ length: CARD_TOP_JOBS }).map((_, i) => (
+              <div key={i} className="h-44 animate-pulse rounded-2xl border border-slate-200 bg-slate-100 dark:border-slate-700 dark:bg-slate-800" />
+            ))}
+          </div>
+        ) : null}
+        {state.status === "error" ? (
+          <p role="alert" data-testid="c3-jobs-error" className="mt-4 text-sm text-red-600 dark:text-red-400">
+            {t.jfError}
+          </p>
+        ) : null}
+        {lists ? (
+          <>
+            {lists.real.length ? (
+              <div data-testid="c3-jobs-real" className="mt-4 grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
+                {lists.real.map((m) => (
+                  <C3JobCard key={m.job._id} m={m} t={t} language={language} boardHref={JOB_BOARD_HREF} />
+                ))}
+              </div>
+            ) : state.status === "ready" ? (
+              <div data-testid="c3-jobs-none" className="mt-4 rounded-2xl border border-dashed border-slate-300 bg-slate-50/70 px-6 py-6 text-center text-sm text-slate-600 dark:border-slate-700 dark:bg-slate-800/40 dark:text-slate-300">
+                {fmt(t.jfNone, { role })}
+              </div>
+            ) : null}
+            {lists.other.length ? (
+              <div data-testid="c3-jobs-other" className="mt-6">
+                <h4 className="mb-3 text-xs font-semibold uppercase tracking-[0.12em] text-slate-500 dark:text-slate-400">{t.jfOtherHeading}</h4>
+                <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
+                  {lists.other.map((m) => (
+                    <C3JobCard key={m.job._id} m={m} t={t} language={language} boardHref={JOB_BOARD_HREF} />
+                  ))}
+                </div>
+              </div>
+            ) : null}
+            {lists.demo.length ? (
+              <div data-testid="c3-jobs-demo" className="mt-6">
+                <SampleJobsHeading t={t} />
+                <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
+                  {lists.demo.map((m) => (
+                    <C3JobCard key={m.job._id} m={m} t={t} language={language} />
+                  ))}
+                </div>
+              </div>
+            ) : null}
+          </>
+        ) : null}
+      </section>
+    </Card>
   );
 }
 

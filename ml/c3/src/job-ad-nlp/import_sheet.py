@@ -57,7 +57,7 @@ REQUIRED_CELLS = ("Job_ID", "Job_Title", "Role_Category", "Seniority", "Full_Ad_
 SENIORITY = ("intern", "associate", "senior")
 JOB_TYPES = ("Internship", "Full-Time", "Part-Time", "Contract")
 EDUCATION = ("Undergraduate", "Diploma / HND", "Bachelor's Degree", "Master's Degree", "Not stated")
-SOURCES = ("TopJobs", "XpressJobs", "Company careers page", "LinkedIn (manual)", "SLIIT career unit", "Other")
+SOURCES = ("TopJobs", "XpressJobs", "ITPro.lk", "Company careers page", "LinkedIn (manual)", "SLIIT career unit", "Other")
 STATUS = ("Active", "Closed")
 EMPTY_LABELS = {"", "-", "none", "not stated", "n/a"}
 
