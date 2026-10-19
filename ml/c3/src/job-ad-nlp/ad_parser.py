@@ -1,7 +1,7 @@
 """
 Turns the text of one job advertisement into structured fields (C3).
 
-  * role         - title matched against roles.json titleSynonyms (longest match wins)
+  * role         - title matched against roles.json titleSynonyms + realAdTitleSynonyms (longest match wins)
   * seniority    - intern / associate / senior from the title and years of experience
   * skills       - skill_extractor on each segment (bullet / line / sentence)
   * level        - an explicit cue in the same segment ("strong knowledge of" -> 3,
@@ -107,7 +107,8 @@ def classify_role(title: str, roles: list[dict]) -> str | None:
     t = " ".join(tokenize(title))
     best: tuple[int, str] | None = None
     for role in roles:
-        for syn in role["titleSynonyms"]:
+        # realAdTitleSynonyms: phrases from the development real ads; the synthetic generator never uses them
+        for syn in role["titleSynonyms"] + role.get("realAdTitleSynonyms", []):
             s = " ".join(tokenize(syn))
             if re.search(rf"(^| ){re.escape(s)}( |$)", t) and (best is None or len(s) > best[0]):
                 best = (len(s), role["id"])

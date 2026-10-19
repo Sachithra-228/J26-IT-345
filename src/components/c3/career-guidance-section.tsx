@@ -7,6 +7,7 @@ import { useLanguage } from "@/context/language-context";
 import { isCvFeatureEnabled } from "@/lib/c3/config";
 import { getAssistantText } from "@/lib/c3/assistant-text";
 import { getC3Text } from "@/lib/c3/i18n";
+import { clearJobMatchContext } from "@/lib/c3/job-match-context";
 import type { SessionSummary } from "@/lib/c3/interview";
 import type { CareerProfile } from "@/lib/c3/validation";
 import { CareerAssistant } from "./career-assistant";
@@ -74,6 +75,7 @@ export function CareerGuidanceSection() {
   }
 
   async function remove() {
+    clearJobMatchContext(); // the result handed to the Career job board is erased too
     setSaveState("saving");
     try {
       const res = await fetch("/api/c3/assessment", { method: "DELETE" });
