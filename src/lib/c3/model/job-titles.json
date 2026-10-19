@@ -1,11 +1,11 @@
 {
- "generatedAt": "2026-10-15",
+ "generatedAt": "2026-10-18",
  "source": "manually collected public Sri Lankan IT job ads (title counts only)",
- "adsUsed": 150,
- "titlesWithoutSearchableName": 6,
+ "adsUsed": 255,
+ "titlesWithoutSearchableName": 8,
  "roles": {
   "software_engineer": {
-   "ads": 25,
+   "ads": 26,
    "titles": [
     {
      "title": "Software Engineer",
@@ -34,55 +34,59 @@
    ]
   },
   "frontend_engineer": {
-   "ads": 9,
+   "ads": 16,
    "titles": [
     {
      "title": "Web Developer",
-     "ads": 3
+     "ads": 6
+    },
+    {
+     "title": "Front-End Engineer",
+     "ads": 2
+    },
+    {
+     "title": "Frontend Developer",
+     "ads": 2
     },
     {
      "title": "WordPress Developer",
      "ads": 2
     },
     {
-     "title": "Front-End Engineer",
-     "ads": 1
-    },
-    {
-     "title": "Frontend Developer",
+     "title": "Frontend Engineer",
      "ads": 1
     },
     {
      "title": "Full-Stack Web Developer",
      "ads": 1
-    },
-    {
-     "title": "PHP WordPress Web Developer",
-     "ads": 1
     }
    ]
   },
   "mobile_developer": {
-   "ads": 7,
+   "ads": 16,
    "titles": [
     {
      "title": "Mobile App Developer",
-     "ads": 3
+     "ads": 4
     },
     {
      "title": "Flutter Developer",
+     "ads": 2
+    },
+    {
+     "title": "Software Engineer",
+     "ads": 2
+    },
+    {
+     "title": "App Developer",
+     "ads": 1
+    },
+    {
+     "title": "Fullstack Engineer",
      "ads": 1
     },
     {
      "title": "Mobile Application Developer",
-     "ads": 1
-    },
-    {
-     "title": "Mobile Development",
-     "ads": 1
-    },
-    {
-     "title": "Software Engineer",
      "ads": 1
     }
    ]
@@ -117,15 +121,23 @@
    ]
   },
   "devops_engineer": {
-   "ads": 13,
+   "ads": 25,
    "titles": [
     {
      "title": "DevOps Engineer",
-     "ads": 7
+     "ads": 12
     },
     {
      "title": "Cloud Engineer",
-     "ads": 4
+     "ads": 7
+    },
+    {
+     "title": "Application Support Engineer",
+     "ads": 1
+    },
+    {
+     "title": "Applications Operations Engineer",
+     "ads": 1
     },
     {
      "title": "BSS & Fintech Operations",
@@ -138,14 +150,18 @@
    ]
   },
   "data_analyst": {
-   "ads": 9,
+   "ads": 16,
    "titles": [
+    {
+     "title": "Data Analyst",
+     "ads": 4
+    },
     {
      "title": "Business Data Analyst",
      "ads": 2
     },
     {
-     "title": "Data Analyst",
+     "title": "Data Engineer",
      "ads": 2
     },
     {
@@ -153,28 +169,28 @@
      "ads": 1
     },
     {
+     "title": "Business Intelligence Analyst",
+     "ads": 1
+    },
+    {
      "title": "Data Analytics",
-     "ads": 1
-    },
-    {
-     "title": "Data Engineer",
-     "ads": 1
-    },
-    {
-     "title": "IT Service Management",
      "ads": 1
     }
    ]
   },
   "data_scientist": {
-   "ads": 8,
+   "ads": 14,
    "titles": [
+    {
+     "title": "Machine Learning Engineer",
+     "ads": 3
+    },
     {
      "title": "AI Engineer",
      "ads": 2
     },
     {
-     "title": "Machine Learning Engineer",
+     "title": "Data Scientist",
      "ads": 2
     },
     {
@@ -182,28 +198,28 @@
      "ads": 1
     },
     {
-     "title": "Data Scientist",
+     "title": "AI Engineering",
      "ads": 1
     },
     {
-     "title": "ML Engineer",
-     "ads": 1
-    },
-    {
-     "title": "MLOps",
+     "title": "AI/ML",
      "ads": 1
     }
    ]
   },
   "business_analyst": {
-   "ads": 16,
+   "ads": 26,
    "titles": [
     {
      "title": "Business Analyst",
-     "ads": 14
+     "ads": 23
     },
     {
      "title": "Business Central Support",
+     "ads": 1
+    },
+    {
+     "title": "Implementation Engineer",
      "ads": 1
     },
     {
@@ -213,69 +229,81 @@
    ]
   },
   "ui_ux_designer": {
-   "ads": 10,
+   "ads": 25,
    "titles": [
     {
      "title": "UI/UX Designer",
+     "ads": 6
+    },
+    {
+     "title": "UI/UX Engineer",
      "ads": 4
     },
     {
      "title": "Graphic Design",
-     "ads": 1
+     "ads": 2
     },
     {
      "title": "Graphic Designer",
-     "ads": 1
+     "ads": 2
     },
     {
      "title": "Product Designer",
-     "ads": 1
+     "ads": 2
     },
     {
      "title": "UI/UX Design",
-     "ads": 1
-    },
-    {
-     "title": "UI/UX Engineer",
-     "ads": 1
+     "ads": 2
     }
    ]
   },
   "network_engineer": {
-   "ads": 12,
+   "ads": 29,
    "titles": [
+    {
+     "title": "IT Executive",
+     "ads": 5
+    },
+    {
+     "title": "IT Specialist",
+     "ads": 2
+    },
+    {
+     "title": "IT Technician",
+     "ads": 2
+    },
     {
      "title": "Network Engineer",
      "ads": 2
     },
     {
-     "title": "IT Assistant",
-     "ads": 1
-    },
-    {
-     "title": "IT Executive",
-     "ads": 1
-    },
-    {
-     "title": "IT Network Support",
-     "ads": 1
-    },
-    {
-     "title": "IT Support Engineer",
-     "ads": 1
-    },
-    {
      "title": "System Engineer",
-     "ads": 1
+     "ads": 2
+    },
+    {
+     "title": "Systems Engineer",
+     "ads": 2
     }
    ]
   },
   "cybersecurity_analyst": {
-   "ads": 7,
+   "ads": 14,
    "titles": [
     {
-     "title": "IT Infrastructure & Security",
-     "ads": 2
+     "title": "Assistant Manager",
+     "ads": 1
+    },
+    {
+     "title": "Cybersecurity",
+     "ads": 1
+    },
+    {
+     "title": "Cybersecurity Engineer",
+     "ads": 1
+    },
+    {
+     "title": "Cybersecurity Products",
+     "ads": 1
     },
     {
      "title": "Cybersecurity Product Support",
@@ -284,24 +312,16 @@
     {
      "title": "Digital Trust & Privacy",
      "ads": 1
-    },
-    {
-     "title": "Global IT Infrastructure & Information Security",
-     "ads": 1
-    },
-    {
-     "title": "Information Security Analyst",
-     "ads": 1
-    },
-    {
-     "title": "Security Analyst",
-     "ads": 1
     }
    ]
   },
   "project_coordinator": {
-   "ads": 9,
+   "ads": 23,
    "titles": [
+    {
+     "title": "Project Manager",
+     "ads": 9
+    },
     {
      "title": "Project Management",
      "ads": 2
@@ -311,19 +331,15 @@
      "ads": 1
     },
     {
+     "title": "Customer Support Executive",
+     "ads": 1
+    },
+    {
      "title": "Digital & IT Services",
      "ads": 1
     },
     {
      "title": "IT Application Support",
-     "ads": 1
-    },
-    {
-     "title": "Management",
-     "ads": 1
-    },
-    {
-     "title": "Project",
      "ads": 1
     }
    ]

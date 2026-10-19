@@ -370,7 +370,7 @@ The folders below exist so each member can start immediately and keep work separ
 
 ### C3 - Explainable AI career guidance (K. K. T. C. Kamburugoda)
 
-> **Status: implemented end to end on SYNTHETIC data** (branch `research/c3-career`, October 2026). The SLIIT ethics application is submitted but not approved, so no real student data and no collected job advertisements are used. Every ML number below says **"SYNTHETIC DATA: validates the pipeline, not real-world accuracy"**. Timings and test counts are real.
+> **Status: implemented end to end; role profiles are still built from SYNTHETIC data** (branch `research/c3-career`, October 2026). The SLIIT ethics application is submitted but not approved, so no real student data is used. 255 manually collected public job advertisements are used only for a preliminary evaluation (skill extraction, role from title, job titles) and are labelled **"Real ads, preliminary"**. Every other ML number says **"SYNTHETIC DATA: validates the pipeline, not real-world accuracy"**. Timings and test counts are real.
 
 **Scope.** NLP over Sri Lankan IT job advertisements to build evidence-based role requirements; a questionnaire (and optional CV text) for Year 3/4 IT students; a transparent readiness score per career path; ranked skill gaps; a reason for every number; and a **Gap-to-Action knowledge graph** that turns gaps into an ordered plan of modules, projects, certifications and free resources. Baseline: transparent unweighted content-based matching.
 
@@ -397,9 +397,11 @@ The folders below exist so each member can start immediately and keep work separ
 | **Mock interview** (FR13): 77-question bank (57 technical on all 26 skills, 8 behavioural STAR, 12 role scenarios), questions chosen from the student's top readiness gaps, rule-based rubric feedback (key points 40%, structure 20%, depth 15%, evidence 15%, clarity 10%) with reasons, session summary | `src/lib/c3/interview*.ts`, `src/components/c3/mock-interview.tsx` (tab in *Career Readiness*) | Done - on-device, nothing stored; questions need lecturer review; rubric not yet validated against human ratings |
 | **AI Career Assistant** (FR12): rule-based, grounded Q&A over the student's own C3 results - 12 intents (readiness, score reasons, best-fit roles, gaps, next steps, role comparison, role requirements, learning resources, certifications, interview feedback, how it works, help), matched by cue words with fuzzy typo tolerance plus the roles and skills named; every number comes from the readiness, gaps, Gap-to-Action plan, role profiles, knowledge graph or mock-interview summary, and each answer names its sources; suggested follow-up questions; EN / SI / TA answers | `src/lib/c3/assistant*.ts`, `src/components/c3/career-assistant.tsx` (tab in *Career Readiness*) | Done - on-device, no language model, nothing sent or stored; typed questions work best in English (a few Sinhala / Tamil keywords are recognised) |
 | LLM mode for the assistant, LLM interview feedback | - | **Not done** - optional; would need an API key, budget and ethics approval |
-| **Real job ads (manual sheet):** importer for the C3 job-ads Google Sheet export (validation: IDs, duplicate ads by URL / title + company / text, URLs, dropdown values, dates; manual role, seniority and skill labels mapped to the taxonomy; same PII stripping and parser as all ads) and a preliminary evaluation of extraction, role-from-title and seniority against the researcher's labels | `ml/c3/src/job-ad-nlp/import_sheet.py`, `ml/c3/evaluation/evaluate_real_ads.py`, `run_pipeline.py real` | Done - 150 public ads so far (target 25 per role: Software Engineer and QA Engineer reached it; Mobile and Cybersecurity have 7 each); one annotator; sheet and ad text stay git-ignored |
+| **Real job ads (manual sheet):** importer for the C3 job-ads Google Sheet export (validation: IDs, duplicate ads by URL / title + company / text, URLs, dropdown values, dates; manual role, seniority and skill labels mapped to the taxonomy; same PII stripping and parser as all ads) and a preliminary evaluation of extraction, role-from-title and seniority against the researcher's labels | `ml/c3/src/job-ad-nlp/import_sheet.py`, `ml/c3/evaluation/evaluate_real_ads.py`, `run_pipeline.py real` | Done - 255 public ads so far (target 25 per role: 6 of 12 roles reached it; Data Scientist and Cybersecurity have 14 each); one annotator; sheet and ad text stay git-ignored |
 | **"Search job sites for" job titles:** each of the 12 roles is a family that real ads publish under many titles (Associate Software Engineer, Java Developer, Full Stack Developer...). For the selected role the results show the titles real ads use, with counts (e.g. QA Engineer: Quality Assurance 8, QA Engineer 7, Quality Assurance Engineer 5), so students know what to search for. Titles are cleaned (seniority words, brackets, company names removed) and counted per manual role | `ml/c3/src/job-ad-nlp/job_titles.py` (run by `run_pipeline.py real`), `src/lib/c3/model/job-titles.json`, `src/lib/c3/job-titles.ts`, `career-guidance-tool.tsx` | Done - display aid only, never a model input; title counts only (no company names, URLs or Job IDs) |
 | **"Check me against a job ad":** the student pastes the text of one ad they found; the same extractor used for CVs (PII stripped first) finds the taxonomy skills it mentions and splits them into "you already have" (Basic or above, with your level) and "still to learn" (each with the least-effort first step from the Gap-to-Action graph). The ad is also matched to its closest role families (cosine similarity between the ad's skills and each role profile, up to 3, clickable), so a title the student has never seen still maps to a role | `src/lib/c3/ad-check.ts`, `career-guidance-tool.tsx` (`AdCheckCard`), `tests/unit/c3/c3-ad-check.test.tsx` | Done - display aid only, never changes scores, gaps or plans; the ad text stays in the browser and is not saved or sent; only skills in the taxonomy are counted; role matching uses the current (synthetic) role profiles |
+| **"Jobs that fit you":** after the student presses "Show jobs that fit me", the platform's employer job board (GET /api/jobs) is fetched once and ranked for the selected role with the same check as "Check me against a job ad": open jobs only, at least 2 taxonomy skills, and the job must fit the selected role (the role is the job's closest role or within 0.1 of it, and similarity >= 0.35; a high match % alone is not enough), sorted by closeness to the role, then match %. Every job shows "Closest role: ...". If none fits, "No open jobs for <role> right now" is shown with up to 3 jobs for the student's other suggested roles. The card shows the top 3; each job shows match %, missing skills and the first step to close a gap, in the same card style as the Career job board. Only when no real job fits any of these roles, 8 clearly labelled fictional sample jobs are shown in a separate "Sample jobs (demo)" list | `src/lib/c3/job-recommend.ts`, `src/lib/c3/demo-it-jobs.ts`, `career-guidance-tool.tsx` (`JobsForYouCard`), `tests/unit/c3/c3-job-recommend.test.tsx` | Done - display aid only, never changes scores, gaps or plans; nothing is requested before the button, the student's levels never leave the browser; the platform's built-in demo jobs count as samples; in demo mode they are past their deadline, so only sample jobs show |
+| **C3 result on the Career job board** (approved by the team leader): "See jobs that match you in Career" saves {role, skill levels, model version, time} in this browser tab's sessionStorage and opens `/dashboard/student#career`. The job board then shows a banner with Clear, a "Best match" sort (default), and on each job card the match %, up to 3 missing skills and the first step. Real jobs (platform + Remotive feed) come first; platform demo jobs are badged "Sample job (demo)"; C3 sample jobs appear only when no real job matches, under their own heading. Without a C3 result the board is unchanged | `src/lib/c3/job-match-context.ts`, `src/components/c3/use-job-match.tsx`, `src/components/c3/c3-job-card.tsx`, `annotateJob` / `bestMatchOrder` in `src/lib/c3/job-recommend.ts`, `tests/unit/c3/c3-job-match.test.tsx`; shared file `src/components/career/part-time-job-board-full.tsx` (+12 / -3 lines, slots only) | Done - skill levels never go to a server or the URL; the context expires after 24 h, is ignored for another model version and is cleared by Clear or "Erase saved data"; no job is removed from the board; Remotive jobs carry only a title, so most get no match badge |
 | Role profiles from real ads, real students, SUS study | - | **Not done** - needs more ads per role / ethics approval |
 
 #### C3.2 Architecture and model
@@ -451,10 +453,10 @@ Hold-out = 600 synthetic students never used for anything else; relevance = simu
 | Skill extraction F1: synthetic ads / CVs / 6 hand-written ads | not stated | 0.965 / 0.969 / 1.000 | - | precision 0.996-1.00 (see below) | Synthetic / tiny sample |
 | Inference time, full assessment (12 roles + 2 plans) | - | 0.06 ms mean, 0.10 ms p95 | - | - | **Real** (this laptop) |
 | CV extraction, 852 words | - | 16 ms mean | - | - | **Real** |
-| Skill extraction on **150 real public ads** vs the researcher's labels | not stated | P 0.905 / R 0.776 / **F1 0.836** [95% CI 0.816, 0.854] | - | synthetic F1 0.965 | **Real ads, preliminary** (1 annotator) |
-| ↳ development set: the first 98 ads (used to choose the v1.1.0 synonyms) | - | P 0.902 / R 0.797 / F1 0.846 [0.823, 0.868] (taxonomy v1.0.0: F1 0.786) | - | - | Real ads, optimistic |
-| ↳ **held-out: the 52 ads added later** (JOB099 onward, not seen when tuning; reported automatically by `run_pipeline.py real` from `DEV_LAST_JOB_NUMBER = 98` and shown on the admin status card) | - | P 0.910 / R 0.744 / **F1 0.819** [0.786, 0.850] | - | - | **Real ads, the honest estimate** |
-| Role from ad title / seniority on the same ads | - | 0.620 (56 of 150 titles unclassified) / 0.967 | - | - | **Real ads, preliminary** |
+| Skill extraction on **255 real public ads** vs the researcher's labels | not stated | P 0.906 / R 0.747 / **F1 0.819** [95% CI 0.802, 0.834] | - | synthetic F1 0.965 | **Real ads, preliminary** (1 annotator) |
+| ↳ development set: the first 98 ads (used to choose the v1.1.0 synonyms) | - | P 0.902 / R 0.802 / F1 0.849 [0.826, 0.872] (taxonomy v1.0.0: F1 0.786, measured before JOB066 and JOB091 were found to be duplicates and replaced with new ads on 18 Oct) | - | - | Real ads, optimistic |
+| ↳ **held-out: the 157 ads added later** (JOB099 onward, not seen when tuning; reported automatically by `run_pipeline.py real` from `DEV_LAST_JOB_NUMBER = 98` and shown on the admin status card) | - | P 0.909 / R 0.715 / **F1 0.800** [0.779, 0.822] | - | - | **Real ads, the honest estimate** |
+| Role from ad title / seniority on the same ads | - | 0.675 (78 of 255 titles unclassified; development 0.816, held-out 0.586 - was 0.551 / 0.516 before the real-ad title synonyms, which come only from the development ads) / 0.957 | - | - | **Real ads, preliminary** |
 | SUS usability | not stated | not measured | - | - | Open - needs user study |
 
 ![C3 ranking comparison](docs/c3/evidence/c3-ranking-comparison.png)
@@ -465,7 +467,7 @@ Hold-out = 600 synthetic students never used for anything else; relevance = simu
 - **Optimistic by construction.** The ads and the simulated expert labels come from the same hidden role templates (`ml/c3/src/job-ad-nlp/synthetic_world.py`), so a model that recovers those weights is favoured. The gain over the baseline shows the pipeline and statistics work; its size says nothing about real students.
 - **No targets were invented.** `docs/c3/proposal/` is empty and this README gave no numeric C3 targets; add the proposal's targets and re-read the table against them.
 - **lambda sensitivity (train split only, informational):** raising the gap penalty slightly improves gap ranking (NDCG@5 0.857 -> 0.867 for lambda 0 -> 1) but **lowers** role ranking (0.943 -> 0.926). lambda stays at the pre-set 0.5; real data should decide.
-- **Extraction precision near 1.00 is not credible for real ads** (on 150 real ads it is 0.91, recall 0.78). The synthetic text has no distractor terms and uses the extractor's own lexicon (recall < 1 only because of deliberately planted out-of-vocabulary terms such as "SQLite"). The 6 hand-written ads were written by the same author as the synonym list, and one of them ("Network & Security Engineer") was assigned the wrong role from its title. Level-from-cue accuracy (0.99) is optimistic for the same reason.
+- **Extraction precision near 1.00 is not credible for real ads** (on 255 real ads it is 0.91, recall 0.75). The synthetic text has no distractor terms and uses the extractor's own lexicon (recall < 1 only because of deliberately planted out-of-vocabulary terms such as "SQLite"). The 6 hand-written ads were written by the same author as the synonym list, and one of them ("Network & Security Engineer") was assigned the wrong role from its title. Level-from-cue accuracy (0.99) is optimistic for the same reason.
 - **Plans** (hold-out, primary target): 3.5 steps and ~70 estimated hours on average, +35 projected readiness points if every step is completed; 105 plans include prerequisite steps; 29 contain a gap with no applicable action in the graph.
 - Protocol: one seeded stratified 80/20 student split and one 80/20 ad split; role profiles use training ads only; hold-out students are scored once; nothing was tuned on them.
 
@@ -517,8 +519,8 @@ All C3 routes: 30 requests / minute / user (saves: 10), `429` with `Retry-After`
 ```bash
 pip install -r ml/c3/requirements.txt     # Python 3.11+ (tested 3.13)
 npm run c3:ml                             # = python ml/c3/run_pipeline.py: data -> model -> graph -> parity -> evaluate (~15 s, seed 42, byte-reproducible)
-npm run c3:test:py                        # 81 pytest tests (taxonomy, PII, extractor, parser, models, graph, metrics, evidence, real-ads import, dev / held-out split, job titles)
-npx jest tests/unit/c3 tests/integration/c3   # 445 Jest tests (parity, runtime, API, MongoDB path, components, wizard, mock interview, assistant, CV file reading, admin data status, academic background, job-ad check)
+npm run c3:test:py                        # 106 pytest tests (taxonomy, PII, extractor, parser, models, graph, metrics, evidence, real-ads import, dev / held-out split, job titles, survey import)
+npx jest tests/unit/c3 tests/integration/c3   # 472 Jest tests (parity, runtime, API, MongoDB path, components, wizard, mock interview, assistant, CV file reading, admin data status, academic background, job-ad check, jobs that fit you, Career job board link)
 npm run c3:benchmark                      # runtime latency -> docs/c3/evidence/runtime-benchmark.json
 ```
 
@@ -533,9 +535,10 @@ PII is stripped before any processing; the analysis runs on the student's device
 #### C3.8 Limitations and open work
 
 - **Needs real data / ethics approval:** real public job ads (collector built but not run), a hand-annotated extraction test set, career-adviser relevance judgements, a consented student pilot, SUS study, and native-speaker review of Sinhala / Tamil.
+- **IT support titles:** IT support titles (IT support engineer, system support engineer, systems engineer, NOC) are mapped to Network Engineer until IT Support has its own role with 25 intern / associate ads.
 - **Needs supervisor / staff input:** C3 proposal targets (none are in this repo), the role list and taxonomy, mapping of illustrative modules to real SLIIT module codes, effort-hour estimates, and verification of every resource link (they were not re-checked online).
 - **Known technical limits:** rule-based extraction misses unseen terms and ignores negation ("no experience in X"); names without a "Name:" label cannot be detected (hence CV text is never stored); readiness measures skill coverage, not hiring likelihood; the rate limiter is per instance; in demo mode the platform always signs in the demo *student* and redirects `/dashboard/admin`, so the staff aggregate view can only be seen with a real admin login (it is covered by tests). The mock-interview rubric checks coverage of key points and answer structure, not whether every statement is technically correct; it is a practice aid, not a hiring prediction, and its questions and weights must be reviewed by a lecturer and validated against human ratings (Cohen's kappa / ICC) before results are reported. The career assistant is rule-based: it only answers its 12 topics (anything else gets "I could not match that" and suggestions), it can misread an unusual question, and its intent accuracy has not been measured on real student questions; it was checked with jsdom component tests, not in the browser, because the local dashboard required a real sign-in.
-- **AI-use disclosure (C3).** The C3 code, tests, synthetic data generators, taxonomy draft, Gap-to-Action content, mock-interview questions and rubric, career-assistant intents and answer templates, translations and this section were produced with AI assistance (Claude Code, October 2026) and must be reviewed by the C3 owner, who should be able to explain every part. Verification performed: 81 pytest + 445 Jest tests, a Python/TypeScript parity test with mutation checks, typecheck, lint, a byte-reproducibility re-run, and a browser check of the student page in demo mode.
+- **AI-use disclosure (C3).** The C3 code, tests, synthetic data generators, taxonomy draft, Gap-to-Action content, mock-interview questions and rubric, career-assistant intents and answer templates, translations and this section were produced with AI assistance (Claude Code, October 2026) and must be reviewed by the C3 owner, who should be able to explain every part. Verification performed: 106 pytest + 472 Jest tests, a Python/TypeScript parity test with mutation checks, typecheck, lint, a byte-reproducibility re-run, and a browser check of the student page in demo mode.
 
 | Folder | Contents |
 | --- | --- |
@@ -548,6 +551,43 @@ PII is stripped before any processing; the analysis runs on the student's device
 | `src/lib/c3/`, `src/components/c3/`, `src/app/api/c3/` | Runtime, UI, API (`model/` holds generated JSON) |
 | `tests/{unit,integration}/c3/`, `tests/fixtures/c3-readiness-parity.json`, `scripts/c3/` | Tests, parity fixture, benchmark |
 | `docs/c3/evidence/` | Evaluation JSON and charts |
+
+#### C3.9 Developer guide
+
+Architecture is in [C3.2](#c32-architecture-and-model) and full run notes in [C3.6](#c36-how-to-run); this is the short version for developers.
+
+**Overview.** C3 has two halves that must agree:
+
+- **Offline Python pipeline (`ml/c3/`)** - builds the taxonomy-based role profiles, the Gap-to-Action knowledge graph and the evaluation evidence. Entry point: `ml/c3/run_pipeline.py`.
+- **Online TypeScript runtime (`src/lib/c3/`)** - readiness, gaps, planner and skill extractor, running in the browser and the `/api/c3/*` routes. It only reads the generated JSON in `src/lib/c3/model/`.
+- **Parity test** - the `parity` stage writes Python reference outputs to `tests/fixtures/c3-readiness-parity.json`; `tests/unit/c3/c3-parity.test.ts` checks that the TypeScript code returns the same results.
+
+**How to run.**
+
+| Command | What it does |
+| --- | --- |
+| `python ml/c3/run_pipeline.py` | Default stages `data`, `model`, `graph`, `parity`, `evaluate`; one stage: `python ml/c3/run_pipeline.py model` |
+| `python ml/c3/run_pipeline.py real` | Not a default stage. Imports `ml/c3/data/raw/job_ads_sheet.csv` and evaluates against the manual labels; if the file does not exist it prints a message and stops |
+| `py -3.13 -m pytest tests/unit/c3 -q` or `npm run c3:test:py` | Python tests |
+| `npm test` | All Jest tests (C3 only: `npx jest tests/unit/c3 tests/integration/c3`) |
+| `npm run build` | Production build (stop `npm run dev` first; both use `.next/`) |
+
+**Model files.** The default stages regenerate `src/lib/c3/model/career-model.json`, `knowledge-graph.json` and `demo-cohort.json`; the `real` stage regenerates `data-status.json` and `job-titles.json`. Never edit them by hand - change the source (taxonomy, roles, Gap-to-Action content, code) and re-run the pipeline, then run the parity test. The current model is `c3-readiness-v1-synthetic` with taxonomy v1.1.0.
+
+**Data rules.**
+
+- `ml/c3/data/raw/` and `ml/c3/data/private/` are git-ignored: the job-ads sheet export, cleaned real ads and labels never go into git. Only aggregate numbers are written to `docs/c3/evidence/` and `src/lib/c3/model/`.
+- Status is Active or Closed (both are used). Rows with an empty required cell, an unknown Role_Category, a repeated Job_ID or a duplicate ad are skipped and reported with their Job_ID.
+- Duplicate ads are detected automatically: same URL (a LinkedIn link is compared by its job id), same title + company, or same ad text. The first row is kept.
+- Collection rule: add new ads at the end and never renumber or reuse a Job_ID (the dev / held-out split depends on it).
+- The real-ad split is by Job_ID (collection order): development = JOB001-JOB098 (used to tune the taxonomy v1.1.0 synonyms), held-out = JOB099 onward. Held-out ads are never used for tuning synonyms, parser rules or labels (`DEV_LAST_JOB_NUMBER` in `ml/c3/evaluation/evaluate_real_ads.py`).
+- The current model files are built from synthetic ads. Synthetic data is always labelled synthetic and never reported as real.
+
+**Ethics rules in the code.**
+
+- No GPA: the profile schema is strict, so a `gpa` field is rejected (`src/lib/c3/validation.ts`, tested in `c3-background.test.tsx`).
+- The academic background (specialisation, internship, projects) is context only: it orders the role list and adds tips, and never changes readiness, gaps or plans (tested).
+- No emotion recognition: the mock interview is text-only and scores answer content and structure; there is no audio, video or camera input.
 
 ### C4 - AI mentor matching and student engagement (L. L. E. Harshana)
 

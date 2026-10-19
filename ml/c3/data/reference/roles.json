@@ -1,16 +1,18 @@
 {
   "schemaVersion": "1.0.0",
-  "provenance": "Hand-authored list of 12 entry-level IT career paths common in Sri Lankan job advertisements for Year 3/4 IT graduates. To be confirmed against the C3 proposal and SLIIT career-guidance staff.",
+  "provenance": "Hand-authored list of 12 entry-level IT career paths common in Sri Lankan job advertisements for Year 3/4 IT graduates. To be confirmed against the C3 proposal and SLIIT career-guidance staff. realAdTitleSynonyms: extra title phrases taken only from the development real ads (JOB001-JOB098), used to classify real ad titles; the synthetic ad generator uses titleSynonyms only.",
   "roles": [
     {
       "id": "software_engineer",
       "label": { "en": "Software Engineer", "si": "මෘදුකාංග ඉංජිනේරු", "ta": "மென்பொருள் பொறியாளர்" },
-      "titleSynonyms": ["software engineer", "associate software engineer", "software developer", "java developer", "full stack developer", "full-stack developer", ".net developer", "backend developer", "back end developer", "software engineering intern", "trainee software engineer"]
+      "titleSynonyms": ["software engineer", "associate software engineer", "software developer", "java developer", "full stack developer", "full-stack developer", ".net developer", "backend developer", "back end developer", "software engineering intern", "trainee software engineer"],
+      "realAdTitleSynonyms": ["software development", "software engineers", "software engineering", "python developer", "fullstack"]
     },
     {
       "id": "frontend_engineer",
       "label": { "en": "Front-end Engineer", "si": "ඉදිරි-අන්ත ඉංජිනේරු", "ta": "முன்-முனை பொறியாளர்" },
-      "titleSynonyms": ["frontend engineer", "front end engineer", "front-end engineer", "frontend developer", "front end developer", "front-end developer", "react developer", "angular developer", "web developer", "ui developer"]
+      "titleSynonyms": ["frontend engineer", "front end engineer", "front-end engineer", "frontend developer", "front end developer", "front-end developer", "react developer", "angular developer", "web developer", "ui developer"],
+      "realAdTitleSynonyms": ["wordpress developer"]
     },
     {
       "id": "mobile_developer",
@@ -20,7 +22,8 @@
     {
       "id": "qa_engineer",
       "label": { "en": "QA Engineer", "si": "QA ඉංජිනේරු", "ta": "QA பொறியாளர்" },
-      "titleSynonyms": ["qa engineer", "associate qa engineer", "quality assurance engineer", "software tester", "test engineer", "qa automation engineer", "sdet", "qa intern", "trainee qa engineer"]
+      "titleSynonyms": ["qa engineer", "associate qa engineer", "quality assurance engineer", "software tester", "test engineer", "qa automation engineer", "sdet", "qa intern", "trainee qa engineer"],
+      "realAdTitleSynonyms": ["quality assurance intern", "qa"]
     },
     {
       "id": "devops_engineer",
@@ -30,7 +33,8 @@
     {
       "id": "data_analyst",
       "label": { "en": "Data Analyst", "si": "දත්ත විශ්ලේෂක", "ta": "தரவு பகுப்பாய்வாளர்" },
-      "titleSynonyms": ["data analyst", "junior data analyst", "business intelligence analyst", "bi analyst", "bi developer", "reporting analyst", "data analytics intern"]
+      "titleSynonyms": ["data analyst", "junior data analyst", "business intelligence analyst", "bi analyst", "bi developer", "reporting analyst", "data analytics intern"],
+      "realAdTitleSynonyms": ["business intelligence", "business analytics"]
     },
     {
       "id": "data_scientist",
@@ -45,22 +49,26 @@
     {
       "id": "ui_ux_designer",
       "label": { "en": "UI/UX Designer", "si": "UI/UX නිර්මාණකරු", "ta": "UI/UX வடிவமைப்பாளர்" },
-      "titleSynonyms": ["ui/ux designer", "ui ux designer", "ux designer", "ui designer", "product designer", "ux researcher", "ui/ux intern", "ux/ui designer"]
+      "titleSynonyms": ["ui/ux designer", "ui ux designer", "ux designer", "ui designer", "product designer", "ux researcher", "ui/ux intern", "ux/ui designer"],
+      "realAdTitleSynonyms": ["ui ux engineer", "website design"]
     },
     {
       "id": "network_engineer",
       "label": { "en": "Network Engineer", "si": "ජාල ඉංජිනේරු", "ta": "வலையமைப்பு பொறியாளர்" },
-      "titleSynonyms": ["network engineer", "associate network engineer", "network administrator", "network support engineer", "noc engineer", "systems and network engineer", "network intern"]
+      "titleSynonyms": ["network engineer", "associate network engineer", "network administrator", "network support engineer", "noc engineer", "systems and network engineer", "network intern"],
+      "realAdTitleSynonyms": ["it support engineer", "system support engineer", "systems engineer", "noc"]
     },
     {
       "id": "cybersecurity_analyst",
       "label": { "en": "Cybersecurity Analyst", "si": "සයිබර් ආරක්ෂණ විශ්ලේෂක", "ta": "இணையப் பாதுகாப்பு பகுப்பாய்வாளர்" },
-      "titleSynonyms": ["cybersecurity analyst", "cyber security analyst", "security analyst", "soc analyst", "information security analyst", "security engineer", "penetration tester", "cyber security intern"]
+      "titleSynonyms": ["cybersecurity analyst", "cyber security analyst", "security analyst", "soc analyst", "information security analyst", "security engineer", "penetration tester", "cyber security intern"],
+      "realAdTitleSynonyms": ["information security", "cybersecurity", "cyber security", "cyber", "digital trust"]
     },
     {
       "id": "project_coordinator",
       "label": { "en": "IT Project Coordinator / Associate PM", "si": "IT ව්‍යාපෘති සම්බන්ධීකාරක", "ta": "IT திட்ட ஒருங்கிணைப்பாளர்" },
-      "titleSynonyms": ["project coordinator", "it project coordinator", "associate project manager", "associate technical project manager", "project management intern", "scrum master", "project associate"]
+      "titleSynonyms": ["project coordinator", "it project coordinator", "associate project manager", "associate technical project manager", "project management intern", "scrum master", "project associate"],
+      "realAdTitleSynonyms": ["project management", "project intern"]
     }
   ]
 }

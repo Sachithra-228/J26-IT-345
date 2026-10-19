@@ -1,27 +1,27 @@
 {
- "generatedAt": "2026-10-16",
+ "generatedAt": "2026-10-18",
  "taxonomyVersion": "1.1.0",
  "realAds": {
-  "rowsInSheet": 150,
-  "adsUsed": 150,
+  "rowsInSheet": 255,
+  "adsUsed": 255,
   "rowsSkipped": 0,
-  "issuesToFix": 2,
+  "issuesToFix": 0,
   "other": 0,
-  "rolesAtTarget": 2,
+  "rolesAtTarget": 6,
   "perRole": [
    {
     "roleId": "software_engineer",
-    "ads": 25,
+    "ads": 26,
     "target": 25
    },
    {
     "roleId": "frontend_engineer",
-    "ads": 9,
+    "ads": 16,
     "target": 25
    },
    {
     "roleId": "mobile_developer",
-    "ads": 7,
+    "ads": 16,
     "target": 25
    },
    {
@@ -31,72 +31,74 @@
    },
    {
     "roleId": "devops_engineer",
-    "ads": 13,
+    "ads": 25,
     "target": 25
    },
    {
     "roleId": "data_analyst",
-    "ads": 9,
-    "target": 25
-   },
-   {
-    "roleId": "data_scientist",
-    "ads": 8,
-    "target": 25
-   },
-   {
-    "roleId": "business_analyst",
     "ads": 16,
     "target": 25
    },
    {
+    "roleId": "data_scientist",
+    "ads": 14,
+    "target": 25
+   },
+   {
+    "roleId": "business_analyst",
+    "ads": 26,
+    "target": 25
+   },
+   {
     "roleId": "ui_ux_designer",
-    "ads": 10,
+    "ads": 25,
     "target": 25
    },
    {
     "roleId": "network_engineer",
-    "ads": 12,
+    "ads": 29,
     "target": 25
    },
    {
     "roleId": "cybersecurity_analyst",
-    "ads": 7,
+    "ads": 14,
     "target": 25
    },
    {
     "roleId": "project_coordinator",
-    "ads": 9,
+    "ads": 23,
     "target": 25
    }
   ],
   "sources": {
-   "LinkedIn (manual)": 62,
-   "Other": 33,
-   "TopJobs": 27,
+   "ITPro.lk": 120,
+   "LinkedIn (manual)": 68,
+   "TopJobs": 36,
    "Company careers page": 19,
-   "XpressJobs": 9
+   "XpressJobs": 10,
+   "SLIIT career unit": 1,
+   "Other": 1
   }
  },
  "realEvaluation": {
-  "ads": 150,
+  "ads": 255,
   "annotators": 1,
   "developmentSet": true,
-  "precision": 0.905,
-  "recall": 0.776,
-  "f1": 0.836,
+  "precision": 0.906,
+  "recall": 0.747,
+  "f1": 0.819,
   "f1Ci95": [
-   0.816,
-   0.854
+   0.802,
+   0.834
   ],
-  "roleFromTitleAccuracy": 0.62,
-  "seniorityAccuracy": 0.967,
+  "roleFromTitleAccuracy": 0.675,
+  "seniorityAccuracy": 0.957,
   "heldOut": {
-   "ads": 52,
-   "f1": 0.819,
+   "ads": 157,
+   "f1": 0.8,
    "f1Ci95": [
-    0.786,
-    0.85
+    0.779,
+    0.822
    ],
    "devLastJobNumber": 98
   }

@@ -112,6 +112,12 @@ def test_validation_flags_bad_cells_and_skips_unusable_rows(role_ids):
         assert expected in found
 
 
+def test_itpro_is_an_accepted_source(role_ids):
+    keep, issues = validate_rows([row("JOB001", Source="ITPro.lk")], role_ids, TODAY)
+    assert [r["Job_ID"] for r in keep] == ["JOB001"]
+    assert ("JOB001", "bad_value") not in codes(issues)
+
+
 def test_import_applies_manual_labels_strips_pii_and_reports_only_counts(extractor, taxonomy, roles):
     rows = [
         row("JOB001", Job_Title="Graduate Programme 2026", Seniority="associate"),  # title alone gives no role
