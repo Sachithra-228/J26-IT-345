@@ -18,7 +18,7 @@ import { DEMO_IT_JOBS } from "@/lib/c3/demo-it-jobs";
 import { annotateJob, bestMatchOrder, hasRealMatch, isDemoJob, recommendJobs, type JobMatch } from "@/lib/c3/job-recommend";
 import { getRole } from "@/lib/c3/model";
 import type { JobListing } from "@/types";
-import { C3JobCard, MatchLines, SampleJobsHeading } from "./c3-job-card";
+import { C3JobCard, ClosestRole, MatchLines, SampleJobsHeading } from "./c3-job-card";
 
 type Sort = "default" | "best";
 
@@ -118,7 +118,7 @@ function JobMatchBadge({ demo, m, t, language }: { demo: boolean; m: JobMatch | 
   return (
     <div data-testid="c3-jm-badge" className="mt-2">
       <div className="flex flex-wrap items-center gap-1.5">
-        {m ? (
+        {m?.fitsRole ? (
           <span data-testid="c3-jm-match">
             <Badge variant="success">{fmt(t.jfMatch, { n: m.matchPercent })}</Badge>
           </span>
@@ -129,7 +129,8 @@ function JobMatchBadge({ demo, m, t, language }: { demo: boolean; m: JobMatch | 
           </span>
         ) : null}
       </div>
-      {m ? <MatchLines m={m} t={t} language={language} /> : null}
+      {m ? <ClosestRole m={m} t={t} language={language} /> : null}
+      {m?.fitsRole ? <MatchLines m={m} t={t} language={language} /> : null}
     </div>
   );
 }

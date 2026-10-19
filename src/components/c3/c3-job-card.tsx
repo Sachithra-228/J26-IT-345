@@ -10,7 +10,7 @@ import { Badge } from "@/components/shared/Badge";
 import type { Language } from "@/context/language-context";
 import { fmt, label, type C3Text } from "@/lib/c3/i18n";
 import type { JobMatch } from "@/lib/c3/job-recommend";
-import { getSkill } from "@/lib/c3/model";
+import { getRole, getSkill } from "@/lib/c3/model";
 import type { JobListing } from "@/types";
 
 const typeAccentClass: Record<JobListing["type"], string> = {
@@ -29,6 +29,20 @@ const skillText = (id: string, language: Language) => {
   const s = getSkill(id);
   return s ? label(s.label, language) : id;
 };
+
+const roleText = (id: string, language: Language) => {
+  const r = getRole(id);
+  return r ? label(r.label, language) : id;
+};
+
+/** "Closest role: ..." - why the job is listed. */
+export function ClosestRole({ m, t, language }: { m: JobMatch; t: C3Text; language: Language }) {
+  return (
+    <p data-testid="c3-job-closest" className="mt-1 text-xs font-medium text-slate-600 dark:text-slate-300">
+      {fmt(t.jfClosestRole, { role: roleText(m.closestRoleId, language) })}
+    </p>
+  );
+}
 
 export function typeText(type: JobListing["type"], t: C3Text): string {
   return type === "internship" ? t.jfTypeInternship : type === "part-time" ? t.jfTypePartTime : type === "full-time" ? t.jfTypeFullTime : type;
@@ -75,6 +89,7 @@ export function C3JobCard({ m, t, language, boardHref }: { m: JobMatch; t: C3Tex
       </div>
 
       <p className="text-sm font-medium text-slate-700 dark:text-slate-300">{job.company}</p>
+      <ClosestRole m={m} t={t} language={language} />
       {job.location ? (
         <p className="mt-2 flex items-center gap-1.5 text-xs text-slate-500 dark:text-slate-400">
           {remote ? <Globe2 className="h-3.5 w-3.5" aria-hidden="true" /> : <MapPin className="h-3.5 w-3.5" aria-hidden="true" />}

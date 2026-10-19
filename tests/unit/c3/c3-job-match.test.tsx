@@ -39,6 +39,7 @@ const QA_FULL = job("qa-full", "QA Intern", ["Manual testing and test cases", "S
 // a feed job: requirements are empty and the "deadline" is its (past) publication date
 const FEED = job("remotive-1", "Senior QA Automation Engineer - Selenium, SQL", [], { source: "Remotive", applicationDeadline: "2026-09-01", externalUrl: "https://remotive.example/1" });
 const PLATFORM_DEMO = { ...demoJobs[1], requirements: ["React", "JavaScript", "Git"] };
+const DA = job("da", "Data Analyst Intern", ["SQL", "Data analysis with Power BI", "Statistics", "Python"]);
 
 function mockBoard(local: JobListing[], feed: JobListing[]) {
   global.fetch = jest.fn((url: string) =>
@@ -103,7 +104,7 @@ describe("annotateJob / bestMatchOrder (never removes a job)", () => {
     const scores = new Map(jobs.map((j) => [j._id, annotateJob(j, QA, "qa_engineer")]));
     const ordered = bestMatchOrder(jobs, scores).map((j) => j._id);
     expect(ordered).toHaveLength(jobs.length);
-    expect(ordered[0]).toBe("qa-full");
+    expect(ordered[0]).toBe("qa-half"); // closest to QA Engineer (role fit before match %)
     expect(ordered.indexOf("vague")).toBeGreaterThan(ordered.indexOf("remotive-1"));
     expect(ordered[ordered.length - 1]).toBe(PLATFORM_DEMO._id); // demo jobs after every real job
   });
@@ -129,16 +130,23 @@ describe("Career job board", () => {
 
   it("with a context: banner, best match by default, badges, demo marking, real jobs first", async () => {
     saveJobMatchContext("qa_engineer", QA);
-    mockBoard([PLATFORM_DEMO, VAGUE, QA_HALF, QA_FULL], [FEED]);
+    mockBoard([PLATFORM_DEMO, VAGUE, QA_HALF, DA, QA_FULL], [FEED]);
     const user = userEvent.setup();
     renderBoard();
     expect(await screen.findByTestId("c3-jm-banner")).toHaveTextContent("Showing jobs matched to your QA Engineer result");
     expect(screen.getByTestId("c3-jm-sort")).toHaveValue("best");
     const articles = await screen.findAllByRole("article");
     const titles = articles.map((a) => within(a).getByRole("heading", { level: 4 }).textContent);
-    expect(titles[0]).toBe("QA Intern");
+    expect(titles[0]).toBe("QA Engineer"); // closest to QA Engineer first
     expect(titles[titles.length - 1]).toBe(PLATFORM_DEMO.title);
-    expect(within(articles[0]).getByTestId("c3-jm-match")).toHaveTextContent("100% match");
+    expect(within(articles[0]).getByTestId("c3-jm-match")).toHaveTextContent("% match");
+    expect(within(articles[0]).getByTestId("c3-job-closest")).toHaveTextContent("Closest role: QA Engineer");
+    expect(within(articles[titles.indexOf("QA Intern")]).getByTestId("c3-jm-match")).toHaveTextContent("100% match");
+    // a Data Analyst job does not fit QA: no match badge, but its closest role is shown, and it comes after the QA jobs
+    const da = articles[titles.indexOf("Data Analyst Intern")];
+    expect(within(da).queryByTestId("c3-jm-match")).not.toBeInTheDocument();
+    expect(within(da).getByTestId("c3-job-closest")).toHaveTextContent("Closest role: Data Analyst");
+    expect(titles.indexOf("Data Analyst Intern")).toBeGreaterThan(titles.indexOf("QA Intern"));
     const half = articles[titles.indexOf("QA Engineer")];
     expect(within(half).getByText(/Missing:/)).toHaveTextContent("Test automation");
     expect(within(half).getByText(/First step:/)).toBeInTheDocument();

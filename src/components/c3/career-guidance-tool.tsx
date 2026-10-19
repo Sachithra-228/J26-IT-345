@@ -969,7 +969,7 @@ const Results = memo(function Results({
         <>
           <JobTitlesCard roleId={detail.roleId} ctx={ctx} />
           <AdCheckCard levels={result.levels} onSelect={onSelect} ctx={ctx} />
-          <JobsForYouCard levels={result.levels} roleId={detail.roleId} ctx={ctx} />
+          <JobsForYouCard levels={result.levels} roleId={detail.roleId} rankedRoleIds={result.roles.map((r) => r.roleId)} ctx={ctx} />
           <Breakdown readiness={detail.readiness} sources={result.sources} ctx={ctx} />
           <Gaps gaps={detail.gaps} roleId={detail.roleId} ctx={ctx} />
           <BackgroundTips background={background} roleId={detail.roleId} topGapSkillId={detail.gaps[0]?.skillId ?? null} ctx={ctx} />
@@ -1163,10 +1163,12 @@ const JOB_BOARD_HREF = "/dashboard/student#career";
  * platform job board is fetched once (a plain GET; the student's levels never leave the
  * browser) and ranked for the selected role.
  */
-function JobsForYouCard({ levels, roleId, ctx }: { levels: SkillLevels; roleId: string; ctx: Ctx }) {
+function JobsForYouCard({ levels, roleId, rankedRoleIds, ctx }: { levels: SkillLevels; roleId: string; rankedRoleIds: string[]; ctx: Ctx }) {
   const { t, language } = ctx;
   const uid = useId();
   const [state, setState] = useState<JobsState>({ status: "idle" });
+  // the student's other top-ranked roles, for "Jobs for your other suggested roles"
+  const otherRoles = rankedRoleIds.filter((id) => id !== roleId).slice(0, 3).join(",");
   const alive = useRef(true);
   useEffect(() => {
     alive.current = true; // React StrictMode mounts twice in development
@@ -1191,9 +1193,12 @@ function JobsForYouCard({ levels, roleId, ctx }: { levels: SkillLevels; roleId: 
   const lists = useMemo(
     () =>
       state.status === "ready" || state.status === "error"
-        ? recommendWithFallback(state.status === "ready" ? state.jobs : [], levels, roleId, new Date(), CARD_TOP_JOBS)
+        ? recommendWithFallback(state.status === "ready" ? state.jobs : [], levels, roleId, new Date(), {
+            top: CARD_TOP_JOBS,
+            otherRoleIds: otherRoles.split(",").filter(Boolean)
+          })
         : null,
-    [state, levels, roleId]
+    [state, levels, roleId, otherRoles]
   );
   const role = roleName(roleId, language);
 
@@ -1251,8 +1256,18 @@ function JobsForYouCard({ levels, roleId, ctx }: { levels: SkillLevels; roleId: 
                 ))}
               </div>
             ) : state.status === "ready" ? (
-              <div data-testid="c3-jobs-none" className="mt-4 rounded-2xl border border-dashed border-slate-300 bg-slate-50/70 px-6 py-8 text-center text-sm text-slate-600 dark:border-slate-700 dark:bg-slate-800/40 dark:text-slate-300">
+              <div data-testid="c3-jobs-none" className="mt-4 rounded-2xl border border-dashed border-slate-300 bg-slate-50/70 px-6 py-6 text-center text-sm text-slate-600 dark:border-slate-700 dark:bg-slate-800/40 dark:text-slate-300">
                 {fmt(t.jfNone, { role })}
+              </div>
+            ) : null}
+            {lists.other.length ? (
+              <div data-testid="c3-jobs-other" className="mt-6">
+                <h4 className="mb-3 text-xs font-semibold uppercase tracking-[0.12em] text-slate-500 dark:text-slate-400">{t.jfOtherHeading}</h4>
+                <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
+                  {lists.other.map((m) => (
+                    <C3JobCard key={m.job._id} m={m} t={t} language={language} boardHref={JOB_BOARD_HREF} />
+                  ))}
+                </div>
               </div>
             ) : null}
             {lists.demo.length ? (
