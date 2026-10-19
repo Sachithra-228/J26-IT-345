@@ -162,6 +162,7 @@ Public C1 pages that work without logging in: `/aid-assessment` (private, on-dev
 | Scholarship matching (eligibility + weighted alignment), NDCG evaluation vs rule-based baseline | `src/lib/c1/matching.ts` | Done - target not yet met |
 | Public **Transparency Ledger** with integrity fingerprint | `/transparency`, `/api/c1/ledger` | Done (simulation + live-chain reader) |
 | On-device **aid assessment** (nothing leaves the browser) | `/aid-assessment` | Done |
+| 12 **fictional sample students** (rural single-parent, high GPA / low income, large family, comfortable household...) with a "Try a sample student" picker and a per-case evidence report | `src/lib/c1/demo-cases.ts`, `npm run c1:demo-cases` | Done - fictional, for demos |
 | Dashboard sections: student *Smart Aid Matching*; admin / faculty *Aid Prioritisation* and *Fund Ledger*; donor *Fund Transparency* | `src/components/...` | Done (tested; not yet verified with live login) |
 | English / Sinhala / Tamil for every C1 screen | `src/lib/c1/i18n.ts` | Done - **needs native-speaker review** |
 | Deployment to Sepolia and live latency measurement | section 6.7 | **Not done** - needs a testnet wallet |
@@ -257,7 +258,9 @@ Safety: OpenZeppelin `AccessControl`, `ReentrancyGuard`, `Pausable`; checks-effe
 | --- | --- |
 | ![ROC](docs/c1/evidence/vulnerability-roc.png) | ![Confusion matrix](docs/c1/evidence/vulnerability-confusion-matrix.png) |
 
-Raw evidence: `docs/c1/evidence/` (`gas-report.json`, `vulnerability-eval.json`, `matching-eval.json`, `slither-report.json`).
+Raw evidence: `docs/c1/evidence/` (`gas-report.json`, `vulnerability-eval.json`, `matching-eval.json`, `slither-report.json`, `demo-cases.json`).
+
+**Sample students (fictional).** Of the 12 hand-written cases, the model rates 6 high, 2 moderate and 4 low need, and ranks every clearly needy case above the comfortable households. It disagrees with the explainable AHP-TOPSIS score on one case, S09 (formal job, rural, boarding: index 3, TOPSIS 0.56) - the kind of borderline case a welfare officer should review. Scores cluster near 0 and 100, a sign of the synthetic training rubric; real data should give more graded scores.
 </details>
 
 ### 6.4 Requirements status
@@ -316,6 +319,7 @@ npm run slither           # static analysis (pip install slither-analyzer)
 pip install -r ml/requirements.txt
 cd ml && python synthetic_data.py && python train_vulnerability.py
 cd .. && npm run c1:eval-matching
+npm run c1:demo-cases    # 12 fictional sample students -> docs/c1/evidence/demo-cases.json
 ```
 
 `ml/` files: `synthetic_data.py` (synthetic students + 24 illustrative scholarships + simulated relevance), `features.py` (feature engineering, mirrored in TypeScript), `ahp_topsis.py` (weights + closeness score), `train_vulnerability.py` (LR / RF / XGBoost, CV, hold-out, fairness, export of the web-app model and parity fixture).
