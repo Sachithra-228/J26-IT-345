@@ -1,0 +1,59 @@
+{
+  "recordedDate": "2026-10-19",
+  "scope": "C2 assessment increment before integration of subsequent shared-branch updates",
+  "jest": {
+    "passedSuites": 28,
+    "passedTests": 612,
+    "failedTests": 0,
+    "success": true
+  },
+  "c2": {
+    "passedTests": 89,
+    "failedTests": 0
+  },
+  "commands": [
+    "npm test -- --runInBand --silent --json",
+    "npm run typecheck",
+    "npm run lint"
+  ],
+  "typecheck": "passed",
+  "lint": "passed with existing warnings outside C2",
+  "browser": {
+    "softwareCheckInputs": {
+      "phq9": [
+        2,
+        2,
+        2,
+        1,
+        1,
+        1,
+        1,
+        1,
+        0
+      ],
+      "gad7": [
+        2,
+        2,
+        1,
+        1,
+        0,
+        1,
+        0
+      ]
+    },
+    "observedTotals": {
+      "phq9": 11,
+      "gad7": 7
+    },
+    "mobileViewport": {
+      "width": 390,
+      "height": 844
+    },
+    "newErrorsAfterFinalReload": 0
+  },
+  "limits": [
+    "Software checks, not participant evidence or clinical validation.",
+    "No live booking, forum post or professional profile was created during verification.",
+    "No production build, deployment or full accessibility audit was performed."
+  ]
+}

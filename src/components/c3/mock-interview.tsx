@@ -15,6 +15,8 @@ import {
   type SelectedQuestion,
   type SessionSummary
 } from "@/lib/c3/interview";
+import { firstActionFor } from "@/lib/c3/ad-check";
+import { planForRole } from "@/lib/c3/graph";
 import { careerModel, getRole, getSkill, type RoleProfile } from "@/lib/c3/model";
 import type { SkillLevels } from "@/lib/c3/readiness";
 
@@ -92,6 +94,18 @@ function reasonText(s: SelectedQuestion, roleId: string, t: C3Text, language: La
   }
 }
 
+/** The criteria the student did best on (score 3, or 2 if none is 3). */
+function strengths(feedback: AnswerFeedback): Criterion[] {
+  const top = feedback.criteria.filter((c) => c.score === 3);
+  return (top.length ? top : feedback.criteria.filter((c) => c.score === 2)).map((c) => c.criterion);
+}
+
+/** The criterion to work on first: the lowest score (ties: rubric order). */
+function weakestOf(feedback: AnswerFeedback): Criterion | null {
+  const low = [...feedback.criteria].sort((a, b) => a.score - b.score)[0];
+  return low && low.score < 3 ? low.criterion : null;
+}
+
 const bandStyle = {
   strong: "bg-emerald-100 text-emerald-800 dark:bg-emerald-950 dark:text-emerald-200",
   developing: "bg-amber-100 text-amber-800 dark:bg-amber-950 dark:text-amber-200",
@@ -104,10 +118,12 @@ type Props = {
   targetRoleIds?: string[];
   /** Called with the summary when an interview is finished (used by the career assistant). */
   onSummary?: (summary: SessionSummary) => void;
+  /** Opens the student's Gap-to-Action plan (the Readiness tab); the button is hidden without it. */
+  onOpenPlan?: () => void;
 };
 
 /** Rule-based mock interview (FR13). Runs on-device; answers are never sent or stored. */
-export function MockInterview({ levels = null, targetRoleIds = [], onSummary }: Props) {
+export function MockInterview({ levels = null, targetRoleIds = [], onSummary, onOpenPlan }: Props) {
   const { language } = useLanguage();
   const t = getC3Text(language);
   const uid = useId();
@@ -144,6 +160,22 @@ export function MockInterview({ levels = null, targetRoleIds = [], onSummary }: 
   useEffect(() => {
     if (phase === "summary" && summary.answered > 0) onSummary?.(summary);
   }, [phase, summary, onSummary]);
+
+  // For each skill to practise: the matching step of the student's plan, or the first learning action.
+  const practiseSteps = useMemo(() => {
+    if (phase !== "summary") return [];
+    const role = getRole(roleId);
+    const plan = role && levels ? planForRole(levels, role) : null;
+    return summary.practiseSkills.map((skillId) => {
+      const step = plan?.steps.find((st) => st.skillId === skillId);
+      const action = step ? step.action : firstActionFor(skillId, levels?.[skillId] ?? 0);
+      return { skillId, action };
+    });
+  }, [phase, roleId, levels, summary.practiseSkills]);
+
+  const scores = results.map((r) => r.feedback.total);
+  const best = scores.length > 1 ? scores.indexOf(Math.max(...scores)) : -1;
+  const worst = scores.length > 1 ? scores.lastIndexOf(Math.min(...scores)) : -1;
 
   function start(nextRound = round) {
     const role = getRole(roleId) as RoleProfile;
@@ -187,10 +219,11 @@ export function MockInterview({ levels = null, targetRoleIds = [], onSummary }: 
       <header>
         <h3 className="text-xl font-semibold">{t.ivTitle}</h3>
         <p className="mt-1 max-w-3xl text-sm text-slate-600 dark:text-slate-300">{t.ivSubtitle}</p>
+        <details className="mt-2 max-w-3xl text-sm">
+          <summary className={`cursor-pointer text-xs font-medium text-primary ${ring}`}>ⓘ {t.ivHowItWorks}</summary>
+          <p className="mt-1 text-xs text-slate-600 dark:text-slate-300">{t.ivNote}</p>
+        </details>
       </header>
-      <p className="rounded-2xl border border-amber-200 bg-amber-50 p-4 text-sm text-amber-900 dark:border-amber-900 dark:bg-amber-950/40 dark:text-amber-100">
-        {t.ivNote}
-      </p>
 
       {phase === "setup" ? (
         <Card>
@@ -299,35 +332,28 @@ export function MockInterview({ levels = null, targetRoleIds = [], onSummary }: 
                   {last.feedback.band === "strong" ? t.ivBandStrong : last.feedback.band === "developing" ? t.ivBandDeveloping : t.ivBandPractice}
                 </span>
               </div>
-              <ul className="space-y-2">
-                {last.feedback.criteria.map((c) => (
-                  <li key={c.criterion} className="text-sm">
-                    <div className="flex justify-between gap-3">
-                      <span className="font-medium">{t[CRITERION_LABEL[c.criterion]]}</span>
-                      <span className="text-slate-500">{c.score}/3</span>
-                    </div>
-                    <div className="mt-1 h-1.5 w-full overflow-hidden rounded-full bg-slate-100 dark:bg-slate-800" aria-hidden="true">
-                      <div className="h-full bg-primary" style={{ width: `${(c.score / 3) * 100}%` }} />
-                    </div>
-                    <p className="mt-1 text-xs text-slate-600 dark:text-slate-300">{explain(c, t)}</p>
-                    {c.score < 2 ? <p className="text-xs text-primary">{t[CRITERION_TIP[c.criterion]]}</p> : null}
-                  </li>
-                ))}
-              </ul>
-              <div className="grid gap-3 text-sm sm:grid-cols-2">
-                <div>
-                  <p className="font-medium">{t.ivCovered}</p>
-                  <ul className="mt-1 list-disc pl-5 text-slate-600 dark:text-slate-300" lang="en">
-                    {last.feedback.coveredPoints.length ? last.feedback.coveredPoints.map((p) => <li key={p}>{p}</li>) : <li>{t.none}</li>}
-                  </ul>
-                </div>
-                <div>
-                  <p className="font-medium">{t.ivMissed}</p>
-                  <ul className="mt-1 list-disc pl-5 text-slate-600 dark:text-slate-300" lang="en">
-                    {last.feedback.missedPoints.length ? last.feedback.missedPoints.map((p) => <li key={p}>{p}</li>) : <li>{t.none}</li>}
-                  </ul>
-                </div>
-              </div>
+              <FeedbackHeadline feedback={last.feedback} t={t} />
+              <details className="text-sm">
+                <summary className={`cursor-pointer font-medium text-primary ${ring}`}>{t.ivDetails}</summary>
+                <ul className="mt-3 space-y-2">
+                  {last.feedback.criteria.map((c) => (
+                    <li key={c.criterion} className="text-sm">
+                      <div className="flex justify-between gap-3">
+                        <span className="font-medium">{t[CRITERION_LABEL[c.criterion]]}</span>
+                        <span className="text-slate-500">{c.score}/3</span>
+                      </div>
+                      <div className="mt-1 h-1.5 w-full overflow-hidden rounded-full bg-slate-100 dark:bg-slate-800" aria-hidden="true">
+                        <div className="h-full bg-primary" style={{ width: `${(c.score / 3) * 100}%` }} />
+                      </div>
+                      <p className="mt-1 text-xs text-slate-600 dark:text-slate-300">{explain(c, t)}</p>
+                    </li>
+                  ))}
+                </ul>
+                <p className="mt-3 font-medium">{t.ivCovered}</p>
+                <ul className="mt-1 list-disc pl-5 text-slate-600 dark:text-slate-300" lang="en">
+                  {last.feedback.coveredPoints.length ? last.feedback.coveredPoints.map((p) => <li key={p}>{p}</li>) : <li>{t.none}</li>}
+                </ul>
+              </details>
               <details className="text-sm">
                 <summary className={`cursor-pointer font-medium text-primary ${ring}`}>{t.ivModel}</summary>
                 <p className="mt-1 text-slate-600 dark:text-slate-300" lang="en">
@@ -353,10 +379,40 @@ export function MockInterview({ levels = null, targetRoleIds = [], onSummary }: 
               {fmt(t.ivWeakest, { criterion: t[CRITERION_LABEL[summary.weakest]] })} {t[CRITERION_TIP[summary.weakest]]}
             </p>
           ) : null}
+          <h5 className="mt-4 text-xs font-semibold uppercase tracking-wide text-slate-500 dark:text-slate-400">{t.ivYourAnswers}</h5>
+          <ol data-testid="c3-iv-answers" className="mt-2 space-y-1.5">
+            {results.map((r, i) => (
+              <li key={i} className="flex flex-wrap items-center gap-2 text-sm">
+                <span className="font-medium">{fmt(t.ivQLine, { n: i + 1, score: r.feedback.total })}</span>
+                <span className="min-w-0 flex-1 truncate text-slate-600 dark:text-slate-300" lang="en">
+                  {r.selected.question.prompt}
+                </span>
+                {i === best ? (
+                  <span data-testid="c3-iv-best" className="rounded-full bg-emerald-100 px-2 py-0.5 text-[11px] font-semibold text-emerald-800 dark:bg-emerald-900/60 dark:text-emerald-100">
+                    {t.ivStrongest}
+                  </span>
+                ) : null}
+                {i === worst && worst !== best ? (
+                  <span data-testid="c3-iv-worst" className="rounded-full bg-amber-100 px-2 py-0.5 text-[11px] font-semibold text-amber-800 dark:bg-amber-900/60 dark:text-amber-100">
+                    {t.ivWeakestTag}
+                  </span>
+                ) : null}
+              </li>
+            ))}
+          </ol>
           {summary.practiseSkills.length ? (
-            <p className="mt-1 text-sm">
-              {fmt(t.ivPractise, { skills: summary.practiseSkills.map((s) => skillName(s, language)).join(", ") })}
-            </p>
+            <div className="mt-4 text-sm">
+              <p>{fmt(t.ivPractise, { skills: summary.practiseSkills.map((s) => skillName(s, language)).join(", ") })}</p>
+              <ul data-testid="c3-iv-plan-steps" className="mt-1 list-disc space-y-1 pl-5 text-slate-600 dark:text-slate-300">
+                {practiseSteps.map((p) =>
+                  p.action ? (
+                    <li key={p.skillId}>
+                      {fmt(t.ivPlanStep, { skill: skillName(p.skillId, language), action: p.action.title, h: p.action.effortHours })}
+                    </li>
+                  ) : null
+                )}
+              </ul>
+            </div>
           ) : null}
           <p className="mt-2 text-xs text-slate-500">{t.ivPrivacy}</p>
           <div className="mt-4 flex flex-wrap gap-3">
@@ -370,10 +426,44 @@ export function MockInterview({ levels = null, targetRoleIds = [], onSummary }: 
               {t.ivRestart}
             </Button>
             <Button type="button" variant="secondary" onClick={() => setPhase("setup")}>
-              {t.ivRole}
+              {t.ivChangeRole}
             </Button>
+            {onOpenPlan && levels ? (
+              <Button type="button" variant="ghost" onClick={onOpenPlan}>
+                {t.ivOpenPlan}
+              </Button>
+            ) : null}
           </div>
         </Card>
+      ) : null}
+    </div>
+  );
+}
+
+/** The two lines a student reads first: what went well, and what to improve (with the missed points). */
+function FeedbackHeadline({ feedback, t }: { feedback: AnswerFeedback; t: C3Text }) {
+  const good = strengths(feedback);
+  const weak = weakestOf(feedback);
+  return (
+    <div className="space-y-3 text-sm">
+      <p data-testid="c3-iv-went-well" className="rounded-xl bg-emerald-50 px-3 py-2 text-emerald-900 dark:bg-emerald-950/40 dark:text-emerald-100">
+        ✓ {good.length ? fmt(t.ivWentWell, { list: good.map((c) => t[CRITERION_LABEL[c]]).join(", ") }) : t.ivWentWellNone}
+      </p>
+      {weak || feedback.missedPoints.length ? (
+        <div data-testid="c3-iv-to-improve" className="rounded-xl bg-amber-50 px-3 py-2 text-amber-900 dark:bg-amber-950/40 dark:text-amber-100">
+          <p className="font-medium">→ {t.ivToImprove}</p>
+          {weak ? <p className="mt-1">{t[CRITERION_TIP[weak]]}</p> : null}
+          {feedback.missedPoints.length ? (
+            <>
+              <p className="mt-2 font-medium">{t.ivMissed}</p>
+              <ul className="mt-1 list-disc pl-5" lang="en">
+                {feedback.missedPoints.map((p) => (
+                  <li key={p}>{p}</li>
+                ))}
+              </ul>
+            </>
+          ) : null}
+        </div>
       ) : null}
     </div>
   );

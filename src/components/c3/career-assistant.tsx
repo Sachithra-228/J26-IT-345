@@ -5,10 +5,10 @@ import { Button } from "@/components/shared/Button";
 import { Card } from "@/components/shared/Card";
 import { useLanguage } from "@/context/language-context";
 import { assessCareer } from "@/lib/c3/assessment";
-import { answerIntent, answerQuestion, type AssistantContext, type IntentId, type SourceId } from "@/lib/c3/assistant";
+import { answerIntent, answerQuestion, QUESTION_KEYS, type AssistantAnswer, type AssistantContext, type IntentId, type SectionId, type SourceId } from "@/lib/c3/assistant";
 import { getAssistantText, type AssistantText } from "@/lib/c3/assistant-text";
-import { getC3Text } from "@/lib/c3/i18n";
 import type { SessionSummary } from "@/lib/c3/interview";
+import { saveJobMatchContext } from "@/lib/c3/job-match-context";
 import type { CareerProfile } from "@/lib/c3/validation";
 
 /**
@@ -23,24 +23,13 @@ type Props = {
   profile: CareerProfile | null;
   /** Summary of the last finished mock interview in this session, if any. */
   interview: SessionSummary | null;
+  /** Opens a part of the Readiness tab ("Open this section"); the button is hidden without it. */
+  onOpenSection?: (section: Exclude<SectionId, "jobs">) => void;
 };
 
 const ring = "focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary";
 
-const SUGGESTION_KEYS: Record<IntentId, keyof AssistantText> = {
-  readiness: "qReadiness",
-  scoreReason: "qScoreReason",
-  bestRole: "qBestRole",
-  gaps: "qGaps",
-  nextStep: "qNextStep",
-  compareRoles: "qCompareRoles",
-  roleRequirements: "qRoleRequirements",
-  resources: "qResources",
-  certifications: "qCertifications",
-  interview: "qInterview",
-  about: "qAbout",
-  help: "qHelp"
-};
+const SUGGESTION_KEYS = QUESTION_KEYS;
 
 const SOURCE_KEYS: Record<SourceId, keyof AssistantText> = {
   readiness: "srcReadiness",
@@ -49,15 +38,25 @@ const SOURCE_KEYS: Record<SourceId, keyof AssistantText> = {
   roleProfile: "srcRoleProfile",
   graph: "srcGraph",
   interview: "srcInterview",
+  jobBoard: "srcJobBoard",
   model: "srcModel"
 };
 
-const START: IntentId[] = ["readiness", "gaps", "nextStep", "bestRole", "interview", "about"];
+const START: IntentId[] = ["readiness", "gaps", "nextStep", "jobs", "certifications", "bestRole", "interview", "about"];
+
+const OPEN_KEYS: Record<SectionId, keyof AssistantText> = {
+  readiness: "openReadiness",
+  gaps: "openGaps",
+  plan: "openPlan",
+  jobs: "openJobs"
+};
+
+/** The student dashboard section that holds the Career job board. */
+const JOB_BOARD_HREF = "/dashboard/student#career";
 
 /** Rule-based career assistant (FR12). Answers only from the student's C3 results; runs on-device. */
-export function CareerAssistant({ profile, interview }: Props) {
+export function CareerAssistant({ profile, interview, onOpenSection }: Props) {
   const { language } = useLanguage();
-  const t = getC3Text(language);
   const a = getAssistantText(language);
   const uid = useId();
   const [turns, setTurns] = useState<Turn[]>([]);
@@ -100,11 +99,14 @@ export function CareerAssistant({ profile, interview }: Props) {
       <header>
         <h3 className="text-xl font-semibold">{a.title}</h3>
         <p className="mt-1 max-w-3xl text-sm text-slate-600 dark:text-slate-300">{a.subtitle}</p>
+        <details className="mt-2 max-w-3xl text-sm">
+          <summary className={`cursor-pointer text-xs font-medium text-primary ${ring}`}>ⓘ {a.howItWorks}</summary>
+          <p data-testid="c3-assistant-note" className="mt-1 text-xs text-slate-600 dark:text-slate-300">
+            {a.note}
+          </p>
+          {!profile ? <p className="mt-1 text-xs text-slate-600 dark:text-slate-300">{a.noAnalysisYet}</p> : null}
+        </details>
       </header>
-      <p className="rounded-2xl border border-amber-200 bg-amber-50 p-4 text-sm text-amber-900 dark:border-amber-900 dark:bg-amber-950/40 dark:text-amber-100">
-        {a.note} {t.syntheticNote}
-      </p>
-      {!profile ? <p className="text-sm text-slate-600 dark:text-slate-300">{a.noAnalysisYet}</p> : null}
 
       <Card>
         <div role="log" aria-live="polite" aria-label={a.title} className="max-h-[32rem] space-y-4 overflow-y-auto pr-1">
@@ -127,6 +129,7 @@ export function CareerAssistant({ profile, interview }: Props) {
                       {a.basedOn} {answer.sources.map((s) => a[SOURCE_KEYS[s]]).join(" · ")}
                     </p>
                   ) : null}
+                  <OpenSection answer={answer} ctx={turn.ctx} a={a} onOpenSection={onOpenSection} />
                 </div>
               </div>
             );
@@ -184,6 +187,39 @@ export function CareerAssistant({ profile, interview }: Props) {
         <p className="mt-3 text-xs text-slate-500 dark:text-slate-400">{a.privacyLine}</p>
       </Card>
     </div>
+  );
+}
+
+/** "Open this section" under answers about readiness, gaps, the plan or jobs. */
+function OpenSection({
+  answer,
+  ctx,
+  a,
+  onOpenSection
+}: {
+  answer: AssistantAnswer;
+  ctx: AssistantContext;
+  a: AssistantText;
+  onOpenSection?: Props["onOpenSection"];
+}) {
+  const section = answer.section;
+  if (!section) return null;
+  const cls = `mt-2 inline-flex items-center gap-1 rounded-lg border border-slate-300 bg-white px-3 py-1.5 text-xs font-semibold text-primary hover:bg-slate-50 dark:border-slate-600 dark:bg-slate-900 ${ring}`;
+  if (section === "jobs") {
+    const levels = ctx.assessment?.levels;
+    if (!answer.roleId || !levels) return null;
+    // Saves {role, levels} in this tab's sessionStorage only - never in the URL - then opens Career.
+    return (
+      <a href={JOB_BOARD_HREF} data-testid="c3-assistant-open" onClick={() => saveJobMatchContext(answer.roleId as string, levels)} className={cls}>
+        {a[OPEN_KEYS.jobs]} →
+      </a>
+    );
+  }
+  if (!onOpenSection) return null;
+  return (
+    <button type="button" data-testid="c3-assistant-open" onClick={() => onOpenSection(section)} className={cls}>
+      {a[OPEN_KEYS[section]]} →
+    </button>
   );
 }
 

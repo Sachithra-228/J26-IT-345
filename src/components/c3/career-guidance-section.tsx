@@ -27,6 +27,14 @@ export function CareerGuidanceSection() {
   const [saveState, setSaveState] = useState<SaveState>("idle");
   const [savedAt, setSavedAt] = useState<string | null>(null);
   const [tab, setTab] = useState<Tab>("readiness");
+
+  /** "Open this section" / "Open my plan": switch to the Readiness tab and scroll to that part of the results. */
+  const openSection = useCallback((section: "readiness" | "gaps" | "plan") => {
+    setTab("readiness");
+    const target = { readiness: "c3-results", gaps: "c3-gaps", plan: "c3-plan" }[section];
+    requestAnimationFrame(() => document.querySelector(`[data-testid="${target}"]`)?.scrollIntoView?.({ behavior: "smooth", block: "start" }));
+  }, []);
+  const openPlan = useCallback(() => openSection("plan"), [openSection]);
   const [interviewSummary, setInterviewSummary] = useState<SessionSummary | null>(null);
 
   useEffect(() => {
@@ -129,11 +137,11 @@ export function CareerGuidanceSection() {
 
       {/* All panels stay mounted so work in one tab survives switching to another. */}
       <div role="tabpanel" id="c3-panel-interview" aria-labelledby="c3-tab-interview" hidden={tab !== "interview"}>
-        <MockInterview levels={last?.skills ?? null} targetRoleIds={last?.targetRoleIds ?? []} onSummary={setInterviewSummary} />
+        <MockInterview levels={last?.skills ?? null} targetRoleIds={last?.targetRoleIds ?? []} onSummary={setInterviewSummary} onOpenPlan={openPlan} />
       </div>
 
       <div role="tabpanel" id="c3-panel-assistant" aria-labelledby="c3-tab-assistant" hidden={tab !== "assistant"}>
-        <CareerAssistant profile={last} interview={interviewSummary} />
+        <CareerAssistant profile={last} interview={interviewSummary} onOpenSection={openSection} />
       </div>
 
       <div role="tabpanel" id="c3-panel-readiness" aria-labelledby="c3-tab-readiness" hidden={tab !== "readiness"} className="space-y-6">
