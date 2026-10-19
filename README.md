@@ -47,7 +47,7 @@ Supervisor: Prof. Dasuni Nawinna - Co-supervisor: Ms. Aruni Premarathne
 | Component | Owner | Research focus | Status in this repository |
 | --- | --- | --- | --- |
 | **C1** | Wijesinghe S K (IT23152700) - group leader | Blockchain-based transparent financial aid, AI financial-vulnerability assessment, AI scholarship matching, admin and donor monitoring | **Implemented** (section 6) |
-| **C2** | D. G. A. Indeepa (IT23273412) | AI-powered mental wellness support and early risk detection: bounded conversational assistant, PHQ-9 / GAD-7 self-assessments, optional facial-expression analysis, mood journaling, quality-aware multimodal fusion, confidential counselor referral | Folder structure ready (section 7) |
+| **C2** | D. G. A. Indeepa (IT23273412) | AI-powered mental wellness support and early risk detection: bounded conversational assistant, PHQ-9 / GAD-7 self-assessments, optional facial-expression analysis, mood journaling, quality-aware multimodal fusion, confidential counselor referral | First text model and fictional reflection workspace implemented; remaining research in section 7 |
 | **C3** | K. K. T. C. Kamburugoda (IT23155084) | Explainable AI career guidance: NLP over Sri Lankan IT job advertisements, CV and questionnaire analysis, career-path recommendation with readiness scores, skill-gap prioritisation, Gap-to-Action knowledge graph | **Implemented on synthetic data** (section 7, C3) |
 | **C4** | L. L. E. Harshana (IT23195202) | AI mentor matching and student engagement: dynamic multi-criteria mentor matching, activity recommendation, privacy-aware parent/guardian communication, peer collaboration, engagement and mentorship analytics | Folder structure ready (section 7) |
 
@@ -356,9 +356,15 @@ Local rehearsal without a testnet: `npm run node` + `npm run seed:local` in `blo
 
 ## 7. Components C2, C3, C4
 
-The folders below exist so each member can start immediately and keep work separated and consistent. They contain only placeholders (`.gitkeep`) - no code yet. Scope is taken from each member's proposal report.
+Each component keeps its implementation, experiments and evidence in its own folders. Current status and remaining work are described below; scope is taken from each member's proposal report.
 
 ### C2 - AI-powered mental wellness support and early risk detection (D. G. A. Indeepa)
+
+**Implemented, 19 October 2026.** A fresh wellness workspace is available at `/wellness` and in the student dashboard's Wellness section. It includes complete PHQ-9/GAD-7 scoring, relevant follow-ups from a fixed question bank, an understandable screening summary, optional reflection/text analysis, local guided support chat and professional preferences (gender, language, type and mode). Forum topics filter actual discussions. Check-in, reflection and chat data remain local to the page session. Booking requests and forum posts are separate, explicit actions; assessment answers are never attached automatically. No fictional-student prompt is shown in the user interface.
+
+The reproducible text experiment uses public GoEmotions data, TF-IDF and regularized one-vs-rest logistic regression. It trains on 42,854 deduplicated comments, selects settings on 5,308 development rows and evaluates once on 5,313 retained test rows: micro-F1 **0.5552**, macro-F1 **0.4084**, compared with frequency-baseline micro-F1 **0.3054**. These measure public-comment emotion labels, **not mental health or referral accuracy**. Browser inference is checked against Python scores. The model has no local student training data, clinical validation, automatic referral or camera capture.
+
+See [training instructions](ml/c2/README.md), [model card and limitations](docs/c2/model-card.md), [evaluation evidence](docs/c2/evidence/text-evaluation.json) and [assessment implementation verification](docs/c2/reports/assessment-increment.md). Professional review of additional content, synthetic fusion experiments, optional facial features, confidential assigned-counselor access and the approved local study remain pending. The chat uses a limited response library; no generative provider is connected. AI assistance is disclosed in the model card; student review and contribution records are required.
 
 **Scope.** A bounded conversational assistant; PHQ-9 and GAD-7 self-assessments; optional facial-expression analysis; mood journaling; confidential counselor referral. **Research contribution:** an empirical assessment of quality-aware multimodal fusion (missing-camera conditions, uncertainty, and the incremental value of facial cues beyond questionnaires and text). Outputs support referral decisions - they do not diagnose or predict suicide. Evaluation: ethics-approved feasibility pilot (about 30 adult undergraduates) with counselor-reviewed cases, comparing questionnaire-only, text-only and fused variants.
 
@@ -604,7 +610,7 @@ Architecture is in [C3.2](#c32-architecture-and-model) and full run notes in [C3
 | `ml/c4/src/analytics/` | Engagement and mentorship analytics |
 | `ml/c4/{data,notebooks,models,evaluation}/`, `src/lib|components|app/api/c4/`, `tests/**/c4/`, `scripts/c4/`, `docs/c4/` | As for C2 |
 
-**Status of C2-C4.** Not integrated in this repository yet; each owner should update this section with their implementation status and results when they start committing code. Cross-component rules: the synthetic-data policy, consent-first handling, role-gated APIs, and "never commit raw data" apply to all four.
+**Status of C2-C4.** C2's first text/reflection increment and C3's career workflow are integrated as described above; C4 retains its stated implementation status. Cross-component rules: the synthetic-data policy, consent-first handling, role-gated APIs, and "never commit raw data" apply to all four.
 
 ## 8. How to add a component to the platform
 

@@ -1,0 +1,21 @@
+{
+  "recordedDate": "2026-10-19",
+  "scope": "C2 branch after integrating the latest remote C2 and main history",
+  "testedCommit": "e6e1a7d4b1877811ba173910c75fb13353dd1fdd",
+  "upstreamMain": "41cdf7077be37ca27f7bca134a7740e42ab083dd",
+  "upstreamC2": "54831feb95096d4183aa22d4f604d6dee9fd5040",
+  "jest": {
+    "passedSuites": 30,
+    "passedTests": 639,
+    "failedTests": 0,
+    "success": true
+  },
+  "c2PassedTests": 89,
+  "typecheck": "passed",
+  "lint": "passed with existing warnings outside C2",
+  "changesAfterTestedCommit": "Documentation and verification evidence only; no application code changes.",
+  "limits": [
+    "Software verification, not clinical validation.",
+    "No production build or deployment performed."
+  ]
+}

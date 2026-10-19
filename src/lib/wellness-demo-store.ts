@@ -1,4 +1,6 @@
-type DemoCounselor = {
+import type { ProviderMetadata } from "@/lib/c2/support";
+
+type DemoCounselor = ProviderMetadata & {
   _id: string;
   name: string;
   specialization: string;
