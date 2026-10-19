@@ -10,10 +10,16 @@
  * Nothing here holds a private key: the web app only READS the chain. Writes
  * (award / verify milestone) are signed by university admins, never by the server.
  */
+import { createHash } from "node:crypto";
 import { Interface, JsonRpcProvider } from "ethers";
 import abi from "./abi/ScholarshipEscrow.json";
 import demoLedger from "./demo-ledger.json";
-import type { LedgerEvent, LedgerEventType, LedgerFile } from "./ledger";
+import { canonicalLedgerString, type LedgerEvent, type LedgerEventType, type LedgerFile } from "./ledger";
+
+/** SHA-256 integrity fingerprint of the full event log (hex). Anyone holding the log can recompute it. */
+export function ledgerDigest(events: LedgerEvent[]): string {
+  return createHash("sha256").update(canonicalLedgerString(events)).digest("hex");
+}
 
 const KNOWN_EVENTS = new Set<string>([
   "CampaignCreated",

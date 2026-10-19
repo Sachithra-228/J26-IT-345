@@ -7,6 +7,7 @@ import { useLanguage } from "@/context/language-context";
 import { getC1Text } from "@/lib/c1/i18n";
 import {
   EVENT_LABELS,
+  explorerTxUrl,
   formatEth,
   shortHash,
   type AwardSummary,
@@ -27,11 +28,6 @@ type LedgerResponse = {
 type LedgerExplorerProps = {
   variant?: "public" | "admin" | "donor";
 };
-
-function explorerTxUrl(chainId: number, txHash: string) {
-  if (chainId === 11155111) return `https://sepolia.etherscan.io/tx/${txHash}`;
-  return null;
-}
 
 function formatDate(unixSeconds: number, locale: string) {
   return new Date(unixSeconds * 1000).toLocaleDateString(locale, { year: "numeric", month: "short", day: "numeric" });
@@ -285,6 +281,27 @@ export function LedgerExplorer({ variant = "public" }: LedgerExplorerProps) {
             {t.viewPublic}
           </a>
         ) : null}
+      </Card>
+
+      <Card>
+        <h3 className="text-base font-semibold">{t.reportTitle}</h3>
+        <p className="mt-1 text-sm text-slate-600 dark:text-slate-300">{t.reportBody}</p>
+        <div className="mt-4 flex flex-wrap gap-3">
+          <a
+            href="/api/c1/ledger/report?format=csv"
+            download
+            className="rounded-lg bg-primary px-4 py-2 text-sm font-semibold text-white hover:opacity-90 focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-1"
+          >
+            {t.reportCsv}
+          </a>
+          <a
+            href="/api/c1/ledger/report?format=json"
+            download
+            className="rounded-lg border border-slate-300 px-4 py-2 text-sm font-semibold hover:bg-slate-50 focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-1 dark:border-slate-700 dark:hover:bg-slate-800"
+          >
+            {t.reportJson}
+          </a>
+        </div>
       </Card>
     </div>
   );
