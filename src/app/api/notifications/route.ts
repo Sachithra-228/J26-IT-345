@@ -1,6 +1,12 @@
 import { NextRequest } from "next/server";
 import { ObjectId } from "mongodb";
 import { isDemoMode, isMongoConnectionError, jsonResponse } from "@/lib/api";
+import { isChainNotificationId } from "@/lib/c1/chain-notifications";
+import {
+  loadChainNotifications,
+  markChainNotificationsRead,
+  readChainNotificationIds
+} from "@/lib/c1/chain-notifications-server";
 import { demoUsers } from "@/lib/demo-data";
 import { getMongoDatabase } from "@/lib/mongodb";
 import { requireRole, requireSession } from "@/lib/session-auth";
@@ -23,6 +29,16 @@ const demoNotifications = [
     read: false
   }
 ];
+
+/** Newest first across stored notifications (createdAt) and demo ones (date only). */
+function newestFirst<T extends object>(items: T[]): T[] {
+  const key = (item: T) => {
+    const { createdAt, date } = item as { createdAt?: unknown; date?: unknown };
+    const at = createdAt instanceof Date ? createdAt.toISOString() : createdAt;
+    return String(at ?? date ?? "");
+  };
+  return [...items].sort((a, b) => key(b).localeCompare(key(a)));
+}
 
 function buildNotificationVisibilityFilters(input: {
   userId?: string;
@@ -52,7 +68,9 @@ function buildNotificationVisibilityFilters(input: {
 
 export async function GET(request: NextRequest) {
   if (isDemoMode()) {
-    return jsonResponse({ user: demoUsers[0], notifications: demoNotifications });
+    // The demo session is a student: include their scholarship events from the simulated ledger (C1, FR11).
+    const chain = await loadChainNotifications(undefined);
+    return jsonResponse({ user: demoUsers[0], notifications: newestFirst([...chain, ...demoNotifications]) });
   }
 
   const authResult = await requireSession(request);
@@ -82,13 +100,21 @@ export async function GET(request: NextRequest) {
       })
       .sort({ createdAt: -1 })
       .toArray();
+    const stored = notifications.map((item) => ({
+      ...item,
+      _id: item._id.toString()
+    }));
+
+    // Students also get notifications for their own scholarship events on the blockchain (C1, FR11).
+    const userKey = authResult.session.user?._id ?? authResult.session.firebase.uid;
+    const chain =
+      currentRole === "student" && userKey
+        ? await loadChainNotifications(authResult.session.user?._id, await readChainNotificationIds(database, userKey))
+        : [];
 
     return jsonResponse({
       user: authResult.session.user,
-      notifications: notifications.map((item) => ({
-        ...item,
-        _id: item._id.toString()
-      }))
+      notifications: chain.length ? newestFirst([...stored, ...chain]) : stored
     });
   } catch (error) {
     if (isMongoConnectionError(error)) {
@@ -118,8 +144,9 @@ export async function PATCH(request: NextRequest) {
     return jsonResponse({ message: "No notification ids provided.", updatedCount: 0 });
   }
 
+  const chainIds = ids.filter(isChainNotificationId);
   const objectIds = ids.filter((id) => ObjectId.isValid(id)).map((id) => new ObjectId(id));
-  if (!objectIds.length) {
+  if (!objectIds.length && !chainIds.length) {
     return jsonResponse({ message: "No valid notification ids provided.", updatedCount: 0 });
   }
 
@@ -137,21 +164,29 @@ export async function PATCH(request: NextRequest) {
       return jsonResponse({ message: "Unauthorized", updatedCount: 0 }, 401);
     }
 
-    const result = await database.collection("notifications").updateMany(
-      {
-        _id: { $in: objectIds },
-        read: { $ne: true },
-        $or: visibilityFilters
-      },
-      {
-        $set: {
-          read: true,
-          updatedAt: new Date()
-        }
-      }
-    );
+    // Chain notifications (C1) are derived from the ledger, so their read state is kept per user.
+    const userKey = authResult.session.user?._id ?? authResult.session.firebase.uid;
+    const chainUpdated = userKey ? await markChainNotificationsRead(database, userKey, chainIds) : 0;
 
-    return jsonResponse({ message: "Notifications marked as read", updatedCount: result.modifiedCount });
+    let storedUpdated = 0;
+    if (objectIds.length) {
+      const result = await database.collection("notifications").updateMany(
+        {
+          _id: { $in: objectIds },
+          read: { $ne: true },
+          $or: visibilityFilters
+        },
+        {
+          $set: {
+            read: true,
+            updatedAt: new Date()
+          }
+        }
+      );
+      storedUpdated = result.modifiedCount;
+    }
+
+    return jsonResponse({ message: "Notifications marked as read", updatedCount: storedUpdated + chainUpdated });
   } catch (error) {
     if (isMongoConnectionError(error)) {
       return jsonResponse(

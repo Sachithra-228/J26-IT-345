@@ -2,6 +2,7 @@
 
 import { useCallback, useEffect, useState } from "react";
 import { AssessmentTool } from "@/components/c1/assessment-tool";
+import { ScholarshipUpdates } from "@/components/c1/scholarship-updates";
 import { Button } from "@/components/shared/Button";
 import { Card } from "@/components/shared/Card";
 import { useLanguage } from "@/context/language-context";
@@ -85,6 +86,8 @@ export function StudentAidMatching() {
         <h2 className="text-2xl font-semibold">{t.toolTitle}</h2>
         <p className="mt-1 max-w-3xl text-sm text-slate-600 dark:text-slate-300">{t.toolSubtitle}</p>
       </header>
+
+      <ScholarshipUpdates />
 
       <AssessmentTool scholarships={catalogue} onResult={onResult} />
 

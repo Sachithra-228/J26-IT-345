@@ -141,7 +141,7 @@ Public C1 pages that work without logging in: `/aid-assessment` (private, on-dev
 | `npm run c1:eval-matching` | C1 scholarship-matching evaluation (NDCG) |
 | `npm run c1:chain:test` | C1 contract tests |
 
-**Environment variables** (see `.env.example`): `NEXT_PUBLIC_DEMO_MODE`, `MONGODB_URI`, `MONGODB_DB_NAME`, `NEXT_PUBLIC_FIREBASE_*`, `FIREBASE_WEB_API_KEY`, and the optional C1 ledger settings `C1_RPC_URL`, `C1_ESCROW_ADDRESS`, `C1_DEPLOY_BLOCK`. Secrets live only in `.env.local` / `blockchain/.env` (both git-ignored).
+**Environment variables** (see `.env.example`): `NEXT_PUBLIC_DEMO_MODE`, `MONGODB_URI`, `MONGODB_DB_NAME`, `NEXT_PUBLIC_FIREBASE_*`, `FIREBASE_WEB_API_KEY`, and the optional C1 ledger settings `C1_RPC_URL`, `C1_ESCROW_ADDRESS`, `C1_DEPLOY_BLOCK` and `C1_STUDENT_REF_SALT`. Secrets live only in `.env.local` / `blockchain/.env` (both git-ignored).
 
 ---
 
@@ -162,6 +162,7 @@ Public C1 pages that work without logging in: `/aid-assessment` (private, on-dev
 | Scholarship matching (eligibility + weighted alignment), NDCG evaluation vs rule-based baseline | `src/lib/c1/matching.ts` | Done - target not yet met |
 | Public **Transparency Ledger** with integrity fingerprint | `/transparency`, `/api/c1/ledger` | Done (simulation + live-chain reader) |
 | Downloadable **donor audit report** (CSV for donors, JSON with a re-computable fingerprint for auditors) | `/api/c1/ledger/report`, download buttons on every ledger view, `npm run c1:audit-report` | Done - reads live Sepolia data automatically once deployed |
+| **Student notifications from chain events**: award, milestone verified, payment released or queued, completed, revoked, withdrawn. Only the student's own events (their pseudonymous `studentRef` is recomputed server-side from a secret salt); shown in the notification counts and a *Scholarship updates* card, in English / Sinhala / Tamil | `src/lib/c1/chain-notifications.ts`, `/api/notifications`, `src/components/c1/scholarship-updates.tsx` | Done for chain events (demo: the simulation's `demo-student-001`); deadline reminders not yet |
 | On-device **aid assessment** (nothing leaves the browser) | `/aid-assessment` | Done |
 | 12 **fictional sample students** (rural single-parent, high GPA / low income, large family, comfortable household...) with a "Try a sample student" picker and a per-case evidence report | `src/lib/c1/demo-cases.ts`, `npm run c1:demo-cases` | Done - fictional, for demos |
 | Dashboard sections: student *Smart Aid Matching*; admin / faculty *Aid Prioritisation* and *Fund Ledger*; donor *Fund Transparency* | `src/components/...` | Done (tested; not yet verified with live login) |
@@ -266,7 +267,7 @@ Raw evidence: `docs/c1/evidence/` (`gas-report.json`, `vulnerability-eval.json`,
 
 ### 6.4 Requirements status
 
-Functional (FR) - 7 done, 4 partial, 1 open (weighted 75%):
+Functional (FR) - 7 done, 5 partial, 0 open (weighted 79%):
 
 | ID | Requirement (short) | Status | Gap |
 | --- | --- | --- | --- |
@@ -280,7 +281,7 @@ Functional (FR) - 7 done, 4 partial, 1 open (weighted 75%):
 | FR08 | Ledger of tx hashes + audit reports for donors | Done | Live data once deployed to Sepolia (the report reads it automatically) |
 | FR09 | Admin dashboard: fund flows, approvals, reports | Partial | Link approvals to on-chain awards |
 | FR10 | Donor dashboard | Done | Wallet-specific filtering |
-| FR11 | Notifications on status / disbursement / deadlines | Open | Feed chain events into notifications |
+| FR11 | Notifications on status / disbursement / deadlines | Partial | Chain-event notifications done; scholarship deadline reminders not yet |
 | FR12 | Sinhala / Tamil / English | Done | Native-speaker review |
 
 Non-functional (NFR): met - NFR01 (0 critical), NFR04 (hashes only; `keccak256` used instead of SHA-256), NFR05, NFR07, NFR09; partial - NFR02 (no PII on-chain, but no application-level AES-256 yet), NFR12 (accessible forms, no formal WCAG audit); open - NFR03 (needs Sepolia), NFR06 (latency), NFR08 (SUS), NFR10 (1,000 users), NFR11 (99.9% uptime).
@@ -339,6 +340,7 @@ npm run c1:audit-report  # donor audit report -> docs/c1/evidence/audit-report.c
 4. Grant roles to other wallets (optional): `ADMIN_ADDRESSES=0x...,0x... DONOR_ADDRESSES=0x... npm run roles:sepolia`.
 5. `npm run latency:sepolia` - runs the real workflow (campaign, 12-milestone award, 12 verifications), times each transaction from submit to one confirmation, writes `docs/c1/evidence/latency-sepolia.json`. Target: p95 < 30 s. Report whatever you measure, including a miss.
 6. In `.env.local` (and **Vercel -> Settings -> Environment Variables**) set `C1_RPC_URL`, `C1_ESCROW_ADDRESS`, `C1_DEPLOY_BLOCK`. `/transparency` then shows **Live blockchain** with Etherscan links. The web app only *reads* the chain; never put `DEPLOYER_PRIVATE_KEY` into Vercel.
+7. For student notifications (FR11), also set a secret `C1_STUDENT_REF_SALT` and award with `studentRef = keccak256("<platform user id>:<salt>")`, so the app can recognise each student's own awards. Never change the salt once awards exist.
 
 Local rehearsal without a testnet: `npm run node` + `npm run seed:local` in `blockchain/`, then set `C1_RPC_URL=http://127.0.0.1:8545` with the printed address.
 
