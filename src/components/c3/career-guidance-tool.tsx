@@ -5,6 +5,7 @@ import { memo, useCallback, useEffect, useId, useMemo, useRef, useState, type Ch
 import { Button } from "@/components/shared/Button";
 import { Card } from "@/components/shared/Card";
 import { C3JobCard, SampleJobsHeading } from "./c3-job-card";
+import { CareerReport } from "./career-report";
 import { useLanguage, type Language } from "@/context/language-context";
 import { checkAgainstAd, type AdCheck } from "@/lib/c3/ad-check";
 import { assessCareer, type CareerAssessment, type SkillSource } from "@/lib/c3/assessment";
@@ -14,7 +15,7 @@ import { proposedGaps, type SkillGap } from "@/lib/c3/gaps";
 import { planForRole, type GapToActionPlan, type StepReason } from "@/lib/c3/graph";
 import { fmt, getC3Text, label, type C3Text } from "@/lib/c3/i18n";
 import { saveJobMatchContext } from "@/lib/c3/job-match-context";
-import { normaliseJobs, recommendWithFallback } from "@/lib/c3/job-recommend";
+import { normaliseJobs, recommendWithFallback, type JobLists } from "@/lib/c3/job-recommend";
 import { titlesForRole } from "@/lib/c3/job-titles";
 import { careerModel, getRole, getSkill, type ActionType, type RoleProfile } from "@/lib/c3/model";
 import { proposedReadiness, readinessBand, type RoleReadiness, type SkillLevels } from "@/lib/c3/readiness";
@@ -162,6 +163,8 @@ export function CareerGuidanceTool({ initialProfile, cvEnabled = false, onResult
   const [result, setResult] = useState<CareerAssessment | null>(null);
   const [selected, setSelected] = useState<string | null>(null);
   const [researchView, setResearchView] = useState(false);
+  const [reportOpen, setReportOpen] = useState(false);
+  const closeReport = useCallback(() => setReportOpen(false), []);
   const [openAreas, setOpenAreas] = useState<string[]>([careerModel.taxonomy.areas[0]?.id ?? ""]);
 
   const steps: StepId[] = cvEnabled ? ["about", "cv", "skills", "results"] : ["about", "skills", "results"];
@@ -722,12 +725,17 @@ export function CareerGuidanceTool({ initialProfile, cvEnabled = false, onResult
               targets={targets}
               researchView={researchView}
               onResearchView={setResearchView}
+              reportOpen={reportOpen}
+              onCloseReport={closeReport}
               ctx={ctx}
             />
             {resultsFooter}
-            <div className="flex justify-start">
+            <div className="flex flex-wrap items-center justify-between gap-3">
               <Button type="button" variant="secondary" onClick={() => goTo("skills")}>
                 ← {t.editAnswers}
+              </Button>
+              <Button type="button" data-testid="c3-report-open" onClick={() => setReportOpen(true)}>
+                ⬇ {t.rpButton}
               </Button>
             </div>
           </div>
@@ -843,6 +851,8 @@ const Results = memo(function Results({
   targets,
   researchView,
   onResearchView,
+  reportOpen,
+  onCloseReport,
   ctx
 }: {
   year: 3 | 4;
@@ -853,6 +863,9 @@ const Results = memo(function Results({
   targets: string[];
   researchView: boolean;
   onResearchView: (v: boolean) => void;
+  /** "Download my report (PDF)" was pressed: show the print-ready report. */
+  reportOpen: boolean;
+  onCloseReport: () => void;
   ctx: Ctx;
 }) {
   const { t, language } = ctx;
@@ -866,6 +879,8 @@ const Results = memo(function Results({
   }, [result, selected]);
   const heroBand = detail ? readinessBand(detail.readiness.score) : "early";
   const heroMsg = heroBand === "strong" ? t.heroStrong : heroBand === "developing" ? t.heroDeveloping : t.heroEarly;
+  // "My Career Readiness Report": jobs are included only if the student already loaded them
+  const [jobLists, setJobLists] = useState<JobLists | null>(null);
 
   return (
     <section data-testid="c3-results" className="space-y-5" aria-live="polite">
@@ -889,6 +904,19 @@ const Results = memo(function Results({
             🎓 {year === 3 ? t.yearContext3 : t.yearContext4}
           </p>
         </div>
+      ) : null}
+      {reportOpen && detail ? (
+        <CareerReport
+          result={result}
+          roleId={detail.roleId}
+          readiness={detail.readiness}
+          gaps={detail.gaps}
+          plan={detail.plan}
+          jobs={jobLists}
+          t={t}
+          language={language}
+          onClose={onCloseReport}
+        />
       ) : null}
 
       <Card>
@@ -969,7 +997,7 @@ const Results = memo(function Results({
         <>
           <JobTitlesCard roleId={detail.roleId} ctx={ctx} />
           <AdCheckCard levels={result.levels} onSelect={onSelect} ctx={ctx} />
-          <JobsForYouCard levels={result.levels} roleId={detail.roleId} rankedRoleIds={result.roles.map((r) => r.roleId)} ctx={ctx} />
+          <JobsForYouCard levels={result.levels} roleId={detail.roleId} rankedRoleIds={result.roles.map((r) => r.roleId)} onLists={setJobLists} ctx={ctx} />
           <Breakdown readiness={detail.readiness} sources={result.sources} ctx={ctx} />
           <Gaps gaps={detail.gaps} roleId={detail.roleId} ctx={ctx} />
           <BackgroundTips background={background} roleId={detail.roleId} topGapSkillId={detail.gaps[0]?.skillId ?? null} ctx={ctx} />
@@ -1163,7 +1191,20 @@ const JOB_BOARD_HREF = "/dashboard/student#career";
  * platform job board is fetched once (a plain GET; the student's levels never leave the
  * browser) and ranked for the selected role.
  */
-function JobsForYouCard({ levels, roleId, rankedRoleIds, ctx }: { levels: SkillLevels; roleId: string; rankedRoleIds: string[]; ctx: Ctx }) {
+function JobsForYouCard({
+  levels,
+  roleId,
+  rankedRoleIds,
+  onLists,
+  ctx
+}: {
+  levels: SkillLevels;
+  roleId: string;
+  rankedRoleIds: string[];
+  /** Hands the ranked lists to the results (for the printable report). */
+  onLists?: (lists: JobLists | null) => void;
+  ctx: Ctx;
+}) {
   const { t, language } = ctx;
   const uid = useId();
   const [state, setState] = useState<JobsState>({ status: "idle" });
@@ -1200,6 +1241,9 @@ function JobsForYouCard({ levels, roleId, rankedRoleIds, ctx }: { levels: SkillL
         : null,
     [state, levels, roleId, otherRoles]
   );
+  useEffect(() => {
+    onLists?.(lists);
+  }, [lists, onLists]);
   const role = roleName(roleId, language);
 
   return (
