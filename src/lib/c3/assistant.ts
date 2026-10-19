@@ -33,11 +33,15 @@ export type IntentId =
   | "resources"
   | "certifications"
   | "interview"
+  | "jobs"
   | "about"
   | "help";
 
 /** Where an answer's facts come from; the UI shows these under every answer. */
-export type SourceId = "readiness" | "gaps" | "plan" | "roleProfile" | "graph" | "interview" | "model";
+export type SourceId = "readiness" | "gaps" | "plan" | "roleProfile" | "graph" | "interview" | "jobBoard" | "model";
+
+/** Parts of C3 an answer can open with "Open this section". */
+export type SectionId = "readiness" | "gaps" | "plan" | "jobs";
 
 export type Intent = {
   id: IntentId;
@@ -71,7 +75,7 @@ export const INTENTS: Intent[] = [
   },
   {
     id: "bestRole",
-    cues: ["best", "suit", "suits", "suitable", "fit", "which role", "which job", "career for me", "recommend", "should i choose", "ගැළපෙන", "பொருத்தமான"],
+    cues: ["best", "suit", "suits", "suitable", "fit", "which role", "career for me", "recommend", "should i choose", "ගැළපෙන", "பொருத்தமான"],
     needsAssessment: true,
     sources: ["readiness"],
     followUps: ["readiness", "compareRoles", "roleRequirements"]
@@ -126,6 +130,13 @@ export const INTENTS: Intent[] = [
     followUps: ["gaps", "nextStep"]
   },
   {
+    id: "jobs",
+    cues: ["jobs", "vacancy", "vacancies", "openings", "hiring", "job board", "which job", "which jobs", "jobs fit", "jobs for me", "open jobs", "apply for", "රැකියා", "வேலைகள்"],
+    needsAssessment: true,
+    sources: ["readiness", "jobBoard"],
+    followUps: ["gaps", "nextStep", "certifications"]
+  },
+  {
     id: "about",
     cues: ["privacy", "private", "my data", "accurate", "accuracy", "trust", "synthetic", "how does", "how do you work", "guarantee", "who are you", "පෞද්ගලික", "දත්ත", "தனிப்பட்ட", "தரவு"],
     needsAssessment: false,
@@ -172,6 +183,21 @@ export type AssistantAnswer = {
   followUps: IntentId[];
   /** False when the assistant could not answer (no analysis yet, unknown question). */
   grounded: boolean;
+  /** The part of C3 this answer is about; the UI shows an "Open this section" button. */
+  section?: SectionId;
+  /** The role the answer is about (used to open the matched job board). */
+  roleId?: string;
+};
+
+/** Which part of C3 each answer refers to. */
+const SECTION_OF: Partial<Record<IntentId, SectionId>> = {
+  readiness: "readiness",
+  scoreReason: "readiness",
+  bestRole: "readiness",
+  compareRoles: "readiness",
+  gaps: "gaps",
+  nextStep: "plan",
+  jobs: "jobs"
 };
 
 export const MIN_CONFIDENCE = 0.34;
@@ -738,6 +764,12 @@ function interviewAnswer(b: Build): Line[] {
   return lines;
 }
 
+function jobsAnswer(b: Build): Line[] {
+  const roleId = focusRoleId(b);
+  const role = roleId ? roleName(roleId, b.language) : "";
+  return [text(fmt(b.a.jobsIntro, { role })), bullet(b.a.jobsCard), bullet(b.a.jobsPrivacy)];
+}
+
 function helpAnswer(b: Build): Line[] {
   return [text(b.a.helpIntro), text(b.a.helpTopics)];
 }
@@ -757,12 +789,67 @@ const BUILDERS: Record<IntentId, (b: Build) => Line[]> = {
   resources: resourcesAnswer,
   certifications: certificationsAnswer,
   interview: interviewAnswer,
+  jobs: jobsAnswer,
   about: aboutAnswer,
   help: helpAnswer
 };
 
-function notUnderstood(b: Build): AssistantAnswer {
-  return { intent: "help", lines: [text(b.a.unknown), ...helpAnswer(b)], sources: [], followUps: getIntent("help").followUps, grounded: false };
+/** The suggested-question text for each topic (the same buttons the UI shows). */
+export const QUESTION_KEYS: Record<IntentId, keyof AssistantText> = {
+  readiness: "qReadiness",
+  scoreReason: "qScoreReason",
+  bestRole: "qBestRole",
+  gaps: "qGaps",
+  nextStep: "qNextStep",
+  compareRoles: "qCompareRoles",
+  roleRequirements: "qRoleRequirements",
+  resources: "qResources",
+  certifications: "qCertifications",
+  interview: "qInterview",
+  jobs: "qJobs",
+  about: "qAbout",
+  help: "qHelp"
+};
+
+const STOP_WORDS = new Set([
+  "i", "me", "my", "the", "a", "an", "is", "am", "are", "do", "does", "did", "what", "which", "how", "to", "for", "of",
+  "in", "on", "and", "or", "you", "your", "can", "could", "should", "with", "it", "this", "that", "be", "get", "about"
+]);
+
+/**
+ * For a question that matched no topic: the (up to 3) suggested questions that share the
+ * most words with it (exact, or a close spelling for words of 5+ letters), in topic order on
+ * ties. Empty when nothing is shared.
+ */
+export function closestSuggestions(question: string, a: AssistantText): IntentId[] {
+  const words = tokenize(question.toLowerCase()).filter((w) => !STOP_WORDS.has(w));
+  if (!words.length) return [];
+  return INTENTS.filter((i) => i.id !== "help")
+    .map((intent, order) => {
+      const qTokens = tokenize(String(a[QUESTION_KEYS[intent.id]]).toLowerCase()).filter((w) => !STOP_WORDS.has(w));
+      const score = words.reduce((sum, w) => {
+        if (qTokens.includes(w)) return sum + 1;
+        const close = w.length >= FUZZY_CUE_MIN && qTokens.some((q) => q.length >= FUZZY_CUE_MIN && q[0] === w[0] && fuzzRatio(q, w) >= FUZZY_CUE_RATIO);
+        return sum + (close ? 0.75 : 0);
+      }, 0);
+      return { id: intent.id, score, order };
+    })
+    .filter((x) => x.score > 0)
+    .sort((x, y) => y.score - x.score || x.order - y.order)
+    .slice(0, 3)
+    .map((x) => x.id);
+}
+
+/** Unknown question: suggest the closest suggested questions, else the usual three. */
+function notUnderstood(b: Build, question = ""): AssistantAnswer {
+  const closest = closestSuggestions(question, b.a);
+  return {
+    intent: "help",
+    lines: [text(b.a.unknown), ...helpAnswer(b)],
+    sources: [],
+    followUps: closest.length ? closest : getIntent("help").followUps,
+    grounded: false
+  };
 }
 
 /** Answers one intent from the context (also used directly by the suggested-question buttons). */
@@ -775,16 +862,26 @@ export function answerIntent(
   const intent = getIntent(intentId);
   const b: Build = { language, t: getC3Text(language), a: getAssistantText(language), ctx, match };
   if (intent.needsAssessment && !ctx.assessment) {
-    return { intent: intentId, lines: [text(b.a.needAnalysis)], sources: [], followUps: ["roleRequirements", "about"], grounded: false };
+    return { intent: intentId, lines: [text(b.a.needAnalysis)], sources: [], followUps: ["roleRequirements", "about"], grounded: false, section: "readiness" };
   }
-  return { intent: intentId, lines: BUILDERS[intentId](b), sources: intent.sources, followUps: intent.followUps, grounded: true };
+  const section = SECTION_OF[intentId];
+  const roleId = section === "jobs" ? (focusRoleId(b) ?? undefined) : undefined;
+  return {
+    intent: intentId,
+    lines: BUILDERS[intentId](b),
+    sources: intent.sources,
+    followUps: intent.followUps,
+    grounded: true,
+    ...(section ? { section } : {}),
+    ...(roleId ? { roleId } : {})
+  };
 }
 
 /** Matches a free-text question and answers it. */
 export function answerQuestion(question: string, ctx: AssistantContext, language: Language): AssistantAnswer {
   const m = matchIntent(question);
   if (m.confidence < MIN_CONFIDENCE) {
-    return notUnderstood({ language, t: getC3Text(language), a: getAssistantText(language), ctx, match: m });
+    return notUnderstood({ language, t: getC3Text(language), a: getAssistantText(language), ctx, match: m }, question);
   }
   let intent = m.intent;
   // On a tie, prefer a topic that can be answered without the analysis if it has not been run.

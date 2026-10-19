@@ -13,7 +13,7 @@ const en = {
   title: "Career assistant",
   subtitle:
     "Ask questions about your readiness, gaps and next steps. Every answer comes from your own analysis and the C3 job-ad model - and says where it came from.",
-  note: "A rule-based helper, not a chatbot: it answers a fixed set of career topics and cannot judge anything outside your C3 results. Ask in English (a few Sinhala and Tamil keywords also work) or use the suggestions.",
+  note: "A rule-based helper, not a chatbot: it answers a fixed set of career topics from your C3 results. Role profiles are currently built from synthetic job ads; skill extraction has been checked on 255 real Sri Lankan job ads.",
   noAnalysisYet: "Tip: run the readiness analysis first - most answers need it. Questions about roles, learning and certifications work without it.",
   welcome: "Hi! Pick a suggested question below or type your own.",
   you: "You",
@@ -34,10 +34,19 @@ const en = {
   qCompareRoles: "Compare my target roles",
   qRoleRequirements: "What does my target role require?",
   qResources: "How can I learn my top gap?",
-  qCertifications: "Which certifications would help?",
+  qCertifications: "Which certifications should I get?",
   qInterview: "How can I do better in interviews?",
   qAbout: "How do you work, and is my data private?",
   qHelp: "What can I ask you?",
+  qJobs: "Which jobs fit me?",
+  howItWorks: "How this works",
+  openReadiness: "Open my readiness",
+  openGaps: "Open my skill gaps",
+  openPlan: "Open my plan",
+  openJobs: "Open matched jobs in Career",
+  jobsIntro: "I can open the Career job board sorted for {role}: jobs that fit this role come first, each with your match % and the skills you are missing.",
+  jobsCard: "Your readiness results also show the top 3 under \"Jobs that fit you\".",
+  jobsPrivacy: "Your skill levels stay in this browser; only the public job list is downloaded.",
   needAnalysis:
     "I need your readiness analysis first. Open the \"Readiness and plan\" tab, rate your skills, choose your target roles and press \"Analyse my readiness\" - then ask me again.",
   unknown:
@@ -109,7 +118,7 @@ const en = {
   // help and about
   helpIntro: "I am the C3 career assistant. You can ask me, for example:",
   helpTopics:
-    "how ready you are · why you got that score · which role suits you · your skill gaps · what to do next · comparing two roles · what a role requires · how to learn a skill · certifications · how your mock interview went",
+    "how ready you are · why you got that score · which role suits you · your skill gaps · what to do next · comparing two roles · what a role requires · how to learn a skill · certifications · how your mock interview went · which jobs fit you",
   aboutRules:
     "I am a rule-based assistant, not a chatbot: I match your question to a topic and answer only from your own C3 results, so I do not make anything up.",
   aboutPrivacy: "Everything runs in your browser. Your questions and answers are not sent or saved.",
@@ -123,6 +132,7 @@ const en = {
   srcRoleProfile: "job-ad role profiles",
   srcGraph: "the Gap-to-Action knowledge graph",
   srcInterview: "your mock-interview summary",
+  srcJobBoard: "the platform's Career job board",
   srcModel: "how the C3 model was built"
 };
 
@@ -133,7 +143,7 @@ const si: AssistantText = {
   title: "වෘත්තීය සහායක",
   subtitle:
     "ඔබේ සූදානම, හිඩැස් සහ ඊළඟ පියවර ගැන ප්‍රශ්න අසන්න. සෑම පිළිතුරක්ම ඔබේම විශ්ලේෂණයෙන් සහ C3 රැකියා-දැන්වීම් ආකෘතියෙන් ලැබෙන අතර, එය කොතැනින් ආවේද යන්නත් පෙන්වයි.",
-  note: "මෙය චැට්බොට් එකක් නොව නීති-පාදක සහායකයෙකි: නියමිත වෘත්තීය මාතෘකා කිහිපයකට පමණක් පිළිතුරු දෙන අතර ඔබේ C3 ප්‍රතිඵලවලින් පිටත කිසිවක් විනිශ්චය කළ නොහැක. ඉංග්‍රීසියෙන් අසන්න (සිංහල මූල පද කිහිපයක්ද ක්‍රියා කරයි) හෝ යෝජනා භාවිත කරන්න.",
+  note: "මෙය චැට්බොට් එකක් නොව නීති-පාදක සහායකයෙකි: ඔබේ C3 ප්‍රතිඵල වලින් නියමිත වෘත්තීය මාතෘකා කිහිපයකට පිළිතුරු දෙයි. භූමිකා පැතිකඩ දැනට සාදා ඇත්තේ කෘත්‍රිම රැකියා දැන්වීම් වලිනි; කුසලතා හඳුනා ගැනීම සැබෑ ශ්‍රී ලංකා රැකියා දැන්වීම් 255 කින් පරීක්ෂා කර ඇත.",
   noAnalysisYet:
     "ඉඟිය: පළමුව සූදානම් විශ්ලේෂණය කරන්න - බොහෝ පිළිතුරුවලට එය අවශ්‍යයි. භූමිකා, ඉගෙනීම සහ සහතික ගැන ප්‍රශ්න එය නොමැතිවද ක්‍රියා කරයි.",
   welcome: "ආයුබෝවන්! පහත යෝජිත ප්‍රශ්නයක් තෝරන්න, නැතහොත් ඔබේම ප්‍රශ්නයක් ටයිප් කරන්න.",
@@ -155,10 +165,19 @@ const si: AssistantText = {
   qCompareRoles: "මගේ ඉලක්ක භූමිකා සසඳන්න",
   qRoleRequirements: "මගේ ඉලක්ක භූමිකාවට අවශ්‍ය මොනවාද?",
   qResources: "මගේ ප්‍රධාන හිඩැස ඉගෙන ගන්නේ කෙසේද?",
-  qCertifications: "උදව් වන සහතික මොනවාද?",
+  qCertifications: "මා ලබා ගත යුතු සහතික මොනවාද?",
   qInterview: "සම්මුඛ පරීක්ෂණවලදී වඩා හොඳින් කරන්නේ කෙසේද?",
   qAbout: "ඔබ ක්‍රියා කරන්නේ කෙසේද, මගේ දත්ත පෞද්ගලිකද?",
   qHelp: "මට ඔබෙන් අසන්න පුළුවන් මොනවාද?",
+  qJobs: "මට ගැළපෙන රැකියා මොනවාද?",
+  howItWorks: "මෙය ක්‍රියා කරන ආකාරය",
+  openReadiness: "මගේ සූදානම විවෘත කරන්න",
+  openGaps: "මගේ කුසලතා හිඩැස් විවෘත කරන්න",
+  openPlan: "මගේ සැලැස්ම විවෘත කරන්න",
+  openJobs: "Career හි ගැළපෙන රැකියා විවෘත කරන්න",
+  jobsIntro: "{role} සඳහා පෙළගැස්වූ Career රැකියා පුවරුව මට විවෘත කළ හැක: මෙම භූමිකාවට ගැළපෙන රැකියා මුලින් පෙන්වයි, එක එකක් සමඟ ඔබේ ගැළපීම % සහ අඩු කුසලතා.",
+  jobsCard: "ඔබේ සූදානම් ප්‍රතිඵලවල \"ඔබට ගැළපෙන රැකියා\" යටතේ හොඳම 3 ද පෙන්වයි.",
+  jobsPrivacy: "ඔබේ කුසලතා මට්ටම් මෙම browser එකේ පමණක් රැඳේ; බාගත කරන්නේ පොදු රැකියා ලැයිස්තුව පමණි.",
   needAnalysis:
     "පළමුව මට ඔබේ සූදානම් විශ්ලේෂණය අවශ්‍යයි. \"සූදානම සහ සැලැස්ම\" ටැබය විවෘත කර, ඔබේ කුසලතා ශ්‍රේණිගත කර, ඉලක්ක භූමිකා තෝරා \"මගේ සූදානම විශ්ලේෂණය කරන්න\" ඔබන්න - ඉන්පසු නැවත අසන්න.",
   unknown:
@@ -220,7 +239,7 @@ const si: AssistantText = {
   ivWeakest: "ඔබේ දුර්වලම ක්ෂේත්‍රය {criterion} ({score}/100). ඉඟිය:",
   helpIntro: "මම C3 වෘත්තීය සහායකයා. උදාහරණයක් ලෙස ඔබට මගෙන් අසන්න පුළුවන්:",
   helpTopics:
-    "ඔබ කොතරම් සූදානම්ද · ඔබට එම ලකුණ ලැබුණේ ඇයි · ඔබට ගැළපෙන භූමිකාව · ඔබේ කුසලතා හිඩැස් · ඊළඟට කළ යුතු දේ · භූමිකා දෙකක් සැසඳීම · භූමිකාවකට අවශ්‍ය දේ · කුසලතාවයක් ඉගෙන ගන්නා ආකාරය · සහතික · ඔබේ ආදර්ශ සම්මුඛ පරීක්ෂණය",
+    "ඔබ කොතරම් සූදානම්ද · ඔබට එම ලකුණ ලැබුණේ ඇයි · ඔබට ගැළපෙන භූමිකාව · ඔබේ කුසලතා හිඩැස් · ඊළඟට කළ යුතු දේ · භූමිකා දෙකක් සැසඳීම · භූමිකාවකට අවශ්‍ය දේ · කුසලතාවයක් ඉගෙන ගන්නා ආකාරය · සහතික · ඔබේ ආදර්ශ සම්මුඛ පරීක්ෂණය · ඔබට ගැළපෙන රැකියා",
   aboutRules:
     "මම චැට්බොට් එකක් නොව නීති-පාදක සහායකයෙක්: ඔබේ ප්‍රශ්නය මාතෘකාවකට ගළපා ඔබේම C3 ප්‍රතිඵලවලින් පමණක් පිළිතුරු දෙමි, එබැවින් මම කිසිවක් ගොතන්නේ නැත.",
   aboutPrivacy: "සියල්ල ක්‍රියා කරන්නේ ඔබේ බ්‍රවුසරය තුළයි. ඔබේ ප්‍රශ්න සහ පිළිතුරු යවන්නේ හෝ සුරකින්නේ නැත.",
@@ -233,6 +252,7 @@ const si: AssistantText = {
   srcRoleProfile: "රැකියා-දැන්වීම් භූමිකා පැතිකඩ",
   srcGraph: "Gap-to-Action දැනුම් ප්‍රස්තාරය",
   srcInterview: "ඔබේ ආදර්ශ සම්මුඛ පරීක්ෂණ සාරාංශය",
+  srcJobBoard: "platform එකේ Career රැකියා පුවරුව",
   srcModel: "C3 ආකෘතිය සාදා ඇති ආකාරය"
 };
 
@@ -241,7 +261,7 @@ const ta: AssistantText = {
   title: "தொழில் உதவியாளர்",
   subtitle:
     "உங்கள் தயார்நிலை, இடைவெளிகள் மற்றும் அடுத்த படிகள் பற்றிக் கேளுங்கள். ஒவ்வொரு பதிலும் உங்கள் சொந்தப் பகுப்பாய்விலிருந்தும் C3 வேலை-விளம்பர மாதிரியிலிருந்தும் வருகிறது - அது எங்கிருந்து வந்தது என்பதையும் காட்டும்.",
-  note: "இது ஒரு அரட்டை இயந்திரம் (chatbot) அல்ல, விதி அடிப்படையிலான உதவியாளர்: குறிப்பிட்ட தொழில் தலைப்புகளுக்கு மட்டுமே பதிலளிக்கும், உங்கள் C3 முடிவுகளுக்கு வெளியே எதையும் மதிப்பிட முடியாது. ஆங்கிலத்தில் கேளுங்கள் (சில தமிழ் முக்கியச் சொற்களும் வேலை செய்யும்) அல்லது பரிந்துரைகளைப் பயன்படுத்துங்கள்.",
+  note: "இது ஒரு அரட்டை இயந்திரம் (chatbot) அல்ல, விதி அடிப்படையிலான உதவியாளர்: உங்கள் C3 முடிவுகளிலிருந்து குறிப்பிட்ட தொழில் தலைப்புகளுக்குப் பதிலளிக்கும். பணி சுயவிவரங்கள் தற்போது செயற்கை வேலை விளம்பரங்களிலிருந்து உருவாக்கப்பட்டுள்ளன; திறன் பிரித்தெடுப்பு 255 உண்மையான இலங்கை வேலை விளம்பரங்களில் சரிபார்க்கப்பட்டுள்ளது.",
   noAnalysisYet:
     "குறிப்பு: முதலில் தயார்நிலைப் பகுப்பாய்வைச் செய்யுங்கள் - பெரும்பாலான பதில்களுக்கு அது தேவை. பணிப்பாத்திரங்கள், கற்றல், சான்றிதழ்கள் பற்றிய கேள்விகள் அது இல்லாமலும் வேலை செய்யும்.",
   welcome: "வணக்கம்! கீழே உள்ள பரிந்துரைக்கப்பட்ட கேள்வியைத் தேர்ந்தெடுங்கள் அல்லது உங்கள் சொந்தக் கேள்வியைத் தட்டச்சு செய்யுங்கள்.",
@@ -263,10 +283,19 @@ const ta: AssistantText = {
   qCompareRoles: "என் இலக்குப் பணிப்பாத்திரங்களை ஒப்பிடு",
   qRoleRequirements: "என் இலக்குப் பணிப்பாத்திரத்திற்கு என்ன தேவை?",
   qResources: "என் முதன்மை இடைவெளியை எப்படிக் கற்றுக்கொள்வது?",
-  qCertifications: "எந்தச் சான்றிதழ்கள் உதவும்?",
+  qCertifications: "நான் எந்தச் சான்றிதழ்களைப் பெற வேண்டும்?",
   qInterview: "நேர்காணல்களில் எப்படிச் சிறப்பாகச் செய்வது?",
   qAbout: "நீங்கள் எப்படி வேலை செய்கிறீர்கள், என் தரவு தனிப்பட்டதா?",
   qHelp: "நான் உங்களிடம் என்ன கேட்கலாம்?",
+  qJobs: "எனக்கு எந்த வேலைகள் பொருந்தும்?",
+  howItWorks: "இது எவ்வாறு செயல்படுகிறது",
+  openReadiness: "எனது தயார்நிலையைத் திற",
+  openGaps: "எனது திறன் இடைவெளிகளைத் திற",
+  openPlan: "எனது திட்டத்தைத் திற",
+  openJobs: "Career இல் பொருந்தும் வேலைகளைத் திற",
+  jobsIntro: "{role} க்காக வரிசைப்படுத்தப்பட்ட Career வேலை வாரியத்தை என்னால் திறக்க முடியும்: இந்தப் பணிக்குப் பொருந்தும் வேலைகள் முதலில், ஒவ்வொன்றுடனும் உங்கள் பொருத்தம் % மற்றும் இல்லாத திறன்கள்.",
+  jobsCard: "உங்கள் தயார்நிலை முடிவுகளில் \"உங்களுக்குப் பொருந்தும் வேலைகள்\" கீழ் சிறந்த 3 உம் காட்டப்படும்.",
+  jobsPrivacy: "உங்கள் திறன் நிலைகள் இந்த browser இல் மட்டுமே இருக்கும்; பொது வேலைப் பட்டியல் மட்டுமே பதிவிறக்கப்படும்.",
   needAnalysis:
     "முதலில் உங்கள் தயார்நிலைப் பகுப்பாய்வு எனக்குத் தேவை. \"தயார்நிலை மற்றும் திட்டம்\" தாவலைத் திறந்து, உங்கள் திறன்களை மதிப்பிட்டு, இலக்குப் பணிப்பாத்திரங்களைத் தேர்ந்தெடுத்து \"என் தயார்நிலையைப் பகுப்பாய்வு செய்\" என்பதை அழுத்துங்கள் - பிறகு மீண்டும் கேளுங்கள்.",
   unknown:
@@ -328,7 +357,7 @@ const ta: AssistantText = {
   ivWeakest: "உங்கள் பலவீனமான பகுதி {criterion} ({score}/100). குறிப்பு:",
   helpIntro: "நான் C3 தொழில் உதவியாளர். உதாரணமாக நீங்கள் என்னிடம் கேட்கலாம்:",
   helpTopics:
-    "நீங்கள் எவ்வளவு தயார் · அந்த மதிப்பெண் ஏன் · உங்களுக்குப் பொருந்தும் பணிப்பாத்திரம் · உங்கள் திறன் இடைவெளிகள் · அடுத்து என்ன செய்வது · இரண்டு பணிப்பாத்திரங்களை ஒப்பிடுதல் · ஒரு பணிப்பாத்திரத்திற்கு என்ன தேவை · ஒரு திறனைக் கற்பது எப்படி · சான்றிதழ்கள் · உங்கள் மாதிரி நேர்காணல்",
+    "நீங்கள் எவ்வளவு தயார் · அந்த மதிப்பெண் ஏன் · உங்களுக்குப் பொருந்தும் பணிப்பாத்திரம் · உங்கள் திறன் இடைவெளிகள் · அடுத்து என்ன செய்வது · இரண்டு பணிப்பாத்திரங்களை ஒப்பிடுதல் · ஒரு பணிப்பாத்திரத்திற்கு என்ன தேவை · ஒரு திறனைக் கற்பது எப்படி · சான்றிதழ்கள் · உங்கள் மாதிரி நேர்காணல் · உங்களுக்குப் பொருந்தும் வேலைகள்",
   aboutRules:
     "நான் அரட்டை இயந்திரம் அல்ல, விதி அடிப்படையிலான உதவியாளர்: உங்கள் கேள்வியை ஒரு தலைப்புடன் பொருத்தி உங்கள் சொந்த C3 முடிவுகளிலிருந்து மட்டுமே பதிலளிக்கிறேன், எனவே எதையும் புனைவதில்லை.",
   aboutPrivacy: "அனைத்தும் உங்கள் உலாவியிலேயே இயங்குகின்றன. உங்கள் கேள்விகளும் பதில்களும் அனுப்பப்படுவதோ சேமிக்கப்படுவதோ இல்லை.",
@@ -341,6 +370,7 @@ const ta: AssistantText = {
   srcRoleProfile: "வேலை-விளம்பர பணிப்பாத்திர விவரங்கள்",
   srcGraph: "Gap-to-Action அறிவு வரைபடம்",
   srcInterview: "உங்கள் மாதிரி நேர்காணல் சுருக்கம்",
+  srcJobBoard: "platform இன் Career வேலை வாரியம்",
   srcModel: "C3 மாதிரி உருவாக்கப்பட்ட விதம்"
 };
 
