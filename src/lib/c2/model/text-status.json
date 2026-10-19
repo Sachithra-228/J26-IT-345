@@ -1,0 +1,1 @@
+{"version":"c2-text-tfidf-ovr-v1","source":"GoEmotions","language":"English","trainingExamples":42854,"testExamples":5313,"microF1":0.5552300261303349,"macroF1":0.4084435665544031,"baselineMicroF1":0.30540845559510377,"features":5000,"warning":"Public emotion benchmark only. No clinical/referral validation."}
