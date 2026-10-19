@@ -101,6 +101,31 @@ describe("AssessmentTool", () => {
     render(withLanguage(<AssessmentTool />));
     expect(screen.getByText(/synthetic data/i)).toBeInTheDocument();
   });
+
+  it("fills the form from a fictional sample student and scores it", async () => {
+    const user = userEvent.setup();
+    render(withLanguage(<AssessmentTool />));
+
+    await user.selectOptions(screen.getByLabelText("Try a sample student"), "S04");
+    expect(screen.getByLabelText(/monthly household income/i)).toHaveValue(18000);
+    expect(screen.getByText(/fictional profiles for demonstration/i)).toBeInTheDocument();
+
+    await user.click(screen.getByRole("button", { name: "Calculate" }));
+    const needy = Number((await screen.findByTestId("vi-value")).textContent);
+
+    await user.selectOptions(screen.getByLabelText("Try a sample student"), "S12");
+    expect(screen.queryByTestId("vi-value")).not.toBeInTheDocument(); // old result cleared
+    await user.click(screen.getByRole("button", { name: "Calculate" }));
+    const comfortable = Number((await screen.findByTestId("vi-value")).textContent);
+
+    expect(needy).toBeGreaterThan(comfortable);
+  });
+
+  it("labels the sample students in Sinhala", async () => {
+    window.localStorage.setItem("unicare-language", "si");
+    render(withLanguage(<AssessmentTool />));
+    expect(await screen.findByRole("option", { name: /ගම්බද තනි දෙමාපිය පවුල/ })).toBeInTheDocument();
+  });
 });
 
 describe("LedgerExplorer", () => {

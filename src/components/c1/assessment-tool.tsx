@@ -6,6 +6,7 @@ import { Button } from "@/components/shared/Button";
 import { Input } from "@/components/shared/Input";
 import { Select } from "@/components/shared/Select";
 import { useLanguage } from "@/context/language-context";
+import { demoCases } from "@/lib/c1/demo-cases";
 import { illustrativeScholarships } from "@/lib/c1/demo-scholarships";
 import { getC1Text } from "@/lib/c1/i18n";
 import { rankScholarships, type Recommendation, type ScholarshipCriteria } from "@/lib/c1/matching";
@@ -52,6 +53,27 @@ const DEFAULTS: FormState = {
   gpa: "3.0",
   year: "3"
 };
+
+/** Fills the form from a profile (used by the "Try a sample student" picker). */
+function profileToForm(p: StudentFinancialProfile): FormState {
+  return {
+    income: String(p.monthlyHouseholdIncomeLkr),
+    householdSize: String(p.householdSize),
+    dependents: String(p.dependents),
+    siblings: String(p.siblingsInEducation),
+    guardian: p.guardianEmployment,
+    singleParent: p.singleParent,
+    rural: p.ruralDistrict,
+    shock: p.financialShockLastYear,
+    hasLoan: p.hasEducationLoan,
+    loanAmount: String(p.loanAmountLkr),
+    expenses: String(p.monthlyExpensesLkr),
+    accommodation: p.accommodation,
+    currentScholarship: p.currentScholarship,
+    gpa: String(p.gpa),
+    year: p.yearOfStudy === 4 ? "4" : "3"
+  };
+}
 
 type Errors = Partial<Record<keyof FormState, true>>;
 
@@ -136,10 +158,20 @@ export function AssessmentTool({ scholarships = illustrativeScholarships, onResu
   const uid = useId();
   const id = (name: string) => `${uid}-${name}`;
   const [form, setForm] = useState<FormState>(DEFAULTS);
+  const [sampleId, setSampleId] = useState("");
   const [errors, setErrors] = useState<Errors>({});
   const [result, setResult] = useState<{ assessment: VulnerabilityAssessment; recs: Recommendation[] } | null>(null);
 
   const set = <K extends keyof FormState>(key: K, value: FormState[K]) => setForm((prev) => ({ ...prev, [key]: value }));
+
+  function loadSample(nextId: string) {
+    setSampleId(nextId);
+    const sample = demoCases.find((c) => c.id === nextId);
+    if (!sample) return;
+    setForm(profileToForm(sample.profile));
+    setErrors({});
+    setResult(null);
+  }
 
   function onSubmit(event: FormEvent) {
     event.preventDefault();
@@ -199,6 +231,17 @@ export function AssessmentTool({ scholarships = illustrativeScholarships, onResu
           <p className="rounded-lg bg-amber-50 px-3 py-2 text-xs text-amber-900 dark:bg-amber-950 dark:text-amber-100">
             {t.syntheticNote}
           </p>
+          <Field label={t.sampleLabel} htmlFor={id("sample")}>
+            <Select id={id("sample")} value={sampleId} onChange={(e) => loadSample(e.target.value)} className={ring}>
+              <option value="">{t.samplePlaceholder}</option>
+              {demoCases.map((c) => (
+                <option key={c.id} value={c.id}>
+                  {c.id} · {c.label[language] ?? c.label.en}
+                </option>
+              ))}
+            </Select>
+          </Field>
+          <p className="text-xs text-slate-500">{t.sampleNote}</p>
         </Card>
 
         <Card>
@@ -288,6 +331,7 @@ export function AssessmentTool({ scholarships = illustrativeScholarships, onResu
             className={ring}
             onClick={() => {
               setForm(DEFAULTS);
+              setSampleId("");
               setErrors({});
               setResult(null);
             }}
