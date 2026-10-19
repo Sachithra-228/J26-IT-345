@@ -3,6 +3,7 @@
  */
 import { NextRequest } from "next/server";
 import { GET as getLedger } from "@/app/api/c1/ledger/route";
+import { GET as getReport } from "@/app/api/c1/ledger/report/route";
 import { DELETE, GET, POST } from "@/app/api/c1/assessments/route";
 import { demoUsers } from "@/lib/demo-data";
 
@@ -68,6 +69,35 @@ describe("GET /api/c1/ledger", () => {
   it("exposes no personal data - only hashes and addresses", async () => {
     const data = await (await getLedger(req("/api/c1/ledger"))).json();
     const text = JSON.stringify(data);
+    for (const user of demoUsers) {
+      expect(text).not.toContain(user.email);
+      expect(text).not.toContain(user.name);
+    }
+  });
+});
+
+describe("GET /api/c1/ledger/report", () => {
+  it("downloads a CSV audit report by default", async () => {
+    const res = await getReport(req("/api/c1/ledger/report"));
+    expect(res.status).toBe(200);
+    expect(res.headers.get("content-type")).toContain("text/csv");
+    expect(res.headers.get("content-disposition")).toMatch(/^attachment; filename="unicare-c1-audit-.+\.csv"$/);
+    const text = await res.text();
+    expect(text).toContain("UniCare Connect - C1 scholarship audit report");
+    expect(text).toContain("Date (UTC),Event,");
+  });
+
+  it("gives the same fingerprint as the public ledger, in CSV and JSON", async () => {
+    const ledgerData = await (await getLedger(req("/api/c1/ledger"))).json();
+    const csv = await (await getReport(req("/api/c1/ledger/report?format=csv"))).text();
+    const json = await (await getReport(req("/api/c1/ledger/report?format=json"))).json();
+    expect(csv).toContain(ledgerData.digest);
+    expect(json.integrity.digest).toBe(ledgerData.digest);
+    expect(json.events).toHaveLength(ledgerData.meta.eventCount);
+  });
+
+  it("contains no personal data", async () => {
+    const text = await (await getReport(req("/api/c1/ledger/report?format=json"))).text();
     for (const user of demoUsers) {
       expect(text).not.toContain(user.email);
       expect(text).not.toContain(user.name);

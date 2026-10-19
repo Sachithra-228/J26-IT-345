@@ -161,6 +161,7 @@ Public C1 pages that work without logging in: `/aid-assessment` (private, on-dev
 | Python-to-TypeScript model parity (runs on Vercel, no Python service) | `src/lib/c1/vulnerability.ts` | Done - parity test |
 | Scholarship matching (eligibility + weighted alignment), NDCG evaluation vs rule-based baseline | `src/lib/c1/matching.ts` | Done - target not yet met |
 | Public **Transparency Ledger** with integrity fingerprint | `/transparency`, `/api/c1/ledger` | Done (simulation + live-chain reader) |
+| Downloadable **donor audit report** (CSV for donors, JSON with a re-computable fingerprint for auditors) | `/api/c1/ledger/report`, download buttons on every ledger view, `npm run c1:audit-report` | Done - reads live Sepolia data automatically once deployed |
 | On-device **aid assessment** (nothing leaves the browser) | `/aid-assessment` | Done |
 | 12 **fictional sample students** (rural single-parent, high GPA / low income, large family, comfortable household...) with a "Try a sample student" picker and a per-case evidence report | `src/lib/c1/demo-cases.ts`, `npm run c1:demo-cases` | Done - fictional, for demos |
 | Dashboard sections: student *Smart Aid Matching*; admin / faculty *Aid Prioritisation* and *Fund Ledger*; donor *Fund Transparency* | `src/components/...` | Done (tested; not yet verified with live login) |
@@ -258,14 +259,14 @@ Safety: OpenZeppelin `AccessControl`, `ReentrancyGuard`, `Pausable`; checks-effe
 | --- | --- |
 | ![ROC](docs/c1/evidence/vulnerability-roc.png) | ![Confusion matrix](docs/c1/evidence/vulnerability-confusion-matrix.png) |
 
-Raw evidence: `docs/c1/evidence/` (`gas-report.json`, `vulnerability-eval.json`, `matching-eval.json`, `slither-report.json`, `demo-cases.json`).
+Raw evidence: `docs/c1/evidence/` (`gas-report.json`, `vulnerability-eval.json`, `matching-eval.json`, `slither-report.json`, `demo-cases.json`, `audit-report.csv`, `audit-report.json`).
 
 **Sample students (fictional).** Of the 12 hand-written cases, the model rates 6 high, 2 moderate and 4 low need, and ranks every clearly needy case above the comfortable households. It disagrees with the explainable AHP-TOPSIS score on one case, S09 (formal job, rural, boarding: index 3, TOPSIS 0.56) - the kind of borderline case a welfare officer should review. Scores cluster near 0 and 100, a sign of the synthetic training rubric; real data should give more graded scores.
 </details>
 
 ### 6.4 Requirements status
 
-Functional (FR) - 6 done, 5 partial, 1 open (weighted 71%):
+Functional (FR) - 7 done, 4 partial, 1 open (weighted 75%):
 
 | ID | Requirement (short) | Status | Gap |
 | --- | --- | --- | --- |
@@ -276,7 +277,7 @@ Functional (FR) - 6 done, 5 partial, 1 open (weighted 71%):
 | FR05 | Rank and recommend scholarships | Done | NDCG target |
 | FR06 | Admins verify milestones | Partial | Admin wallet signing UI |
 | FR07 | Automated disbursement on verified milestone | Done | - |
-| FR08 | Ledger of tx hashes + audit reports for donors | Partial | Downloadable report; live Sepolia data |
+| FR08 | Ledger of tx hashes + audit reports for donors | Done | Live data once deployed to Sepolia (the report reads it automatically) |
 | FR09 | Admin dashboard: fund flows, approvals, reports | Partial | Link approvals to on-chain awards |
 | FR10 | Donor dashboard | Done | Wallet-specific filtering |
 | FR11 | Notifications on status / disbursement / deadlines | Open | Feed chain events into notifications |
@@ -291,6 +292,7 @@ Non-functional (NFR): met - NFR01 (0 critical), NFR04 (hashes only; `keccak256` 
 | Endpoint | Access | Purpose |
 | --- | --- | --- |
 | `GET /api/c1/ledger?limit=` | Public, read-only, pseudonymous | Totals, campaigns, awards, recent events, SHA-256 integrity digest |
+| `GET /api/c1/ledger/report?format=csv\|json` | Public, read-only, pseudonymous | Downloadable audit report (FR08): every event with its transaction hash, totals and the same digest |
 | `GET /api/c1/assessments` | Student | Own saved assessment + ranked scholarships |
 | `GET /api/c1/assessments?scope=catalogue` | Student | Rankable scholarships for on-device matching |
 | `GET /api/c1/assessments?scope=queue` | Admin, faculty | Students ranked by need (derived fields only) |
@@ -320,6 +322,7 @@ pip install -r ml/requirements.txt
 cd ml && python synthetic_data.py && python train_vulnerability.py
 cd .. && npm run c1:eval-matching
 npm run c1:demo-cases    # 12 fictional sample students -> docs/c1/evidence/demo-cases.json
+npm run c1:audit-report  # donor audit report -> docs/c1/evidence/audit-report.csv / .json
 ```
 
 `ml/` files: `synthetic_data.py` (synthetic students + 24 illustrative scholarships + simulated relevance), `features.py` (feature engineering, mirrored in TypeScript), `ahp_topsis.py` (weights + closeness score), `train_vulnerability.py` (LR / RF / XGBoost, CV, hold-out, fairness, export of the web-app model and parity fixture).
