@@ -11,7 +11,13 @@ type Message = {
   text: string;
   reply?: SupportReply;
 };
-export function WellnessChat({ onSupport }: { onSupport: () => void }) {
+export function WellnessChat({
+  onSupport,
+  onPlan,
+}: {
+  onSupport: () => void;
+  onPlan?: () => void;
+}) {
   const [messages, setMessages] = useState<Message[]>([]);
   const [draft, setDraft] = useState("");
   const [error, setError] = useState("");
@@ -68,8 +74,8 @@ export function WellnessChat({ onSupport }: { onSupport: () => void }) {
       </div>
       <p className={`mt-4 ${secondaryText}`}>
         Write what’s on your mind or choose a topic to explore practical coping
-        steps. This automated guide uses prepared support replies, so it may
-        not understand every message. For personal advice, find a professional.
+        steps. This automated guide uses prepared support replies, so it may not
+        understand every message. For personal advice, find a professional.
       </p>
       <div
         role="log"
@@ -122,6 +128,17 @@ export function WellnessChat({ onSupport }: { onSupport: () => void }) {
           </div>
         ))}
       </div>
+      {onPlan ? (
+        <div className="mt-4 rounded-2xl bg-blue-50 p-4 dark:bg-blue-950">
+          <p className="text-sm">
+            Want to work through one practical step? Your plan has guided
+            activities you can choose and change.
+          </p>
+          <Button className="mt-3" variant="secondary" onClick={onPlan}>
+            Try a guided activity
+          </Button>
+        </div>
+      ) : null}
       <div className="my-4 flex flex-wrap gap-2">
         {(
           lastReply?.suggestions ?? [

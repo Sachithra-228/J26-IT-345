@@ -17,6 +17,8 @@ The model is active in the main student dashboard Wellness section and the stand
 5. The summary explains the actual questionnaire ranges, confirmed topics, reported impact/duration and the student's preferred support. It records why each question was asked.
 6. Confirmed/reported topics reach professional matching and community filters. Directory metadata and student preferences determine profile matches. The eight demo professionals are synthetic and cannot receive real appointment requests.
 
+The follow-through increment adds **My plan**, seven guided activities, optional **Progress** stored on the browser and a student-selected appointment-note download. Confirmed topics/context guide authored plan rules; no new model is trained by these views. Device history saves only selected summary metadata, mood ratings and completions. Full behavior and the PP1 walkthrough are in [the next-steps increment](PP1_NEXT_STEPS_INCREMENT.md).
+
 The model is an encoder classifier. Explanations use bounded templates filled with actual results; it is not a generative therapist or a trained prediction of professional treatment outcomes. The earlier structured logistic classifier remains an independent research replay and is no longer the main assessment's model.
 
 The 100 questions are assistant-authored for support context, not a validated clinical scale. Fifteen cover general context and 17 cover each of the five concern areas. Conditional branches can ask about details raised by an earlier answer; repeated IDs and facets are excluded. They await professional review. The question bank does not change PHQ-9 or GAD-7 scores, and the resulting summary describes screening ranges rather than diagnoses.

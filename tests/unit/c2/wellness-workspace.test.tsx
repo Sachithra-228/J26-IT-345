@@ -40,7 +40,11 @@ function click(name: string) {
 }
 function answer(name: string) {
   fireEvent.click(screen.getByRole("radio", { name, exact: true }));
-  click(screen.queryByRole("button", { name: "See my summary", exact: true }) ? "See my summary" : "Continue");
+  click(
+    screen.queryByRole("button", { name: "See my summary", exact: true })
+      ? "See my summary"
+      : "Continue",
+  );
 }
 function coreResponses(skipFirst = false, safety = false) {
   PHQ9.forEach((_, index) => {
@@ -48,7 +52,13 @@ function coreResponses(skipFirst = false, safety = false) {
     else answer(index === 8 && safety ? "Several days" : "Not at all");
   });
   GAD7.forEach(() => answer("Not at all"));
-  if (screen.queryByRole("button", { name: "Continue without text analysis", exact: true })) click("Continue without text analysis");
+  if (
+    screen.queryByRole("button", {
+      name: "Continue without text analysis",
+      exact: true,
+    })
+  )
+    click("Continue without text analysis");
 }
 function skipContext() {
   while (
@@ -80,7 +90,9 @@ it("completes both questionnaires and keeps all assessment data on-device", () =
     screen.getByRole("button", { name: "Continue", exact: true }),
   ).toBeDisabled();
   coreResponses();
-  expect(screen.getByRole("heading", { name: /How much are these concerns/ })).toBeInTheDocument();
+  expect(
+    screen.getByRole("heading", { name: /How much are these concerns/ }),
+  ).toBeInTheDocument();
   skipContext();
   expect(screen.getAllByText("Minimal symptom range")).toHaveLength(2);
   expect(complete.mock.calls[0][0]).toMatchObject({
@@ -88,7 +100,9 @@ it("completes both questionnaires and keeps all assessment data on-device", () =
     gad7: Array(7).fill(0),
     context: {},
   });
-  expect(global.fetch).toHaveBeenCalledWith("/api/c2/follow-up-questions", { cache: "no-store" });
+  expect(global.fetch).toHaveBeenCalledWith("/api/c2/follow-up-questions", {
+    cache: "no-store",
+  });
 });
 it("shows incomplete results rather than treating skipped answers as zero", () => {
   render(
@@ -156,13 +170,19 @@ it("keeps core answers when navigating back and selects context without adding a
   click("Continue");
   for (let i = 1; i < 9; i++) answer("Not at all");
   GAD7.forEach(() => answer("Not at all"));
-  fireEvent.click(screen.getByRole("checkbox", { name: "Low mood & motivation" }));
+  fireEvent.click(
+    screen.getByRole("checkbox", { name: "Low mood & motivation" }),
+  );
   click("Use these topics");
   answer("Getting started");
-  while (screen.queryByRole("button", { name: "Skip this question", exact: true })) {
+  while (
+    screen.queryByRole("button", { name: "Skip this question", exact: true })
+  ) {
     const heading = screen.getByRole("heading", { level: 3 }).textContent ?? "";
-    if (heading.startsWith("How much are these concerns")) answer("Very difficult");
-    else if (heading.startsWith("What would feel most useful")) answer("Talk to a professional");
+    if (heading.startsWith("How much are these concerns"))
+      answer("Very difficult");
+    else if (heading.startsWith("What would feel most useful"))
+      answer("Talk to a professional");
     else click("Skip this question");
   }
   const result: Assessment = complete.mock.calls[0][0];
@@ -291,4 +311,51 @@ it("separates the community service and exposes immediate help without an assess
   expect(
     screen.getByRole("region", { name: "Immediate support" }),
   ).toBeInTheDocument();
+});
+
+it("connects activities to optional progress and clears session drafts without deleting saved history", () => {
+  localStorage.clear();
+  render(<WellnessWorkspace />);
+  click("My plan");
+  fireEvent.click(
+    within(screen.getByRole("article", { name: "Plan action 1" })).getByRole(
+      "button",
+      { name: "Explore activity" },
+    ),
+  );
+  click("Start activity");
+  click("Next step");
+  click("Next step");
+  click("Next step");
+  click("Finish activity");
+  click("Open my progress");
+  fireEvent.click(screen.getByRole("checkbox"));
+  click("Open my device history");
+  click("Save activity completion");
+  click("My plan");
+  click("Prepare my appointment");
+  fireEvent.change(screen.getByLabelText("What would you like help with?"), {
+    target: { value: "A private appointment draft" },
+  });
+  click("Overview");
+  click("My plan");
+  click("Prepare my appointment");
+  expect(screen.getByLabelText("What would you like help with?")).toHaveValue(
+    "A private appointment draft",
+  );
+  click("Clear my session");
+  click("My plan");
+  click("Prepare my appointment");
+  expect(screen.getByLabelText("What would you like help with?")).toHaveValue(
+    "",
+  );
+  click("Progress");
+  expect(
+    screen.getByRole("button", { name: "Open my device history" }),
+  ).toBeDisabled();
+  fireEvent.click(screen.getByRole("checkbox"));
+  click("Open my device history");
+  expect(screen.getByText("Activity: Pause and notice")).toBeInTheDocument();
+  expect(global.fetch).not.toHaveBeenCalled();
+  localStorage.clear();
 });
