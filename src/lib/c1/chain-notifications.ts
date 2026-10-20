@@ -1,5 +1,6 @@
 /**
- * C1 - student notifications from smart-contract events (FR11).
+ * C1 - student notifications from smart-contract events and upcoming scholarship
+ * deadlines (FR11).
  *
  * The contract never stores who a student is: an award names a pseudonymous
  * `studentRef = keccak256("<studentId>:<secret salt>")` computed off-chain (see
@@ -8,32 +9,50 @@
  * payment released or queued, completed, revoked, withdrawn) into notifications.
  * Nothing about the student is written to the chain or exposed to anyone else.
  *
- * Notification ids are derived from the transaction (`c1-chain:<txHash>:<logIndex>`),
- * so the same event always maps to the same notification and read state can be kept.
+ * Notification ids are derived deterministically (`c1-chain:<txHash>:<logIndex>` and
+ * `c1-deadline:<scholarshipId>`), so the same event or deadline always maps to the
+ * same notification and read state can be kept.
  */
 import { keccak256, toUtf8Bytes } from "ethers";
 import { explorerTxUrl, formatEth, type LedgerEvent } from "./ledger";
+import { isEligible, type ScholarshipCriteria } from "./matching";
+import type { StudentFinancialProfile } from "./vulnerability";
 
 /** Identity used by the bundled simulation (blockchain/scripts/simulate-lifecycle.ts) for the demo student. */
 export const DEMO_STUDENT_ID = "demo-student-001";
 export const DEMO_STUDENT_SALT = "demo-salt";
 
 export const CHAIN_NOTIFICATION_PREFIX = "c1-chain:";
+export const DEADLINE_NOTIFICATION_PREFIX = "c1-deadline:";
+/** Scholarships closing within this window trigger a deadline reminder (FR11). */
+export const DEADLINE_REMINDER_MAX_DAYS = 14;
 
-export type ChainNotificationKind = "awarded" | "verified" | "released" | "queued" | "completed" | "revoked" | "withdrawn";
+export type ChainNotificationKind =
+  | "awarded"
+  | "verified"
+  | "released"
+  | "queued"
+  | "completed"
+  | "revoked"
+  | "withdrawn"
+  | "deadline";
 
-/** Values the UI fills into its translated templates. Amounts are test-ETH strings. */
+/** Values the UI fills into its translated templates. Amounts are test-ETH or LKR strings. */
 export type ChainNotificationValues = {
   amount?: string;
   milestone?: number;
   milestones?: number;
   awardId?: string;
   campaignId?: string;
+  scholarshipTitle?: string;
+  provider?: string;
+  days?: number;
+  amountLkr?: string;
 };
 
 export type ChainNotification = {
   id: string;
-  type: "c1-chain";
+  type: "c1-chain" | "c1-deadline";
   sectionId: "financial-aid";
   kind: ChainNotificationKind;
   values: ChainNotificationValues;
@@ -53,7 +72,7 @@ export function studentRefFor(studentId: string, salt: string): string {
 }
 
 export function isChainNotificationId(id: string): boolean {
-  return id.startsWith(CHAIN_NOTIFICATION_PREFIX);
+  return id.startsWith(CHAIN_NOTIFICATION_PREFIX) || id.startsWith(DEADLINE_NOTIFICATION_PREFIX);
 }
 
 const amountOf = (wei: string | undefined) => formatEth(wei ?? "0");
@@ -117,7 +136,13 @@ export function chainNotificationsFor(
 
     if (e.type === "PendingWithdrawn") {
       if (wallets.has((a.beneficiary ?? "").toLowerCase())) {
-        push(e, "withdrawn", { amount: amountOf(a.amount) }, "Withdrawal complete", `You withdrew ${eth(a.amount)} that was waiting for you.`);
+        push(
+          e,
+          "withdrawn",
+          { amount: amountOf(a.amount) },
+          "Withdrawal complete",
+          `You withdrew ${eth(a.amount)} that was waiting for you.`
+        );
       }
       continue;
     }
@@ -137,7 +162,13 @@ export function chainNotificationsFor(
         );
         break;
       case "FundsDisbursed":
-        push(e, "released", { amount: amountOf(a.amount), milestone }, "Payment released", `${eth(a.amount)} for milestone ${milestone} was sent to your wallet.`);
+        push(
+          e,
+          "released",
+          { amount: amountOf(a.amount), milestone },
+          "Payment released",
+          `${eth(a.amount)} for milestone ${milestone} was sent to your wallet.`
+        );
         break;
       case "DisbursementQueued":
         push(
@@ -149,10 +180,22 @@ export function chainNotificationsFor(
         );
         break;
       case "AwardCompleted":
-        push(e, "completed", { milestones: award.milestones, awardId: a.awardId }, "Scholarship completed", `All ${award.milestones} milestone payments of award #${a.awardId} have been released.`);
+        push(
+          e,
+          "completed",
+          { milestones: award.milestones, awardId: a.awardId },
+          "Scholarship completed",
+          `All ${award.milestones} milestone payments of award #${a.awardId} have been released.`
+        );
         break;
       case "AwardRevoked":
-        push(e, "revoked", { awardId: a.awardId }, "Scholarship revoked", `Award #${a.awardId} was revoked by the welfare office. Please contact them for details.`);
+        push(
+          e,
+          "revoked",
+          { awardId: a.awardId },
+          "Scholarship revoked",
+          `Award #${a.awardId} was revoked by the welfare office. Please contact them for details.`
+        );
         break;
       default:
         break;
@@ -160,4 +203,49 @@ export function chainNotificationsFor(
   }
 
   return out.reverse();
+}
+
+/**
+ * Automated notifications for scholarships closing within `maxDays` (default 14 days, FR11).
+ * If the student has a saved financial profile, only scholarships they are eligible for are included.
+ */
+export function deadlineNotificationsFor(
+  scholarships: ScholarshipCriteria[],
+  options: {
+    profile?: StudentFinancialProfile | null;
+    readIds?: ReadonlySet<string>;
+    maxDays?: number;
+    now?: Date;
+  } = {}
+): ChainNotification[] {
+  const { profile = null, readIds = new Set(), maxDays = DEADLINE_REMINDER_MAX_DAYS, now = new Date() } = options;
+  const iso = now.toISOString();
+  const date = iso.slice(0, 10);
+
+  return scholarships
+    .filter((s) => s.deadlineDays >= 0 && s.deadlineDays <= maxDays && (!profile || isEligible(profile, s)))
+    .sort((a, b) => a.deadlineDays - b.deadlineDays || a.id.localeCompare(b.id))
+    .map((s) => {
+      const id = `${DEADLINE_NOTIFICATION_PREFIX}${s.id}`;
+      const amountLkr = s.amountLkr.toLocaleString("en-LK");
+      return {
+        id,
+        type: "c1-deadline" as const,
+        sectionId: "financial-aid" as const,
+        kind: "deadline" as const,
+        values: {
+          scholarshipTitle: s.title,
+          provider: s.provider,
+          days: s.deadlineDays,
+          amountLkr
+        },
+        title: `Upcoming scholarship deadline (${s.deadlineDays} days)`,
+        message: `${s.title} (${s.provider}, LKR ${amountLkr}) closes in ${s.deadlineDays} days.`,
+        date,
+        createdAt: iso,
+        read: readIds.has(id),
+        txHash: "",
+        explorerUrl: null
+      };
+    });
 }

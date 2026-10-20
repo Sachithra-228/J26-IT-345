@@ -3,6 +3,7 @@
  */
 import {
   chainNotificationsFor,
+  deadlineNotificationsFor,
   DEMO_STUDENT_ID,
   DEMO_STUDENT_SALT,
   isChainNotificationId,
@@ -10,6 +11,7 @@ import {
 } from "@/lib/c1/chain-notifications";
 import { chainIdentity } from "@/lib/c1/chain-notifications-server";
 import demoLedger from "@/lib/c1/demo-ledger.json";
+import { illustrativeScholarships } from "@/lib/c1/demo-scholarships";
 import type { LedgerFile } from "@/lib/c1/ledger";
 
 const ledger = demoLedger as unknown as LedgerFile;
@@ -65,6 +67,40 @@ describe("chainNotificationsFor", () => {
     expect(again[0].explorerUrl).toBeNull();
     const sepolia = chainNotificationsFor(ledger.events, refOf(DEMO_STUDENT_ID), 11155111);
     expect(sepolia[0].explorerUrl).toBe(`https://sepolia.etherscan.io/tx/${sepolia[0].txHash}`);
+  });
+});
+
+describe("deadlineNotificationsFor (FR11)", () => {
+  it("surfaces scholarships closing within 14 days in urgency order", () => {
+    const fixedNow = new Date("2026-10-20T00:00:00.000Z");
+    const reminders = deadlineNotificationsFor(illustrativeScholarships, { now: fixedNow });
+    // ILL-07 (7 days) and ILL-05 (14 days) close within 14 days
+    expect(reminders.map((r) => r.id)).toEqual(["c1-deadline:ILL-07", "c1-deadline:ILL-05"]);
+    expect(reminders[0].values.days).toBe(7);
+    expect(reminders[1].values.days).toBe(14);
+    expect(reminders.every((r) => isChainNotificationId(r.id))).toBe(true);
+  });
+
+  it("filters deadline reminders by eligibility when the student has a saved profile", () => {
+    // Year 3 student with high income (200,000 LKR): ineligible for ILL-07 (max 60k) and ILL-05 (year 4 only)
+    const highIncomeYear3 = {
+      monthlyHouseholdIncomeLkr: 200_000,
+      householdSize: 4,
+      dependents: 1,
+      siblingsInEducation: 0,
+      guardianEmployment: "formal" as const,
+      singleParent: false,
+      hasEducationLoan: false,
+      loanAmountLkr: 0,
+      monthlyExpensesLkr: 30_000,
+      accommodation: "home" as const,
+      ruralDistrict: false,
+      financialShockLastYear: false,
+      currentScholarship: false,
+      gpa: 3.5,
+      yearOfStudy: 3
+    };
+    expect(deadlineNotificationsFor(illustrativeScholarships, { profile: highIncomeYear3 })).toEqual([]);
   });
 });
 

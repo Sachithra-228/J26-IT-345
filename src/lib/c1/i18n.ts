@@ -113,9 +113,9 @@ const en = {
     "Download every event with its transaction hash, the totals and the integrity fingerprint. The JSON version lets an auditor recompute the fingerprint.",
   reportCsv: "Download report (CSV)",
   reportJson: "Download for verification (JSON)",
-  // ---- student scholarship updates (FR11)
+  // ---- student scholarship updates & deadlines (FR11)
   updatesTitle: "Scholarship updates",
-  updatesSubtitle: "Payments and milestone checks for your scholarships, read straight from the blockchain ledger.",
+  updatesSubtitle: "Payments, milestone checks and upcoming deadlines for your scholarships.",
   updatesEmpty: "No scholarship activity yet. When you receive an award, its milestones and payments will appear here.",
   updatesError: "Scholarship updates could not be loaded.",
   viewTransaction: "View transaction",
@@ -135,10 +135,12 @@ const en = {
   nRevokedBody: "Award #{award} was revoked by the welfare office. Please contact them for details.",
   nWithdrawnTitle: "Withdrawal complete",
   nWithdrawnBody: "You withdrew {amount} test ETH that was waiting for you.",
+  nDeadlineTitle: "Upcoming scholarship deadline ({days} days)",
+  nDeadlineBody: "{scholarship} ({provider}, LKR {amountLkr}) closes in {days} days.",
   // ---- student sharing
   shareTitle: "Share with the welfare office (optional)",
   shareBody:
-    "If you choose to share, your answers are stored securely and the welfare office sees only your need index and main factors - not your detailed figures. You can delete it at any time.",
+    "If you choose to share, your answers are encrypted at rest (AES-256-GCM) and the welfare office sees only your need index and main factors - not your detailed figures. You can delete it at any time.",
   consentLabel: "I consent to storing my assessment and sharing my need index with the university welfare office.",
   saveShare: "Save and share",
   deleteSaved: "Delete my saved assessment",
@@ -158,7 +160,36 @@ const en = {
   queueEmpty: "No students have shared an assessment yet.",
   queueError: "The queue could not be loaded.",
   syntheticBadge: "Synthetic-trained model",
-  minimisationNote: "Data minimisation: you only see derived need signals, never a student's raw financial figures."
+  minimisationNote: "Data minimisation: you only see derived need signals, never a student's raw financial figures.",
+  prepareAwardBtn: "Prepare on-chain award",
+  // ---- donor & admin wallet actions (FR02, FR06, FR09, FR10)
+  donorFilterLabel: "Filter by donor wallet",
+  donorFilterAll: "All donor wallets",
+  donorActionsTitle: "Fund a campaign on-chain (Donor wallet)",
+  donorActionsSubtitle:
+    "Sign with your browser wallet to deposit test ETH into ScholarshipEscrow.sol or top up an existing campaign.",
+  createCampaignTitle: "Create funded campaign",
+  campaignSummaryLabel: "Campaign title / eligibility summary",
+  campaignAmountLabel: "Deposit amount (test ETH)",
+  createCampaignBtn: "Create & fund campaign",
+  topUpCampaignTitle: "Top up open campaign",
+  topUpAmountLabel: "Top-up amount (test ETH)",
+  topUpCampaignBtn: "Top up campaign",
+  adminActionsTitle: "Verify milestones & award scholarships on-chain (Admin wallet)",
+  adminActionsSubtitle:
+    "Sign with an ADMIN_ROLE wallet to verify a milestone (automatically releasing the tranche) or record a new scholarship award.",
+  verifyMilestoneTitle: "Verify next milestone & release payment",
+  selectAwardLabel: "Active scholarship award",
+  evidenceNoteLabel: "Verification evidence note (hashed to bytes32)",
+  verifyMilestoneBtn: "Verify milestone & release tranche",
+  awardOnChainTitle: "Award scholarship from open campaign",
+  beneficiaryWalletLabel: "Student beneficiary wallet (0x...)",
+  studentRefLabel: "Pseudonymous studentRef (bytes32)",
+  assessmentHashLabel: "Assessment commitment hash (bytes32)",
+  milestonesCountLabel: "Milestones (1-12)",
+  awardOnChainBtn: "Award scholarship on-chain",
+  walletPreparedNote:
+    "Prepared transaction payload (connect a browser wallet on Sepolia to broadcast to ScholarshipEscrow.sol):"
 };
 
 export type C1Text = typeof en;
@@ -267,7 +298,7 @@ const si: C1Text = {
   reportCsv: "වාර්තාව බාගන්න (CSV)",
   reportJson: "සත්‍යාපනය සඳහා බාගන්න (JSON)",
   updatesTitle: "ශිෂ්‍යත්ව යාවත්කාලීන",
-  updatesSubtitle: "ඔබේ ශිෂ්‍යත්වවල ගෙවීම් සහ milestone පරීක්ෂා, blockchain ලෙජරයෙන් සෘජුවම කියවා ඇත.",
+  updatesSubtitle: "ඔබේ ශිෂ්‍යත්වවල ගෙවීම්, milestone පරීක්ෂා සහ ඉදිරි අවසන් දින.",
   updatesEmpty: "තවම ශිෂ්‍යත්ව ක්‍රියාකාරකම් නැත. ඔබට ප්‍රදානයක් ලැබුණු විට, එහි milestone සහ ගෙවීම් මෙහි දිස් වේ.",
   updatesError: "ශිෂ්‍යත්ව යාවත්කාලීන පූරණය කළ නොහැකි විය.",
   viewTransaction: "ගනුදෙනුව බලන්න",
@@ -287,9 +318,11 @@ const si: C1Text = {
   nRevokedBody: "ප්‍රදානය #{award} සුබසාධන කාර්යාලය විසින් අවලංගු කරන ලදී. විස්තර සඳහා ඔවුන් අමතන්න.",
   nWithdrawnTitle: "ආපසු ගැනීම සම්පූර්ණයි",
   nWithdrawnBody: "ඔබ එනතුරු රැඳී තිබූ test ETH {amount} ඔබ ආපසු ගත්තා.",
+  nDeadlineTitle: "ශිෂ්‍යාධාර අවසන් දිනය (දින {days})",
+  nDeadlineBody: "{scholarship} ({provider}, රු. {amountLkr}) දින {days} කින් අවසන් වේ.",
   shareTitle: "සුභසාධන කාර්යාලය සමඟ බෙදාගන්න (අමතර)",
   shareBody:
-    "ඔබ බෙදාගැනීමට තෝරා ගත්තොත්, ඔබේ පිළිතුරු ආරක්ෂිතව ගබඩා වන අතර සුභසාධන කාර්යාලයට පෙනෙන්නේ ඔබේ අවශ්‍යතා දර්ශකය සහ ප්‍රධාන සාධක පමණි - සවිස්තර අගයන් නොවේ. ඕනෑම වේලාවක මකා දැමිය හැක.",
+    "ඔබ බෙදාගැනීමට තෝරා ගත්තොත්, ඔබේ පිළිතුරු AES-256-GCM මඟින් ආරක්ෂිතව ගබඩා වන අතර සුභසාධන කාර්යාලයට පෙනෙන්නේ ඔබේ අවශ්‍යතා දර්ශකය සහ ප්‍රධාන සාධක පමණි - සවිස්තර අගයන් නොවේ. ඕනෑම වේලාවක මකා දැමිය හැක.",
   consentLabel: "මගේ තක්සේරුව ගබඩා කිරීමට සහ මගේ අවශ්‍යතා දර්ශකය විශ්වවිද්‍යාල සුභසාධන කාර්යාලය සමඟ බෙදාගැනීමට මම එකඟ වෙමි.",
   saveShare: "සුරකින්න සහ බෙදාගන්න",
   deleteSaved: "සුරකින ලද මගේ තක්සේරුව මකන්න",
@@ -308,7 +341,35 @@ const si: C1Text = {
   queueEmpty: "තවම කිසිදු ශිෂ්‍යයෙක් තක්සේරුවක් බෙදාගෙන නැත.",
   queueError: "පෝලිම පූරණය කළ නොහැක.",
   syntheticBadge: "කෘත්‍රිම දත්තවලින් පුහුණු ආකෘතිය",
-  minimisationNote: "දත්ත අවම කිරීම: ඔබට පෙනෙන්නේ ව්‍යුත්පන්න අවශ්‍යතා සංඥා පමණි, ශිෂ්‍යයෙකුගේ අමු මූල්‍ය අගයන් කිසිවිටෙක නොවේ."
+  minimisationNote: "දත්ත අවම කිරීම: ඔබට පෙනෙන්නේ ව්‍යුත්පන්න අවශ්‍යතා සංඥා පමණි, ශිෂ්‍යයෙකුගේ අමු මූල්‍ය අගයන් කිසිවිටෙක නොවේ.",
+  prepareAwardBtn: "ඔන්-චේන් ප්‍රදානය සූදානම් කරන්න",
+  donorFilterLabel: "ප්‍රදායක wallet අනුව පෙරන්න",
+  donorFilterAll: "සියලුම ප්‍රදායක wallets",
+  donorActionsTitle: "ඔන්-චේන් ව්‍යාපෘතියකට අරමුදල් යොදන්න (Donor wallet)",
+  donorActionsSubtitle:
+    "ScholarshipEscrow.sol වෙත test ETH තැන්පත් කිරීමට හෝ පවතින ව්‍යාපෘතියකට අරමුදල් එක් කිරීමට ඔබේ බ්‍රවුසර් wallet එකෙන් අත්සන් කරන්න.",
+  createCampaignTitle: "නව අරමුදල් ව්‍යාපෘතියක් අරඹන්න",
+  campaignSummaryLabel: "ව්‍යාපෘති නාමය / සුදුසුකම් සාරාංශය",
+  campaignAmountLabel: "තැන්පත් මුදල (test ETH)",
+  createCampaignBtn: "ව්‍යාපෘතිය සාදා අරමුදල් යොදන්න",
+  topUpCampaignTitle: "විවෘත ව්‍යාපෘතියකට මුදල් එක් කරන්න",
+  topUpAmountLabel: "එක් කරන මුදල (test ETH)",
+  topUpCampaignBtn: "අරමුදල් එක් කරන්න",
+  adminActionsTitle: "Milestones සත්‍යාපනය සහ ඔන්-චේන් ශිෂ්‍යාධාර ප්‍රදානය (Admin wallet)",
+  adminActionsSubtitle:
+    "Milestone එකක් සත්‍යාපනය කර ස්වයංක්‍රීයව මුදල් නිකුත් කිරීමට හෝ නව ශිෂ්‍යාධාරයක් සටහන් කිරීමට ADMIN_ROLE wallet එකකින් අත්සන් කරන්න.",
+  verifyMilestoneTitle: "මීළඟ milestone සත්‍යාපනය කර ගෙවීම නිකුත් කරන්න",
+  selectAwardLabel: "ක්‍රියාත්මක ශිෂ්‍යාධාර ප්‍රදානය",
+  evidenceNoteLabel: "සත්‍යාපන සාක්ෂි සටහන (bytes32 hash බවට පත් කෙරේ)",
+  verifyMilestoneBtn: "Milestone සත්‍යාපනය කර මුදල නිකුත් කරන්න",
+  awardOnChainTitle: "විවෘත ව්‍යාපෘතියකින් ශිෂ්‍යාධාරයක් ප්‍රදානය කරන්න",
+  beneficiaryWalletLabel: "ශිෂ්‍ය ප්‍රතිලාභී wallet ලිපිනය (0x...)",
+  studentRefLabel: "ව්‍යාජ නාමික studentRef (bytes32)",
+  assessmentHashLabel: "තක්සේරු කැපවීම් hash (bytes32)",
+  milestonesCountLabel: "Milestones ගණන (1-12)",
+  awardOnChainBtn: "ඔන්-චේන් ශිෂ්‍යාධාරය ප්‍රදානය කරන්න",
+  walletPreparedNote:
+    "සූදානම් කළ ගනුදෙනු දත්ත (ScholarshipEscrow.sol වෙත යැවීමට Sepolia බ්‍රවුසර් wallet එකක් සම්බන්ධ කරන්න):"
 };
 
 const ta: C1Text = {
@@ -415,8 +476,7 @@ const ta: C1Text = {
   reportCsv: "அறிக்கையைப் பதிவிறக்கவும் (CSV)",
   reportJson: "சரிபார்ப்புக்குப் பதிவிறக்கவும் (JSON)",
   updatesTitle: "உதவித்தொகை புதுப்பிப்புகள்",
-  updatesSubtitle:
-    "உங்கள் உதவித்தொகைகளுக்கான கொடுப்பனவுகள் மற்றும் milestone சரிபார்ப்புகள், blockchain பேரேட்டிலிருந்து நேரடியாகப் படிக்கப்பட்டவை.",
+  updatesSubtitle: "உங்கள் உதவித்தொகைகளுக்கான கொடுப்பனவுகள், milestone சரிபார்ப்புகள் மற்றும் வரவிருக்கும் கடைசி நாட்கள்.",
   updatesEmpty:
     "இதுவரை உதவித்தொகை செயல்பாடு இல்லை. உங்களுக்கு விருது கிடைத்ததும், அதன் milestone மற்றும் கொடுப்பனவுகள் இங்கே தோன்றும்.",
   updatesError: "உதவித்தொகை புதுப்பிப்புகளை ஏற்ற முடியவில்லை.",
@@ -437,9 +497,11 @@ const ta: C1Text = {
   nRevokedBody: "விருது #{award} நலன்புரி அலுவலகத்தால் ரத்து செய்யப்பட்டது. விவரங்களுக்கு அவர்களைத் தொடர்பு கொள்ளவும்.",
   nWithdrawnTitle: "திரும்பப் பெறுதல் நிறைவடைந்தது",
   nWithdrawnBody: "உங்களுக்காகக் காத்திருந்த {amount} test ETH ஐத் திரும்பப் பெற்றீர்கள்.",
+  nDeadlineTitle: "உதவித்தொகை கடைசி நாள் ({days} நாட்கள்)",
+  nDeadlineBody: "{scholarship} ({provider}, ரூ. {amountLkr}) இன்னும் {days} நாட்களில் முடிவடைகிறது.",
   shareTitle: "நலத்துறை அலுவலகத்துடன் பகிரவும் (விருப்பம்)",
   shareBody:
-    "நீங்கள் பகிர முடிவு செய்தால், உங்கள் பதில்கள் பாதுகாப்பாகச் சேமிக்கப்படும்; நலத்துறை அலுவலகம் உங்கள் தேவை குறியீட்டையும் முக்கிய காரணிகளையும் மட்டுமே காணும் - விரிவான எண்களை அல்ல. எப்போது வேண்டுமானாலும் நீக்கலாம்.",
+    "நீங்கள் பகிர முடிவு செய்தால், உங்கள் பதில்கள் AES-256-GCM மூலம் பாதுகாப்பாகச் சேமிக்கப்படும்; நலத்துறை அலுவலகம் உங்கள் தேவை குறியீட்டையும் முக்கிய காரணிகளையும் மட்டுமே காணும் - விரிவான எண்களை அல்ல. எப்போது வேண்டுமானாலும் நீக்கலாம்.",
   consentLabel: "எனது மதிப்பீட்டைச் சேமிக்கவும், எனது தேவை குறியீட்டைப் பல்கலைக்கழக நலத்துறை அலுவலகத்துடன் பகிரவும் நான் சம்மதிக்கிறேன்.",
   saveShare: "சேமித்துப் பகிரவும்",
   deleteSaved: "சேமித்த எனது மதிப்பீட்டை நீக்கு",
@@ -458,7 +520,35 @@ const ta: C1Text = {
   queueEmpty: "இதுவரை எந்த மாணவரும் மதிப்பீட்டைப் பகிரவில்லை.",
   queueError: "வரிசையை ஏற்ற முடியவில்லை.",
   syntheticBadge: "செயற்கைத் தரவில் பயிற்சி பெற்ற மாதிரி",
-  minimisationNote: "தரவுக் குறைப்பு: பெறப்பட்ட தேவைச் சமிக்ஞைகளை மட்டுமே காண்பீர்கள்; மாணவரின் மூல நிதி எண்களை ஒருபோதும் அல்ல."
+  minimisationNote: "தரவுக் குறைப்பு: பெறப்பட்ட தேவைச் சமிக்ஞைகளை மட்டுமே காண்பீர்கள்; மாணவரின் மூல நிதி எண்களை ஒருபோதும் அல்ல.",
+  prepareAwardBtn: "ஆன்-செயின் விருதைத் தயாரிக்கவும்",
+  donorFilterLabel: "நன்கொடையாளர் wallet மூலம் வடிகட்டவும்",
+  donorFilterAll: "அனைத்து நன்கொடையாளர் wallets",
+  donorActionsTitle: "ஆன்-செயின் பிரச்சாரத்திற்கு நிதியளிக்கவும் (Donor wallet)",
+  donorActionsSubtitle:
+    "ScholarshipEscrow.sol இல் test ETH செலுத்த அல்லது திறந்த பிரச்சாரத்தில் நிதி சேர்க்க உங்கள் உலாவி wallet மூலம் கையொப்பமிடவும்.",
+  createCampaignTitle: "புதிய நிதி பிரச்சாரத்தை உருவாக்கவும்",
+  campaignSummaryLabel: "பிரச்சாரத் தலைப்பு / தகுதிச் சுருக்கம்",
+  campaignAmountLabel: "வைப்புத் தொகை (test ETH)",
+  createCampaignBtn: "பிரச்சாரத்தை உருவாக்கி நிதியளி",
+  topUpCampaignTitle: "திறந்த பிரச்சாரத்தில் நிதி சேர்க்கவும்",
+  topUpAmountLabel: "சேர்க்கும் தொகை (test ETH)",
+  topUpCampaignBtn: "நிதி சேர்",
+  adminActionsTitle: "Milestones சரிபார்ப்பு மற்றும் ஆன்-செயின் உதவித்தொகை வழங்கல் (Admin wallet)",
+  adminActionsSubtitle:
+    "Milestone ஐச் சரிபார்த்து தானாகத் தவணையை விடுவிக்க அல்லது புதிய உதவித்தொகை விருதைப் பதிவுசெய்ய ADMIN_ROLE wallet மூலம் கையொப்பமிடவும்.",
+  verifyMilestoneTitle: "அடுத்த milestone ஐச் சரிபார்த்து கொடுப்பனவை விடுவிக்கவும்",
+  selectAwardLabel: "செயலில் உள்ள உதவித்தொகை விருது",
+  evidenceNoteLabel: "சரிபார்ப்புச் சான்று குறிப்பு (bytes32 hash ஆக மாற்றப்படும்)",
+  verifyMilestoneBtn: "Milestone சரிபார்த்து தவணையை விடுவி",
+  awardOnChainTitle: "திறந்த பிரச்சாரத்திலிருந்து உதவித்தொகை வழங்கவும்",
+  beneficiaryWalletLabel: "மாணவர் பயனாளி wallet முகவரி (0x...)",
+  studentRefLabel: "புனைப்பெயர் studentRef (bytes32)",
+  assessmentHashLabel: "மதிப்பீட்டு உறுதிமொழி hash (bytes32)",
+  milestonesCountLabel: "Milestones எண்ணிக்கை (1-12)",
+  awardOnChainBtn: "ஆன்-செயின் உதவித்தொகை வழங்கு",
+  walletPreparedNote:
+    "தயாரிக்கப்பட்ட பரிவர்த்தனை தரவு (ScholarshipEscrow.sol க்கு அனுப்ப Sepolia உலாவி wallet ஐ இணைக்கவும்):"
 };
 
 const DICTIONARY: Record<Language, C1Text> = { en, si, ta };

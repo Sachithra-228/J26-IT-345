@@ -7,7 +7,7 @@ import { useLanguage } from "@/context/language-context";
 import type { ChainNotification, ChainNotificationKind, ChainNotificationValues } from "@/lib/c1/chain-notifications";
 import { getC1Text, type C1Text } from "@/lib/c1/i18n";
 
-const MAX_SHOWN = 8;
+const MAX_SHOWN = 10;
 
 const TEMPLATES: Record<ChainNotificationKind, [keyof C1Text, keyof C1Text]> = {
   awarded: ["nAwardedTitle", "nAwardedBody"],
@@ -16,7 +16,8 @@ const TEMPLATES: Record<ChainNotificationKind, [keyof C1Text, keyof C1Text]> = {
   queued: ["nQueuedTitle", "nQueuedBody"],
   completed: ["nCompletedTitle", "nCompletedBody"],
   revoked: ["nRevokedTitle", "nRevokedBody"],
-  withdrawn: ["nWithdrawnTitle", "nWithdrawnBody"]
+  withdrawn: ["nWithdrawnTitle", "nWithdrawnBody"],
+  deadline: ["nDeadlineTitle", "nDeadlineBody"]
 };
 
 function fill(template: string, v: ChainNotificationValues) {
@@ -25,10 +26,14 @@ function fill(template: string, v: ChainNotificationValues) {
     .replace(/\{m\}/g, String(v.milestone ?? ""))
     .replace(/\{n\}/g, String(v.milestones ?? ""))
     .replace("{award}", v.awardId ?? "")
-    .replace("{campaign}", v.campaignId ?? "");
+    .replace("{campaign}", v.campaignId ?? "")
+    .replace("{scholarship}", v.scholarshipTitle ?? "")
+    .replace("{provider}", v.provider ?? "")
+    .replace(/\{days\}/g, String(v.days ?? ""))
+    .replace("{amountLkr}", v.amountLkr ?? "");
 }
 
-/** Student's scholarship events from the blockchain ledger (C1, FR11), from /api/notifications. */
+/** Student's scholarship events from the blockchain ledger and upcoming deadlines (C1, FR11), from /api/notifications. */
 export function ScholarshipUpdates() {
   const { language } = useLanguage();
   const t = getC1Text(language);
@@ -46,7 +51,9 @@ export function ScholarshipUpdates() {
       .then((data: { notifications?: Array<{ type?: string }> }) => {
         if (cancelled) return;
         const list = Array.isArray(data.notifications) ? data.notifications : [];
-        setItems(list.filter((n): n is ChainNotification => n.type === "c1-chain"));
+        setItems(
+          list.filter((n): n is ChainNotification => n.type === "c1-chain" || n.type === "c1-deadline")
+        );
       })
       .catch(() => {
         if (!cancelled) setError(true);

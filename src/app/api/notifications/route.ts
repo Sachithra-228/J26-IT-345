@@ -1,9 +1,10 @@
 import { NextRequest } from "next/server";
 import { ObjectId } from "mongodb";
 import { isDemoMode, isMongoConnectionError, jsonResponse } from "@/lib/api";
-import { isChainNotificationId } from "@/lib/c1/chain-notifications";
+import { isChainNotificationId, type ChainNotification } from "@/lib/c1/chain-notifications";
 import {
   loadChainNotifications,
+  loadDeadlineNotifications,
   markChainNotificationsRead,
   readChainNotificationIds
 } from "@/lib/c1/chain-notifications-server";
@@ -68,9 +69,15 @@ function buildNotificationVisibilityFilters(input: {
 
 export async function GET(request: NextRequest) {
   if (isDemoMode()) {
-    // The demo session is a student: include their scholarship events from the simulated ledger (C1, FR11).
-    const chain = await loadChainNotifications(undefined);
-    return jsonResponse({ user: demoUsers[0], notifications: newestFirst([...chain, ...demoNotifications]) });
+    // The demo session is a student: include their scholarship events and deadline reminders (C1, FR11).
+    const [chain, deadlines] = await Promise.all([
+      loadChainNotifications(undefined),
+      loadDeadlineNotifications({ userId: demoUsers[0]._id })
+    ]);
+    return jsonResponse({
+      user: demoUsers[0],
+      notifications: newestFirst([...chain, ...deadlines, ...demoNotifications])
+    });
   }
 
   const authResult = await requireSession(request);
@@ -105,16 +112,26 @@ export async function GET(request: NextRequest) {
       _id: item._id.toString()
     }));
 
-    // Students also get notifications for their own scholarship events on the blockchain (C1, FR11).
+    // Students also get notifications for their own scholarship events on the blockchain + upcoming deadlines (C1, FR11).
     const userKey = authResult.session.user?._id ?? authResult.session.firebase.uid;
-    const chain =
-      currentRole === "student" && userKey
-        ? await loadChainNotifications(authResult.session.user?._id, await readChainNotificationIds(database, userKey))
-        : [];
+    let c1Notifications: ChainNotification[] = [];
+    if (currentRole === "student" && userKey) {
+      const readIds = await readChainNotificationIds(database, userKey);
+      const [chain, deadlines] = await Promise.all([
+        loadChainNotifications(authResult.session.user?._id, readIds),
+        loadDeadlineNotifications({
+          database,
+          userId: authResult.session.user?._id,
+          firebaseUid: authResult.session.firebase.uid,
+          readIds
+        })
+      ]);
+      c1Notifications = [...chain, ...deadlines];
+    }
 
     return jsonResponse({
       user: authResult.session.user,
-      notifications: chain.length ? newestFirst([...stored, ...chain]) : stored
+      notifications: c1Notifications.length ? newestFirst([...stored, ...c1Notifications]) : stored
     });
   } catch (error) {
     if (isMongoConnectionError(error)) {
@@ -164,7 +181,7 @@ export async function PATCH(request: NextRequest) {
       return jsonResponse({ message: "Unauthorized", updatedCount: 0 }, 401);
     }
 
-    // Chain notifications (C1) are derived from the ledger, so their read state is kept per user.
+    // Chain and deadline notifications (C1) are derived dynamically, so their read state is kept per user.
     const userKey = authResult.session.user?._id ?? authResult.session.firebase.uid;
     const chainUpdated = userKey ? await markChainNotificationsRead(database, userKey, chainIds) : 0;
 
@@ -243,4 +260,3 @@ export async function POST(request: NextRequest) {
     throw error;
   }
 }
-

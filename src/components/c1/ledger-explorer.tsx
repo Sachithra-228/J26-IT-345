@@ -1,7 +1,10 @@
 "use client";
 
-import { useCallback, useEffect, useState } from "react";
+import { FormEvent, useCallback, useEffect, useId, useMemo, useState } from "react";
+import { Button } from "@/components/shared/Button";
 import { Card } from "@/components/shared/Card";
+import { Input } from "@/components/shared/Input";
+import { Select } from "@/components/shared/Select";
 import { StatCard } from "@/components/shared/stat-card";
 import { useLanguage } from "@/context/language-context";
 import { getC1Text } from "@/lib/c1/i18n";
@@ -16,6 +19,14 @@ import {
   type LedgerMeta,
   type LedgerSummary
 } from "@/lib/c1/ledger";
+import {
+  hasInjectedWallet,
+  prepareAwardScholarship,
+  prepareCreateCampaign,
+  prepareTopUpCampaign,
+  prepareVerifyMilestone,
+  submitEscrowAction
+} from "@/lib/c1/wallet-actions";
 
 type LedgerResponse = {
   meta: LedgerMeta;
@@ -36,10 +47,36 @@ function formatDate(unixSeconds: number, locale: string) {
 export function LedgerExplorer({ variant = "public" }: LedgerExplorerProps) {
   const { language } = useLanguage();
   const t = getC1Text(language);
+  const uid = useId();
   const locale = language === "si" ? "si-LK" : language === "ta" ? "ta-LK" : "en-LK";
   const [data, setData] = useState<LedgerResponse | null>(null);
   const [error, setError] = useState(false);
   const [loading, setLoading] = useState(true);
+  const [donorFilter, setDonorFilter] = useState<string>("all");
+
+  // Donor form state (FR02)
+  const [campaignTitle, setCampaignTitle] = useState("SLIIT Need-Based IT Bursary");
+  const [campaignEth, setCampaignEth] = useState("2.0");
+  const [topUpCampaignId, setTopUpCampaignId] = useState("1");
+  const [topUpEth, setTopUpEth] = useState("1.0");
+
+  // Admin form state (FR06, FR09)
+  const [verifyAwardId, setVerifyAwardId] = useState("1");
+  const [evidenceNote, setEvidenceNote] = useState("Semester GPA 3.25 and 15 credits verified");
+  const [awardCampaignId, setAwardCampaignId] = useState("1");
+  const [beneficiaryWallet, setBeneficiaryWallet] = useState("0x70997970C51812dc3A010C7d01b50e0d17dc79C8");
+  const [studentRefInput, setStudentRefInput] = useState(
+    "0x8a597c65f32d18e3b9b574898014fd69b752874931214957e50825fd16fa8fb4"
+  );
+  const [assessmentHashInput, setAssessmentHashInput] = useState(
+    "0x5f3d28479102f8b04d31f92a8e110c46b9a841d75c0e9231f8045210ab89c123"
+  );
+  const [awardTotalEth, setAwardTotalEth] = useState("2.0");
+  const [awardMilestones, setAwardMilestones] = useState("4");
+
+  const [actionError, setActionError] = useState<string | null>(null);
+  const [preparedPreview, setPreparedPreview] = useState<Record<string, unknown> | null>(null);
+  const [txNotice, setTxNotice] = useState<string | null>(null);
 
   const load = useCallback(async () => {
     setLoading(true);
@@ -58,6 +95,15 @@ export function LedgerExplorer({ variant = "public" }: LedgerExplorerProps) {
   useEffect(() => {
     void load();
   }, [load]);
+
+  const donorWallets = useMemo(() => {
+    if (!data) return [];
+    const seen = new Set<string>();
+    for (const c of data.summary.campaigns) {
+      if (c.donor) seen.add(c.donor);
+    }
+    return [...seen];
+  }, [data]);
 
   if (loading) {
     return (
@@ -90,6 +136,89 @@ export function LedgerExplorer({ variant = "public" }: LedgerExplorerProps) {
   const { totals } = summary;
   const isLive = meta.source === "live";
 
+  const filteredCampaigns =
+    variant === "donor" && donorFilter !== "all"
+      ? summary.campaigns.filter((c) => c.donor.toLowerCase() === donorFilter.toLowerCase())
+      : summary.campaigns;
+  const allowedCampaignIds = new Set(filteredCampaigns.map((c) => c.id));
+  const filteredAwards =
+    variant === "donor" && donorFilter !== "all"
+      ? summary.awards.filter((a) => allowedCampaignIds.has(a.campaignId))
+      : summary.awards;
+  const allowedAwardIds = new Set(filteredAwards.map((a) => a.id));
+  const filteredEvents =
+    variant === "donor" && donorFilter !== "all"
+      ? events.filter((e) => {
+          const cid = e.args.campaignId;
+          const aid = e.args.awardId;
+          if (cid && allowedCampaignIds.has(cid)) return true;
+          if (aid && allowedAwardIds.has(aid)) return true;
+          return false;
+        })
+      : events;
+
+  const openCampaigns = summary.campaigns.filter((c) => !c.closed);
+  const activeAwards = summary.awards.filter((a) => a.status === "active");
+
+  async function runAction(
+    result:
+      | ReturnType<typeof prepareCreateCampaign>
+      | ReturnType<typeof prepareTopUpCampaign>
+      | ReturnType<typeof prepareVerifyMilestone>
+      | ReturnType<typeof prepareAwardScholarship>
+  ) {
+    setActionError(null);
+    setTxNotice(null);
+    if (!result.ok) {
+      setPreparedPreview(null);
+      setActionError(result.error);
+      return;
+    }
+    setPreparedPreview({
+      contract: meta.contractAddress,
+      network: meta.network,
+      ...result.data
+    });
+    if (isLive && hasInjectedWallet()) {
+      try {
+        const submitted = await submitEscrowAction(meta.contractAddress, result.data);
+        setTxNotice(`Transaction confirmed: ${submitted.txHash}`);
+        await load();
+      } catch (err) {
+        setActionError(err instanceof Error ? err.message : "Wallet transaction failed.");
+      }
+    }
+  }
+
+  function handleCreateCampaign(e: FormEvent) {
+    e.preventDefault();
+    void runAction(prepareCreateCampaign({ title: campaignTitle, amountEth: campaignEth }));
+  }
+
+  function handleTopUpCampaign(e: FormEvent) {
+    e.preventDefault();
+    void runAction(prepareTopUpCampaign({ campaignId: topUpCampaignId, amountEth: topUpEth }));
+  }
+
+  function handleVerifyMilestone(e: FormEvent) {
+    e.preventDefault();
+    void runAction(prepareVerifyMilestone({ awardId: verifyAwardId, evidenceNote }));
+  }
+
+  function handleAwardScholarship(e: FormEvent) {
+    e.preventDefault();
+    void runAction(
+      prepareAwardScholarship({
+        campaignId: awardCampaignId,
+        beneficiary: beneficiaryWallet,
+        studentRef: studentRefInput,
+        assessmentHash: assessmentHashInput,
+        totalAmountEth: awardTotalEth,
+        milestoneCount: awardMilestones
+      })
+    );
+  }
+
   return (
     <div className="space-y-6">
       <div
@@ -118,6 +247,245 @@ export function LedgerExplorer({ variant = "public" }: LedgerExplorerProps) {
       </div>
       <p className="-mt-3 text-xs text-slate-500">{t.unitNote}</p>
 
+      {variant === "donor" ? (
+        <Card className="space-y-4">
+          <div className="flex flex-wrap items-center justify-between gap-3">
+            <div>
+              <h3 className="text-base font-semibold">{t.donorActionsTitle}</h3>
+              <p className="mt-0.5 text-sm text-slate-600 dark:text-slate-300">{t.donorActionsSubtitle}</p>
+            </div>
+            <div className="flex items-center gap-2">
+              <label htmlFor={`${uid}-donor-filter`} className="text-xs font-medium text-slate-600 dark:text-slate-300">
+                {t.donorFilterLabel}
+              </label>
+              <Select
+                id={`${uid}-donor-filter`}
+                value={donorFilter}
+                onChange={(e) => setDonorFilter(e.target.value)}
+                className="w-48"
+              >
+                <option value="all">{t.donorFilterAll}</option>
+                {donorWallets.map((w) => (
+                  <option key={w} value={w}>
+                    {shortHash(w)}
+                  </option>
+                ))}
+              </Select>
+            </div>
+          </div>
+
+          <div className="grid gap-4 md:grid-cols-2">
+            <form onSubmit={handleCreateCampaign} className="space-y-3 rounded-xl border border-slate-200 p-4 dark:border-slate-800">
+              <h4 className="text-sm font-semibold">{t.createCampaignTitle}</h4>
+              <div>
+                <label htmlFor={`${uid}-camp-title`} className="mb-1 block text-xs font-medium">
+                  {t.campaignSummaryLabel}
+                </label>
+                <Input
+                  id={`${uid}-camp-title`}
+                  value={campaignTitle}
+                  onChange={(e) => setCampaignTitle(e.target.value)}
+                />
+              </div>
+              <div>
+                <label htmlFor={`${uid}-camp-eth`} className="mb-1 block text-xs font-medium">
+                  {t.campaignAmountLabel}
+                </label>
+                <Input
+                  id={`${uid}-camp-eth`}
+                  type="number"
+                  step="0.1"
+                  value={campaignEth}
+                  onChange={(e) => setCampaignEth(e.target.value)}
+                />
+              </div>
+              <Button type="submit">{t.createCampaignBtn}</Button>
+            </form>
+
+            <form onSubmit={handleTopUpCampaign} className="space-y-3 rounded-xl border border-slate-200 p-4 dark:border-slate-800">
+              <h4 className="text-sm font-semibold">{t.topUpCampaignTitle}</h4>
+              <div>
+                <label htmlFor={`${uid}-topup-id`} className="mb-1 block text-xs font-medium">
+                  {t.campaign}
+                </label>
+                <Select
+                  id={`${uid}-topup-id`}
+                  value={topUpCampaignId}
+                  onChange={(e) => setTopUpCampaignId(e.target.value)}
+                >
+                  {openCampaigns.map((c) => (
+                    <option key={c.id} value={c.id}>
+                      #{c.id} ({formatEth(c.funded)} ETH)
+                    </option>
+                  ))}
+                </Select>
+              </div>
+              <div>
+                <label htmlFor={`${uid}-topup-eth`} className="mb-1 block text-xs font-medium">
+                  {t.topUpAmountLabel}
+                </label>
+                <Input
+                  id={`${uid}-topup-eth`}
+                  type="number"
+                  step="0.1"
+                  value={topUpEth}
+                  onChange={(e) => setTopUpEth(e.target.value)}
+                />
+              </div>
+              <Button type="submit">{t.topUpCampaignBtn}</Button>
+            </form>
+          </div>
+
+          {actionError ? (
+            <p role="alert" className="text-xs font-medium text-red-600">
+              {actionError}
+            </p>
+          ) : null}
+          {txNotice ? <p className="text-xs font-medium text-emerald-700 dark:text-emerald-300">{txNotice}</p> : null}
+          {preparedPreview ? (
+            <div className="rounded-lg bg-slate-50 p-3 text-xs dark:bg-slate-900" data-testid="wallet-prepared-preview">
+              <p className="font-medium text-slate-700 dark:text-slate-200">{t.walletPreparedNote}</p>
+              <pre className="mt-1 overflow-x-auto font-mono text-[11px]">{JSON.stringify(preparedPreview, null, 2)}</pre>
+            </div>
+          ) : null}
+        </Card>
+      ) : null}
+
+      {variant === "admin" ? (
+        <Card className="space-y-4">
+          <div>
+            <h3 className="text-base font-semibold">{t.adminActionsTitle}</h3>
+            <p className="mt-0.5 text-sm text-slate-600 dark:text-slate-300">{t.adminActionsSubtitle}</p>
+          </div>
+
+          <div className="grid gap-4 md:grid-cols-2">
+            <form onSubmit={handleVerifyMilestone} className="space-y-3 rounded-xl border border-slate-200 p-4 dark:border-slate-800">
+              <h4 className="text-sm font-semibold">{t.verifyMilestoneTitle}</h4>
+              <div>
+                <label htmlFor={`${uid}-verify-award`} className="mb-1 block text-xs font-medium">
+                  {t.selectAwardLabel}
+                </label>
+                <Select
+                  id={`${uid}-verify-award`}
+                  value={verifyAwardId}
+                  onChange={(e) => setVerifyAwardId(e.target.value)}
+                >
+                  {activeAwards.map((a) => (
+                    <option key={a.id} value={a.id}>
+                      #{a.id} · {a.milestonesVerified}/{a.milestoneCount} ({formatEth(a.released)}/{formatEth(a.totalAmount)} ETH)
+                    </option>
+                  ))}
+                </Select>
+              </div>
+              <div>
+                <label htmlFor={`${uid}-evidence-note`} className="mb-1 block text-xs font-medium">
+                  {t.evidenceNoteLabel}
+                </label>
+                <Input
+                  id={`${uid}-evidence-note`}
+                  value={evidenceNote}
+                  onChange={(e) => setEvidenceNote(e.target.value)}
+                />
+              </div>
+              <Button type="submit">{t.verifyMilestoneBtn}</Button>
+            </form>
+
+            <form onSubmit={handleAwardScholarship} className="space-y-3 rounded-xl border border-slate-200 p-4 dark:border-slate-800">
+              <h4 className="text-sm font-semibold">{t.awardOnChainTitle}</h4>
+              <div className="grid gap-2 sm:grid-cols-2">
+                <div>
+                  <label htmlFor={`${uid}-award-camp`} className="mb-1 block text-xs font-medium">
+                    {t.campaign}
+                  </label>
+                  <Select
+                    id={`${uid}-award-camp`}
+                    value={awardCampaignId}
+                    onChange={(e) => setAwardCampaignId(e.target.value)}
+                  >
+                    {openCampaigns.map((c) => (
+                      <option key={c.id} value={c.id}>
+                        #{c.id} ({formatEth(c.funded)} ETH)
+                      </option>
+                    ))}
+                  </Select>
+                </div>
+                <div>
+                  <label htmlFor={`${uid}-award-eth`} className="mb-1 block text-xs font-medium">
+                    {t.amount} (ETH)
+                  </label>
+                  <Input
+                    id={`${uid}-award-eth`}
+                    type="number"
+                    step="0.1"
+                    value={awardTotalEth}
+                    onChange={(e) => setAwardTotalEth(e.target.value)}
+                  />
+                </div>
+              </div>
+              <div className="grid gap-2 sm:grid-cols-2">
+                <div>
+                  <label htmlFor={`${uid}-award-ben`} className="mb-1 block text-xs font-medium">
+                    {t.beneficiaryWalletLabel}
+                  </label>
+                  <Input
+                    id={`${uid}-award-ben`}
+                    value={beneficiaryWallet}
+                    onChange={(e) => setBeneficiaryWallet(e.target.value)}
+                  />
+                </div>
+                <div>
+                  <label htmlFor={`${uid}-award-ms`} className="mb-1 block text-xs font-medium">
+                    {t.milestonesCountLabel}
+                  </label>
+                  <Input
+                    id={`${uid}-award-ms`}
+                    type="number"
+                    min={1}
+                    max={12}
+                    value={awardMilestones}
+                    onChange={(e) => setAwardMilestones(e.target.value)}
+                  />
+                </div>
+              </div>
+              <div>
+                <label htmlFor={`${uid}-award-sref`} className="mb-1 block text-xs font-medium">
+                  {t.studentRefLabel}
+                </label>
+                <Input
+                  id={`${uid}-award-sref`}
+                  value={studentRefInput}
+                  onChange={(e) => setStudentRefInput(e.target.value)}
+                />
+              </div>
+              <div>
+                <label htmlFor={`${uid}-award-ahash`} className="mb-1 block text-xs font-medium">
+                  {t.assessmentHashLabel}
+                </label>
+                <Input
+                  id={`${uid}-award-ahash`}
+                  value={assessmentHashInput}
+                  onChange={(e) => setAssessmentHashInput(e.target.value)}
+                />
+              </div>
+              <Button type="submit">{t.awardOnChainBtn}</Button>
+            </form>
+          </div>
+
+          {actionError ? (
+            <p role="alert" className="text-xs font-medium text-red-600">
+              {actionError}
+            </p>
+          ) : null}
+          {txNotice ? <p className="text-xs font-medium text-emerald-700 dark:text-emerald-300">{txNotice}</p> : null}
+          {preparedPreview ? (
+            <div className="rounded-lg bg-slate-50 p-3 text-xs dark:bg-slate-900" data-testid="wallet-prepared-preview">
+              <p className="font-medium text-slate-700 dark:text-slate-200">{t.walletPreparedNote}</p>
+              <pre className="mt-1 overflow-x-auto font-mono text-[11px]">{JSON.stringify(preparedPreview, null, 2)}</pre>
+            </div>
+          ) : null}
+        </Card>
+      ) : null}
+
       <Card>
         <h3 className="text-lg font-semibold">{t.campaigns}</h3>
         <div className="mt-4 overflow-x-auto">
@@ -132,7 +500,7 @@ export function LedgerExplorer({ variant = "public" }: LedgerExplorerProps) {
               </tr>
             </thead>
             <tbody>
-              {summary.campaigns.map((c: CampaignSummary) => {
+              {filteredCampaigns.map((c: CampaignSummary) => {
                 const pct = BigInt(c.funded) === 0n ? 0 : Number((BigInt(c.disbursed) * 100n) / BigInt(c.funded));
                 return (
                   <tr key={c.id} className="border-t border-slate-100 dark:border-slate-800">
@@ -179,7 +547,7 @@ export function LedgerExplorer({ variant = "public" }: LedgerExplorerProps) {
               </tr>
             </thead>
             <tbody>
-              {summary.awards.map((a: AwardSummary) => (
+              {filteredAwards.map((a: AwardSummary) => (
                 <tr key={a.id} className="border-t border-slate-100 dark:border-slate-800">
                   <td className="py-3 pr-3 font-mono text-xs">{shortHash(a.studentRef)}</td>
                   <td className="py-3 pr-3">#{a.campaignId}</td>
@@ -223,11 +591,11 @@ export function LedgerExplorer({ variant = "public" }: LedgerExplorerProps) {
 
       <Card>
         <h3 className="text-lg font-semibold">{t.activity}</h3>
-        {events.length === 0 ? (
+        {filteredEvents.length === 0 ? (
           <p className="mt-3 text-sm text-slate-500">{t.noEvents}</p>
         ) : (
           <ul className="mt-4 divide-y divide-slate-100 dark:divide-slate-800">
-            {events.slice(0, 12).map((e) => {
+            {filteredEvents.slice(0, 12).map((e) => {
               const url = explorerTxUrl(meta.chainId, e.txHash);
               const detail = describeEvent(e);
               return (

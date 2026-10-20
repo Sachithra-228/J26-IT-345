@@ -162,13 +162,14 @@ Public C1 pages that work without logging in: `/aid-assessment` (private, on-dev
 | Scholarship matching (eligibility + weighted alignment), NDCG evaluation vs rule-based baseline | `src/lib/c1/matching.ts` | Done - target not yet met |
 | Public **Transparency Ledger** with integrity fingerprint | `/transparency`, `/api/c1/ledger` | Done (simulation + live-chain reader) |
 | Downloadable **donor audit report** (CSV for donors, JSON with a re-computable fingerprint for auditors) | `/api/c1/ledger/report`, download buttons on every ledger view, `npm run c1:audit-report` | Done - reads live Sepolia data automatically once deployed |
-| **Student notifications from chain events**: award, milestone verified, payment released or queued, completed, revoked, withdrawn. Only the student's own events (their pseudonymous `studentRef` is recomputed server-side from a secret salt); shown in the notification counts and a *Scholarship updates* card, in English / Sinhala / Tamil | `src/lib/c1/chain-notifications.ts`, `/api/notifications`, `src/components/c1/scholarship-updates.tsx` | Done for chain events (demo: the simulation's `demo-student-001`); deadline reminders not yet |
+| **Student notifications from chain events & upcoming deadlines (FR11)**: award, milestone verified, payment released or queued, completed, revoked, withdrawn, plus reminders for eligible scholarships closing within 14 days; shown in the notification counts and a *Scholarship updates* card, in English / Sinhala / Tamil | `src/lib/c1/chain-notifications.ts`, `/api/notifications`, `src/components/c1/scholarship-updates.tsx` | Done |
 | On-device **aid assessment** (nothing leaves the browser) | `/aid-assessment` | Done |
 | 12 **fictional sample students** (rural single-parent, high GPA / low income, large family, comfortable household...) with a "Try a sample student" picker and a per-case evidence report | `src/lib/c1/demo-cases.ts`, `npm run c1:demo-cases` | Done - fictional, for demos |
 | Dashboard sections: student *Smart Aid Matching*; admin / faculty *Aid Prioritisation* and *Fund Ledger*; donor *Fund Transparency* | `src/components/...` | Done (tested; not yet verified with live login) |
 | English / Sinhala / Tamil for every C1 screen | `src/lib/c1/i18n.ts` | Done - **needs native-speaker review** |
+| **AES-256-GCM encryption at rest (NFR02 / FR01)** for saved student financial profiles (`c1_assessments`) + `bytes32` assessment commitment hashes | `src/lib/c1/encryption.ts`, `src/lib/c1/assessment-store.ts` | Done |
+| **Donor & Admin wallet signing UI (FR02, FR06, FR09, FR10)**: donor wallet filter, `createCampaign`, `topUpCampaign`, `verifyMilestone`, `awardScholarship` + queue-to-award commitment link | `src/lib/c1/wallet-actions.ts`, `src/components/c1/ledger-explorer.tsx`, `src/components/admin/admin-aid-prioritisation.tsx` | Done |
 | Deployment to Sepolia and live latency measurement | section 6.7 | **Not done** - needs a testnet wallet |
-| Admin wallet signing (award / verify milestone) from the dashboard | - | **Not done** |
 
 ### 6.2 Architecture
 
@@ -267,24 +268,24 @@ Raw evidence: `docs/c1/evidence/` (`gas-report.json`, `vulnerability-eval.json`,
 
 ### 6.4 Requirements status
 
-Functional (FR) - 7 done, 5 partial, 0 open (weighted 79%):
+Functional (FR) - 12 done, 0 partial, 0 open (100% implemented in code; real-data retraining & Sepolia deployment pending):
 
-| ID | Requirement (short) | Status | Gap |
+| ID | Requirement (short) | Status | Remaining external validation |
 | --- | --- | --- | --- |
-| FR01 | Student profile with socio-economic indicators | Partial | Merge with main profile; field-level encryption |
-| FR02 | Donors create campaigns, deposit into escrow | Partial | Donor wallet UI |
+| FR01 | Student profile with socio-economic indicators (AES-256-GCM at rest) | Done | - |
+| FR02 | Donors create campaigns, deposit into escrow | Done | Live Sepolia wallet run |
 | FR03 | Capture and preprocess indicators | Done | - |
 | FR04 | AI Vulnerability Index 0-100 | Done (synthetic) | Retrain on SLIIT data |
-| FR05 | Rank and recommend scholarships | Done | NDCG target |
-| FR06 | Admins verify milestones | Partial | Admin wallet signing UI |
+| FR05 | Rank and recommend scholarships | Done | NDCG target on welfare-officer judgements |
+| FR06 | Admins verify milestones | Done | Live Sepolia wallet run |
 | FR07 | Automated disbursement on verified milestone | Done | - |
 | FR08 | Ledger of tx hashes + audit reports for donors | Done | Live data once deployed to Sepolia (the report reads it automatically) |
-| FR09 | Admin dashboard: fund flows, approvals, reports | Partial | Link approvals to on-chain awards |
-| FR10 | Donor dashboard | Done | Wallet-specific filtering |
-| FR11 | Notifications on status / disbursement / deadlines | Partial | Chain-event notifications done; scholarship deadline reminders not yet |
+| FR09 | Admin dashboard: fund flows, approvals, reports, queue-to-award commitment link | Done | - |
+| FR10 | Donor dashboard with donor wallet filter | Done | - |
+| FR11 | Notifications on status, disbursement and upcoming deadlines (<= 14 days) | Done | - |
 | FR12 | Sinhala / Tamil / English | Done | Native-speaker review |
 
-Non-functional (NFR): met - NFR01 (0 critical), NFR04 (hashes only; `keccak256` used instead of SHA-256), NFR05, NFR07, NFR09; partial - NFR02 (no PII on-chain, but no application-level AES-256 yet), NFR12 (accessible forms, no formal WCAG audit); open - NFR03 (needs Sepolia), NFR06 (latency), NFR08 (SUS), NFR10 (1,000 users), NFR11 (99.9% uptime).
+Non-functional (NFR): met - NFR01 (0 critical), NFR02 (zero PII on-chain; AES-256-GCM off-chain encryption at rest), NFR04 (hashes only; `keccak256` used instead of SHA-256), NFR05, NFR07, NFR09; partial - NFR12 (accessible forms, no formal WCAG audit); open - NFR03 (needs Sepolia), NFR06 (latency), NFR08 (SUS), NFR10 (1,000 users), NFR11 (99.9% uptime).
 
 ### 6.5 Interfaces
 

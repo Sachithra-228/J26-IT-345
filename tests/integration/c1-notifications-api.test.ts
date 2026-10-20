@@ -15,7 +15,7 @@ afterAll(() => {
 });
 
 describe("GET /api/notifications (demo student)", () => {
-  it("includes the student's scholarship events from the ledger, newest first, alongside other notifications", async () => {
+  it("includes the student's scholarship events and upcoming deadline reminders, newest first, alongside other notifications", async () => {
     const res = await GET(new NextRequest("http://localhost/api/notifications"));
     expect(res.status).toBe(200);
     const { notifications } = (await res.json()) as {
@@ -25,7 +25,12 @@ describe("GET /api/notifications (demo student)", () => {
     const chain = notifications.filter((n) => n.type === "c1-chain");
     expect(chain).toHaveLength(7);
     expect(chain.every((n) => n.sectionId === "financial-aid")).toBe(true);
-    expect(notifications.some((n) => n.type !== "c1-chain")).toBe(true); // existing notifications kept
+
+    const deadlines = notifications.filter((n) => n.type === "c1-deadline");
+    expect(deadlines.length).toBeGreaterThanOrEqual(2);
+    expect(deadlines.every((n) => n.sectionId === "financial-aid")).toBe(true);
+
+    expect(notifications.some((n) => n.type !== "c1-chain" && n.type !== "c1-deadline")).toBe(true);
 
     const keys = notifications.map((n) => String(n.createdAt ?? n.date));
     expect(keys).toEqual([...keys].sort().reverse());
