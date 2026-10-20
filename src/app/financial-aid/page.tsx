@@ -2,6 +2,7 @@
 
 import Link from "next/link";
 import { ModuleHero } from "@/components/shared/module-hero";
+import { ScrollReveal } from "@/components/ui/scroll-reveal";
 import { useLanguage } from "@/context/language-context";
 import { getC1Text } from "@/lib/c1/i18n";
 
@@ -53,35 +54,41 @@ export default function FinancialAidPage() {
           };
 
   return (
-    <div className="mx-auto w-full max-w-6xl px-4 py-10">
-      <ModuleHero
-        eyebrow={text.eyebrow}
-        title={text.title}
-        subtitle={text.subtitle}
-        accent="from-emerald-400/45 via-emerald-400/15 to-transparent"
-        highlights={text.highlights}
-        stats={text.stats}
-        actions={[
-          { label: text.primaryAction, href: "/aid-assessment" },
-          { label: text.secondaryAction, href: "/career", variant: "ghost" }
-        ]}
-      />
+    <div className="min-h-screen bg-black py-10 text-slate-100">
+      <div className="mx-auto w-full max-w-6xl px-4">
+        <ModuleHero
+          eyebrow={text.eyebrow}
+          title={text.title}
+          subtitle={text.subtitle}
+          accent="from-white/15 via-white/5 to-transparent"
+          highlights={text.highlights}
+          stats={text.stats}
+          actions={[
+            { label: text.primaryAction, href: "/aid-assessment" },
+            { label: text.secondaryAction, href: "/career", variant: "ghost" }
+          ]}
+        />
 
-      <div className="mt-8 grid gap-4 sm:grid-cols-2">
-        <Link
-          href="/aid-assessment"
-          className="rounded-2xl border border-slate-200 bg-white p-6 shadow-sm transition hover:border-primary focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary dark:border-slate-800 dark:bg-slate-900"
-        >
-          <h2 className="text-lg font-semibold">{c1.toolTitle}</h2>
-          <p className="mt-1 text-sm text-slate-600 dark:text-slate-300">{c1.privacyNote}</p>
-        </Link>
-        <Link
-          href="/transparency"
-          className="rounded-2xl border border-slate-200 bg-white p-6 shadow-sm transition hover:border-primary focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary dark:border-slate-800 dark:bg-slate-900"
-        >
-          <h2 className="text-lg font-semibold">{c1.ledgerTitle}</h2>
-          <p className="mt-1 text-sm text-slate-600 dark:text-slate-300">{c1.ledgerSubtitle}</p>
-        </Link>
+        <div className="mt-8 grid gap-4 sm:grid-cols-2">
+          <ScrollReveal delay={0.1}>
+            <Link
+              href="/aid-assessment"
+              className="block h-full rounded-2xl border border-white/15 bg-neutral-950 p-6 shadow-sm transition hover:-translate-y-0.5 hover:border-white/40 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-white"
+            >
+              <h2 className="text-lg font-semibold text-white">{c1.toolTitle}</h2>
+              <p className="mt-1 text-sm text-neutral-400">{c1.privacyNote}</p>
+            </Link>
+          </ScrollReveal>
+          <ScrollReveal delay={0.2}>
+            <Link
+              href="/transparency"
+              className="block h-full rounded-2xl border border-white/15 bg-neutral-950 p-6 shadow-sm transition hover:-translate-y-0.5 hover:border-white/40 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-white"
+            >
+              <h2 className="text-lg font-semibold text-white">{c1.ledgerTitle}</h2>
+              <p className="mt-1 text-sm text-neutral-400">{c1.ledgerSubtitle}</p>
+            </Link>
+          </ScrollReveal>
+        </div>
       </div>
     </div>
   );

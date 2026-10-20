@@ -4,6 +4,7 @@ import clsx from "clsx";
 import Image from "next/image";
 import { useMemo, useState } from "react";
 import { SriLankaDistrictMap } from "@/components/shared/sri-lanka-district-map";
+import { ScrollReveal } from "@/components/ui/scroll-reveal";
 import { SRI_LANKA_DISTRICTS } from "@/lib/data/theme-mappings";
 import { useLanguage } from "@/context/language-context";
 
@@ -138,41 +139,6 @@ const professionalInstitutes: DirectoryItem[] = [
   { name: "Sri Lanka Institute of Tourism and Hotel Management (SLITHM)", location: "Colombo", focus: "Tourism, Hospitality" }
 ];
 
-const sections: DirectorySection[] = [
-  {
-    id: "government-universities",
-    label: "Government Universities",
-    title: "Public university network",
-    subtitle: "Select a university card to view details.",
-    fallbackImage: "/top-hero.png",
-    items: governmentUniversities
-  },
-  {
-    id: "government-higher",
-    label: "Government Higher Institutes",
-    title: "Applied and technical institutes",
-    subtitle: "Select an institute card to view details.",
-    fallbackImage: "/teacher.png",
-    items: attachLogos(governmentInstitutes)
-  },
-  {
-    id: "private-degree",
-    label: "Private and Degree Institutes",
-    title: "Private and international pathways",
-    subtitle: "Select an institute card to view details.",
-    fallbackImage: "/hero-student.png",
-    items: attachLogos(privateInstitutes)
-  },
-  {
-    id: "professional",
-    label: "Professional Institutes",
-    title: "Career-focused credential pathways",
-    subtitle: "Select an institute card to view details.",
-    fallbackImage: "/parent.png",
-    items: attachLogos(professionalInstitutes)
-  }
-];
-
 function initialsOf(name: string) {
   const words = name.split(" ").filter(Boolean);
   return words.slice(0, 2).map((word) => word[0]).join("").toUpperCase();
@@ -185,6 +151,105 @@ function getLocationDistricts(location: string) {
 
 export default function UniversityConnectPage() {
   const { language } = useLanguage();
+
+  const sections: DirectorySection[] = useMemo(
+    () => [
+      {
+        id: "government-universities",
+        label:
+          language === "si"
+            ? "රජයේ විශ්වවිද්‍යාල"
+            : language === "ta"
+              ? "அரசு பல்கலைக்கழகங்கள்"
+              : "Government Universities",
+        title:
+          language === "si"
+            ? "රාජ්‍ය විශ්වවිද්‍යාල ජාලය"
+            : language === "ta"
+              ? "பொது பல்கலைக்கழக வலையமைப்பு"
+              : "Public university network",
+        subtitle:
+          language === "si"
+            ? "විස්තර බැලීමට විශ්වවිද්‍යාල කාඩ්පතක් තෝරන්න."
+            : language === "ta"
+              ? "விவரங்களைக் காண பல்கலைக்கழக அட்டையைத் தேர்ந்தெடுக்கவும்."
+              : "Select a university card to view details.",
+        fallbackImage: "/top-hero.png",
+        items: governmentUniversities
+      },
+      {
+        id: "government-higher",
+        label:
+          language === "si"
+            ? "රජයේ උසස් අධ්‍යාපන ආයතන"
+            : language === "ta"
+              ? "அரசு உயர்கல்வி நிறுவனங்கள்"
+              : "Government Higher Institutes",
+        title:
+          language === "si"
+            ? "ව්‍යවහාරික සහ තාක්ෂණික ආයතන"
+            : language === "ta"
+              ? "பயன்பாட்டு மற்றும் தொழில்நுட்ப நிறுவனங்கள்"
+              : "Applied and technical institutes",
+        subtitle:
+          language === "si"
+            ? "විස්තර බැලීමට ආයතන කාඩ්පතක් තෝරන්න."
+            : language === "ta"
+              ? "விவரங்களைக் காண நிறுவன அட்டையைத் தேர்ந்தெடுக்கவும்."
+              : "Select an institute card to view details.",
+        fallbackImage: "/teacher.png",
+        items: attachLogos(governmentInstitutes)
+      },
+      {
+        id: "private-degree",
+        label:
+          language === "si"
+            ? "පෞද්ගලික සහ උපාධි ආයතන"
+            : language === "ta"
+              ? "தனியார் மற்றும் பட்டப்படிப்பு நிறுவனங்கள்"
+              : "Private and Degree Institutes",
+        title:
+          language === "si"
+            ? "පෞද්ගලික සහ ජාත්‍යන්තර උසස් අධ්‍යාපන මාර්ග"
+            : language === "ta"
+              ? "தனியார் மற்றும் சர்வதேச கல்வி பாதைகள்"
+              : "Private and international pathways",
+        subtitle:
+          language === "si"
+            ? "විස්තර බැලීමට ආයතන කාඩ්පතක් තෝරන්න."
+            : language === "ta"
+              ? "விவரங்களைக் காண நிறுவன அட்டையைத் தேர்ந்தெடுக்கவும்."
+              : "Select an institute card to view details.",
+        fallbackImage: "/hero-student.png",
+        items: attachLogos(privateInstitutes)
+      },
+      {
+        id: "professional",
+        label:
+          language === "si"
+            ? "වෘත්තීය ආයතන"
+            : language === "ta"
+              ? "தொழில்முறை நிறுவனங்கள்"
+              : "Professional Institutes",
+        title:
+          language === "si"
+            ? "වෘත්තීය සුදුසුකම් සහ සහතිකපත් මාර්ග"
+            : language === "ta"
+              ? "தொழில் சார்ந்த தகுதிப் பாதைகள்"
+              : "Career-focused credential pathways",
+        subtitle:
+          language === "si"
+            ? "විස්තර බැලීමට ආයතන කාඩ්පතක් තෝරන්න."
+            : language === "ta"
+              ? "விவரங்களைக் காண நிறுவன அட்டையைத் தேர்ந்தெடுக்கவும்."
+              : "Select an institute card to view details.",
+        fallbackImage: "/parent.png",
+        items: attachLogos(professionalInstitutes)
+      }
+    ],
+    [language]
+  );
+
   const text =
     language === "si"
       ? {
@@ -224,7 +289,7 @@ export default function UniversityConnectPage() {
 
   const activeSection = useMemo(
     () => sections.find((section) => section.id === activeSectionId) ?? sections[0],
-    [activeSectionId]
+    [activeSectionId, sections]
   );
 
   const serviceDistricts = useMemo(
@@ -244,135 +309,141 @@ export default function UniversityConnectPage() {
   };
 
   return (
-    <div className="w-full pb-10 pt-0">
-      <section className="w-full bg-gradient-to-br from-[#0b1f45] via-[#102a59] to-[#0c1d3d]">
-        <div className="mx-auto grid w-full max-w-6xl items-center gap-8 px-4 py-10 lg:grid-cols-[1.05fr_0.95fr]">
-          <div className="space-y-4">
-            <h1 className="text-4xl font-semibold leading-tight text-slate-100 md:text-5xl">
+    <div className="min-h-screen w-full bg-black pb-16 pt-0 text-white">
+      <section className="w-full border-b border-white/10 bg-black">
+        <div className="mx-auto grid w-full max-w-6xl items-center gap-8 px-4 py-12 lg:grid-cols-[1.05fr_0.95fr]">
+          <ScrollReveal className="space-y-4">
+            <h1 className="text-4xl font-bold leading-tight text-white md:text-5xl">
               {text.heading}
             </h1>
-            <p className="max-w-xl text-lg leading-relaxed text-blue-100/90">
+            <p className="max-w-xl text-base leading-relaxed text-neutral-400">
               {text.subheading}
             </p>
-          </div>
-          <div className="w-full justify-self-center lg:justify-self-end">
+          </ScrollReveal>
+          <ScrollReveal delay={0.15} className="w-full justify-self-center lg:justify-self-end">
             <SriLankaDistrictMap
               selectedDistricts={[]}
               serviceDistricts={serviceDistricts}
               selectable={false}
               minimal
             />
-          </div>
+          </ScrollReveal>
         </div>
       </section>
 
-      <div className="w-full bg-white py-8 text-slate-900">
-      <div className="mx-auto w-full max-w-6xl space-y-8 px-4">
-        <div className="flex flex-wrap gap-2 rounded-2xl border border-slate-200 bg-white p-2">
-          {sections.map((section) => {
-            const isActive = section.id === activeSectionId;
+      <div className="w-full bg-black py-10 text-white">
+        <div className="mx-auto w-full max-w-6xl space-y-8 px-4">
+          <ScrollReveal>
+            <div className="flex flex-wrap gap-2 rounded-2xl border border-white/15 bg-neutral-950 p-2">
+              {sections.map((section) => {
+                const isActive = section.id === activeSectionId;
 
-            return (
-              <button
-                key={section.id}
-                type="button"
-                onClick={() => setActiveSectionId(section.id)}
-                className={clsx(
-                  "rounded-full px-4 py-2 text-sm font-medium transition-colors",
-                  isActive
-                    ? "bg-primary text-white"
-                    : "border border-slate-200 text-slate-700 hover:border-primary/30 hover:text-primary"
-                )}
-              >
-                {section.label}
-              </button>
-            );
-          })}
-        </div>
+                return (
+                  <button
+                    key={section.id}
+                    type="button"
+                    onClick={() => setActiveSectionId(section.id)}
+                    className={clsx(
+                      "rounded-full px-4 py-2 text-sm font-medium transition-colors",
+                      isActive
+                        ? "bg-white text-black"
+                        : "border border-white/15 text-neutral-300 hover:border-white/35 hover:text-white"
+                    )}
+                  >
+                    {section.label}
+                  </button>
+                );
+              })}
+            </div>
+          </ScrollReveal>
 
-        <section className="space-y-5">
-          <div className="space-y-2 text-center">
-            <h2 className="text-3xl font-semibold text-slate-900 md:text-4xl">{activeSection.title}</h2>
-            <p className="text-slate-600">{activeSection.subtitle}</p>
-          </div>
+          <section className="space-y-6">
+            <ScrollReveal className="space-y-2 text-center">
+              <h2 className="text-3xl font-semibold text-white md:text-4xl">{activeSection.title}</h2>
+              <p className="text-neutral-400">{activeSection.subtitle}</p>
+            </ScrollReveal>
 
-          {selectedItem ? (
-            <div className="grid gap-6 lg:grid-cols-[0.95fr_1.05fr]">
-              <article className="relative min-h-[340px] overflow-hidden rounded-3xl">
-                <Image
-                  src={selectedItem.logo ?? activeSection.fallbackImage}
-                  alt={selectedItem.name}
-                  fill
-                  className="object-cover"
-                  sizes="(max-width: 1024px) 100vw, 45vw"
-                />
-              </article>
+            {selectedItem ? (
+              <ScrollReveal delay={0.1}>
+                <div className="grid gap-6 lg:grid-cols-[0.95fr_1.05fr]">
+                  <article className="relative min-h-[340px] overflow-hidden rounded-3xl border border-white/15 bg-neutral-950">
+                    <Image
+                      src={selectedItem.logo ?? activeSection.fallbackImage}
+                      alt={selectedItem.name}
+                      fill
+                      className="object-cover"
+                      sizes="(max-width: 1024px) 100vw, 45vw"
+                    />
+                  </article>
 
-              <article className="rounded-3xl border border-slate-200 bg-white p-6 shadow-[0_16px_40px_-24px_rgba(15,23,42,0.25)]">
-                <p className="text-xs font-semibold uppercase tracking-[0.16em] text-primary/80">{text.profile}</p>
-                <h3 className="mt-2 text-2xl font-semibold text-slate-900">{selectedItem.name}</h3>
-                <p className="mt-1 text-slate-600">{selectedItem.location}</p>
+                  <article className="rounded-3xl border border-white/15 bg-neutral-950 p-6 shadow-2xl">
+                    <p className="text-xs font-semibold uppercase tracking-[0.16em] text-neutral-400">{text.profile}</p>
+                    <h3 className="mt-2 text-2xl font-semibold text-white">{selectedItem.name}</h3>
+                    <p className="mt-1 text-neutral-400">{selectedItem.location}</p>
 
-                <div className="mt-5 rounded-2xl border border-slate-200 bg-slate-50 p-4">
-                  <p className="text-xs font-semibold uppercase tracking-[0.14em] text-primary/80">{text.focus}</p>
-                  <ul className="mt-3 grid gap-2 text-sm text-slate-700">
-                    {selectedItem.focus.split(",").map((focus) => (
-                      <li
-                        key={`${selectedItem.name}-${focus.trim()}`}
-                        className="rounded-lg border border-blue-100/70 bg-blue-50/55 px-3 py-2"
-                      >
-                        {focus.trim()}
-                      </li>
-                    ))}
-                  </ul>
+                    <div className="mt-5 rounded-2xl border border-white/10 bg-black/60 p-4">
+                      <p className="text-xs font-semibold uppercase tracking-[0.14em] text-neutral-400">{text.focus}</p>
+                      <ul className="mt-3 grid gap-2 text-sm text-neutral-200">
+                        {selectedItem.focus.split(",").map((focus) => (
+                          <li
+                            key={`${selectedItem.name}-${focus.trim()}`}
+                            className="rounded-lg border border-white/10 bg-white/5 px-3 py-2"
+                          >
+                            {focus.trim()}
+                          </li>
+                        ))}
+                      </ul>
+                    </div>
+
+                    <p className="mt-5 text-sm text-neutral-500">{text.clickHint}</p>
+                  </article>
                 </div>
+              </ScrollReveal>
+            ) : (
+              <div className="rounded-2xl border border-white/15 bg-neutral-950 p-6 text-sm text-neutral-400">
+                {text.empty}
+              </div>
+            )}
 
-                <p className="mt-5 text-sm text-slate-500">{text.clickHint}</p>
-              </article>
-            </div>
-          ) : (
-            <div className="rounded-2xl border border-slate-200 bg-slate-50 p-6 text-sm text-slate-600">
-              {text.empty}
-            </div>
-          )}
+            <ScrollReveal delay={0.15}>
+              <div className="grid gap-3 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
+                {visibleItems.map((item, index) => {
+                  const isSelected = item.name === selectedItem?.name;
 
-          <div className="grid gap-3 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
-            {visibleItems.map((item, index) => {
-              const isSelected = item.name === selectedItem?.name;
-
-              return (
-                <button
-                  key={`${activeSection.id}-${item.name}`}
-                  type="button"
-                  onClick={() => selectItem(index)}
-                  className={clsx(
-                    "rounded-2xl border p-4 text-left transition-all",
-                    isSelected
-                      ? "border-primary bg-primary/5 shadow-sm"
-                      : "border-slate-200 bg-white hover:border-primary/35 hover:bg-slate-50"
-                  )}
-                >
-                  <div className="flex items-center gap-3">
-                    <div className="relative h-12 w-12 shrink-0 overflow-hidden rounded-full border border-slate-200 bg-white">
-                      {item.logo ? (
-                        <Image src={item.logo} alt={`${item.name} logo`} fill className="object-cover" />
-                      ) : (
-                        <div className="grid h-full w-full place-items-center text-xs font-semibold text-slate-500">
-                          {initialsOf(item.name)}
-                        </div>
+                  return (
+                    <button
+                      key={`${activeSection.id}-${item.name}`}
+                      type="button"
+                      onClick={() => selectItem(index)}
+                      className={clsx(
+                        "rounded-2xl border p-4 text-left transition-all",
+                        isSelected
+                          ? "border-white/50 bg-white/10 shadow-sm"
+                          : "border-white/15 bg-neutral-950 hover:border-white/30 hover:bg-neutral-900"
                       )}
-                    </div>
-                    <div>
-                      <p className="line-clamp-2 text-sm font-semibold leading-5 text-slate-900">{item.name}</p>
-                      <p className="text-xs text-slate-500">{item.location}</p>
-                    </div>
-                  </div>
-                </button>
-              );
-            })}
-          </div>
-        </section>
-      </div>
+                    >
+                      <div className="flex items-center gap-3">
+                        <div className="relative h-12 w-12 shrink-0 overflow-hidden rounded-full border border-white/20 bg-white">
+                          {item.logo ? (
+                            <Image src={item.logo} alt={`${item.name} logo`} fill className="object-cover" />
+                          ) : (
+                            <div className="grid h-full w-full place-items-center text-xs font-semibold text-neutral-700">
+                              {initialsOf(item.name)}
+                            </div>
+                          )}
+                        </div>
+                        <div>
+                          <p className="line-clamp-2 text-sm font-semibold leading-5 text-white">{item.name}</p>
+                          <p className="text-xs text-neutral-400">{item.location}</p>
+                        </div>
+                      </div>
+                    </button>
+                  );
+                })}
+              </div>
+            </ScrollReveal>
+          </section>
+        </div>
       </div>
     </div>
   );
