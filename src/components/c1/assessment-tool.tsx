@@ -1,7 +1,13 @@
 "use client";
 
 import { FormEvent, ReactNode, useId, useState } from "react";
-import { Card } from "@/components/shared/Card";
+import { Calculator, ListChecks, ShieldCheck } from "lucide-react";
+import {
+  studentBentoIconClass,
+  studentBentoInsetClass,
+  studentBentoPillClass,
+  studentBentoTileClass
+} from "@/components/dashboard/student/student-card-theme";
 import { Button } from "@/components/shared/Button";
 import { Input } from "@/components/shared/Input";
 import { Select } from "@/components/shared/Select";
@@ -135,24 +141,47 @@ function Field({
 }) {
   return (
     <div>
-      <label htmlFor={htmlFor} className="mb-1 block text-sm font-medium text-slate-700 dark:text-slate-200">
+      <label htmlFor={htmlFor} className="mb-1.5 block text-xs font-semibold uppercase tracking-wider text-slate-500 dark:text-neutral-400">
         {label}
       </label>
       {children}
-      {invalid ? <p className="mt-1 text-xs font-medium text-red-600">▲ {invalidHint}</p> : null}
+      {invalid ? <p className="mt-1 text-xs font-medium text-red-600 dark:text-red-400">{invalidHint}</p> : null}
     </div>
   );
 }
 
 const ring = "focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-1";
 
+/** Borderless inset input surface that matches the dashboard bento tiles. */
+const control =
+  "border-transparent bg-slate-50 text-slate-900 dark:border-transparent dark:bg-neutral-900 dark:text-neutral-100";
+const fieldsetClass = "mt-6 space-y-4 border-t border-slate-100 pt-6 dark:border-white/5";
+const legendClass = "mb-3 text-xs font-semibold uppercase tracking-wider text-slate-400 dark:text-neutral-500";
+
+function TileHeader({ icon, title, subtitle, meta }: { icon: ReactNode; title: string; subtitle?: string; meta?: ReactNode }) {
+  return (
+    <div className="mb-5 flex items-start justify-between gap-3">
+      <div className="flex items-center gap-3">
+        <span className={studentBentoIconClass}>{icon}</span>
+        <div>
+          <h3 className="text-base font-bold tracking-tight text-slate-900 dark:text-white">{title}</h3>
+          {subtitle ? <p className="text-xs text-slate-500 dark:text-neutral-400">{subtitle}</p> : null}
+        </div>
+      </div>
+      {meta}
+    </div>
+  );
+}
+
 type AssessmentToolProps = {
   scholarships?: ScholarshipCriteria[];
   /** Called after each successful calculation (used by dashboards that persist the result). */
   onResult?: (profile: StudentFinancialProfile, assessment: VulnerabilityAssessment) => void;
+  /** Extra tile rendered at the end of the results column. */
+  aside?: ReactNode;
 };
 
-export function AssessmentTool({ scholarships = illustrativeScholarships, onResult }: AssessmentToolProps) {
+export function AssessmentTool({ scholarships = illustrativeScholarships, onResult, aside }: AssessmentToolProps) {
   const { language } = useLanguage();
   const t = getC1Text(language);
   const uid = useId();
@@ -203,14 +232,14 @@ export function AssessmentTool({ scholarships = illustrativeScholarships, onResu
         value={form[name] as string}
         onChange={(e) => set(name, e.target.value as never)}
         aria-invalid={errors[name] ? true : undefined}
-        className={`${ring} ${errors[name] ? "border-red-500" : ""}`}
+        className={`${control} ${ring} ${errors[name] ? "!border-red-500" : ""}`}
         {...props}
       />
     </Field>
   );
 
   const check = (name: keyof FormState, label: string) => (
-    <label className="flex items-start gap-2 text-sm text-slate-700 dark:text-slate-200">
+    <label className={`${studentBentoInsetClass} flex cursor-pointer items-start gap-2.5 px-3 py-2.5 text-sm text-slate-700 dark:text-neutral-200`}>
       <input
         type="checkbox"
         checked={form[name] as boolean}
@@ -222,17 +251,21 @@ export function AssessmentTool({ scholarships = illustrativeScholarships, onResu
   );
 
   return (
-    <div className="grid gap-6 lg:grid-cols-5">
-      <form onSubmit={onSubmit} noValidate className="space-y-5 lg:col-span-3" aria-label={t.toolTitle}>
-        <Card className="space-y-4">
-          <p className="rounded-lg bg-emerald-50 px-3 py-2 text-xs text-emerald-900 dark:bg-emerald-950 dark:text-emerald-100">
-            {t.privacyNote}
+    <div className="grid grid-cols-1 gap-4 lg:grid-cols-12">
+      <form onSubmit={onSubmit} noValidate className={`${studentBentoTileClass} lg:col-span-7`} aria-label={t.toolTitle}>
+        <TileHeader icon={<Calculator className="size-5" />} title={t.toolTitle} subtitle={t.sampleNote} />
+
+        <div className="space-y-2">
+          <p className={`${studentBentoInsetClass} flex items-start gap-2 px-3.5 py-2.5 text-xs text-slate-600 dark:text-neutral-300`}>
+            <ShieldCheck className="mt-0.5 size-4 shrink-0 text-emerald-600 dark:text-emerald-400" />
+            <span>{t.privacyNote}</span>
           </p>
-          <p className="rounded-lg bg-amber-50 px-3 py-2 text-xs text-amber-900 dark:bg-amber-950 dark:text-amber-100">
-            {t.syntheticNote}
-          </p>
+          <p className="px-3.5 text-[11px] text-slate-400 dark:text-neutral-500">{t.syntheticNote}</p>
+        </div>
+
+        <div className="mt-5">
           <Field label={t.sampleLabel} htmlFor={id("sample")}>
-            <Select id={id("sample")} value={sampleId} onChange={(e) => loadSample(e.target.value)} className={ring}>
+            <Select id={id("sample")} value={sampleId} onChange={(e) => loadSample(e.target.value)} className={`${control} ${ring}`}>
               <option value="">{t.samplePlaceholder}</option>
               {demoCases.map((c) => (
                 <option key={c.id} value={c.id}>
@@ -241,87 +274,80 @@ export function AssessmentTool({ scholarships = illustrativeScholarships, onResu
               ))}
             </Select>
           </Field>
-          <p className="text-xs text-slate-500">{t.sampleNote}</p>
-        </Card>
+        </div>
 
-        <Card>
-          <fieldset className="space-y-4">
-            <legend className="mb-2 text-base font-semibold">{t.sectionHousehold}</legend>
-            <div className="grid gap-4 sm:grid-cols-2">
-              {numberInput("income", t.income, { min: 5000, step: 1000 })}
-              {numberInput("householdSize", t.householdSize, { min: 2, max: 9, step: 1 })}
-              {numberInput("dependents", t.dependents, { min: 0, max: 8, step: 1 })}
-              {numberInput("siblings", t.siblings, { min: 0, max: 6, step: 1 })}
-              <Field label={t.guardian} htmlFor={id("guardian")}>
-                <Select
-                  id={id("guardian")}
-                  value={form.guardian}
-                  onChange={(e) => set("guardian", e.target.value as GuardianEmployment)}
-                  className={ring}
-                >
-                  <option value="formal">{t.guardianFormal}</option>
-                  <option value="informal">{t.guardianInformal}</option>
-                  <option value="unemployed">{t.guardianUnemployed}</option>
-                  <option value="retired">{t.guardianRetired}</option>
-                  <option value="deceased">{t.guardianDeceased}</option>
-                </Select>
-              </Field>
-            </div>
-            <div className="grid gap-2 sm:grid-cols-2">
-              {check("singleParent", t.singleParent)}
-              {check("rural", t.rural)}
-            </div>
-          </fieldset>
-        </Card>
+        <fieldset className={fieldsetClass}>
+          <legend className={legendClass}>{t.sectionHousehold}</legend>
+          <div className="grid gap-4 sm:grid-cols-2">
+            {numberInput("income", t.income, { min: 5000, step: 1000 })}
+            {numberInput("householdSize", t.householdSize, { min: 2, max: 9, step: 1 })}
+            {numberInput("dependents", t.dependents, { min: 0, max: 8, step: 1 })}
+            {numberInput("siblings", t.siblings, { min: 0, max: 6, step: 1 })}
+            <Field label={t.guardian} htmlFor={id("guardian")}>
+              <Select
+                id={id("guardian")}
+                value={form.guardian}
+                onChange={(e) => set("guardian", e.target.value as GuardianEmployment)}
+                className={`${control} ${ring}`}
+              >
+                <option value="formal">{t.guardianFormal}</option>
+                <option value="informal">{t.guardianInformal}</option>
+                <option value="unemployed">{t.guardianUnemployed}</option>
+                <option value="retired">{t.guardianRetired}</option>
+                <option value="deceased">{t.guardianDeceased}</option>
+              </Select>
+            </Field>
+          </div>
+          <div className="grid gap-2 sm:grid-cols-2">
+            {check("singleParent", t.singleParent)}
+            {check("rural", t.rural)}
+          </div>
+        </fieldset>
 
-        <Card>
-          <fieldset className="space-y-4">
-            <legend className="mb-2 text-base font-semibold">{t.sectionFinances}</legend>
-            <div className="grid gap-4 sm:grid-cols-2">
-              {numberInput("expenses", t.expenses, { min: 5000, step: 1000 })}
-              <Field label={t.accommodation} htmlFor={id("accommodation")}>
-                <Select
-                  id={id("accommodation")}
-                  value={form.accommodation}
-                  onChange={(e) => set("accommodation", e.target.value as Accommodation)}
-                  className={ring}
-                >
-                  <option value="home">{t.accHome}</option>
-                  <option value="boarding">{t.accBoarding}</option>
-                  <option value="hostel">{t.accHostel}</option>
-                </Select>
-              </Field>
-              {form.hasLoan ? numberInput("loanAmount", t.loanAmount, { min: 0, step: 10000 }) : null}
-            </div>
-            <div className="grid gap-2 sm:grid-cols-2">
-              {check("hasLoan", t.hasLoan)}
-              {check("shock", t.shock)}
-              {check("currentScholarship", t.currentScholarship)}
-            </div>
-          </fieldset>
-        </Card>
+        <fieldset className={fieldsetClass}>
+          <legend className={legendClass}>{t.sectionFinances}</legend>
+          <div className="grid gap-4 sm:grid-cols-2">
+            {numberInput("expenses", t.expenses, { min: 5000, step: 1000 })}
+            <Field label={t.accommodation} htmlFor={id("accommodation")}>
+              <Select
+                id={id("accommodation")}
+                value={form.accommodation}
+                onChange={(e) => set("accommodation", e.target.value as Accommodation)}
+                className={`${control} ${ring}`}
+              >
+                <option value="home">{t.accHome}</option>
+                <option value="boarding">{t.accBoarding}</option>
+                <option value="hostel">{t.accHostel}</option>
+              </Select>
+            </Field>
+            {form.hasLoan ? numberInput("loanAmount", t.loanAmount, { min: 0, step: 10000 }) : null}
+          </div>
+          <div className="grid gap-2 sm:grid-cols-2">
+            {check("hasLoan", t.hasLoan)}
+            {check("shock", t.shock)}
+            {check("currentScholarship", t.currentScholarship)}
+          </div>
+        </fieldset>
 
-        <Card>
-          <fieldset className="space-y-4">
-            <legend className="mb-2 text-base font-semibold">{t.sectionStudy}</legend>
-            <div className="grid gap-4 sm:grid-cols-2">
-              {numberInput("gpa", t.gpa, { min: 0, max: 4, step: 0.01 })}
-              <Field label={t.year} htmlFor={id("year")}>
-                <Select id={id("year")} value={form.year} onChange={(e) => set("year", e.target.value as "3" | "4")} className={ring}>
-                  <option value="3">3</option>
-                  <option value="4">4</option>
-                </Select>
-              </Field>
-            </div>
-          </fieldset>
-        </Card>
+        <fieldset className={fieldsetClass}>
+          <legend className={legendClass}>{t.sectionStudy}</legend>
+          <div className="grid gap-4 sm:grid-cols-2">
+            {numberInput("gpa", t.gpa, { min: 0, max: 4, step: 0.01 })}
+            <Field label={t.year} htmlFor={id("year")}>
+              <Select id={id("year")} value={form.year} onChange={(e) => set("year", e.target.value as "3" | "4")} className={`${control} ${ring}`}>
+                <option value="3">3</option>
+                <option value="4">4</option>
+              </Select>
+            </Field>
+          </div>
+        </fieldset>
 
         {Object.keys(errors).length > 0 ? (
-          <p role="alert" className="text-sm text-red-600">
+          <p role="alert" className="mt-5 text-sm text-red-600 dark:text-red-400">
             {t.invalidInput}
           </p>
         ) : null}
-        <div className="flex gap-3">
+        <div className="mt-6 flex gap-3">
           <Button type="submit" className={ring}>
             {t.calculate}
           </Button>
@@ -341,19 +367,23 @@ export function AssessmentTool({ scholarships = illustrativeScholarships, onResu
         </div>
       </form>
 
-      <div className="space-y-4 lg:col-span-2" aria-live="polite">
+      <div className="space-y-4 lg:col-span-5" aria-live="polite">
         {result ? (
           <>
-            <Card>
-              <h3 className="text-lg font-semibold">{t.resultTitle}</h3>
-              <div className="mt-4 flex items-end gap-3">
-                <span className="text-5xl font-bold tabular-nums" data-testid="vi-value">
+            <div className={studentBentoTileClass}>
+              <TileHeader
+                icon={<ShieldCheck className="size-5" />}
+                title={t.resultTitle}
+                meta={<span className={studentBentoPillClass}>{bandLabel(result.assessment.band)}</span>}
+              />
+              <div className="flex items-end gap-3">
+                <span className="text-5xl font-bold tracking-tight tabular-nums text-slate-900 dark:text-white" data-testid="vi-value">
                   {result.assessment.vulnerabilityIndex}
                 </span>
-                <span className="pb-1 text-sm text-slate-500">/ 100 · {t.index}</span>
+                <span className="pb-1.5 text-sm text-slate-500 dark:text-neutral-400">/ 100 · {t.index}</span>
               </div>
               <div
-                className="mt-3 h-3 overflow-hidden rounded-full bg-slate-200 dark:bg-slate-700"
+                className="mt-3 h-2.5 overflow-hidden rounded-full bg-slate-100 dark:bg-neutral-800"
                 role="progressbar"
                 aria-valuenow={result.assessment.vulnerabilityIndex}
                 aria-valuemin={0}
@@ -361,69 +391,85 @@ export function AssessmentTool({ scholarships = illustrativeScholarships, onResu
                 aria-label={t.index}
               >
                 <div
-                  className={`h-full ${bandColor(result.assessment.band)}`}
+                  className={`h-full rounded-full ${bandColor(result.assessment.band)}`}
                   style={{ width: `${result.assessment.vulnerabilityIndex}%` }}
                 />
               </div>
-              <p className="mt-2 text-sm font-semibold" data-testid="vi-band">
+              <p className="mt-2 text-sm font-semibold text-slate-800 dark:text-neutral-200" data-testid="vi-band">
                 {bandLabel(result.assessment.band)}
               </p>
-              <h4 className="mt-5 text-sm font-semibold">{t.whyTitle}</h4>
-              <p className="text-xs text-slate-500">{t.whyNote}</p>
-              <ul className="mt-2 space-y-2">
-                {result.assessment.topFactors.map((f) => (
-                  <li key={f.feature}>
-                    <div className="flex justify-between text-sm">
-                      <span>{f.label}</span>
-                      <span className="text-slate-500">{f.sharePercent}%</span>
-                    </div>
-                    <div className="mt-1 h-1.5 overflow-hidden rounded-full bg-slate-200 dark:bg-slate-700">
-                      <div className="h-full bg-primary" style={{ width: `${f.sharePercent}%` }} />
-                    </div>
-                  </li>
-                ))}
-              </ul>
-            </Card>
 
-            <Card>
-              <h3 className="text-lg font-semibold">{t.matchesTitle}</h3>
-              <p className="text-xs text-slate-500">{t.catalogueNote}</p>
+              <div className={`${studentBentoInsetClass} mt-5 p-4`}>
+                <h4 className="text-sm font-semibold text-slate-900 dark:text-white">{t.whyTitle}</h4>
+                <p className="text-[11px] text-slate-500 dark:text-neutral-500">{t.whyNote}</p>
+                <ul className="mt-3 space-y-2.5">
+                  {result.assessment.topFactors.map((f) => (
+                    <li key={f.feature}>
+                      <div className="flex justify-between text-xs">
+                        <span className="text-slate-700 dark:text-neutral-300">{f.label}</span>
+                        <span className="font-semibold text-slate-500 dark:text-neutral-400">{f.sharePercent}%</span>
+                      </div>
+                      <div className="mt-1 h-1.5 overflow-hidden rounded-full bg-slate-200/80 dark:bg-neutral-800">
+                        <div className="h-full rounded-full bg-primary" style={{ width: `${f.sharePercent}%` }} />
+                      </div>
+                    </li>
+                  ))}
+                </ul>
+              </div>
+            </div>
+
+            <div className={studentBentoTileClass}>
+              <TileHeader
+                icon={<ListChecks className="size-5" />}
+                title={t.matchesTitle}
+                subtitle={t.catalogueNote}
+                meta={<span className={studentBentoPillClass}>{Math.min(result.recs.length, 5)}</span>}
+              />
               {result.recs.length === 0 ? (
-                <p className="mt-3 text-sm text-slate-500">{t.noMatches}</p>
+                <div className={`${studentBentoInsetClass} py-8 text-center text-sm text-slate-500 dark:text-neutral-500`}>
+                  {t.noMatches}
+                </div>
               ) : (
-                <ol className="mt-3 space-y-3" data-testid="recommendations">
+                <ol className="space-y-2.5" data-testid="recommendations">
                   {result.recs.slice(0, 5).map((r, index) => (
-                    <li key={r.scholarship.id} className="rounded-xl border border-slate-200 p-3 dark:border-slate-700">
+                    <li key={r.scholarship.id} className={`${studentBentoInsetClass} p-4`}>
                       <div className="flex items-start justify-between gap-2">
-                        <div>
-                          <p className="text-sm font-semibold">
+                        <div className="min-w-0">
+                          <p className="text-sm font-semibold text-slate-900 dark:text-white">
                             {index + 1}. {r.scholarship.title}
                           </p>
-                          <p className="text-xs text-slate-500">
+                          <p className="mt-0.5 text-[11px] text-slate-500 dark:text-neutral-500">
                             {r.scholarship.provider} · LKR {r.scholarship.amountLkr.toLocaleString("en-LK")} · {t.deadlineIn}{" "}
                             {r.scholarship.deadlineDays} {t.days}
                           </p>
                         </div>
-                        <span className="shrink-0 rounded-full bg-primary/10 px-2 py-0.5 text-xs font-semibold text-primary">
+                        <span className="shrink-0 rounded-full bg-white px-2 py-0.5 text-[11px] font-semibold text-slate-700 shadow-sm ring-1 ring-slate-200/70 dark:bg-neutral-950 dark:text-neutral-300 dark:ring-white/10">
                           {t.fit} {Math.round(r.score * 100)}%
                         </span>
                       </div>
-                      <ul className="mt-2 list-disc pl-5 text-xs text-slate-600 dark:text-slate-300">
+                      <ul className="mt-2 space-y-1 text-xs text-slate-600 dark:text-neutral-400">
                         {r.reasons.map((reason) => (
-                          <li key={reason}>{reason}</li>
+                          <li key={reason} className="flex gap-2">
+                            <span className="mt-1.5 h-1 w-1 shrink-0 rounded-full bg-slate-400 dark:bg-neutral-500" />
+                            <span>{reason}</span>
+                          </li>
                         ))}
                       </ul>
                     </li>
                   ))}
                 </ol>
               )}
-            </Card>
+            </div>
           </>
         ) : (
-          <Card>
-            <p className="text-sm text-slate-500">{t.toolSubtitle}</p>
-          </Card>
+          <div className={`${studentBentoTileClass} flex flex-col items-center justify-center py-12 text-center`}>
+            <span className={studentBentoIconClass}>
+              <ShieldCheck className="size-5" />
+            </span>
+            <p className="mt-3 max-w-xs text-sm text-slate-500 dark:text-neutral-400">{t.toolSubtitle}</p>
+          </div>
         )}
+        {aside}
       </div>
     </div>
   );

@@ -1,8 +1,20 @@
 ﻿"use client";
 
-import { useCallback, useEffect, useState } from "react";
+import { useCallback, useEffect, useState, type ReactNode } from "react";
 import Image from "next/image";
-import { PieChart, Pie, Cell, ResponsiveContainer, Legend, Tooltip } from "recharts";
+import { PieChart, Pie, Cell, ResponsiveContainer, Tooltip } from "recharts";
+import {
+  ChartPie,
+  ChevronRight,
+  GraduationCap,
+  HeartHandshake,
+  History,
+  Laptop,
+  LifeBuoy,
+  UtensilsCrossed,
+  Wallet,
+  type LucideIcon
+} from "lucide-react";
 import { Card } from "@/components/shared/Card";
 import { Badge } from "@/components/shared/Badge";
 import { Button } from "@/components/shared/Button";
@@ -16,6 +28,12 @@ import {
   type NgoProgram
 } from "@/lib/ngo-demo-store";
 import { useAuth } from "@/context/auth-context";
+import {
+  studentBentoIconClass,
+  studentBentoInsetClass,
+  studentBentoPillClass,
+  studentBentoTileClass
+} from "./student-card-theme";
 
 type AidRequest = {
   id?: string;
@@ -213,18 +231,6 @@ export function StudentFinancialAid() {
   }, 0);
   const totalBalance = mealBalance + tuitionBalance + ngoTotalReceived + emergencyAidReceived;
 
-  const tabs = [
-    { id: "emergency-aid" as const, label: "Emergency aid applications" },
-    { id: "equipment" as const, label: "Equipment support" },
-    { id: "meal-voucher" as const, label: "Meal voucher support" },
-    { id: "tuition" as const, label: "Tuition support" },
-    { id: "ngo-programs" as const, label: "NGO Support Programs" }
-  ];
-  const tabPanelCardClass =
-    "border-blue-200/80 bg-gradient-to-br from-blue-50 via-white to-sky-50 dark:border-blue-500/30 dark:from-[#0f1f3f] dark:via-slate-900 dark:to-[#102a59]";
-  const formContainerClass =
-    "mt-6 rounded-xl border border-white/25 bg-gradient-to-br from-[#0b1f45] via-[#102a59] to-[#0c1d3d] p-4 text-white shadow-[0_14px_34px_-22px_rgba(2,6,23,0.95)]";
-
   const renderBalanceCardContent = (isPopup = false) => {
     const profileSize = isPopup ? 72 : 64;
     const profileClass = isPopup ? "h-[72px] w-[72px]" : "h-16 w-16";
@@ -296,7 +302,11 @@ export function StudentFinancialAid() {
 
   const renderRequestList = (requests: AidRequest[], emptyMessage: string) => {
     if (requests.length === 0) {
-      return <p className="text-sm text-slate-500">{emptyMessage}</p>;
+      return (
+        <div className={`${studentBentoInsetClass} py-8 text-center text-xs text-slate-500 dark:text-neutral-500`}>
+          {emptyMessage}
+        </div>
+      );
     }
 
     return (
@@ -306,15 +316,22 @@ export function StudentFinancialAid() {
             <button
               type="button"
               onClick={() => setSelectedRequest(request)}
-              className="flex w-full flex-wrap items-center justify-between gap-2 rounded-xl border border-slate-200 bg-white p-3 text-left transition-colors hover:border-primary/30 hover:bg-slate-50 dark:border-slate-700 dark:bg-slate-800/50 dark:hover:border-primary/40 dark:hover:bg-slate-800/80"
+              className={`${studentBentoInsetClass} group flex w-full items-center justify-between gap-3 px-3.5 py-3 text-left transition-colors hover:bg-slate-100/90 dark:hover:bg-neutral-900`}
             >
-              <div>
-                <span className="font-medium text-slate-900 dark:text-white">
+              <div className="min-w-0">
+                <p className="truncate text-sm font-semibold text-slate-800 dark:text-neutral-200">
                   {formatCategory(request.category || "")}
-                </span>
-                {request.amount && <span className="ml-2 text-sm text-slate-500">{request.amount} {currency}</span>}
+                </p>
+                {request.amount && (
+                  <p className="text-[11px] text-slate-500 dark:text-neutral-500">
+                    {currency} {request.amount}
+                  </p>
+                )}
               </div>
-              <Badge variant={getStatusBadgeVariant(request.status)}>{formatStatus(request.status)}</Badge>
+              <div className="flex shrink-0 items-center gap-2">
+                <Badge variant={getStatusBadgeVariant(request.status)}>{formatStatus(request.status)}</Badge>
+                <ChevronRight className="size-4 text-slate-400 transition-transform group-hover:translate-x-0.5 dark:text-neutral-500" />
+              </div>
             </button>
           </li>
         ))}
@@ -322,262 +339,301 @@ export function StudentFinancialAid() {
     );
   };
 
+  const tabs = [
+    { id: "emergency-aid" as const, label: "Emergency aid", icon: LifeBuoy },
+    { id: "equipment" as const, label: "Equipment", icon: Laptop },
+    { id: "meal-voucher" as const, label: "Meal vouchers", icon: UtensilsCrossed },
+    { id: "tuition" as const, label: "Tuition", icon: GraduationCap },
+    { id: "ngo-programs" as const, label: "NGO programs", icon: HeartHandshake }
+  ];
+
+  const balanceTiles = [
+    { label: "Meal vouchers", value: mealBalance, icon: UtensilsCrossed, dot: "bg-amber-500" },
+    { label: "Tuition support", value: tuitionBalance, icon: GraduationCap, dot: "bg-blue-500" },
+    { label: "NGO support", value: ngoTotalReceived, icon: HeartHandshake, dot: "bg-emerald-500" },
+    { label: "Emergency aid", value: emergencyAidReceived, icon: LifeBuoy, dot: "bg-rose-500" }
+  ];
+
+  const renderTileHeader = (
+    Icon: LucideIcon,
+    title: string,
+    subtitle?: string,
+    meta?: ReactNode
+  ) => (
+    <div className="mb-5 flex items-start justify-between gap-3">
+      <div className="flex items-center gap-3">
+        <span className={studentBentoIconClass}>
+          <Icon className="size-5" />
+        </span>
+        <div>
+          <h3 className="text-base font-bold tracking-tight text-slate-900 dark:text-white">{title}</h3>
+          {subtitle ? <p className="text-xs text-slate-500 dark:text-neutral-400">{subtitle}</p> : null}
+        </div>
+      </div>
+      {meta}
+    </div>
+  );
+
+  const renderFormTile = (
+    Icon: LucideIcon,
+    title: string,
+    subtitle: string,
+    category: "emergency" | "equipment" | "boarding" | "tuition",
+    submitLabel: string
+  ) => (
+    <div className={`${studentBentoTileClass} lg:col-span-7`}>
+      {renderTileHeader(Icon, title, subtitle)}
+      <AidRequestForm
+        defaultCategory={category}
+        lockCategory
+        submitLabel={submitLabel}
+        onSuccess={() => refreshAidAndSummary(false)}
+        onShowSuccessPopup={() => setShowSuccessPopup(true)}
+      />
+    </div>
+  );
+
+  const renderHistoryTile = (requests: AidRequest[], emptyMessage: string, className = "") => (
+    <div className={`${studentBentoTileClass} ${className}`}>
+      {renderTileHeader(
+        History,
+        "Request history",
+        "Select a request to view details",
+        <span className={studentBentoPillClass}>{requests.length} total</span>
+      )}
+      {loadingAid ? <p className="text-sm text-slate-500 dark:text-neutral-500">Loading...</p> : renderRequestList(requests, emptyMessage)}
+    </div>
+  );
+
+  const renderBalanceTile = (title: string, value: number) => (
+    <div className={studentBentoTileClass}>
+      {renderTileHeader(Wallet, title, financialSummary?.lastUpdated ? `Updated ${financialSummary.lastUpdated}` : undefined)}
+      {loadingFin ? (
+        <p className="text-sm text-slate-500 dark:text-neutral-500">Loading...</p>
+      ) : (
+        <p className="text-3xl font-bold tracking-tight text-slate-900 dark:text-white">
+          <span className="mr-1.5 text-base font-semibold text-slate-400 dark:text-neutral-500">{currency}</span>
+          {value.toLocaleString()}
+        </p>
+      )}
+    </div>
+  );
+
   return (
-    <div className="space-y-6">
-      <div
-        role="button"
-        tabIndex={0}
-        onClick={() => setShowBalanceCardPopup(true)}
-        onKeyDown={(event) => {
-          if (event.key === "Enter" || event.key === " ") {
-            event.preventDefault();
-            setShowBalanceCardPopup(true);
-          }
-        }}
-        className="cursor-pointer focus:outline-none focus-visible:ring-2 focus-visible:ring-primary/60 focus-visible:ring-offset-2 dark:focus-visible:ring-offset-slate-950"
-        aria-label="Open balance card"
-      >
-        <Card className="relative overflow-hidden border-slate-900/60 bg-gradient-to-br from-slate-950 via-black to-slate-900 text-white shadow-lg transition-transform duration-200 hover:scale-[1.01]">
+    <div className="space-y-4">
+      {/* Top bento row: balance card + balance breakdown */}
+      <div className="grid grid-cols-1 gap-4 lg:grid-cols-12">
+        <div
+          role="button"
+          tabIndex={0}
+          onClick={() => setShowBalanceCardPopup(true)}
+          onKeyDown={(event) => {
+            if (event.key === "Enter" || event.key === " ") {
+              event.preventDefault();
+              setShowBalanceCardPopup(true);
+            }
+          }}
+          className="relative cursor-pointer overflow-hidden rounded-3xl bg-gradient-to-br from-slate-950 via-black to-slate-900 text-white shadow-[0_2px_12px_-4px_rgba(15,23,42,0.25)] transition-transform duration-200 hover:scale-[1.005] focus:outline-none focus-visible:ring-2 focus-visible:ring-primary/60 focus-visible:ring-offset-2 lg:col-span-7 dark:ring-1 dark:ring-white/10 dark:focus-visible:ring-offset-black"
+          aria-label="Open balance card"
+        >
           {renderBalanceCardContent()}
-        </Card>
+        </div>
+
+        <div className="grid grid-cols-2 gap-4 lg:col-span-5">
+          {balanceTiles.map(({ label, value, icon: Icon, dot }) => (
+            <div key={label} className={`${studentBentoTileClass} flex flex-col justify-between !p-5`}>
+              <div className="flex items-center justify-between gap-2">
+                <div className="flex items-center gap-1.5">
+                  <span className={`h-2 w-2 rounded-full ${dot}`} />
+                  <span className="text-[11px] font-medium text-slate-500 dark:text-neutral-400">{label}</span>
+                </div>
+                <Icon className="size-4 text-slate-400 dark:text-neutral-500" />
+              </div>
+              <p className="mt-3 text-lg font-bold text-slate-900 dark:text-white">
+                {loadingFin ? "..." : `${currency} ${value.toLocaleString()}`}
+              </p>
+            </div>
+          ))}
+        </div>
       </div>
 
-      <div className="border-b border-slate-200 dark:border-slate-700">
-        <nav className="flex flex-wrap gap-1" aria-label="Financial aid sections">
-          {tabs.map((tab) => (
-            <button
-              key={tab.id}
-              type="button"
-              onClick={() => setActiveTab(tab.id)}
-              className={`rounded-t-lg px-4 py-2.5 text-sm font-medium transition-colors ${
-                activeTab === tab.id
-                  ? "border border-b-0 border-blue-300 bg-blue-600 text-white dark:border-blue-300/40 dark:bg-blue-500/30 dark:text-blue-100"
-                  : "border border-transparent text-slate-600 hover:bg-blue-50 hover:text-blue-700 dark:text-slate-300 dark:hover:bg-blue-500/15 dark:hover:text-blue-100"
-              }`}
-            >
-              {tab.label}
-            </button>
-          ))}
-        </nav>
-      </div>
+      {/* Section switcher */}
+      <nav
+        className="flex gap-1 overflow-x-auto rounded-2xl bg-slate-100/80 p-1 dark:bg-neutral-900/80"
+        aria-label="Financial aid sections"
+      >
+        {tabs.map(({ id, label, icon: Icon }) => (
+          <button
+            key={id}
+            type="button"
+            onClick={() => setActiveTab(id)}
+            aria-pressed={activeTab === id}
+            className={`flex shrink-0 items-center gap-2 rounded-xl px-4 py-2 text-sm font-medium transition-colors ${
+              activeTab === id
+                ? "bg-white text-slate-900 shadow-sm dark:bg-neutral-950 dark:text-white"
+                : "text-slate-500 hover:text-slate-900 dark:text-neutral-400 dark:hover:text-white"
+            }`}
+          >
+            <Icon className="size-4" />
+            {label}
+          </button>
+        ))}
+      </nav>
 
       {activeTab === "emergency-aid" && (
-        <Card className={`overflow-hidden p-5 ${tabPanelCardClass}`}>
-          <h3 className="text-lg font-semibold text-slate-900 dark:text-white">Emergency aid applications</h3>
-          {loadingAid ? (
-            <p className="mt-4 text-sm text-slate-500">Loading...</p>
-          ) : (
-            <div className="mt-4 grid gap-6 lg:grid-cols-2">
-              <div>
-                {pieData.length > 0 ? (
-                  <div className="h-[220px]">
+        <div className="grid grid-cols-1 gap-4 lg:grid-cols-12">
+          {renderFormTile(
+            LifeBuoy,
+            "Apply for emergency academic aid",
+            "Requests are verified by your university before release",
+            "emergency",
+            "Submit emergency aid request"
+          )}
+
+          <div className="space-y-4 lg:col-span-5">
+            <div className={studentBentoTileClass}>
+              {renderTileHeader(
+                ChartPie,
+                "Emergency aid status",
+                "Your emergency requests at a glance",
+                <span className={studentBentoPillClass}>{emergencyRequests.length} total</span>
+              )}
+              {loadingAid ? (
+                <p className="text-sm text-slate-500 dark:text-neutral-500">Loading...</p>
+              ) : (
+                <>
+                  <div className="h-[170px]">
                     <ResponsiveContainer width="100%" height="100%">
                       <PieChart>
                         <Pie
-                          data={pieData}
+                          data={pieData.length > 0 ? pieData : [{ name: "No requests", value: 1, color: "#52525b" }]}
                           cx="50%"
                           cy="50%"
                           innerRadius={50}
-                          outerRadius={80}
-                          paddingAngle={2}
+                          outerRadius={72}
+                          paddingAngle={pieData.length > 1 ? 4 : 0}
                           dataKey="value"
                           nameKey="name"
-                          label={({ name, value }) => `${name}: ${value}`}
+                          stroke="none"
                         >
-                          {pieData.map((entry, index) => (
+                          {(pieData.length > 0 ? pieData : [{ color: "#52525b" }]).map((entry, index) => (
                             <Cell key={index} fill={entry.color} />
                           ))}
                         </Pie>
-                        <Tooltip />
-                        <Legend />
+                        {pieData.length > 0 && <Tooltip formatter={(value: number) => [value, "Count"]} />}
                       </PieChart>
                     </ResponsiveContainer>
                   </div>
-                ) : (
-                  <p className="text-sm text-slate-500">No emergency aid requests yet.</p>
-                )}
-              </div>
-              <div className="space-y-3">
-                <p className="text-sm font-medium text-slate-700 dark:text-slate-200">Recent emergency requests</p>
-                {renderRequestList(emergencyRequests.slice(0, 5), "No emergency requests found.")}
-              </div>
+                  <div className="mt-2 grid grid-cols-3 gap-2.5">
+                    {(["Pending", "Approved", "Rejected"] as const).map((status) => (
+                      <div key={status} className={`${studentBentoInsetClass} px-3 py-2.5`}>
+                        <div className="flex items-center gap-1.5">
+                          <span className="h-2 w-2 rounded-full" style={{ backgroundColor: STATUS_COLORS[status] }} />
+                          <span className="text-[11px] font-medium text-slate-500 dark:text-neutral-400">{status}</span>
+                        </div>
+                        <p className="mt-1 text-lg font-bold text-slate-900 dark:text-white">
+                          {emergencyStatusCounts[status] || 0}
+                        </p>
+                      </div>
+                    ))}
+                  </div>
+                </>
+              )}
             </div>
-          )}
-
-          <div className={formContainerClass}>
-            <h4 className="text-sm font-semibold text-white">Apply for emergency academic aid</h4>
-            <AidRequestForm
-              defaultCategory="emergency"
-              lockCategory
-              submitLabel="Submit emergency aid request"
-              onSuccess={() => refreshAidAndSummary(false)}
-              onShowSuccessPopup={() => setShowSuccessPopup(true)}
-            />
+            {renderHistoryTile(emergencyRequests, "No emergency requests yet.")}
           </div>
-
-          <div className="mt-8 border-t border-slate-200 pt-6 dark:border-slate-700">
-            <h4 className="text-sm font-semibold text-slate-900 dark:text-white">Emergency request history</h4>
-            <p className="mt-1 text-xs text-slate-500 dark:text-slate-400">Click a request to view details or delete.</p>
-            <div className="mt-3">{renderRequestList(emergencyRequests, "No previous emergency requests.")}</div>
-          </div>
-        </Card>
+        </div>
       )}
 
       {activeTab === "equipment" && (
-        <Card className={`p-5 ${tabPanelCardClass}`}>
-          <h3 className="text-lg font-semibold text-slate-900 dark:text-white">Equipment & resource support</h3>
-          <p className="mt-1 text-sm text-slate-600 dark:text-slate-300">
-            Request laptops, books, and lab equipment. Your requests are tracked with live status updates.
-          </p>
-
-          <div className={formContainerClass}>
-            <h4 className="text-sm font-semibold text-white">Request equipment</h4>
-            <AidRequestForm
-              defaultCategory="equipment"
-              lockCategory
-              submitLabel="Submit equipment request"
-              onSuccess={() => refreshAidAndSummary(false)}
-              onShowSuccessPopup={() => setShowSuccessPopup(true)}
-            />
-          </div>
-
-          <div className="mt-6 border-t border-slate-200 pt-5 dark:border-slate-700">
-            <h4 className="text-sm font-semibold text-slate-900 dark:text-white">Equipment request history</h4>
-            <div className="mt-3">{renderRequestList(equipmentRequests, "No equipment requests yet.")}</div>
-          </div>
-        </Card>
+        <div className="grid grid-cols-1 gap-4 lg:grid-cols-12">
+          {renderFormTile(
+            Laptop,
+            "Request equipment & resources",
+            "Laptops, books and lab equipment, tracked with live status",
+            "equipment",
+            "Submit equipment request"
+          )}
+          {renderHistoryTile(equipmentRequests, "No equipment requests yet.", "lg:col-span-5")}
+        </div>
       )}
 
       {activeTab === "meal-voucher" && (
-        <div className="space-y-6">
-          <Card className={`overflow-hidden ${tabPanelCardClass}`}>
-            <div className="border-b border-blue-200/70 bg-blue-100/70 px-5 py-4 dark:border-blue-400/25 dark:bg-blue-500/10">
-              <h3 className="text-lg font-semibold text-slate-900 dark:text-white">Meal voucher support</h3>
-              <p className="mt-0.5 text-sm text-slate-600 dark:text-slate-400">
-                Track your meal voucher balance and request top-ups when needed.
-              </p>
-            </div>
-            {loadingFin ? (
-              <p className="p-6 text-sm text-slate-500">Loading...</p>
-            ) : (
-              <div className="p-5">
-                <div className="flex flex-col items-center justify-center rounded-2xl border-2 border-dashed border-blue-300/80 bg-white/90 py-10 dark:border-blue-300/40 dark:bg-slate-800/50">
-                  <p className="text-sm font-medium uppercase tracking-wide text-slate-500 dark:text-slate-400">Current balance</p>
-                  <p className="mt-2 text-4xl font-bold text-primary">
-                    {currency} {mealBalance.toLocaleString()}
-                  </p>
-                  {financialSummary?.lastUpdated && (
-                    <p className="mt-2 text-xs text-slate-500">Last updated: {financialSummary.lastUpdated}</p>
-                  )}
-                </div>
-              </div>
-            )}
-          </Card>
-
-          <Card className={`p-5 ${tabPanelCardClass}`}>
-            <div className={formContainerClass}>
-              <h4 className="text-sm font-semibold text-white">Request meal voucher top-up</h4>
-              <AidRequestForm
-                defaultCategory="boarding"
-                lockCategory
-                submitLabel="Submit meal voucher request"
-                onSuccess={() => refreshAidAndSummary(false)}
-                onShowSuccessPopup={() => setShowSuccessPopup(true)}
-              />
-            </div>
-
-            <div className="mt-6 border-t border-slate-200 pt-5 dark:border-slate-700">
-              <h4 className="text-sm font-semibold text-slate-900 dark:text-white">Meal voucher request history</h4>
-              <div className="mt-3">{renderRequestList(mealVoucherRequests, "No meal voucher requests yet.")}</div>
-            </div>
-          </Card>
+        <div className="grid grid-cols-1 gap-4 lg:grid-cols-12">
+          {renderFormTile(
+            UtensilsCrossed,
+            "Request a meal voucher top-up",
+            "Top up your balance when you need more support",
+            "boarding",
+            "Submit meal voucher request"
+          )}
+          <div className="space-y-4 lg:col-span-5">
+            {renderBalanceTile("Meal voucher balance", mealBalance)}
+            {renderHistoryTile(mealVoucherRequests, "No meal voucher requests yet.")}
+          </div>
         </div>
       )}
 
       {activeTab === "tuition" && (
-        <div className="space-y-6">
-          <Card className={`overflow-hidden ${tabPanelCardClass}`}>
-            <div className="border-b border-blue-200/70 bg-blue-100/70 px-5 py-4 dark:border-blue-400/25 dark:bg-blue-500/10">
-              <h3 className="text-lg font-semibold text-slate-900 dark:text-white">Tuition & maintenance support</h3>
-              <p className="mt-0.5 text-sm text-slate-600 dark:text-slate-400">
-                Monitor allocated support and submit new tuition assistance requests.
-              </p>
-            </div>
-            {loadingFin ? (
-              <p className="p-6 text-sm text-slate-500">Loading...</p>
-            ) : (
-              <div className="p-5">
-                <div className="rounded-2xl border-2 border-blue-200 bg-white p-6 dark:border-blue-300/35 dark:bg-slate-800/50">
-                  <p className="text-sm font-medium uppercase tracking-wide text-slate-500 dark:text-slate-400">
-                    Allocated support balance
-                  </p>
-                  <p className="mt-2 text-3xl font-bold text-primary">
-                    {currency} {tuitionBalance.toLocaleString()}
-                  </p>
-                  {financialSummary?.lastUpdated && (
-                    <p className="mt-1 text-xs text-slate-500">Last updated: {financialSummary.lastUpdated}</p>
-                  )}
-                </div>
-              </div>
-            )}
-          </Card>
-
-          <Card className={`p-5 ${tabPanelCardClass}`}>
-            <div className={formContainerClass}>
-              <h4 className="text-sm font-semibold text-white">Apply for tuition aid</h4>
-              <AidRequestForm
-                defaultCategory="tuition"
-                lockCategory
-                submitLabel="Submit tuition request"
-                onSuccess={() => refreshAidAndSummary(false)}
-                onShowSuccessPopup={() => setShowSuccessPopup(true)}
-              />
-            </div>
-
-            <div className="mt-6 border-t border-slate-200 pt-5 dark:border-slate-700">
-              <h4 className="text-sm font-semibold text-slate-900 dark:text-white">Tuition request history</h4>
-              <div className="mt-3">{renderRequestList(tuitionRequests, "No tuition support requests yet.")}</div>
-            </div>
-          </Card>
+        <div className="grid grid-cols-1 gap-4 lg:grid-cols-12">
+          {renderFormTile(
+            GraduationCap,
+            "Apply for tuition & maintenance aid",
+            "Request support towards fees and living costs",
+            "tuition",
+            "Submit tuition request"
+          )}
+          <div className="space-y-4 lg:col-span-5">
+            {renderBalanceTile("Allocated tuition support", tuitionBalance)}
+            {renderHistoryTile(tuitionRequests, "No tuition support requests yet.")}
+          </div>
         </div>
       )}
 
       {activeTab === "ngo-programs" && (
-        <Card className={`p-5 ${tabPanelCardClass}`}>
-          <h3 className="text-lg font-semibold text-slate-900 dark:text-white">Active NGO Support Programs</h3>
-          <p className="mt-1 mb-4 text-sm text-slate-600 dark:text-slate-300">
-            External organizations have partnered with the university to provide these support initiatives. Apply here, and your university admin will verify your eligibility with the NGO.
-          </p>
+        <div className={studentBentoTileClass}>
+          {renderTileHeader(
+            HeartHandshake,
+            "NGO support programs",
+            "Partner programs verified by your university admin",
+            <span className={studentBentoPillClass}>{ngoPrograms.length} active</span>
+          )}
 
-          <div className="space-y-4">
-            {ngoPrograms.length === 0 ? (
-              <p className="text-sm text-slate-500">No active NGO programs at this time.</p>
-            ) : (
-              ngoPrograms.map((prog) => {
+          {ngoPrograms.length === 0 ? (
+            <div className={`${studentBentoInsetClass} py-10 text-center text-sm text-slate-500 dark:text-neutral-500`}>
+              No active NGO programs at this time.
+            </div>
+          ) : (
+            <div className="grid gap-3.5 md:grid-cols-2">
+              {ngoPrograms.map((prog) => {
                 const hasApplied = studentNgoApplications.some((application) => application.programId === prog._id);
                 return (
-                <div key={prog._id} className="rounded-xl border border-blue-200 bg-white/95 p-4 dark:border-blue-400/25 dark:bg-blue-500/10">
-                  <div className="flex flex-col gap-2 sm:flex-row sm:items-start sm:justify-between">
+                  <div key={prog._id} className={`${studentBentoInsetClass} flex flex-col justify-between p-4`}>
                     <div>
-                      <h4 className="font-semibold text-slate-900 dark:text-white">{prog.title}</h4>
-                      <p className="mt-1 text-sm text-slate-500">{prog.description}</p>
-                      <div className="mt-2 text-xs font-medium text-emerald-600 dark:text-emerald-400">
-                        Eligibility: {prog.eligibility}
+                      <div className="flex items-start justify-between gap-2">
+                        <h4 className="font-semibold text-slate-900 dark:text-white">{prog.title}</h4>
+                        {hasApplied ? <Badge variant="success">Applied</Badge> : null}
                       </div>
+                      <p className="mt-1 text-xs leading-relaxed text-slate-600 dark:text-neutral-400">{prog.description}</p>
+                      <p className="mt-2 text-[11px] font-medium text-slate-500 dark:text-neutral-500">
+                        Eligibility: {prog.eligibility}
+                      </p>
                     </div>
+
                     {applyingNgoId === prog._id ? (
-                      <div className="w-full sm:w-64 space-y-2 rounded-lg bg-slate-50 p-3 outline outline-1 outline-slate-200 dark:bg-slate-900 dark:outline-slate-700">
-                        <Input 
-                          placeholder="Amount requested (LKR)" 
+                      <div className="mt-4 space-y-2">
+                        <Input
+                          placeholder="Amount requested (LKR)"
                           type="number"
-                          value={ngoApplyAmount} 
-                          onChange={(e) => setNgoApplyAmount(e.target.value)} 
+                          value={ngoApplyAmount}
+                          onChange={(e) => setNgoApplyAmount(e.target.value)}
+                          className="border-transparent bg-white dark:border-transparent dark:bg-neutral-950"
                         />
-                        <textarea 
+                        <textarea
                           placeholder="Brief reason for application..."
                           value={ngoApplyReason}
                           onChange={(e) => setNgoApplyReason(e.target.value)}
-                          className="w-full rounded-lg border border-slate-200 p-2 text-xs dark:border-slate-700 dark:bg-slate-800"
+                          className="w-full rounded-xl bg-white px-3 py-2 text-sm focus-visible:outline-none dark:bg-neutral-950"
                           rows={2}
                         />
                         <div className="flex gap-2">
@@ -612,30 +668,31 @@ export function StudentFinancialAid() {
                           }}>
                             Submit
                           </Button>
-                          <Button className="py-1.5 text-xs" onClick={() => setApplyingNgoId(null)}>Cancel</Button>
+                          <Button variant="secondary" className="py-1.5 text-xs" onClick={() => setApplyingNgoId(null)}>Cancel</Button>
                         </div>
                       </div>
                     ) : (
-                      <Button
-                        disabled={hasApplied}
-                        className={hasApplied ? "cursor-not-allowed opacity-60" : ""}
-                        onClick={() => {
-                          if (hasApplied) return;
-                          setApplyingNgoId(prog._id);
-                          setNgoApplyReason("");
-                          setNgoApplyAmount("");
-                        }}
-                      >
-                        {hasApplied ? "Applied" : "Apply"}
-                      </Button>
+                      <div className="mt-4">
+                        <Button
+                          disabled={hasApplied}
+                          className={hasApplied ? "cursor-not-allowed opacity-60" : ""}
+                          onClick={() => {
+                            if (hasApplied) return;
+                            setApplyingNgoId(prog._id);
+                            setNgoApplyReason("");
+                            setNgoApplyAmount("");
+                          }}
+                        >
+                          {hasApplied ? "Applied" : "Apply"}
+                        </Button>
+                      </div>
                     )}
                   </div>
-                </div>
                 );
-              })
-            )}
-          </div>
-        </Card>
+              })}
+            </div>
+          )}
+        </div>
       )}
 
       {showSuccessPopup && (
@@ -647,7 +704,7 @@ export function StudentFinancialAid() {
           onClick={() => setShowSuccessPopup(false)}
         >
           <div onClick={(event) => event.stopPropagation()}>
-            <Card className="w-full max-w-sm border-primary/20 bg-white p-6 shadow-xl dark:bg-slate-900">
+            <Card className="w-full max-w-sm rounded-3xl border-slate-200/80 bg-white p-6 shadow-xl dark:border-white/10 dark:bg-neutral-950">
               <p id="success-title" className="text-center text-lg font-semibold text-slate-900 dark:text-white">
                 Request submitted
               </p>
@@ -673,7 +730,7 @@ export function StudentFinancialAid() {
           onClick={() => setShowBalanceCardPopup(false)}
         >
           <div onClick={(event) => event.stopPropagation()} className="w-full max-w-2xl">
-            <Card className="relative overflow-hidden border-slate-900/60 bg-gradient-to-br from-slate-950 via-black to-slate-900 p-0 text-white shadow-2xl">
+            <Card className="relative overflow-hidden rounded-3xl border-white/10 bg-gradient-to-br from-slate-950 via-black to-slate-900 p-0 text-white shadow-2xl">
               {renderBalanceCardContent(true)}
             </Card>
           </div>
@@ -704,7 +761,7 @@ export function StudentFinancialAid() {
             onClick={() => setSelectedRequest(null)}
           >
             <div onClick={(event) => event.stopPropagation()}>
-              <Card className="w-full max-w-md border-slate-200 bg-white shadow-xl dark:border-slate-700 dark:bg-slate-900">
+              <Card className="w-full max-w-md rounded-3xl border-slate-200/80 bg-white p-0 shadow-xl dark:border-white/10 dark:bg-neutral-950">
                 <div className="flex items-center justify-between border-b border-slate-200 px-6 py-4 dark:border-slate-700">
                   <h3 id="detail-title" className="text-lg font-semibold text-slate-900 dark:text-white">
                     Request details
@@ -722,32 +779,32 @@ export function StudentFinancialAid() {
                 </div>
 
                 <div className="space-y-3 px-6 py-4">
-                  <div className="flex flex-col gap-1 rounded-lg border border-slate-100 bg-slate-50/50 px-4 py-3 dark:border-slate-700 dark:bg-slate-800/30">
+                  <div className={`${studentBentoInsetClass} flex flex-col gap-1 px-4 py-3`}>
                     <span className="text-xs font-medium uppercase tracking-wide text-slate-500 dark:text-slate-400">Category</span>
                     <span className="text-slate-900 dark:text-white">{formatCategory(selectedRequest.category || "")}</span>
                   </div>
 
                   {selectedRequest.amount && (
-                    <div className="flex flex-col gap-1 rounded-lg border border-slate-100 bg-slate-50/50 px-4 py-3 dark:border-slate-700 dark:bg-slate-800/30">
+                    <div className={`${studentBentoInsetClass} flex flex-col gap-1 px-4 py-3`}>
                       <span className="text-xs font-medium uppercase tracking-wide text-slate-500 dark:text-slate-400">Amount</span>
                       <span className="font-medium text-slate-900 dark:text-white">{selectedRequest.amount} {currency}</span>
                     </div>
                   )}
 
                   {selectedRequest.description && (
-                    <div className="flex flex-col gap-1 rounded-lg border border-slate-100 bg-slate-50/50 px-4 py-3 dark:border-slate-700 dark:bg-slate-800/30">
+                    <div className={`${studentBentoInsetClass} flex flex-col gap-1 px-4 py-3`}>
                       <span className="text-xs font-medium uppercase tracking-wide text-slate-500 dark:text-slate-400">Summary</span>
                       <p className="text-slate-900 dark:text-white">{selectedRequest.description}</p>
                     </div>
                   )}
 
-                  <div className="flex flex-col gap-1 rounded-lg border border-slate-100 bg-slate-50/50 px-4 py-3 dark:border-slate-700 dark:bg-slate-800/30">
+                  <div className={`${studentBentoInsetClass} flex flex-col gap-1 px-4 py-3`}>
                     <span className="text-xs font-medium uppercase tracking-wide text-slate-500 dark:text-slate-400">Status</span>
                     <Badge variant={getStatusBadgeVariant(selectedRequest.status)}>{formatStatus(selectedRequest.status)}</Badge>
                   </div>
 
                   {submittedFormatted && (
-                    <div className="flex flex-col gap-1 rounded-lg border border-slate-100 bg-slate-50/50 px-4 py-3 dark:border-slate-700 dark:bg-slate-800/30">
+                    <div className={`${studentBentoInsetClass} flex flex-col gap-1 px-4 py-3`}>
                       <span className="text-xs font-medium uppercase tracking-wide text-slate-500 dark:text-slate-400">Submitted</span>
                       <span className="text-slate-900 dark:text-white">{submittedFormatted}</span>
                     </div>

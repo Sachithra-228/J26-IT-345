@@ -12,7 +12,7 @@ import {
 import { clsx } from "clsx";
 
 const SIDEBAR_WIDTH = "16rem";
-const SIDEBAR_WIDTH_COLLAPSED = "3.5rem";
+const SIDEBAR_WIDTH_COLLAPSED = "3.75rem";
 const MOBILE_BREAKPOINT = 1024;
 
 type SidebarContextValue = {
@@ -86,14 +86,14 @@ export function Sidebar({ className, style, children, ...props }: SidebarProps) 
           type="button"
           aria-label="Close sidebar"
           onClick={() => setMobileOpen(false)}
-          className="fixed inset-0 z-40 bg-slate-900/40 lg:hidden"
+          className="fixed inset-0 z-40 bg-black/60 lg:hidden"
         />
       ) : null}
       <aside
         data-collapsed={isCompact}
         className={clsx(
-          "fixed inset-y-0 left-0 z-50 flex h-screen flex-col overflow-hidden border-r border-slate-200 bg-slate-50 transition-[width,transform] duration-200 ease-linear dark:border-slate-800 dark:bg-slate-900",
-          isMobile ? clsx("w-64 shadow-xl", mobileOpen ? "translate-x-0" : "-translate-x-full") : "translate-x-0",
+          "fixed inset-y-0 left-0 z-50 flex h-screen flex-col border-r border-white/10 bg-black text-white transition-[width,transform,background-color,color,border-color] duration-200 ease-linear dark:border-white/15 dark:bg-gradient-to-b dark:from-neutral-200/90 dark:via-neutral-300/85 dark:to-neutral-400/80 dark:text-neutral-900 dark:backdrop-blur-xl",
+          isMobile ? clsx("w-64 shadow-2xl", mobileOpen ? "translate-x-0" : "-translate-x-full") : "translate-x-0",
           className
         )}
         style={{
@@ -112,7 +112,7 @@ export function SidebarHeader({ className, ...props }: ComponentPropsWithoutRef<
   return (
     <div
       className={clsx(
-        "flex shrink-0 items-center border-b border-slate-200 bg-slate-50 px-3 py-4 dark:border-slate-800 dark:bg-slate-900",
+        "flex shrink-0 items-center justify-between border-b border-white/10 bg-transparent px-4 py-4 transition-colors dark:border-neutral-400/40",
         className
       )}
       {...props}
@@ -123,7 +123,7 @@ export function SidebarHeader({ className, ...props }: ComponentPropsWithoutRef<
 export function SidebarContent({ className, ...props }: ComponentPropsWithoutRef<"div">) {
   return (
     <div
-      className={clsx("min-h-0 flex-1 overflow-y-auto overflow-x-hidden py-4", className)}
+      className={clsx("flex min-h-0 flex-1 flex-col overflow-hidden py-3", className)}
       {...props}
     />
   );
@@ -133,7 +133,7 @@ export function SidebarFooter({ className, ...props }: ComponentPropsWithoutRef<
   return (
     <div
       className={clsx(
-        "shrink-0 border-t border-slate-200 bg-slate-50 p-3 dark:border-slate-800 dark:bg-slate-900",
+        "shrink-0 border-t border-white/10 bg-transparent p-3 transition-colors dark:border-neutral-400/40",
         className
       )}
       {...props}
@@ -142,19 +142,31 @@ export function SidebarFooter({ className, ...props }: ComponentPropsWithoutRef<
 }
 
 export function SidebarGroup({ className, ...props }: ComponentPropsWithoutRef<"div">) {
-  return <div className={clsx("px-3 py-2", className)} {...props} />;
+  return <div className={clsx("flex flex-1 flex-col px-3 py-1", className)} {...props} />;
 }
 
 export function SidebarGroupLabel({ className, ...props }: ComponentPropsWithoutRef<"div">) {
   const { collapsed, isMobile } = useSidebar();
   if (!isMobile && collapsed) return null;
   return (
-    <div className={clsx("mb-2 px-3 text-xs font-semibold uppercase tracking-wider text-slate-500", className)} {...props} />
+    <div
+      className={clsx(
+        "mb-2 px-3 text-[10px] font-semibold uppercase tracking-widest text-white/50 dark:text-neutral-600",
+        className
+      )}
+      {...props}
+    />
   );
 }
 
 export function SidebarMenu({ className, ...props }: ComponentPropsWithoutRef<"nav">) {
-  return <nav className={clsx("space-y-0.5", className)} aria-label="Dashboard sections" {...props} />;
+  return (
+    <nav
+      className={clsx("flex flex-1 flex-col justify-between", className)}
+      aria-label="Dashboard sections"
+      {...props}
+    />
+  );
 }
 
 export function SidebarMenuItem({ className, ...props }: ComponentPropsWithoutRef<"div">) {
@@ -176,12 +188,12 @@ export function SidebarMenuButton({
   const { collapsed, isMobile } = useSidebar();
   const isCompact = !isMobile && collapsed;
   const base = clsx(
-    "flex w-full items-center gap-3 rounded-lg px-3 py-2.5 text-left text-sm font-medium transition-colors",
+    "flex w-full items-center gap-3.5 rounded-xl px-3.5 py-2.5 text-left text-[13.5px] font-medium transition-colors",
     isCompact && "justify-center px-2"
   );
   const active = isActive
-    ? "bg-primary/10 text-primary dark:bg-primary/20"
-    : "text-slate-700 hover:bg-slate-200/80 dark:text-slate-300 dark:hover:bg-slate-800";
+    ? "bg-white/15 text-white font-semibold dark:bg-neutral-900/90 dark:text-white dark:shadow-sm"
+    : "text-white/80 hover:bg-white/10 hover:text-white dark:text-neutral-800 dark:hover:bg-black/10 dark:hover:text-black";
   const combined = clsx(base, active, className);
 
   if (asChild && typeof children === "object" && children !== null && "props" in children) {
@@ -206,7 +218,7 @@ export function SidebarTrigger({ className, children, ...props }: ComponentProps
       type="button"
       onClick={toggle}
       className={clsx(
-        "inline-flex size-9 items-center justify-center rounded-lg text-slate-600 hover:bg-slate-200 hover:text-slate-900 dark:text-slate-400 dark:hover:bg-slate-700",
+        "inline-flex size-8 items-center justify-center rounded-lg text-white/80 transition-colors hover:bg-white/10 hover:text-white dark:text-neutral-700 dark:hover:bg-black/10 dark:hover:text-black",
         className
       )}
       aria-label="Toggle sidebar"

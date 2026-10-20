@@ -1,0 +1,112 @@
+{
+  "generatedAt": "2026-10-20T04:35:49.970Z",
+  "network": "sepolia",
+  "chainId": 11155111,
+  "contract": "0xFF768B0CBa1f6B9237ce31f024ACBb3D69a83ae0",
+  "representative": true,
+  "note": "Real network measurement (submit -> 1 confirmation).",
+  "target": {
+    "metric": "transaction latency",
+    "limitSeconds": 30
+  },
+  "stats": {
+    "n": 14,
+    "mean": 11.63,
+    "median": 12.1,
+    "p95": 13.47,
+    "max": 13.47
+  },
+  "meetsTarget": true,
+  "samples": [
+    {
+      "operation": "grantRole DONOR",
+      "seconds": 18.46,
+      "gasUsed": 133550,
+      "txHash": "0xc03cfcfe95ed368589035f5405a9d3745de6f1d0cd4cf57051e01cabb4c3d92d"
+    },
+    {
+      "operation": "createCampaign",
+      "seconds": 6.38,
+      "gasUsed": 579297,
+      "txHash": "0xdce3df2da2652f82bbed8c104b8a3d8045a8df07107ad2cf372485574ced77ba"
+    },
+    {
+      "operation": "awardScholarship (12 ms)",
+      "seconds": 13.47,
+      "gasUsed": 916320,
+      "txHash": "0x5dbd2f7ab8cf0b9891f66a755b4488c7bc8712c567777969fc315a6db53879eb"
+    },
+    {
+      "operation": "verifyMilestone 1/12",
+      "seconds": 9.65,
+      "gasUsed": 584705,
+      "txHash": "0xb9c2416658eb2ad08b2fd1c06437b13a571ba1e1c4e378b5959bb08f9a17b49d"
+    },
+    {
+      "operation": "verifyMilestone 2/12",
+      "seconds": 12.23,
+      "gasUsed": 107345,
+      "txHash": "0x014761b467a1f1ff6732d39d654d2dd48e83dc5f810f4c75b0365ca3d1e63e17"
+    },
+    {
+      "operation": "verifyMilestone 3/12",
+      "seconds": 12.1,
+      "gasUsed": 107345,
+      "txHash": "0xcc85a1bb87d0c45282ced7d6fcab413c4747925d6b2d454978b6cad3fa1715f8"
+    },
+    {
+      "operation": "verifyMilestone 4/12",
+      "seconds": 12.81,
+      "gasUsed": 107345,
+      "txHash": "0x46a0c092f37a0aa22dba0a29fdce1bd9c3865598e301525a81ed9d3a1645c107"
+    },
+    {
+      "operation": "verifyMilestone 5/12",
+      "seconds": 11.58,
+      "gasUsed": 107345,
+      "txHash": "0xe72976c2b76d74259a9d3f3e1b5aed92ed3ec1ee3e0aa11b7a89932ffff39457"
+    },
+    {
+      "operation": "verifyMilestone 6/12",
+      "seconds": 11.62,
+      "gasUsed": 107345,
+      "txHash": "0x01d2897f967229d857595a6a59391ed2d9f1e648485ac447a06d58f81aa5bd32"
+    },
+    {
+      "operation": "verifyMilestone 7/12",
+      "seconds": 12.9,
+      "gasUsed": 107345,
+      "txHash": "0x2dc47025e7c95a4efcbf947419ae042209f5bff4a85d004a9bb3d9692305ab52"
+    },
+    {
+      "operation": "verifyMilestone 8/12",
+      "seconds": 11.23,
+      "gasUsed": 107333,
+      "txHash": "0x59677ae6cffb7436ab0825ff466461427079e9b07c14575bff31ed1af23bf256"
+    },
+    {
+      "operation": "verifyMilestone 9/12",
+      "seconds": 11.49,
+      "gasUsed": 107345,
+      "txHash": "0x10ff162945d7d93b711c902b66ec7c4b777dcb2e900d83688909dec65ea2f8ae"
+    },
+    {
+      "operation": "verifyMilestone 10/12",
+      "seconds": 12.92,
+      "gasUsed": 107345,
+      "txHash": "0x295c5a189d5a2a29e69f432d7160dde09098c572ded361f66a00002b1fecb530"
+    },
+    {
+      "operation": "verifyMilestone 11/12",
+      "seconds": 12.21,
+      "gasUsed": 107333,
+      "txHash": "0x19940a0b8fbf6803aa0baac8093ea2063450922bc1b2aedddacfc0c1d0fab637"
+    },
+    {
+      "operation": "verifyMilestone 12/12",
+      "seconds": 12.29,
+      "gasUsed": 97641,
+      "txHash": "0xb1c527b8d00f124e6d92341bec8715c84d204f2f8dddbbc7a26e8c1aa9a467e3"
+    }
+  ]
+}

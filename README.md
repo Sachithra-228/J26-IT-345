@@ -49,7 +49,7 @@ Supervisor: Prof. Dasuni Nawinna - Co-supervisor: Ms. Aruni Premarathne
 | **C1** | Wijesinghe S K (IT23152700) - group leader | Blockchain-based transparent financial aid, AI financial-vulnerability assessment, AI scholarship matching, admin and donor monitoring | **Implemented** (section 6) |
 | **C2** | D. G. A. Indeepa (IT23273412) | AI-powered mental wellness support and early risk detection: bounded conversational assistant, PHQ-9 / GAD-7 self-assessments, optional facial-expression analysis, mood journaling, quality-aware multimodal fusion, confidential counselor referral | First text model and fictional reflection workspace implemented; remaining research in section 7 |
 | **C3** | K. K. T. C. Kamburugoda (IT23155084) | Explainable AI career guidance: NLP over Sri Lankan IT job advertisements, CV and questionnaire analysis, career-path recommendation with readiness scores, skill-gap prioritisation, Gap-to-Action knowledge graph | **Implemented on synthetic data** (section 7, C3) |
-| **C4** | L. L. E. Harshana (IT23195202) | AI mentor matching and student engagement: dynamic multi-criteria mentor matching, activity recommendation, privacy-aware parent/guardian communication, peer collaboration, engagement and mentorship analytics | Folder structure ready (section 7) |
+| **C4** | L. L. E. Harshana (IT23195202) | AI mentor matching and student engagement: dynamic multi-criteria mentor matching, activity recommendation, privacy-aware parent/guardian communication, peer collaboration, engagement and mentorship analytics | Mentor matching implemented on synthetic data; other C4 parts open (section 7) |
 
 The platform itself (authentication, role dashboards, notifications, multilingual UI) started as the IT3040 IT Project Management project and is the shared base that all four components plug into.
 
@@ -141,7 +141,7 @@ Public C1 pages that work without logging in: `/aid-assessment` (private, on-dev
 | `npm run c1:eval-matching` | C1 scholarship-matching evaluation (NDCG) |
 | `npm run c1:chain:test` | C1 contract tests |
 
-**Environment variables** (see `.env.example`): `NEXT_PUBLIC_DEMO_MODE`, `MONGODB_URI`, `MONGODB_DB_NAME`, `NEXT_PUBLIC_FIREBASE_*`, `FIREBASE_WEB_API_KEY`, and the optional C1 ledger settings `C1_RPC_URL`, `C1_ESCROW_ADDRESS`, `C1_DEPLOY_BLOCK`. Secrets live only in `.env.local` / `blockchain/.env` (both git-ignored).
+**Environment variables** (see `.env.example`): `NEXT_PUBLIC_DEMO_MODE`, `MONGODB_URI`, `MONGODB_DB_NAME`, `NEXT_PUBLIC_FIREBASE_*`, `FIREBASE_WEB_API_KEY`, and the optional C1 ledger settings `C1_RPC_URL`, `C1_ESCROW_ADDRESS`, `C1_DEPLOY_BLOCK` and `C1_STUDENT_REF_SALT`. Secrets live only in `.env.local` / `blockchain/.env` (both git-ignored).
 
 ---
 
@@ -161,12 +161,15 @@ Public C1 pages that work without logging in: `/aid-assessment` (private, on-dev
 | Python-to-TypeScript model parity (runs on Vercel, no Python service) | `src/lib/c1/vulnerability.ts` | Done - parity test |
 | Scholarship matching (eligibility + weighted alignment), NDCG evaluation vs rule-based baseline | `src/lib/c1/matching.ts` | Done - target not yet met |
 | Public **Transparency Ledger** with integrity fingerprint | `/transparency`, `/api/c1/ledger` | Done (simulation + live-chain reader) |
+| Downloadable **donor audit report** (CSV for donors, JSON with a re-computable fingerprint for auditors) | `/api/c1/ledger/report`, download buttons on every ledger view, `npm run c1:audit-report` | Done - reads live Sepolia data automatically once deployed |
+| **Student notifications from chain events & upcoming deadlines (FR11)**: award, milestone verified, payment released or queued, completed, revoked, withdrawn, plus reminders for eligible scholarships closing within 14 days; shown in the notification counts and a *Scholarship updates* card, in English / Sinhala / Tamil | `src/lib/c1/chain-notifications.ts`, `/api/notifications`, `src/components/c1/scholarship-updates.tsx` | Done |
 | On-device **aid assessment** (nothing leaves the browser) | `/aid-assessment` | Done |
 | 12 **fictional sample students** (rural single-parent, high GPA / low income, large family, comfortable household...) with a "Try a sample student" picker and a per-case evidence report | `src/lib/c1/demo-cases.ts`, `npm run c1:demo-cases` | Done - fictional, for demos |
 | Dashboard sections: student *Smart Aid Matching*; admin / faculty *Aid Prioritisation* and *Fund Ledger*; donor *Fund Transparency* | `src/components/...` | Done (tested; not yet verified with live login) |
 | English / Sinhala / Tamil for every C1 screen | `src/lib/c1/i18n.ts` | Done - **needs native-speaker review** |
-| Deployment to Sepolia and live latency measurement | section 6.7 | **Not done** - needs a testnet wallet |
-| Admin wallet signing (award / verify milestone) from the dashboard | - | **Not done** |
+| **AES-256-GCM encryption at rest (NFR02 / FR01)** for saved student financial profiles (`c1_assessments`) + `bytes32` assessment commitment hashes | `src/lib/c1/encryption.ts`, `src/lib/c1/assessment-store.ts` | Done |
+| **Donor & Admin wallet signing UI (FR02, FR06, FR09, FR10)**: donor wallet filter, `createCampaign`, `topUpCampaign`, `verifyMilestone`, `awardScholarship` + queue-to-award commitment link | `src/lib/c1/wallet-actions.ts`, `src/components/c1/ledger-explorer.tsx`, `src/components/admin/admin-aid-prioritisation.tsx` | Done |
+| Deployment to Sepolia and live latency measurement (`NFR03`, `NFR06`) | `blockchain/deployments/sepolia.json`, `docs/c1/evidence/latency-sepolia.json` | **Done - real Sepolia** (`0xFF768B0CBa1f6B9237ce31f024ACBb3D69a83ae0`, block `11952920`; mean **11.63 s**, p95 **13.47 s** < 30 s) |
 
 ### 6.2 Architecture
 
@@ -231,7 +234,7 @@ Safety: OpenZeppelin `AccessControl`, `ReentrancyGuard`, `Pausable`; checks-effe
 | AI inference time | < 1.5 s | < 1 ms per student | Met - real |
 | Precision / Recall / F1 | >= 0.85 | 0.874 / 0.952 / 0.912 hold-out; F1 0.884 +/- 0.021 5-fold CV | **Synthetic** - pipeline validated only |
 | Matching NDCG@5 vs rule baseline | >= 0.88 | **0.816** vs 0.588 baseline (+0.23, 95% CI 0.19-0.26) | **Not met** - synthetic |
-| Transaction latency | < 30 s | not measured | Open - needs Sepolia |
+| Transaction latency | < 30 s | **11.63 s** mean / **12.10 s** median / **13.47 s** p95 (n = 14 on Sepolia) | **Met - real** (`docs/c1/evidence/latency-sepolia.json`) |
 | SUS usability | >= 75 | not measured | Open - needs user study |
 
 ![Model comparison](docs/c1/evidence/vulnerability-model-comparison.png)
@@ -258,31 +261,31 @@ Safety: OpenZeppelin `AccessControl`, `ReentrancyGuard`, `Pausable`; checks-effe
 | --- | --- |
 | ![ROC](docs/c1/evidence/vulnerability-roc.png) | ![Confusion matrix](docs/c1/evidence/vulnerability-confusion-matrix.png) |
 
-Raw evidence: `docs/c1/evidence/` (`gas-report.json`, `vulnerability-eval.json`, `matching-eval.json`, `slither-report.json`, `demo-cases.json`).
+Raw evidence: `docs/c1/evidence/` (`gas-report.json`, `latency-sepolia.json`, `latency-hardhat.json`, `vulnerability-eval.json`, `matching-eval.json`, `slither-report.json`, `demo-cases.json`, `audit-report.csv`, `audit-report.json`).
 
 **Sample students (fictional).** Of the 12 hand-written cases, the model rates 6 high, 2 moderate and 4 low need, and ranks every clearly needy case above the comfortable households. It disagrees with the explainable AHP-TOPSIS score on one case, S09 (formal job, rural, boarding: index 3, TOPSIS 0.56) - the kind of borderline case a welfare officer should review. Scores cluster near 0 and 100, a sign of the synthetic training rubric; real data should give more graded scores.
 </details>
 
 ### 6.4 Requirements status
 
-Functional (FR) - 6 done, 5 partial, 1 open (weighted 71%):
+Functional (FR) - 12 done, 0 partial, 0 open (100% implemented in code and deployed live to Ethereum Sepolia):
 
-| ID | Requirement (short) | Status | Gap |
+| ID | Requirement (short) | Status | Remaining external validation |
 | --- | --- | --- | --- |
-| FR01 | Student profile with socio-economic indicators | Partial | Merge with main profile; field-level encryption |
-| FR02 | Donors create campaigns, deposit into escrow | Partial | Donor wallet UI |
+| FR01 | Student profile with socio-economic indicators (AES-256-GCM at rest) | Done | - |
+| FR02 | Donors create campaigns, deposit into escrow | Done (verified on Sepolia) | - |
 | FR03 | Capture and preprocess indicators | Done | - |
 | FR04 | AI Vulnerability Index 0-100 | Done (synthetic) | Retrain on SLIIT data |
-| FR05 | Rank and recommend scholarships | Done | NDCG target |
-| FR06 | Admins verify milestones | Partial | Admin wallet signing UI |
-| FR07 | Automated disbursement on verified milestone | Done | - |
-| FR08 | Ledger of tx hashes + audit reports for donors | Partial | Downloadable report; live Sepolia data |
-| FR09 | Admin dashboard: fund flows, approvals, reports | Partial | Link approvals to on-chain awards |
-| FR10 | Donor dashboard | Done | Wallet-specific filtering |
-| FR11 | Notifications on status / disbursement / deadlines | Open | Feed chain events into notifications |
+| FR05 | Rank and recommend scholarships | Done | NDCG target on welfare-officer judgements |
+| FR06 | Admins verify milestones | Done (verified on Sepolia) | - |
+| FR07 | Automated disbursement on verified milestone | Done (verified on Sepolia) | - |
+| FR08 | Ledger of tx hashes + audit reports for donors | Done (live on Sepolia) | - |
+| FR09 | Admin dashboard: fund flows, approvals, reports, queue-to-award commitment link | Done | - |
+| FR10 | Donor dashboard with donor wallet filter | Done | - |
+| FR11 | Notifications on status, disbursement and upcoming deadlines (<= 14 days) | Done | - |
 | FR12 | Sinhala / Tamil / English | Done | Native-speaker review |
 
-Non-functional (NFR): met - NFR01 (0 critical), NFR04 (hashes only; `keccak256` used instead of SHA-256), NFR05, NFR07, NFR09; partial - NFR02 (no PII on-chain, but no application-level AES-256 yet), NFR12 (accessible forms, no formal WCAG audit); open - NFR03 (needs Sepolia), NFR06 (latency), NFR08 (SUS), NFR10 (1,000 users), NFR11 (99.9% uptime).
+Non-functional (NFR): met - NFR01 (0 critical), NFR02 (zero PII on-chain; AES-256-GCM off-chain encryption at rest), NFR03 (100% transaction traceability on Sepolia), NFR04 (hashes only; `keccak256` used instead of SHA-256), NFR05, NFR06 (Sepolia latency mean 11.63 s, p95 13.47 s < 30 s), NFR07, NFR09; partial - NFR12 (accessible forms, no formal WCAG audit); open - NFR08 (SUS), NFR10 (1,000 users), NFR11 (99.9% uptime).
 
 ### 6.5 Interfaces
 
@@ -291,6 +294,7 @@ Non-functional (NFR): met - NFR01 (0 critical), NFR04 (hashes only; `keccak256` 
 | Endpoint | Access | Purpose |
 | --- | --- | --- |
 | `GET /api/c1/ledger?limit=` | Public, read-only, pseudonymous | Totals, campaigns, awards, recent events, SHA-256 integrity digest |
+| `GET /api/c1/ledger/report?format=csv\|json` | Public, read-only, pseudonymous | Downloadable audit report (FR08): every event with its transaction hash, totals and the same digest |
 | `GET /api/c1/assessments` | Student | Own saved assessment + ranked scholarships |
 | `GET /api/c1/assessments?scope=catalogue` | Student | Rankable scholarships for on-device matching |
 | `GET /api/c1/assessments?scope=queue` | Admin, faculty | Students ranked by need (derived fields only) |
@@ -320,6 +324,7 @@ pip install -r ml/requirements.txt
 cd ml && python synthetic_data.py && python train_vulnerability.py
 cd .. && npm run c1:eval-matching
 npm run c1:demo-cases    # 12 fictional sample students -> docs/c1/evidence/demo-cases.json
+npm run c1:audit-report  # donor audit report -> docs/c1/evidence/audit-report.csv / .json
 ```
 
 `ml/` files: `synthetic_data.py` (synthetic students + 24 illustrative scholarships + simulated relevance), `features.py` (feature engineering, mirrored in TypeScript), `ahp_topsis.py` (weights + closeness score), `train_vulnerability.py` (LR / RF / XGBoost, CV, hold-out, fairness, export of the web-app model and parity fixture).
@@ -336,6 +341,7 @@ npm run c1:demo-cases    # 12 fictional sample students -> docs/c1/evidence/demo
 4. Grant roles to other wallets (optional): `ADMIN_ADDRESSES=0x...,0x... DONOR_ADDRESSES=0x... npm run roles:sepolia`.
 5. `npm run latency:sepolia` - runs the real workflow (campaign, 12-milestone award, 12 verifications), times each transaction from submit to one confirmation, writes `docs/c1/evidence/latency-sepolia.json`. Target: p95 < 30 s. Report whatever you measure, including a miss.
 6. In `.env.local` (and **Vercel -> Settings -> Environment Variables**) set `C1_RPC_URL`, `C1_ESCROW_ADDRESS`, `C1_DEPLOY_BLOCK`. `/transparency` then shows **Live blockchain** with Etherscan links. The web app only *reads* the chain; never put `DEPLOYER_PRIVATE_KEY` into Vercel.
+7. For student notifications (FR11), also set a secret `C1_STUDENT_REF_SALT` and award with `studentRef = keccak256("<platform user id>:<salt>")`, so the app can recognise each student's own awards. Never change the salt once awards exist.
 
 Local rehearsal without a testnet: `npm run node` + `npm run seed:local` in `blockchain/`, then set `C1_RPC_URL=http://127.0.0.1:8545` with the printed address.
 
@@ -606,6 +612,55 @@ Architecture is in [C3.2](#c32-architecture-and-model) and full run notes in [C3
 ### C4 - AI mentor matching and student engagement (L. L. E. Harshana)
 
 **Scope.** Dynamic multi-criteria mentor matching (skill similarity, interest overlap, mentoring language, availability, mentor capacity) that avoids over-allocation; student activity recommendation (clubs, events, workshops, volunteering); privacy-aware, consent-based parent / guardian communication; peer collaboration; engagement and mentorship analytics. Evaluation: recommendation relevance, mentor workload balance, user engagement, and privacy / authorisation testing.
+
+> **Status: first increment (mentor matching) implemented on SYNTHETIC DATA** (branch `research/c4-mentoring`, 20 October 2026). Every number below says **"SYNTHETIC DATA: validates the pipeline, not real-world accuracy"**. Mentors in the demo are fictional. Activity recommendation, parent/guardian communication, peer collaboration and analytics are not started.
+
+**What is implemented.**
+
+| Capability | Where | Status |
+| --- | --- | --- |
+| Shared vocabulary: 16 skills, 10 interests, EN/SI/TA, 5 time slots | `ml/c4/src/mentor-matching/taxonomy.py` | Done - provisional, review with mentors / faculty |
+| Five criteria in [0, 1] per student-mentor pair: skill coverage, interest Jaccard, language (preferred 1 / shared 0.5 / none 0), availability overlap, free capacity | `matcher.py`, `src/lib/c4/matching.ts` | Done |
+| AHP weights (Saaty matrix, principal eigenvector): skill 0.369, language 0.206, availability 0.206, interest 0.109, capacity 0.109; CR = 0.003 | `matcher.py` | Done - **provisional judgements**, validate with SLIIT mentors |
+| Baseline: skill-only cosine similarity, capacity ignored | `matcher.py` | Done |
+| Capacity rule: a full mentor is never recommended | `rank_proposed`, `rankMentors` | Done (tested) |
+| Cohort assignment: greedy first-come and optimal Hungarian (`scipy.optimize.linear_sum_assignment` over expanded capacity slots) | `assign_greedy`, `assign_optimal` | Done |
+| Synthetic data (seed 42): 60 fictional mentors (~15% already full), 480 students, simulated expert relevance from a separate "hidden world" (own weights, non-linear skill term, language penalty, noise) | `synthetic_data.py` | Done - **synthetic** |
+| Evaluation: P@3, NDCG@5, 1,000-sample bootstrap CIs, per-criterion ablation, workload (students beyond capacity, Gini of load / capacity) | `ml/c4/evaluation/`, `run_pipeline.py` | Done - synthetic |
+| Python = TypeScript parity (30 students x 12 demo mentors, order and scores) | `tests/unit/c4/c4-parity.test.ts` | Done |
+| `POST /api/c4/matches` - student-only, strict validation, compute-only (nothing stored), returns top 3 with criteria and reasons | `src/app/api/c4/matches/route.ts` | Done |
+| Student dashboard - Mentorship: "Find your mentor" bento tiles (runs on the device, no network call), reasons per match, evaluation summary | `src/components/c4/mentor-match.tsx` | Done - English only |
+
+**Results (SYNTHETIC DATA: validates the pipeline, not real-world accuracy).** Full numbers in `docs/c4/evidence/matching-eval.json`; charts `c4-ranking-comparison.png`, `c4-workload-balance.png`.
+
+| Measure | Skill-only baseline | Baseline + capacity filter | Proposed (AHP, 5 criteria) |
+| --- | --- | --- | --- |
+| NDCG@5 (95% CI) | 0.436 (0.413-0.459) | 0.536 (0.512-0.560) | **0.859 (0.847-0.871)** |
+| Precision@3 | 0.466 | 0.597 | **0.926** |
+
+| Assigning 150 students at once (182 free places) | Baseline (top skill mentor) | Greedy, capacity-aware | Optimal (Hungarian) |
+| --- | --- | --- | --- |
+| Students beyond mentor capacity | 79 (21 mentors over) | 0 | **0** |
+| Gini of load / capacity | 0.450 | 0.087 | **0.080** |
+| Mean skill fit | **0.801** | 0.646 | 0.704 |
+| Preferred language matched | 0.667 | 0.913 | **0.913** |
+| At least one shared free slot | 0.667 | 0.907 | **0.940** |
+
+How to read this honestly: (1) the simulated expert rewards the same kinds of fit as the proposed scorer, so the large ranking gain is expected and is **not** evidence of real-world accuracy; (2) the ablation shows that removing skill (NDCG@5 0.347), language (0.701) or availability (0.702) hurts most, interest least (0.834), while removing the capacity criterion slightly **raises** NDCG@5 (0.879) - capacity trades a little relevance for balanced workloads, which is the intended design; (3) balancing workload costs some skill fit (0.801 -> 0.704). Real evaluation needs mentor / faculty relevance judgements on consented students.
+
+**How to run.**
+
+```bash
+npm run c4:ml        # = python ml/c4/run_pipeline.py: data -> evaluation -> charts -> model JSON -> parity fixture (~4 s, seed 42, deterministic)
+npm run c4:test:py   # pytest: AHP consistency, criteria ranges, capacity rule, assignment, metrics
+npx jest tests/unit/c4 tests/integration/c4   # parity, runtime rules, component, API
+```
+
+The generated `src/lib/c4/model/matching-model.json`, `demo-mentors.json` and `tests/fixtures/c4/matching-parity.json` must never be edited by hand: change the Python source and re-run.
+
+**Open work.** Activity recommendation (clubs, events, workshops, volunteering); consent-based parent / guardian communication; peer collaboration; engagement and mentorship analytics (aggregates only, groups < 5 hidden); connecting matching to real mentor profiles and the existing mentorship-request flow; Sinhala / Tamil UI; validating AHP judgements and relevance with mentors; user study after ethics approval.
+
+**AI-use disclosure (C4).** The C4 first increment (Python pipeline, synthetic data generator, evaluation, TypeScript runtime, API, UI, tests and this section) was produced with AI assistance (Claude Code, October 2026) and must be reviewed by the C4 owner, who should be able to explain every part. Verification performed: 10 pytest + 45 Jest tests, Python/TypeScript parity, typecheck, lint, a deterministic re-run, and a browser check of the student Mentorship page in demo mode.
 
 | Folder | Intended use |
 | --- | --- |
