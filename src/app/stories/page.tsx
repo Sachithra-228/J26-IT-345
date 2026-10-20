@@ -1,6 +1,7 @@
 "use client";
 
 import { TestimonialsCarousel } from "@/components/shared/testimonials-carousel";
+import { ScrollReveal } from "@/components/ui/scroll-reveal";
 import { useLanguage } from "@/context/language-context";
 
 export default function StoriesPage() {
@@ -8,7 +9,6 @@ export default function StoriesPage() {
   const text =
     language === "si"
       ? {
-          eyebrow: "සත්‍ය ප්‍රතිචාර",
           title: "අපේ ශිෂ්‍ය ප්‍රජාවේ කතා",
           subtitle: "UniCare භාවිතා කරන ශිෂ්‍යයන්, උපදේශකයන් සහ දෙමාපියන්ගේ සැබෑ අත්දැකීම්.",
           testimonials: [
@@ -33,7 +33,6 @@ export default function StoriesPage() {
         }
       : language === "ta"
         ? {
-            eyebrow: "சான்றுரைகள்",
             title: "எங்கள் மாணவர் சமூகத்தின் கதைகள்",
             subtitle: "UniCare பயன்படுத்தும் மாணவர்கள், ஆலோசகர்கள், மற்றும் பெற்றோரின் உண்மையான அனுபவங்கள்.",
             testimonials: [
@@ -57,7 +56,6 @@ export default function StoriesPage() {
             ]
           }
         : {
-            eyebrow: "Testimonials",
             title: "Stories from our student community",
             subtitle:
               "Real voices from students, advisors, and parents using UniCare across Sri Lankan campuses.",
@@ -83,42 +81,39 @@ export default function StoriesPage() {
           };
 
   return (
-    <div className="relative min-h-screen w-full overflow-hidden bg-gradient-to-br from-[#0b1f45] via-[#102a59] to-[#0c1d3d]">
-      <div className="pointer-events-none absolute inset-0 bg-[linear-gradient(to_right,rgba(148,163,184,0.08)_1px,transparent_1px),linear-gradient(to_bottom,rgba(148,163,184,0.07)_1px,transparent_1px)] bg-[size:34px_34px] opacity-35" />
-      <div className="pointer-events-none absolute -right-20 -top-24 h-72 w-72 rounded-full bg-cyan-300/10 blur-3xl" />
-      <div className="pointer-events-none absolute -bottom-24 left-1/4 h-64 w-64 rounded-full bg-blue-400/12 blur-3xl" />
-
+    <div className="relative min-h-screen w-full overflow-hidden bg-black text-white">
       <div className="relative mx-auto w-full max-w-6xl space-y-10 px-4 py-14">
-      <div className="mb-8 space-y-2 text-center">
-        <p className="text-xs font-semibold uppercase tracking-[0.2em] text-blue-200">{text.eyebrow}</p>
-        <h1 className="text-3xl font-semibold text-white">{text.title}</h1>
-        <p className="text-sm text-blue-100/85">{text.subtitle}</p>
-      </div>
-      <TestimonialsCarousel
-        testimonials={[
-          {
-            name: text.testimonials[0].name,
-            title: text.testimonials[0].title,
-            quote: text.testimonials[0].quote,
-            avatar: "/sachithra.jpeg",
-            image: "/sachithra.jpeg"
-          },
-          {
-            name: text.testimonials[1].name,
-            title: text.testimonials[1].title,
-            quote: text.testimonials[1].quote,
-            avatar: "/imasha.jpeg",
-            image: "/imasha.jpeg"
-          },
-          {
-            name: text.testimonials[2].name,
-            title: text.testimonials[2].title,
-            quote: text.testimonials[2].quote,
-            avatar: "/kusum.jpeg",
-            image: "/kusum.jpeg"
-          }
-        ]}
-      />
+        <ScrollReveal className="mb-8 space-y-2 text-center">
+          <h1 className="text-3xl font-bold text-white sm:text-4xl">{text.title}</h1>
+          <p className="text-sm text-neutral-400 sm:text-base">{text.subtitle}</p>
+        </ScrollReveal>
+        <ScrollReveal delay={0.15}>
+          <TestimonialsCarousel
+            testimonials={[
+              {
+                name: text.testimonials[0].name,
+                title: text.testimonials[0].title,
+                quote: text.testimonials[0].quote,
+                avatar: "/sachithra.jpeg",
+                image: "/sachithra.jpeg"
+              },
+              {
+                name: text.testimonials[1].name,
+                title: text.testimonials[1].title,
+                quote: text.testimonials[1].quote,
+                avatar: "/imasha.jpeg",
+                image: "/imasha.jpeg"
+              },
+              {
+                name: text.testimonials[2].name,
+                title: text.testimonials[2].title,
+                quote: text.testimonials[2].quote,
+                avatar: "/kusum.jpeg",
+                image: "/kusum.jpeg"
+              }
+            ]}
+          />
+        </ScrollReveal>
       </div>
     </div>
   );

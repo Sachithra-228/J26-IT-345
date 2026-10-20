@@ -28,12 +28,12 @@ export default function DashboardLayout({ children }: { children: React.ReactNod
     <SidebarProvider defaultCollapsed={false}>
       <AppSidebar role={role} user={user ?? null} />
       <SidebarInset>
-        <div className="flex min-h-screen flex-col bg-slate-50/80 p-4 md:p-6 lg:p-8 dark:bg-slate-900/50">
+        <div className="flex min-h-screen flex-col bg-[#f8fafc] p-4 transition-colors md:p-6 lg:p-8 dark:bg-black">
           <div className="mb-4 flex items-center gap-3 lg:hidden">
-            <SidebarTrigger className="border border-slate-200 bg-white text-slate-700 shadow-sm hover:bg-slate-100 dark:border-slate-700 dark:bg-slate-900 dark:text-slate-300 dark:hover:bg-slate-800">
+            <SidebarTrigger className="border border-slate-200 bg-white text-slate-700 shadow-sm hover:bg-slate-100 dark:border-white/15 dark:bg-neutral-950 dark:text-neutral-200 dark:hover:bg-neutral-900">
               <PanelLeftOpen className="size-5" />
             </SidebarTrigger>
-            <p className="text-sm font-semibold text-slate-700 dark:text-slate-200">
+            <p className="text-sm font-semibold text-slate-700 dark:text-neutral-200">
               {DASHBOARD_ROLE_CONFIG[role].workspaceLabel}
             </p>
           </div>

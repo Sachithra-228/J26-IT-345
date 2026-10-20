@@ -1,0 +1,12 @@
+{
+  "contract": "ScholarshipEscrow",
+  "network": "sepolia",
+  "chainId": 11155111,
+  "address": "0xFF768B0CBa1f6B9237ce31f024ACBb3D69a83ae0",
+  "deployer": "0x60F1eF867e7C517f9a6E1c2c4C8d74E5Cc96EE3c",
+  "txHash": "0x6fe17996adce3ad8d72378794aa75ac8494afeaba507552c75c0384cb9cdf598",
+  "blockNumber": 11952920,
+  "gasUsed": "11348651",
+  "deployedAt": "2026-10-20T04:30:01.608Z",
+  "abiFile": "../src/lib/c1/abi/ScholarshipEscrow.json"
+}

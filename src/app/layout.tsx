@@ -26,8 +26,8 @@ export const metadata: Metadata = {
 
 export default function RootLayout({ children }: { children: React.ReactNode }) {
   return (
-    <html lang="en" className={`${inter.variable} ${notoSansSinhala.variable} ${notoSansTamil.variable}`}>
-      <body className="min-h-screen bg-white font-sans text-slate-900 dark:bg-slate-950 dark:text-slate-100">
+    <html lang="en" className={`dark ${inter.variable} ${notoSansSinhala.variable} ${notoSansTamil.variable}`}>
+      <body className="min-h-screen bg-black font-sans text-slate-100">
         <Providers>
           <AppShell>{children}</AppShell>
         </Providers>

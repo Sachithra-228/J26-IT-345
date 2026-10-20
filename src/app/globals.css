@@ -20,7 +20,7 @@
 }
 
 body {
-  @apply bg-white text-slate-900 dark:bg-slate-950 dark:text-slate-100;
+  @apply bg-black text-slate-100;
 }
 
 a:focus-visible,
@@ -239,12 +239,12 @@ textarea:focus-visible {
 }
 
 .core-journey-section {
-  background: linear-gradient(180deg, #f7faff 0%, #ffffff 62%);
+  background: #000000;
 }
 
 .stories-section {
   isolation: isolate;
-  background: linear-gradient(135deg, #0b1f45 0%, #102a59 55%, #0c1d3d 100%);
+  background: #000000;
 }
 
 .stories-section > * {
@@ -258,16 +258,16 @@ textarea:focus-visible {
   inset: 0;
   pointer-events: none;
   background-image:
-    radial-gradient(circle, rgba(125, 211, 252, 0.15) 1px, transparent 1.1px),
-    linear-gradient(90deg, rgba(148, 163, 184, 0.09) 1px, transparent 1px),
-    linear-gradient(rgba(148, 163, 184, 0.09) 1px, transparent 1px);
+    radial-gradient(circle, rgba(255, 255, 255, 0.1) 1px, transparent 1.1px),
+    linear-gradient(90deg, rgba(255, 255, 255, 0.04) 1px, transparent 1px),
+    linear-gradient(rgba(255, 255, 255, 0.04) 1px, transparent 1px);
   background-size: 30px 30px, 30px 30px, 30px 30px;
   background-position: 0 0, 0 0;
   opacity: 0.55;
 }
 
 .dark .stories-section {
-  background: linear-gradient(135deg, #071735 0%, #0d2550 55%, #08162d 100%);
+  background: #000000;
 }
 
 .dark .stories-section::before {
