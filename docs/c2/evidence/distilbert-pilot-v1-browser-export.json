@@ -1,0 +1,65 @@
+{
+  "schemaVersion": 1,
+  "runId": "distilbert-pilot-v1",
+  "checkpointSha256": "8fbdfb15003660a07f439eb3b418d044a973fb2413c5fb8a66981f564848dd62",
+  "onnxSha256": "f529baf29017ff4a94c4289d7f352bf5e69f0ec62ffdccba7735bf0235796853",
+  "onnxBytes": 268027729,
+  "fp32MaximumProbeScoreError": 4.172325134277344e-07,
+  "precision": "FP32; no quantization or retraining",
+  "exportVersion": 3,
+  "evaluationBatchSize": 1,
+  "reasonForConversionRevision": "Quantized conversion probes exposed cross-runtime differences. Retain the numerically verified full-precision graph for the PP1 demonstration. Training checkpoint and selected threshold are unchanged; no model or threshold is chosen against test results.",
+  "threshold": 0.25,
+  "testRows": 5313,
+  "browserTest": {
+    "micro": {
+      "precision": 0.5325914149443561,
+      "recall": 0.5398001933612633,
+      "f1": 0.5361715749039693
+    },
+    "macro": {
+      "precision": 0.418640606386257,
+      "recall": 0.32609538245393294,
+      "f1": 0.3272163884927881
+    },
+    "weighted": {
+      "precision": 0.5065706990906802,
+      "recall": 0.5398001933612633,
+      "f1": 0.4924559569964536
+    },
+    "exactMatchAccuracy": 0.3674007152268022,
+    "labelAccuracy": 0.961038961038961
+  },
+  "torchTest": {
+    "micro": {
+      "precision": 0.5325914149443561,
+      "recall": 0.5398001933612633,
+      "f1": 0.5361715749039693
+    },
+    "macro": {
+      "precision": 0.418640606386257,
+      "recall": 0.32609538245393294,
+      "f1": 0.3272163884927881
+    },
+    "weighted": {
+      "precision": 0.5065706990906802,
+      "recall": 0.5398001933612633,
+      "f1": 0.4924559569964536
+    },
+    "exactMatchAccuracy": 0.3674007152268022,
+    "labelAccuracy": 0.961038961038961
+  },
+  "runtimeAssets": [
+    "ort-wasm-simd-threaded.asyncify.wasm",
+    "ort-wasm-simd-threaded.jsep.wasm",
+    "ort-wasm-simd-threaded.jspi.wasm",
+    "ort-wasm-simd-threaded.wasm",
+    "ort-wasm-simd-threaded.asyncify.mjs",
+    "ort-wasm-simd-threaded.jsep.mjs",
+    "ort-wasm-simd-threaded.jspi.mjs",
+    "ort-wasm-simd-threaded.mjs"
+  ],
+  "onnxRuntimeVersion": "1.31.0",
+  "onnxVersion": "1.23.2",
+  "seconds": 111.96473289999994
+}

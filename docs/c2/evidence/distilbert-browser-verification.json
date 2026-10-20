@@ -1,0 +1,74 @@
+{
+  "runId": "distilbert-pilot-v1",
+  "browser": "Codex in-app browser, actual website UI",
+  "precision": "FP32",
+  "checkpointSha256": "8fbdfb15003660a07f439eb3b418d044a973fb2413c5fb8a66981f564848dd62",
+  "onnxSha256": "f529baf29017ff4a94c4289d7f352bf5e69f0ec62ffdccba7735bf0235796853",
+  "cases": 10,
+  "maximumAbsoluteScoreError": 7.485321045219706e-07,
+  "tokenMismatches": 0,
+  "tolerance": 1e-05,
+  "allPassed": true,
+  "results": [
+    {
+      "text": "I am happy that I finished my project and grateful for the help.",
+      "all28ScoresRead": true,
+      "tokenIdsMatch": true,
+      "maximumAbsoluteScoreError": 7.485321045219706e-07
+    },
+    {
+      "text": "I miss my friends and feel lonely this evening.",
+      "all28ScoresRead": true,
+      "tokenIdsMatch": true,
+      "maximumAbsoluteScoreError": 1.1265463829152056e-07
+    },
+    {
+      "text": "I am worried about my exam tomorrow.",
+      "all28ScoresRead": true,
+      "tokenIdsMatch": true,
+      "maximumAbsoluteScoreError": 2.946723937913287e-07
+    },
+    {
+      "text": "I am not sad today. I am happy my friend called.",
+      "all28ScoresRead": true,
+      "tokenIdsMatch": true,
+      "maximumAbsoluteScoreError": 6.004268646164768e-07
+    },
+    {
+      "text": "I am angry about the delay.",
+      "all28ScoresRead": true,
+      "tokenIdsMatch": true,
+      "maximumAbsoluteScoreError": 2.2474517821780005e-07
+    },
+    {
+      "text": "I feel proud of my progress.",
+      "all28ScoresRead": true,
+      "tokenIdsMatch": true,
+      "maximumAbsoluteScoreError": 1.8821659088230636e-07
+    },
+    {
+      "text": "I do not know how I feel about that.",
+      "all28ScoresRead": true,
+      "tokenIdsMatch": true,
+      "maximumAbsoluteScoreError": 2.969184875467601e-07
+    },
+    {
+      "text": "The library opens at nine.",
+      "all28ScoresRead": true,
+      "tokenIdsMatch": true,
+      "maximumAbsoluteScoreError": 1.1291046142503092e-07
+    },
+    {
+      "text": "I’m relieved that my friend called; I don’t feel alone today.",
+      "all28ScoresRead": true,
+      "tokenIdsMatch": true,
+      "maximumAbsoluteScoreError": 1.7283287045977147e-07
+    },
+    {
+      "text": "I enjoyed meeting my friends at the café today.",
+      "all28ScoresRead": true,
+      "tokenIdsMatch": true,
+      "maximumAbsoluteScoreError": 3.5899448394549616e-07
+    }
+  ]
+}

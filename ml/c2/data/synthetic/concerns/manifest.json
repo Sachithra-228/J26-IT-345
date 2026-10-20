@@ -1,0 +1,65 @@
+{
+  "schemaVersion": 1,
+  "version": "c2-synthetic-concern-narratives-v1",
+  "seed": 23273412,
+  "labels": [
+    "low-mood",
+    "worry",
+    "sleep",
+    "study",
+    "connection"
+  ],
+  "sourceType": "synthetic",
+  "generator": "ml/c2/generate_concern_cases.py",
+  "generatorSha256": "0ecf0814964f875668167c8a326a9ad3b1af2a92c7ba84b0213391e86e2b5bc0",
+  "partitions": {
+    "train": {
+      "rows": 900,
+      "labelCounts": [
+        284,
+        297,
+        261,
+        263,
+        263
+      ],
+      "emptyLabelRows": 141,
+      "sha256": "389306a767973e8fc7b19b49273dba6cee6e9609e633510ef6930b2e243b1815"
+    },
+    "dev": {
+      "rows": 300,
+      "labelCounts": [
+        95,
+        95,
+        91,
+        88,
+        110
+      ],
+      "emptyLabelRows": 40,
+      "sha256": "19c21e7cf430d3ba7caef2f6f008712283be930f44bf03336b716aee1d55918e"
+    },
+    "test": {
+      "rows": 300,
+      "labelCounts": [
+        88,
+        97,
+        89,
+        94,
+        95
+      ],
+      "emptyLabelRows": 50,
+      "sha256": "588c24d0e3c90ede96d218e386f46839745d9a7968a680de7c7650d8066cc5e2"
+    }
+  },
+  "familyOverlaps": {
+    "train:dev": 0,
+    "train:test": 0,
+    "dev:test": 0
+  },
+  "limitations": [
+    "Composed synthetic narratives with simulated concern labels; no participants or clinical diagnoses.",
+    "Wording-family separation reduces exact template leakage but does not establish natural-language generalization.",
+    "Shared topic vocabulary and artificial composition can make classification easier than real student accounts.",
+    "Negated examples cover only a narrow set of constructions. No independent professional annotation review.",
+    "English only; no local cultural or clinical validation."
+  ]
+}

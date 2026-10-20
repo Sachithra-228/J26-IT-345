@@ -1,0 +1,36 @@
+{
+  "status": "gradient-smoke-test-only",
+  "notFinalTraining": true,
+  "model": "distilbert/distilbert-base-uncased",
+  "revision": "12040accade4e8a0f71eabdb258fecc2e7e948be",
+  "environment": {
+    "python": "3.12.14",
+    "platform": "Windows-11-10.0.26300-SP0",
+    "logicalCpuCount": 12,
+    "cudaAvailable": false,
+    "torchThreads": 4,
+    "packages": {
+      "torch": "2.14.1",
+      "transformers": "5.20.1",
+      "numpy": "2.3.4",
+      "scikit-learn": "1.7.2",
+      "tokenizers": "0.23.3",
+      "safetensors": "0.8.0",
+      "huggingface-hub": "2.2.0"
+    }
+  },
+  "batchSize": 16,
+  "maxLength": 96,
+  "trainableLastBlocks": 2,
+  "trainableParameters": 14787868,
+  "totalParameters": 66975004,
+  "secondsPerStep": [
+    0.8089407000079518,
+    0.5291864000027999,
+    0.6336283999989973,
+    0.4732175999961328
+  ],
+  "pretrainedBlockWeightsChanged": true,
+  "frozenEmbeddingWeightsUnchanged": true,
+  "testPartitionUsed": false
+}

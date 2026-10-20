@@ -1,5 +1,11 @@
 # C2 reproducible text training
 
+## New synthetic questionnaire/context experiment
+
+The earlier structured-data model is documented in [the support model card](../../docs/c2/support-model-card.md). It uses 1,500 synthetic structured cases (900 train / 300 development / 300 test), fits logistic regression and Random Forest, selects the support model before test evaluation, and fits a separate learned topic router. No pretrained support model is used. Run `generate_support_cases.py`, then `train_support.py`, then `test_support.py` with the prepared Python environment described below. Its replay remains under `/wellness/research`; the main check-in now uses the separate DistilBERT concern flow described at the end of this README. Synthetic labels are not medical diagnoses or professional judgments.
+
+## Existing public-text experiment
+
 This directory contains the first new C2 ML experiment, implemented from scratch in the current repository. It trains on public English emotion annotations. It does not train a clinical or referral model.
 
 Use Python 3.12 and the pinned dependencies in `requirements.txt`. A fresh environment can be created with `python -m venv .venv-c2`, followed by `.venv-c2\Scripts\python.exe -m pip install -r ml/c2/requirements.txt` on Windows.
@@ -18,6 +24,8 @@ The download stage pins a Google Research Git revision and records SHA-256 hashe
 
 The training stage fits training-only preprocessing, chooses settings on development data, and evaluates the test division after selection. A rerun repeats the same frozen protocol; it is not an opportunity to tune against test results.
 
+For an offline lecture demonstration using the same learned artifact and inference functions as the website, run `npm run c2:demo`. Add `-- --labels` for per-emotion test metrics or `-- --text "Your English sentence"` for a new input. This command does not train or save inputs. See [the PP1 walkthrough](../../docs/c2/PP1_ML_DEMO.md) for the explanation, evidence and remaining proposal work.
+
 Outputs:
 
 - `src/lib/c2/model/text-model.json`: portable learned model.
@@ -27,4 +35,32 @@ Outputs:
 
 Public source data and documentation are cached under git-ignored `ml/c2/data/raw/goemotions/`. Never put student health records or private journals in tracked directories. See `docs/c2/model-card.md` for attribution, permissions, limits and measured results.
 
-The interfaces are `/wellness` and the student dashboard's Wellness section. Questionnaire answers, reflections and guided chat stay in temporary page memory. The separate application includes PHQ-9/GAD-7 scoring and context follow-ups; these do not come from the text classifier. Combined-input modeling, camera work and confidential assigned-counselor referral remain pending. See [the application report](../../docs/c2/reports/assessment-increment.md) for current status and verification.
+The interfaces are `/wellness`, the student dashboard's Wellness section and `/wellness/research`. Questionnaire answers, reflections and guided chat stay in temporary page memory. The application includes PHQ-9/GAD-7 scoring and a database-backed bank of 100 custom support questions. The fine-tuned DistilBERT classifier ranks five concern topics; explicit application rules choose 5–9 questions and respond to earlier answers. The classifier does not predict question IDs or diagnoses. Proposed text/camera multimodal fusion and confidential assigned-counselor referral remain pending. See [the main model explanation](../../docs/c2/MAIN_DISTILBERT_PP1.md) and [the separate support model card](../../docs/c2/support-model-card.md).
+
+## DistilBERT fine-tuning experiment
+
+The separate neural experiment is documented in `docs/c2/DISTILBERT_EXPERIMENT.md`.
+Use `requirements-distilbert-lock.txt` in a separate Python environment. Run
+`train_distilbert.py benchmark` to verify actual pretrained-layer gradient updates,
+then `train_distilbert.py train` to record a named experiment. A benchmark alone
+is not a completed fine-tuning experiment. `export_distilbert.py` converts only a
+completed, matching checkpoint to a browser model and measures conversion effects.
+Existing classical and synthetic-support artifacts are preserved.
+# Main student check-in: DistilBERT concern classifier
+
+The main check-in now has a dedicated concern-analysis flow: standard PHQ-9/GAD-7 answers, optional English narrative, DistilBERT topic suggestions, student confirmation, adaptive fixed-bank questions, an explained summary and topic/preference matching. The neural concern run is separate from the GoEmotions emotion experiment and earlier synthetic structured logistic models.
+
+Run these commands with the existing `.venv-c2-distilbert` Python environment activated (or use its full interpreter path):
+
+```powershell
+python ml/c2/generate_concern_cases.py
+python ml/c2/train_concerns.py --run-id c2-distilbert-concerns-v1
+python ml/c2/audit_concerns.py
+python ml/c2/export_concerns.py
+```
+
+Generation creates 1,500 explicitly synthetic narrative cases (900/300/300) under `ml/c2/data/synthetic/concerns/`. Wording families are partitioned before composition. Clinical labels and real participant records are absent. Preserve completed run IDs: training refuses to overwrite an existing run. Do not regenerate/modify the data behind a completed report without creating and documenting a new experiment.
+
+The exporter creates the separate `c2-concerns` browser artifact and writes its committed checkpoint identity only after native parity and held-out export checks pass. Large model/runtime assets remain ignored by Git. Source code and a normal Git push alone do not provision the trained browser files on another computer.
+
+Actual completed reports appear at `docs/c2/evidence/c2-distilbert-concerns-v1-*.json`. The public-comment emotion model's measurements must not be reused as concern-model performance. Student confirmations and preference filters remain in control; this classifier does not diagnose conditions or learn treatment outcomes.

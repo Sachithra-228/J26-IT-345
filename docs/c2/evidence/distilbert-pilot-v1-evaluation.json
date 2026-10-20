@@ -1,0 +1,1548 @@
+{
+  "schemaVersion": 1,
+  "status": "completed",
+  "runId": "distilbert-pilot-v1",
+  "task": "Multilabel public English comment emotion classification; no clinical targets or local student validation",
+  "protocol": {
+    "schemaVersion": 1,
+    "runId": "distilbert-pilot-v1",
+    "createdUtc": "2026-10-19T15:25:07.224388+00:00",
+    "model": "distilbert/distilbert-base-uncased",
+    "modelRevision": "12040accade4e8a0f71eabdb258fecc2e7e948be",
+    "source": {
+      "source": "Google Research GoEmotions",
+      "revision": "3ef52111c1fabc301880818f5a547570e926a76b",
+      "files": {
+        "train.tsv": {
+          "url": "https://raw.githubusercontent.com/google-research/google-research/3ef52111c1fabc301880818f5a547570e926a76b/goemotions/data/train.tsv",
+          "sha256": "1c254a142be5c00e80d819b9ae1bbd36d94b2eeb8f4b1271846508d57e57d9c5",
+          "bytes": 3519053
+        },
+        "dev.tsv": {
+          "url": "https://raw.githubusercontent.com/google-research/google-research/3ef52111c1fabc301880818f5a547570e926a76b/goemotions/data/dev.tsv",
+          "sha256": "575489c079c9de1097062a01738f998590d6b7ead66dd1c9fd1d2ba01fd8bc62",
+          "bytes": 439059
+        },
+        "test.tsv": {
+          "url": "https://raw.githubusercontent.com/google-research/google-research/3ef52111c1fabc301880818f5a547570e926a76b/goemotions/data/test.tsv",
+          "sha256": "0587b2dd8b27b97352adbfc3fb083d46005c8946657fdc2b1ca8b1cc7f1f8be4",
+          "bytes": 436706
+        },
+        "emotions.txt": {
+          "url": "https://raw.githubusercontent.com/google-research/google-research/3ef52111c1fabc301880818f5a547570e926a76b/goemotions/data/emotions.txt",
+          "sha256": "45c3ef86782d2a4d7fedcd6d8c111aa0d0e94720689bd164fac94fefb4495a89",
+          "bytes": 248
+        },
+        "README.md": {
+          "url": "https://raw.githubusercontent.com/google-research/google-research/3ef52111c1fabc301880818f5a547570e926a76b/goemotions/README.md",
+          "sha256": "c882c69be9f400129bce8535319606434481a085be9c20263930670890e171a7",
+          "bytes": 7968
+        },
+        "LICENSE": {
+          "url": "https://raw.githubusercontent.com/google-research/google-research/3ef52111c1fabc301880818f5a547570e926a76b/LICENSE",
+          "sha256": "cfc7749b96f63bd31c3c42b5c471bf756814053e847c10f3eb003417bc523d30",
+          "bytes": 11358
+        },
+        "model_card.pdf": {
+          "url": "https://raw.githubusercontent.com/google-research/google-research/3ef52111c1fabc301880818f5a547570e926a76b/goemotions/goemotions_model_card.pdf",
+          "sha256": "7bbb8ed8b10d907da99c6e429ce26eae40e2cf84ad586d80b0712cdb8901a252",
+          "bytes": 283625
+        }
+      }
+    },
+    "scriptSha256": "67a0c8b52080acace999f0ad974880c05c4a15e5f16a86f99141ea82a194a318",
+    "preparationScriptSha256": "36fa93b91852d1a4b336c6370c2b1164120fa574d859e931a7bd6d1e9928faec",
+    "seed": 23273412,
+    "labels": [
+      "admiration",
+      "amusement",
+      "anger",
+      "annoyance",
+      "approval",
+      "caring",
+      "confusion",
+      "curiosity",
+      "desire",
+      "disappointment",
+      "disapproval",
+      "disgust",
+      "embarrassment",
+      "excitement",
+      "fear",
+      "gratitude",
+      "grief",
+      "joy",
+      "love",
+      "nervousness",
+      "optimism",
+      "pride",
+      "realization",
+      "relief",
+      "remorse",
+      "sadness",
+      "surprise",
+      "neutral"
+    ],
+    "deduplicationAudit": {
+      "train": {
+        "officialRows": 43410,
+        "mergedDuplicates": 553,
+        "removedEmptyRows": 3,
+        "removedCrossPartitionOverlap": 0,
+        "usedRows": 42854
+      },
+      "dev": {
+        "officialRows": 5426,
+        "mergedDuplicates": 20,
+        "removedEmptyRows": 0,
+        "removedCrossPartitionOverlap": 98,
+        "usedRows": 5308
+      },
+      "test": {
+        "officialRows": 5427,
+        "mergedDuplicates": 19,
+        "removedEmptyRows": 0,
+        "removedCrossPartitionOverlap": 95,
+        "usedRows": 5313
+      }
+    },
+    "sampling": "Uniform seeded train/dev subsets, fixed before fitting; complete cleaned test split",
+    "partitions": {
+      "train": {
+        "rows": 3000,
+        "idsSha256": "9cbe39c882a1d69dbe89100c8a5a779883750e0ab3c7c4205937076274538de6",
+        "labelCounts": [
+          295,
+          149,
+          94,
+          170,
+          207,
+          83,
+          94,
+          165,
+          36,
+          67,
+          144,
+          59,
+          13,
+          64,
+          45,
+          168,
+          7,
+          92,
+          132,
+          11,
+          108,
+          6,
+          72,
+          15,
+          38,
+          111,
+          82,
+          1019
+        ]
+      },
+      "dev": {
+        "rows": 1000,
+        "idsSha256": "4dffc13742fb2e681145dcc2c27a1f14cd31817a7686531c3a3db24de722d83c",
+        "labelCounts": [
+          85,
+          61,
+          38,
+          70,
+          67,
+          23,
+          36,
+          49,
+          7,
+          17,
+          56,
+          21,
+          6,
+          23,
+          19,
+          58,
+          3,
+          32,
+          43,
+          3,
+          44,
+          3,
+          28,
+          4,
+          10,
+          28,
+          28,
+          326
+        ]
+      },
+      "test": {
+        "rows": 5313,
+        "idsSha256": "e97f717b57aa0ad157bede37cf092844aeed76f77ed60237ca6aa5f993dee6e9",
+        "labelCounts": [
+          492,
+          262,
+          195,
+          318,
+          345,
+          131,
+          152,
+          282,
+          83,
+          151,
+          265,
+          122,
+          37,
+          98,
+          77,
+          320,
+          5,
+          160,
+          228,
+          23,
+          183,
+          16,
+          145,
+          11,
+          56,
+          151,
+          139,
+          1759
+        ]
+      }
+    },
+    "maxLength": 96,
+    "batchSize": 16,
+    "epochsMaximum": 3,
+    "trainableLastBlocks": 2,
+    "weightDecay": 0.01,
+    "gradientClipNorm": 1.0,
+    "optimizer": "AdamW; separate head/backbone rates; linear decay with 10% warmup",
+    "loss": "Unweighted BCEWithLogitsLoss (multilabel); no disease targets",
+    "configurations": [
+      {
+        "id": "lr-2e-5",
+        "backboneLearningRate": 2e-05,
+        "headLearningRate": 0.0005,
+        "tokenMaskProbability": 0.0
+      },
+      {
+        "id": "lr-5e-5",
+        "backboneLearningRate": 5e-05,
+        "headLearningRate": 0.0005,
+        "tokenMaskProbability": 0.0
+      },
+      {
+        "id": "lr-2e-5-mask",
+        "backboneLearningRate": 2e-05,
+        "headLearningRate": 0.0005,
+        "tokenMaskProbability": 0.05
+      }
+    ],
+    "thresholdCandidates": [
+      0.15,
+      0.2,
+      0.25,
+      0.3,
+      0.4,
+      0.5
+    ],
+    "selection": "Development micro-F1 across checkpoints, configurations and shared thresholds; earliest wins ties",
+    "earlyStopping": "Stop a configuration after two epochs without improved development micro-F1",
+    "augmentation": "None for primary trials. Optional 5% non-special, non-negation WordPiece masking is a training-only experimental ablation; label preservation is not guaranteed.",
+    "curveAccuracy": "Exact set match; label accuracy is also reported and can be high from negative-label imbalance",
+    "curveLoss": "Full selected training subset and development evaluated in eval mode after each epoch",
+    "testUse": "Evaluate selected neural checkpoint and dev-selected baseline once after selection; no test tuning",
+    "environment": {
+      "python": "3.12.14",
+      "platform": "Windows-11-10.0.26300-SP0",
+      "logicalCpuCount": 12,
+      "cudaAvailable": false,
+      "torchThreads": 4,
+      "packages": {
+        "torch": "2.14.1",
+        "transformers": "5.20.1",
+        "numpy": "2.3.4",
+        "scikit-learn": "1.7.2",
+        "tokenizers": "0.23.3",
+        "safetensors": "0.8.0",
+        "huggingface-hub": "2.2.0"
+      }
+    }
+  },
+  "selected": {
+    "configuration": {
+      "id": "lr-5e-5",
+      "backboneLearningRate": 5e-05,
+      "headLearningRate": 0.0005,
+      "tokenMaskProbability": 0.0
+    },
+    "epoch": 3,
+    "threshold": 0.25,
+    "developmentMicroF1": 0.5422446406052963,
+    "trainableParameters": 14787868,
+    "totalParameters": 66975004
+  },
+  "history": [
+    {
+      "trial": "lr-2e-5",
+      "epoch": 1,
+      "trainLoss": 0.12123517799377441,
+      "validationLoss": 0.12597197806835175,
+      "train": {
+        "micro": {
+          "precision": 0.7914798206278026,
+          "recall": 0.09954878736604625,
+          "f1": 0.17685370741482967
+        },
+        "macro": {
+          "precision": 0.08872411775240314,
+          "recall": 0.0292285034138071,
+          "f1": 0.04385821807635894
+        },
+        "weighted": {
+          "precision": 0.3284286858808465,
+          "recall": 0.09954878736604625,
+          "f1": 0.15250299759293057
+        },
+        "exactMatchAccuracy": 0.099,
+        "labelAccuracy": 0.9608809523809524
+      },
+      "validation": {
+        "micro": {
+          "precision": 0.6956521739130435,
+          "recall": 0.09427609427609428,
+          "f1": 0.16604892512972572
+        },
+        "macro": {
+          "precision": 0.08075473179926176,
+          "recall": 0.028606449984267035,
+          "f1": 0.042197088464094104
+        },
+        "weighted": {
+          "precision": 0.27555933163409796,
+          "recall": 0.09427609427609428,
+          "f1": 0.14034572618098407
+        },
+        "exactMatchAccuracy": 0.101,
+        "labelAccuracy": 0.9598214285714286
+      },
+      "curveThreshold": 0.5,
+      "selectedThreshold": 0.15,
+      "selectionMicroF1": 0.4084967320261438,
+      "thresholdTrials": [
+        {
+          "threshold": 0.15,
+          "microF1": 0.4084967320261438
+        },
+        {
+          "threshold": 0.2,
+          "microF1": 0.40298507462686567
+        },
+        {
+          "threshold": 0.25,
+          "microF1": 0.38513164687661333
+        },
+        {
+          "threshold": 0.3,
+          "microF1": 0.3554046406338427
+        },
+        {
+          "threshold": 0.4,
+          "microF1": 0.2694571615434925
+        },
+        {
+          "threshold": 0.5,
+          "microF1": 0.16604892512972572
+        }
+      ],
+      "seconds": 200.24843439999677
+    },
+    {
+      "trial": "lr-2e-5",
+      "epoch": 2,
+      "trainLoss": 0.10012974164883295,
+      "validationLoss": 0.11263797861337661,
+      "train": {
+        "micro": {
+          "precision": 0.6427488630621526,
+          "recall": 0.3587140439932318,
+          "f1": 0.4604524886877828
+        },
+        "macro": {
+          "precision": 0.35613744831658684,
+          "recall": 0.1248449960673064,
+          "f1": 0.14971051891691614
+        },
+        "weighted": {
+          "precision": 0.530510934297326,
+          "recall": 0.3587140439932318,
+          "f1": 0.3519154439818641
+        },
+        "exactMatchAccuracy": 0.3556666666666667,
+        "labelAccuracy": 0.9645119047619047
+      },
+      "validation": {
+        "micro": {
+          "precision": 0.579100145137881,
+          "recall": 0.33585858585858586,
+          "f1": 0.4251465103889185
+        },
+        "macro": {
+          "precision": 0.24244729053348577,
+          "recall": 0.11559637849848588,
+          "f1": 0.13016858158568595
+        },
+        "weighted": {
+          "precision": 0.4295640464121715,
+          "recall": 0.33585858585858586,
+          "f1": 0.31099112821269803
+        },
+        "exactMatchAccuracy": 0.337,
+        "labelAccuracy": 0.9614642857142857
+      },
+      "curveThreshold": 0.5,
+      "selectedThreshold": 0.2,
+      "selectionMicroF1": 0.47717348154029376,
+      "thresholdTrials": [
+        {
+          "threshold": 0.15,
+          "microF1": 0.46967009577864494
+        },
+        {
+          "threshold": 0.2,
+          "microF1": 0.47717348154029376
+        },
+        {
+          "threshold": 0.25,
+          "microF1": 0.466866182129115
+        },
+        {
+          "threshold": 0.3,
+          "microF1": 0.4562358276643991
+        },
+        {
+          "threshold": 0.4,
+          "microF1": 0.448838358872961
+        },
+        {
+          "threshold": 0.5,
+          "microF1": 0.4251465103889185
+        }
+      ],
+      "seconds": 223.35156270000152
+    },
+    {
+      "trial": "lr-2e-5",
+      "epoch": 3,
+      "trainLoss": 0.0917361690402031,
+      "validationLoss": 0.10506126338243485,
+      "train": {
+        "micro": {
+          "precision": 0.7728686994399502,
+          "recall": 0.350253807106599,
+          "f1": 0.4820492916747526
+        },
+        "macro": {
+          "precision": 0.38661797708801765,
+          "recall": 0.18510084502449775,
+          "f1": 0.22702858230344902
+        },
+        "weighted": {
+          "precision": 0.5930113046381134,
+          "recall": 0.350253807106599,
+          "f1": 0.41271859518950293
+        },
+        "exactMatchAccuracy": 0.3426666666666667,
+        "labelAccuracy": 0.9682261904761905
+      },
+      "validation": {
+        "micro": {
+          "precision": 0.6636363636363637,
+          "recall": 0.30723905723905726,
+          "f1": 0.42002301495972383
+        },
+        "macro": {
+          "precision": 0.24452812502442853,
+          "recall": 0.14062804043904312,
+          "f1": 0.165913040960913
+        },
+        "weighted": {
+          "precision": 0.45125754720862776,
+          "recall": 0.30723905723905726,
+          "f1": 0.3455717704685634
+        },
+        "exactMatchAccuracy": 0.301,
+        "labelAccuracy": 0.964
+      },
+      "curveThreshold": 0.5,
+      "selectedThreshold": 0.2,
+      "selectionMicroF1": 0.5118815738215816,
+      "thresholdTrials": [
+        {
+          "threshold": 0.15,
+          "microF1": 0.4918588873812754
+        },
+        {
+          "threshold": 0.2,
+          "microF1": 0.5118815738215816
+        },
+        {
+          "threshold": 0.25,
+          "microF1": 0.5098206660973527
+        },
+        {
+          "threshold": 0.3,
+          "microF1": 0.49299719887955185
+        },
+        {
+          "threshold": 0.4,
+          "microF1": 0.4564533053515215
+        },
+        {
+          "threshold": 0.5,
+          "microF1": 0.42002301495972383
+        }
+      ],
+      "seconds": 246.36645329999737
+    },
+    {
+      "trial": "lr-5e-5",
+      "epoch": 1,
+      "trainLoss": 0.11641760939359665,
+      "validationLoss": 0.12155918514728546,
+      "train": {
+        "micro": {
+          "precision": 0.7696793002915452,
+          "recall": 0.14890016920473773,
+          "f1": 0.2495274102079395
+        },
+        "macro": {
+          "precision": 0.0871303066681218,
+          "recall": 0.04747240598806013,
+          "f1": 0.060439725511346076
+        },
+        "weighted": {
+          "precision": 0.32421737878590673,
+          "recall": 0.14890016920473773,
+          "f1": 0.20002855125567612
+        },
+        "exactMatchAccuracy": 0.14833333333333334,
+        "labelAccuracy": 0.9621904761904762
+      },
+      "validation": {
+        "micro": {
+          "precision": 0.6885245901639344,
+          "recall": 0.1414141414141414,
+          "f1": 0.2346368715083799
+        },
+        "macro": {
+          "precision": 0.08032967032967032,
+          "recall": 0.04457776975821003,
+          "f1": 0.05673469387755102
+        },
+        "weighted": {
+          "precision": 0.2761486661486662,
+          "recall": 0.1414141414141414,
+          "f1": 0.18544973544973542
+        },
+        "exactMatchAccuracy": 0.151,
+        "labelAccuracy": 0.9608571428571429
+      },
+      "curveThreshold": 0.5,
+      "selectedThreshold": 0.15,
+      "selectionMicroF1": 0.42923794712286156,
+      "thresholdTrials": [
+        {
+          "threshold": 0.15,
+          "microF1": 0.42923794712286156
+        },
+        {
+          "threshold": 0.2,
+          "microF1": 0.4207650273224044
+        },
+        {
+          "threshold": 0.25,
+          "microF1": 0.40981963927855714
+        },
+        {
+          "threshold": 0.3,
+          "microF1": 0.3873431533006001
+        },
+        {
+          "threshold": 0.4,
+          "microF1": 0.31409062693978895
+        },
+        {
+          "threshold": 0.5,
+          "microF1": 0.2346368715083799
+        }
+      ],
+      "seconds": 261.54925860000367
+    },
+    {
+      "trial": "lr-5e-5",
+      "epoch": 2,
+      "trainLoss": 0.0922171794573466,
+      "validationLoss": 0.10663137298822403,
+      "train": {
+        "micro": {
+          "precision": 0.6856732151413513,
+          "recall": 0.4035532994923858,
+          "f1": 0.5080774010296467
+        },
+        "macro": {
+          "precision": 0.43409947843646524,
+          "recall": 0.17025863156431295,
+          "f1": 0.20454812111207157
+        },
+        "weighted": {
+          "precision": 0.6095588926337352,
+          "recall": 0.4035532994923858,
+          "f1": 0.40558277571636203
+        },
+        "exactMatchAccuracy": 0.4013333333333333,
+        "labelAccuracy": 0.9670119047619048
+      },
+      "validation": {
+        "micro": {
+          "precision": 0.6177715091678421,
+          "recall": 0.3686868686868687,
+          "f1": 0.46178176067474963
+        },
+        "macro": {
+          "precision": 0.27634785545423846,
+          "recall": 0.13810109617404254,
+          "f1": 0.1587772803683853
+        },
+        "weighted": {
+          "precision": 0.4673177480080554,
+          "recall": 0.3686868686868687,
+          "f1": 0.35432844176858586
+        },
+        "exactMatchAccuracy": 0.375,
+        "labelAccuracy": 0.9635357142857143
+      },
+      "curveThreshold": 0.5,
+      "selectedThreshold": 0.2,
+      "selectionMicroF1": 0.5128205128205128,
+      "thresholdTrials": [
+        {
+          "threshold": 0.15,
+          "microF1": 0.5079365079365079
+        },
+        {
+          "threshold": 0.2,
+          "microF1": 0.5128205128205128
+        },
+        {
+          "threshold": 0.25,
+          "microF1": 0.5055603079555175
+        },
+        {
+          "threshold": 0.3,
+          "microF1": 0.4990990990990991
+        },
+        {
+          "threshold": 0.4,
+          "microF1": 0.4829292429490351
+        },
+        {
+          "threshold": 0.5,
+          "microF1": 0.46178176067474963
+        }
+      ],
+      "seconds": 246.8108057000063
+    },
+    {
+      "trial": "lr-5e-5",
+      "epoch": 3,
+      "trainLoss": 0.08315943398078282,
+      "validationLoss": 0.0998634517788887,
+      "train": {
+        "micro": {
+          "precision": 0.7962760131434831,
+          "recall": 0.41003948110547095,
+          "f1": 0.54132539091586
+        },
+        "macro": {
+          "precision": 0.5060030779131938,
+          "recall": 0.23251333950993122,
+          "f1": 0.2770052217958655
+        },
+        "weighted": {
+          "precision": 0.7190054118483239,
+          "recall": 0.41003948110547095,
+          "f1": 0.47297802443922393
+        },
+        "exactMatchAccuracy": 0.39866666666666667,
+        "labelAccuracy": 0.9706666666666667
+      },
+      "validation": {
+        "micro": {
+          "precision": 0.6842105263157895,
+          "recall": 0.3611111111111111,
+          "f1": 0.4727272727272727
+        },
+        "macro": {
+          "precision": 0.3319150378564461,
+          "recall": 0.18848492741062076,
+          "f1": 0.21619100043053288
+        },
+        "weighted": {
+          "precision": 0.5336408066554519,
+          "recall": 0.3611111111111111,
+          "f1": 0.3965188186439245
+        },
+        "exactMatchAccuracy": 0.351,
+        "labelAccuracy": 0.9658214285714286
+      },
+      "curveThreshold": 0.5,
+      "selectedThreshold": 0.25,
+      "selectionMicroF1": 0.5422446406052963,
+      "thresholdTrials": [
+        {
+          "threshold": 0.15,
+          "microF1": 0.5160635779506256
+        },
+        {
+          "threshold": 0.2,
+          "microF1": 0.5384321223709368
+        },
+        {
+          "threshold": 0.25,
+          "microF1": 0.5422446406052963
+        },
+        {
+          "threshold": 0.3,
+          "microF1": 0.5317496573777981
+        },
+        {
+          "threshold": 0.4,
+          "microF1": 0.5166835187057633
+        },
+        {
+          "threshold": 0.5,
+          "microF1": 0.4727272727272727
+        }
+      ],
+      "seconds": 251.3961305999983
+    },
+    {
+      "trial": "lr-2e-5-mask",
+      "epoch": 1,
+      "trainLoss": 0.12148432310422262,
+      "validationLoss": 0.1256667104959488,
+      "train": {
+        "micro": {
+          "precision": 0.7346278317152104,
+          "recall": 0.12803158488437677,
+          "f1": 0.21805955811719502
+        },
+        "macro": {
+          "precision": 0.08833604057035095,
+          "recall": 0.03511488368072234,
+          "f1": 0.04926556385067105
+        },
+        "weighted": {
+          "precision": 0.30911859377939777,
+          "recall": 0.12803158488437677,
+          "f1": 0.17868392421810106
+        },
+        "exactMatchAccuracy": 0.12933333333333333,
+        "labelAccuracy": 0.9612380952380952
+      },
+      "validation": {
+        "micro": {
+          "precision": 0.6740088105726872,
+          "recall": 0.12878787878787878,
+          "f1": 0.21625441696113074
+        },
+        "macro": {
+          "precision": 0.07715919701213818,
+          "recall": 0.03404165770391084,
+          "f1": 0.045963840081487135
+        },
+        "weighted": {
+          "precision": 0.2629723157500935,
+          "recall": 0.12878787878787878,
+          "f1": 0.16982960922354862
+        },
+        "exactMatchAccuracy": 0.135,
+        "labelAccuracy": 0.9603928571428572
+      },
+      "curveThreshold": 0.5,
+      "selectedThreshold": 0.15,
+      "selectionMicroF1": 0.4128622469233823,
+      "thresholdTrials": [
+        {
+          "threshold": 0.15,
+          "microF1": 0.4128622469233823
+        },
+        {
+          "threshold": 0.2,
+          "microF1": 0.3987138263665595
+        },
+        {
+          "threshold": 0.25,
+          "microF1": 0.3809040121889284
+        },
+        {
+          "threshold": 0.3,
+          "microF1": 0.35986913849509267
+        },
+        {
+          "threshold": 0.4,
+          "microF1": 0.30287859824780977
+        },
+        {
+          "threshold": 0.5,
+          "microF1": 0.21625441696113074
+        }
+      ],
+      "seconds": 249.38079569999536
+    },
+    {
+      "trial": "lr-2e-5-mask",
+      "epoch": 2,
+      "trainLoss": 0.101588702917099,
+      "validationLoss": 0.11320879518985748,
+      "train": {
+        "micro": {
+          "precision": 0.6501821967725143,
+          "recall": 0.35222786238014664,
+          "f1": 0.456923358331809
+        },
+        "macro": {
+          "precision": 0.35188058355149515,
+          "recall": 0.12303132842448791,
+          "f1": 0.1485731818258995
+        },
+        "weighted": {
+          "precision": 0.541739911985405,
+          "recall": 0.35222786238014664,
+          "f1": 0.34824956588277506
+        },
+        "exactMatchAccuracy": 0.35233333333333333,
+        "labelAccuracy": 0.9646547619047618
+      },
+      "validation": {
+        "micro": {
+          "precision": 0.5762962962962963,
+          "recall": 0.3274410774410774,
+          "f1": 0.4176060118089104
+        },
+        "macro": {
+          "precision": 0.22193439265392736,
+          "recall": 0.11204336822458717,
+          "f1": 0.12457690271547105
+        },
+        "weighted": {
+          "precision": 0.3999147517760556,
+          "recall": 0.3274410774410774,
+          "f1": 0.30215908663112384
+        },
+        "exactMatchAccuracy": 0.33,
+        "labelAccuracy": 0.96125
+      },
+      "curveThreshold": 0.5,
+      "selectedThreshold": 0.2,
+      "selectionMicroF1": 0.46653306613226453,
+      "thresholdTrials": [
+        {
+          "threshold": 0.15,
+          "microF1": 0.4662138005005363
+        },
+        {
+          "threshold": 0.2,
+          "microF1": 0.46653306613226453
+        },
+        {
+          "threshold": 0.25,
+          "microF1": 0.46511627906976744
+        },
+        {
+          "threshold": 0.3,
+          "microF1": 0.4581056466302368
+        },
+        {
+          "threshold": 0.4,
+          "microF1": 0.43326693227091634
+        },
+        {
+          "threshold": 0.5,
+          "microF1": 0.4176060118089104
+        }
+      ],
+      "seconds": 248.5606773000036
+    },
+    {
+      "trial": "lr-2e-5-mask",
+      "epoch": 3,
+      "trainLoss": 0.09332859776417414,
+      "validationLoss": 0.10551644879579544,
+      "train": {
+        "micro": {
+          "precision": 0.7667731629392971,
+          "recall": 0.338409475465313,
+          "f1": 0.4695754255527294
+        },
+        "macro": {
+          "precision": 0.4276680173225408,
+          "recall": 0.17475966282534383,
+          "f1": 0.2169492738854015
+        },
+        "weighted": {
+          "precision": 0.6365851334867134,
+          "recall": 0.338409475465313,
+          "f1": 0.39965129310047537
+        },
+        "exactMatchAccuracy": 0.33366666666666667,
+        "labelAccuracy": 0.9677261904761905
+      },
+      "validation": {
+        "micro": {
+          "precision": 0.6616541353383458,
+          "recall": 0.2962962962962963,
+          "f1": 0.40930232558139534
+        },
+        "macro": {
+          "precision": 0.28383170516779394,
+          "recall": 0.13297329772912256,
+          "f1": 0.1596559155171437
+        },
+        "weighted": {
+          "precision": 0.47971585674870654,
+          "recall": 0.2962962962962963,
+          "f1": 0.33318451167373625
+        },
+        "exactMatchAccuracy": 0.294,
+        "labelAccuracy": 0.9637142857142857
+      },
+      "curveThreshold": 0.5,
+      "selectedThreshold": 0.2,
+      "selectionMicroF1": 0.5044834307992203,
+      "thresholdTrials": [
+        {
+          "threshold": 0.15,
+          "microF1": 0.4855687606112054
+        },
+        {
+          "threshold": 0.2,
+          "microF1": 0.5044834307992203
+        },
+        {
+          "threshold": 0.25,
+          "microF1": 0.5002145002145002
+        },
+        {
+          "threshold": 0.3,
+          "microF1": 0.4867380176826431
+        },
+        {
+          "threshold": 0.4,
+          "microF1": 0.4541622760800843
+        },
+        {
+          "threshold": 0.5,
+          "microF1": 0.40930232558139534
+        }
+      ],
+      "seconds": 244.820137600007
+    }
+  ],
+  "testLoss": 0.09823235640617474,
+  "test": {
+    "micro": {
+      "precision": 0.5325914149443561,
+      "recall": 0.5398001933612633,
+      "f1": 0.5361715749039693
+    },
+    "macro": {
+      "precision": 0.418640606386257,
+      "recall": 0.32609538245393294,
+      "f1": 0.3272163884927881
+    },
+    "weighted": {
+      "precision": 0.5065706990906802,
+      "recall": 0.5398001933612633,
+      "f1": 0.4924559569964536
+    },
+    "exactMatchAccuracy": 0.3674007152268022,
+    "labelAccuracy": 0.961038961038961
+  },
+  "baseline": {
+    "name": "TF-IDF + logistic regression refitted on exactly the same train/dev rows",
+    "C": 4.0,
+    "threshold": 0.15,
+    "developmentMicroF1": 0.46882399368587213,
+    "developmentTrials": [
+      {
+        "C": 1.0,
+        "thresholds": [
+          {
+            "threshold": 0.15,
+            "microF1": 0.42469753858990406
+          },
+          {
+            "threshold": 0.2,
+            "microF1": 0.4164408310749774
+          },
+          {
+            "threshold": 0.25,
+            "microF1": 0.4037055095075573
+          },
+          {
+            "threshold": 0.3,
+            "microF1": 0.39491794600317626
+          },
+          {
+            "threshold": 0.4,
+            "microF1": 0.3055555555555556
+          },
+          {
+            "threshold": 0.5,
+            "microF1": 0.16517857142857142
+          }
+        ]
+      },
+      {
+        "C": 4.0,
+        "thresholds": [
+          {
+            "threshold": 0.15,
+            "microF1": 0.46882399368587213
+          },
+          {
+            "threshold": 0.2,
+            "microF1": 0.46065934065934067
+          },
+          {
+            "threshold": 0.25,
+            "microF1": 0.44541484716157204
+          },
+          {
+            "threshold": 0.3,
+            "microF1": 0.42887029288702927
+          },
+          {
+            "threshold": 0.4,
+            "microF1": 0.3673469387755102
+          },
+          {
+            "threshold": 0.5,
+            "microF1": 0.3016181229773463
+          }
+        ]
+      }
+    ],
+    "test": {
+      "micro": {
+        "precision": 0.43354123354123353,
+        "recall": 0.5040283596519497,
+        "f1": 0.4661351613143581
+      },
+      "macro": {
+        "precision": 0.3993462934979187,
+        "recall": 0.2554288760528957,
+        "f1": 0.2793549963800498
+      },
+      "weighted": {
+        "precision": 0.4357434557231431,
+        "recall": 0.5040283596519497,
+        "f1": 0.4172150257940552
+      },
+      "exactMatchAccuracy": 0.2896668548842462,
+      "labelAccuracy": 0.9518364658116211
+    }
+  },
+  "perLabel": [
+    {
+      "label": "admiration",
+      "precision": 0.5504132231404959,
+      "recall": 0.676829268292683,
+      "f1": 0.6071103008204193,
+      "support": 492
+    },
+    {
+      "label": "amusement",
+      "precision": 0.6678571428571428,
+      "recall": 0.7137404580152672,
+      "f1": 0.6900369003690037,
+      "support": 262
+    },
+    {
+      "label": "anger",
+      "precision": 0.46987951807228917,
+      "recall": 0.4,
+      "f1": 0.43213296398891965,
+      "support": 195
+    },
+    {
+      "label": "annoyance",
+      "precision": 0.24632352941176472,
+      "recall": 0.21069182389937108,
+      "f1": 0.2271186440677966,
+      "support": 318
+    },
+    {
+      "label": "approval",
+      "precision": 0.42424242424242425,
+      "recall": 0.24347826086956523,
+      "f1": 0.30939226519337015,
+      "support": 345
+    },
+    {
+      "label": "caring",
+      "precision": 0.46835443037974683,
+      "recall": 0.2824427480916031,
+      "f1": 0.3523809523809524,
+      "support": 131
+    },
+    {
+      "label": "confusion",
+      "precision": 0.25833333333333336,
+      "recall": 0.20394736842105263,
+      "f1": 0.22794117647058823,
+      "support": 152
+    },
+    {
+      "label": "curiosity",
+      "precision": 0.49033816425120774,
+      "recall": 0.7198581560283688,
+      "f1": 0.5833333333333334,
+      "support": 282
+    },
+    {
+      "label": "desire",
+      "precision": 0.8333333333333334,
+      "recall": 0.060240963855421686,
+      "f1": 0.11235955056179775,
+      "support": 83
+    },
+    {
+      "label": "disappointment",
+      "precision": 0.4,
+      "recall": 0.013245033112582781,
+      "f1": 0.02564102564102564,
+      "support": 151
+    },
+    {
+      "label": "disapproval",
+      "precision": 0.38596491228070173,
+      "recall": 0.2490566037735849,
+      "f1": 0.30275229357798167,
+      "support": 265
+    },
+    {
+      "label": "disgust",
+      "precision": 0.6363636363636364,
+      "recall": 0.1721311475409836,
+      "f1": 0.2709677419354839,
+      "support": 122
+    },
+    {
+      "label": "embarrassment",
+      "precision": 0.0,
+      "recall": 0.0,
+      "f1": 0.0,
+      "support": 37
+    },
+    {
+      "label": "excitement",
+      "precision": 0.6,
+      "recall": 0.12244897959183673,
+      "f1": 0.2033898305084746,
+      "support": 98
+    },
+    {
+      "label": "fear",
+      "precision": 0.75,
+      "recall": 0.11688311688311688,
+      "f1": 0.20224719101123595,
+      "support": 77
+    },
+    {
+      "label": "gratitude",
+      "precision": 0.7718832891246684,
+      "recall": 0.909375,
+      "f1": 0.8350071736011477,
+      "support": 320
+    },
+    {
+      "label": "grief",
+      "precision": 0.0,
+      "recall": 0.0,
+      "f1": 0.0,
+      "support": 5
+    },
+    {
+      "label": "joy",
+      "precision": 0.5454545454545454,
+      "recall": 0.45,
+      "f1": 0.4931506849315068,
+      "support": 160
+    },
+    {
+      "label": "love",
+      "precision": 0.7552742616033755,
+      "recall": 0.7850877192982456,
+      "f1": 0.7698924731182796,
+      "support": 228
+    },
+    {
+      "label": "nervousness",
+      "precision": 0.0,
+      "recall": 0.0,
+      "f1": 0.0,
+      "support": 23
+    },
+    {
+      "label": "optimism",
+      "precision": 0.5,
+      "recall": 0.5355191256830601,
+      "f1": 0.5171503957783641,
+      "support": 183
+    },
+    {
+      "label": "pride",
+      "precision": 0.0,
+      "recall": 0.0,
+      "f1": 0.0,
+      "support": 16
+    },
+    {
+      "label": "realization",
+      "precision": 0.0,
+      "recall": 0.0,
+      "f1": 0.0,
+      "support": 145
+    },
+    {
+      "label": "relief",
+      "precision": 0.0,
+      "recall": 0.0,
+      "f1": 0.0,
+      "support": 11
+    },
+    {
+      "label": "remorse",
+      "precision": 0.5263157894736842,
+      "recall": 0.7142857142857143,
+      "f1": 0.6060606060606061,
+      "support": 56
+    },
+    {
+      "label": "sadness",
+      "precision": 0.34545454545454546,
+      "recall": 0.5033112582781457,
+      "f1": 0.40970350404312667,
+      "support": 151
+    },
+    {
+      "label": "surprise",
+      "precision": 0.55,
+      "recall": 0.23741007194244604,
+      "f1": 0.3316582914572864,
+      "support": 139
+    },
+    {
+      "label": "neutral",
+      "precision": 0.5461509000382995,
+      "recall": 0.8106878908470722,
+      "f1": 0.6526315789473685,
+      "support": 1759
+    }
+  ],
+  "confusionMatrices": [
+    [
+      [
+        4549,
+        272
+      ],
+      [
+        159,
+        333
+      ]
+    ],
+    [
+      [
+        4958,
+        93
+      ],
+      [
+        75,
+        187
+      ]
+    ],
+    [
+      [
+        5030,
+        88
+      ],
+      [
+        117,
+        78
+      ]
+    ],
+    [
+      [
+        4790,
+        205
+      ],
+      [
+        251,
+        67
+      ]
+    ],
+    [
+      [
+        4854,
+        114
+      ],
+      [
+        261,
+        84
+      ]
+    ],
+    [
+      [
+        5140,
+        42
+      ],
+      [
+        94,
+        37
+      ]
+    ],
+    [
+      [
+        5072,
+        89
+      ],
+      [
+        121,
+        31
+      ]
+    ],
+    [
+      [
+        4820,
+        211
+      ],
+      [
+        79,
+        203
+      ]
+    ],
+    [
+      [
+        5229,
+        1
+      ],
+      [
+        78,
+        5
+      ]
+    ],
+    [
+      [
+        5159,
+        3
+      ],
+      [
+        149,
+        2
+      ]
+    ],
+    [
+      [
+        4943,
+        105
+      ],
+      [
+        199,
+        66
+      ]
+    ],
+    [
+      [
+        5179,
+        12
+      ],
+      [
+        101,
+        21
+      ]
+    ],
+    [
+      [
+        5276,
+        0
+      ],
+      [
+        37,
+        0
+      ]
+    ],
+    [
+      [
+        5207,
+        8
+      ],
+      [
+        86,
+        12
+      ]
+    ],
+    [
+      [
+        5233,
+        3
+      ],
+      [
+        68,
+        9
+      ]
+    ],
+    [
+      [
+        4907,
+        86
+      ],
+      [
+        29,
+        291
+      ]
+    ],
+    [
+      [
+        5308,
+        0
+      ],
+      [
+        5,
+        0
+      ]
+    ],
+    [
+      [
+        5093,
+        60
+      ],
+      [
+        88,
+        72
+      ]
+    ],
+    [
+      [
+        5027,
+        58
+      ],
+      [
+        49,
+        179
+      ]
+    ],
+    [
+      [
+        5290,
+        0
+      ],
+      [
+        23,
+        0
+      ]
+    ],
+    [
+      [
+        5032,
+        98
+      ],
+      [
+        85,
+        98
+      ]
+    ],
+    [
+      [
+        5297,
+        0
+      ],
+      [
+        16,
+        0
+      ]
+    ],
+    [
+      [
+        5168,
+        0
+      ],
+      [
+        145,
+        0
+      ]
+    ],
+    [
+      [
+        5302,
+        0
+      ],
+      [
+        11,
+        0
+      ]
+    ],
+    [
+      [
+        5221,
+        36
+      ],
+      [
+        16,
+        40
+      ]
+    ],
+    [
+      [
+        5018,
+        144
+      ],
+      [
+        75,
+        76
+      ]
+    ],
+    [
+      [
+        5147,
+        27
+      ],
+      [
+        106,
+        33
+      ]
+    ],
+    [
+      [
+        2369,
+        1185
+      ],
+      [
+        333,
+        1426
+      ]
+    ]
+  ],
+  "checkpointSha256": "8fbdfb15003660a07f439eb3b418d044a973fb2413c5fb8a66981f564848dd62",
+  "durationSeconds": 2306.2032664,
+  "limitations": [
+    "Pilot subsampling when counts are below the full partition; rare labels may be absent or weak.",
+    "Single random seed; no confidence intervals or independent replication.",
+    "English Reddit emotion labels differ from Sri Lankan student reflections and are not diagnoses.",
+    "Not a generative chatbot, clinical prediction model or trained professional-outcome matcher.",
+    "Fine-tuned checkpoint is local. Website integration must be verified separately."
+  ]
+}
