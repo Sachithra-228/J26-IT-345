@@ -49,7 +49,7 @@ Supervisor: Prof. Dasuni Nawinna - Co-supervisor: Ms. Aruni Premarathne
 | **C1** | Wijesinghe S K (IT23152700) - group leader | Blockchain-based transparent financial aid, AI financial-vulnerability assessment, AI scholarship matching, admin and donor monitoring | **Implemented** (section 6) |
 | **C2** | D. G. A. Indeepa (IT23273412) | AI-powered mental wellness support and early risk detection: bounded conversational assistant, PHQ-9 / GAD-7 self-assessments, optional facial-expression analysis, mood journaling, quality-aware multimodal fusion, confidential counselor referral | First text model and fictional reflection workspace implemented; remaining research in section 7 |
 | **C3** | K. K. T. C. Kamburugoda (IT23155084) | Explainable AI career guidance: NLP over Sri Lankan IT job advertisements, CV and questionnaire analysis, career-path recommendation with readiness scores, skill-gap prioritisation, Gap-to-Action knowledge graph | **Implemented on synthetic data** (section 7, C3) |
-| **C4** | L. L. E. Harshana (IT23195202) | AI mentor matching and student engagement: dynamic multi-criteria mentor matching, activity recommendation, privacy-aware parent/guardian communication, peer collaboration, engagement and mentorship analytics | Folder structure ready (section 7) |
+| **C4** | L. L. E. Harshana (IT23195202) | AI mentor matching and student engagement: dynamic multi-criteria mentor matching, activity recommendation, privacy-aware parent/guardian communication, peer collaboration, engagement and mentorship analytics | Mentor matching implemented on synthetic data; other C4 parts open (section 7) |
 
 The platform itself (authentication, role dashboards, notifications, multilingual UI) started as the IT3040 IT Project Management project and is the shared base that all four components plug into.
 
@@ -608,6 +608,55 @@ Architecture is in [C3.2](#c32-architecture-and-model) and full run notes in [C3
 ### C4 - AI mentor matching and student engagement (L. L. E. Harshana)
 
 **Scope.** Dynamic multi-criteria mentor matching (skill similarity, interest overlap, mentoring language, availability, mentor capacity) that avoids over-allocation; student activity recommendation (clubs, events, workshops, volunteering); privacy-aware, consent-based parent / guardian communication; peer collaboration; engagement and mentorship analytics. Evaluation: recommendation relevance, mentor workload balance, user engagement, and privacy / authorisation testing.
+
+> **Status: first increment (mentor matching) implemented on SYNTHETIC DATA** (branch `research/c4-mentoring`, 20 October 2026). Every number below says **"SYNTHETIC DATA: validates the pipeline, not real-world accuracy"**. Mentors in the demo are fictional. Activity recommendation, parent/guardian communication, peer collaboration and analytics are not started.
+
+**What is implemented.**
+
+| Capability | Where | Status |
+| --- | --- | --- |
+| Shared vocabulary: 16 skills, 10 interests, EN/SI/TA, 5 time slots | `ml/c4/src/mentor-matching/taxonomy.py` | Done - provisional, review with mentors / faculty |
+| Five criteria in [0, 1] per student-mentor pair: skill coverage, interest Jaccard, language (preferred 1 / shared 0.5 / none 0), availability overlap, free capacity | `matcher.py`, `src/lib/c4/matching.ts` | Done |
+| AHP weights (Saaty matrix, principal eigenvector): skill 0.369, language 0.206, availability 0.206, interest 0.109, capacity 0.109; CR = 0.003 | `matcher.py` | Done - **provisional judgements**, validate with SLIIT mentors |
+| Baseline: skill-only cosine similarity, capacity ignored | `matcher.py` | Done |
+| Capacity rule: a full mentor is never recommended | `rank_proposed`, `rankMentors` | Done (tested) |
+| Cohort assignment: greedy first-come and optimal Hungarian (`scipy.optimize.linear_sum_assignment` over expanded capacity slots) | `assign_greedy`, `assign_optimal` | Done |
+| Synthetic data (seed 42): 60 fictional mentors (~15% already full), 480 students, simulated expert relevance from a separate "hidden world" (own weights, non-linear skill term, language penalty, noise) | `synthetic_data.py` | Done - **synthetic** |
+| Evaluation: P@3, NDCG@5, 1,000-sample bootstrap CIs, per-criterion ablation, workload (students beyond capacity, Gini of load / capacity) | `ml/c4/evaluation/`, `run_pipeline.py` | Done - synthetic |
+| Python = TypeScript parity (30 students x 12 demo mentors, order and scores) | `tests/unit/c4/c4-parity.test.ts` | Done |
+| `POST /api/c4/matches` - student-only, strict validation, compute-only (nothing stored), returns top 3 with criteria and reasons | `src/app/api/c4/matches/route.ts` | Done |
+| Student dashboard - Mentorship: "Find your mentor" bento tiles (runs on the device, no network call), reasons per match, evaluation summary | `src/components/c4/mentor-match.tsx` | Done - English only |
+
+**Results (SYNTHETIC DATA: validates the pipeline, not real-world accuracy).** Full numbers in `docs/c4/evidence/matching-eval.json`; charts `c4-ranking-comparison.png`, `c4-workload-balance.png`.
+
+| Measure | Skill-only baseline | Baseline + capacity filter | Proposed (AHP, 5 criteria) |
+| --- | --- | --- | --- |
+| NDCG@5 (95% CI) | 0.436 (0.413-0.459) | 0.536 (0.512-0.560) | **0.859 (0.847-0.871)** |
+| Precision@3 | 0.466 | 0.597 | **0.926** |
+
+| Assigning 150 students at once (182 free places) | Baseline (top skill mentor) | Greedy, capacity-aware | Optimal (Hungarian) |
+| --- | --- | --- | --- |
+| Students beyond mentor capacity | 79 (21 mentors over) | 0 | **0** |
+| Gini of load / capacity | 0.450 | 0.087 | **0.080** |
+| Mean skill fit | **0.801** | 0.646 | 0.704 |
+| Preferred language matched | 0.667 | 0.913 | **0.913** |
+| At least one shared free slot | 0.667 | 0.907 | **0.940** |
+
+How to read this honestly: (1) the simulated expert rewards the same kinds of fit as the proposed scorer, so the large ranking gain is expected and is **not** evidence of real-world accuracy; (2) the ablation shows that removing skill (NDCG@5 0.347), language (0.701) or availability (0.702) hurts most, interest least (0.834), while removing the capacity criterion slightly **raises** NDCG@5 (0.879) - capacity trades a little relevance for balanced workloads, which is the intended design; (3) balancing workload costs some skill fit (0.801 -> 0.704). Real evaluation needs mentor / faculty relevance judgements on consented students.
+
+**How to run.**
+
+```bash
+npm run c4:ml        # = python ml/c4/run_pipeline.py: data -> evaluation -> charts -> model JSON -> parity fixture (~4 s, seed 42, deterministic)
+npm run c4:test:py   # pytest: AHP consistency, criteria ranges, capacity rule, assignment, metrics
+npx jest tests/unit/c4 tests/integration/c4   # parity, runtime rules, component, API
+```
+
+The generated `src/lib/c4/model/matching-model.json`, `demo-mentors.json` and `tests/fixtures/c4/matching-parity.json` must never be edited by hand: change the Python source and re-run.
+
+**Open work.** Activity recommendation (clubs, events, workshops, volunteering); consent-based parent / guardian communication; peer collaboration; engagement and mentorship analytics (aggregates only, groups < 5 hidden); connecting matching to real mentor profiles and the existing mentorship-request flow; Sinhala / Tamil UI; validating AHP judgements and relevance with mentors; user study after ethics approval.
+
+**AI-use disclosure (C4).** The C4 first increment (Python pipeline, synthetic data generator, evaluation, TypeScript runtime, API, UI, tests and this section) was produced with AI assistance (Claude Code, October 2026) and must be reviewed by the C4 owner, who should be able to explain every part. Verification performed: 10 pytest + 45 Jest tests, Python/TypeScript parity, typecheck, lint, a deterministic re-run, and a browser check of the student Mentorship page in demo mode.
 
 | Folder | Intended use |
 | --- | --- |
