@@ -1,5 +1,6 @@
 "use client";
 
+import { CheckCircle2, FileText, Search, Target, TrendingUp } from "lucide-react";
 import { Card } from "@/components/shared/Card";
 import { useLanguage } from "@/context/language-context";
 import { collectionProgress, dataStatus, type DataStatus } from "@/lib/c3/data-status";
@@ -61,13 +62,13 @@ export function CareerDataStatus({ status = dataStatus }: { status?: DataStatus 
         </header>
 
         <div className="grid gap-3 sm:grid-cols-2 xl:grid-cols-4">
-          <StatTile icon="📄" accent="blue" label={t.dsTileAds} value={ads.adsUsed} testId="c3-ds-tile-ads"
+          <StatTile icon={FileText} accent="blue" label={t.dsTileAds} value={ads.adsUsed} testId="c3-ds-tile-ads"
             sub={fmt(t.dsTileAdsSub, { skipped: ads.rowsSkipped, issues: ads.issuesToFix })} />
-          <StatTile icon="📈" accent="violet" label={t.dsTileProgress} value={`${Math.round(progress.share * 100)}%`}
+          <StatTile icon={TrendingUp} accent="violet" label={t.dsTileProgress} value={`${Math.round(progress.share * 100)}%`}
             sub={fmt(t.dsTileProgressSub, { target: progress.target, per: perRole })} />
-          <StatTile icon="🎯" accent="green" label={t.dsTileRoles} value={`${ads.rolesAtTarget} / ${progress.roles}`}
+          <StatTile icon={Target} accent="green" label={t.dsTileRoles} value={`${ads.rolesAtTarget} / ${progress.roles}`}
             sub={fmt(t.dsTileRolesSub, { per: perRole })} />
-          <StatTile icon="🔎" accent="orange" label={t.dsTileF1} value={two(ev.f1)} testId="c3-ds-tile-f1"
+          <StatTile icon={Search} accent="orange" label={t.dsTileF1} value={two(ev.f1)} testId="c3-ds-tile-f1"
             sub={fmt(t.dsTileF1Sub, { n: ev.ads })} />
         </div>
 
@@ -141,7 +142,8 @@ export function CareerDataStatus({ status = dataStatus }: { status?: DataStatus 
           </p>
           {ev.heldOut ? (
             <p data-testid="c3-ds-heldout" className="mt-3 rounded-xl border border-emerald-200 bg-emerald-50 px-3 py-2 text-sm text-emerald-900 dark:border-emerald-900 dark:bg-emerald-950/40 dark:text-emerald-100">
-              ✅ {fmt(t.dsHeldOut, { n: ev.heldOut.ads, f1: two(ev.heldOut.f1), lo: two(ev.heldOut.f1Ci95[0]), hi: two(ev.heldOut.f1Ci95[1]) })}
+              <CheckCircle2 aria-hidden="true" className="mr-1 inline h-4 w-4 align-[-3px] text-emerald-600" />
+          {fmt(t.dsHeldOut, { n: ev.heldOut.ads, f1: two(ev.heldOut.f1), lo: two(ev.heldOut.f1Ci95[0]), hi: two(ev.heldOut.f1Ci95[1]) })}
             </p>
           ) : null}
           <p className="mt-3 text-sm">{fmt(t.dsEvalExtra, { role: pct(ev.roleFromTitleAccuracy), sen: pct(ev.seniorityAccuracy) })}</p>

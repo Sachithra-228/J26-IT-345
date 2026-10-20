@@ -1,5 +1,6 @@
 "use client";
 
+import { GraduationCap } from "lucide-react";
 import { useCallback, useEffect, useState } from "react";
 import { Card } from "@/components/shared/Card";
 import { useLanguage } from "@/context/language-context";
@@ -74,7 +75,7 @@ export function CareerInsightsAdmin() {
           ) : null}
 
           <div className="grid gap-3 sm:grid-cols-3">
-            <StatTile icon="🎓" accent="blue" label={t.aggStudents} value={data.students} testId="c3-agg-students"
+            <StatTile icon={GraduationCap} accent="blue" label={t.aggStudents} value={data.students} testId="c3-agg-students"
               sub={fmt(t.aggModel, { version: data.modelVersion })} />
             <StatTile icon="3" accent="violet" label={t.year3} value={data.suppressed ? t.aggHidden : show(data.byYear.year3)} />
             <StatTile icon="4" accent="orange" label={t.year4} value={data.suppressed ? t.aggHidden : show(data.byYear.year4)} />

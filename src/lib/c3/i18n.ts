@@ -11,6 +11,9 @@ import type { Localised } from "./model";
 
 const en = {
   toolTitle: "Career readiness and skill-gap guide",
+  heroChipDevice: "Runs on your device",
+  heroChipReason: "A reason for every number",
+  heroChipPlan: "A plan for what to do next",
   toolSubtitle:
     "Rate your skills, choose up to three target roles, and see how ready you are, which gaps matter most and what to do next - with the reason for every number.",
   privacyNote: "Private by design: the analysis runs in your browser. Nothing is sent unless you choose to save it.",
@@ -389,6 +392,9 @@ export type C3Text = typeof en;
 
 const si: C3Text = {
   toolTitle: "වෘත්තීය සූදානම සහ කුසලතා හිඩැස් මාර්ගෝපදේශය",
+  heroChipDevice: "ඔබේ උපාංගයේම ක්‍රියා කරයි",
+  heroChipReason: "සෑම අගයකටම හේතුවක්",
+  heroChipPlan: "ඊළඟට කළ යුතු දේ සඳහා සැලැස්මක්",
   toolSubtitle:
     "ඔබේ කුසලතා ඇගයීමට ලක් කර, ඉලක්ක රැකියා තුනක් දක්වා තෝරන්න. ඔබ කොතරම් සූදානම්ද, වැදගත්ම හිඩැස් මොනවාද, ඊළඟට කළ යුත්තේ කුමක්ද යන්න - සෑම අගයකටම හේතුව සමඟ - බලන්න.",
   privacyNote: "පෞද්ගලිකත්වය ආරක්ෂිතයි: විශ්ලේෂණය ඔබේ බ්‍රවුසරයේම සිදු වේ. ඔබ සුරැකීමට තෝරා ගන්නේ නම් මිස කිසිවක් යවනු නොලැබේ.",
@@ -757,6 +763,9 @@ const si: C3Text = {
 
 const ta: C3Text = {
   toolTitle: "தொழில் தயார்நிலை மற்றும் திறன் இடைவெளி வழிகாட்டி",
+  heroChipDevice: "உங்கள் சாதனத்திலேயே இயங்குகிறது",
+  heroChipReason: "ஒவ்வொரு எண்ணுக்கும் ஒரு காரணம்",
+  heroChipPlan: "அடுத்து என்ன செய்வது என்பதற்கான திட்டம்",
   toolSubtitle:
     "உங்கள் திறன்களை மதிப்பிட்டு, மூன்று இலக்கு பணிகள் வரை தேர்ந்தெடுங்கள். நீங்கள் எவ்வளவு தயாராக உள்ளீர்கள், எந்த இடைவெளிகள் முக்கியம், அடுத்து என்ன செய்ய வேண்டும் என்பதை - ஒவ்வொரு எண்ணுக்கும் காரணத்துடன் - பாருங்கள்.",
   privacyNote: "தனியுரிமை உறுதி: பகுப்பாய்வு உங்கள் உலாவியிலேயே நடைபெறுகிறது. நீங்கள் சேமிக்கத் தேர்ந்தெடுக்காவிட்டால் எதுவும் அனுப்பப்படாது.",

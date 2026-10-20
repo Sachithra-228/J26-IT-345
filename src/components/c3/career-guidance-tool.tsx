@@ -1,6 +1,35 @@
 "use client";
 
-import { ArrowUpRight, Briefcase } from "lucide-react";
+import {
+  AlertTriangle,
+  ArrowLeft,
+  ArrowRight,
+  ArrowUpRight,
+  BarChart3,
+  BookOpen,
+  Brain,
+  Briefcase,
+  Check,
+  CheckCircle2,
+  ClipboardList,
+  Cloud,
+  Code2,
+  Download,
+  FlaskConical,
+  FolderKanban,
+  GraduationCap,
+  Info,
+  Lock,
+  Monitor,
+  Network,
+  Palette,
+  Route,
+  Search,
+  ShieldCheck,
+  Smartphone,
+  Star,
+  type LucideIcon
+} from "lucide-react";
 import { memo, useCallback, useEffect, useId, useMemo, useRef, useState, type ChangeEvent, type KeyboardEvent, type ReactNode } from "react";
 import { Button } from "@/components/shared/Button";
 import { Card } from "@/components/shared/Card";
@@ -41,20 +70,25 @@ const EXAMPLE: CareerProfile = {
 };
 
 /** Decorative icons for the role chips (aria-hidden; the role name is the label). */
-const ROLE_ICONS: Record<string, string> = {
-  software_engineer: "💻",
-  frontend_engineer: "🖥️",
-  mobile_developer: "📱",
-  qa_engineer: "🧪",
-  devops_engineer: "☁️",
-  data_analyst: "📊",
-  data_scientist: "🤖",
-  business_analyst: "📋",
-  ui_ux_designer: "🎨",
-  network_engineer: "🌐",
-  cybersecurity_analyst: "🛡️",
-  project_coordinator: "🗂️"
+const ROLE_ICONS: Record<string, LucideIcon> = {
+  software_engineer: Code2,
+  frontend_engineer: Monitor,
+  mobile_developer: Smartphone,
+  qa_engineer: FlaskConical,
+  devops_engineer: Cloud,
+  data_analyst: BarChart3,
+  data_scientist: Brain,
+  business_analyst: ClipboardList,
+  ui_ux_designer: Palette,
+  network_engineer: Network,
+  cybersecurity_analyst: ShieldCheck,
+  project_coordinator: FolderKanban
 };
+
+function RoleIcon({ roleId, className = "h-4 w-4" }: { roleId: string; className?: string }) {
+  const Icon = ROLE_ICONS[roleId] ?? Briefcase;
+  return <Icon aria-hidden="true" className={`shrink-0 text-slate-500 dark:text-slate-400 ${className}`} />;
+}
 
 /** One hue that deepens with the level: a higher level reads as "more". */
 const LEVEL_ON = [
@@ -307,8 +341,8 @@ export function CareerGuidanceTool({ initialProfile, cvEnabled = false, onResult
                 onClick={() => setBackground((cur) => ({ ...cur, [field]: on ? undefined : o.value }))}
                 className={`rounded-full border px-3 py-1.5 text-xs font-medium transition ${ring} ${
                   on
-                    ? "border-violet-500 bg-violet-600 text-white shadow-sm dark:border-violet-400 dark:bg-violet-500"
-                    : "border-slate-200 bg-white text-slate-700 hover:border-violet-300 dark:border-slate-700 dark:bg-slate-900 dark:text-slate-200"
+                    ? "border-primary bg-primary text-white shadow-sm dark:border-blue-500 dark:bg-blue-600"
+                    : "border-slate-200 bg-white text-slate-700 hover:border-blue-300 dark:border-slate-700 dark:bg-slate-900 dark:text-slate-200"
                 }`}
               >
                 {o.text}
@@ -340,9 +374,9 @@ export function CareerGuidanceTool({ initialProfile, cvEnabled = false, onResult
   return (
     <div className="space-y-5">
       {/* One short, always-visible line keeps the essential caveats; the full text is one click away. */}
-      <div className="rounded-2xl border border-indigo-100 bg-gradient-to-r from-indigo-50 via-sky-50 to-emerald-50 px-4 py-3 text-sm text-slate-700 dark:border-slate-700 dark:from-slate-800 dark:via-slate-800 dark:to-slate-800 dark:text-slate-200">
+      <div className="rounded-2xl border border-slate-200 bg-white px-4 py-3 text-sm text-slate-700 shadow-sm dark:border-slate-800 dark:bg-slate-900 dark:text-slate-200">
         <p className="flex items-start gap-2">
-          <span aria-hidden="true">ℹ️</span>
+          <Info aria-hidden="true" className="mt-0.5 h-4 w-4 shrink-0 text-primary" />
           <span>{t.notesShort}</span>
         </p>
         <details className="mt-1 pl-6">
@@ -380,7 +414,7 @@ export function CareerGuidanceTool({ initialProfile, cvEnabled = false, onResult
           aria-valuetext={fmt(t.stepOf, { n: stepIndex + 1, total: steps.length })}
         >
           <div
-            className="h-full rounded-full bg-gradient-to-r from-sky-500 via-indigo-500 to-violet-500 transition-all duration-500"
+            className="h-full rounded-full bg-primary transition-all duration-500"
             style={{ width: `${((stepIndex + 1) / steps.length) * 100}%` }}
           />
         </div>
@@ -396,16 +430,16 @@ export function CareerGuidanceTool({ initialProfile, cvEnabled = false, onResult
                   aria-current={current ? "step" : undefined}
                   onClick={() => (id === "results" || id === "about" || validTargets() ? goTo(id) : goTo("about"))}
                   className={`flex w-full items-center gap-2 rounded-xl px-2 py-1.5 text-left text-xs transition disabled:cursor-not-allowed disabled:opacity-50 ${ring} ${
-                    current ? "bg-indigo-50 font-semibold text-indigo-700 dark:bg-indigo-950/60 dark:text-indigo-200" : "text-slate-600 hover:bg-slate-50 dark:text-slate-300 dark:hover:bg-slate-800"
+                    current ? "bg-blue-50 font-semibold text-blue-700 dark:bg-blue-950/60 dark:text-blue-200" : "text-slate-600 hover:bg-slate-50 dark:text-slate-300 dark:hover:bg-slate-800"
                   }`}
                 >
                   <span
                     aria-hidden="true"
                     className={`flex h-6 w-6 shrink-0 items-center justify-center rounded-full text-[11px] font-bold ${
-                      current ? "bg-indigo-600 text-white" : done ? "bg-emerald-500 text-white" : "bg-slate-200 text-slate-600 dark:bg-slate-700 dark:text-slate-200"
+                      current ? "bg-blue-600 text-white" : done ? "bg-emerald-500 text-white" : "bg-slate-200 text-slate-600 dark:bg-slate-700 dark:text-slate-200"
                     }`}
                   >
-                    {done && !current ? "✓" : i + 1}
+                    {done && !current ? <Check className="h-3.5 w-3.5" /> : i + 1}
                   </span>
                   <span className="hidden truncate sm:inline">{stepTitle[id]}</span>
                 </button>
@@ -435,7 +469,7 @@ export function CareerGuidanceTool({ initialProfile, cvEnabled = false, onResult
                   aria-checked={year === y}
                   onClick={() => setYear(y)}
                   className={`rounded-lg px-4 py-1.5 text-sm font-medium transition ${ring} ${
-                    year === y ? "bg-white text-indigo-700 shadow-sm dark:bg-slate-900 dark:text-indigo-300" : "text-slate-600 dark:text-slate-300"
+                    year === y ? "bg-white text-blue-700 shadow-sm dark:bg-slate-900 dark:text-blue-300" : "text-slate-600 dark:text-slate-300"
                   }`}
                 >
                   {y === 3 ? t.year3 : t.year4}
@@ -443,7 +477,7 @@ export function CareerGuidanceTool({ initialProfile, cvEnabled = false, onResult
               ))}
             </div>
           </div>
-          <div className="mt-5 rounded-2xl border border-violet-100 bg-violet-50/50 p-4 dark:border-violet-900/60 dark:bg-violet-950/20">
+          <div className="mt-5 rounded-2xl border border-slate-200 bg-slate-50 p-4 dark:border-slate-800 dark:bg-slate-800/40">
             <h4 className="text-sm font-semibold text-slate-800 dark:text-slate-100">{t.bgTitle}</h4>
             <p className="mt-0.5 text-xs text-slate-500 dark:text-slate-400">{t.bgHint}</p>
             {chipGroup("specialisation", t.bgSpecialisation, SPECIALISATIONS.map((v) => ({ value: v, text: specialisationName(v, t) })))}
@@ -457,7 +491,7 @@ export function CareerGuidanceTool({ initialProfile, cvEnabled = false, onResult
           <fieldset className="mt-5" aria-describedby={`${uid}-roles-help${targetError ? ` ${uid}-target-error` : ""}`}>
             <legend className="text-sm font-medium text-slate-700 dark:text-slate-200">{t.targetRoles}</legend>
             <p id={`${uid}-roles-help`} className="mt-1 text-xs text-slate-500 dark:text-slate-400">
-              {t.rolesHelp} <span className="font-semibold text-indigo-600 dark:text-indigo-300">{fmt(t.rolesChosen, { n: targets.length })}</span>
+              {t.rolesHelp} <span className="font-semibold text-blue-600 dark:text-blue-300">{fmt(t.rolesChosen, { n: targets.length })}</span>
             </p>
             <div className="mt-3 grid grid-cols-1 gap-2 sm:grid-cols-2 lg:grid-cols-3">
               {orderedRoles.map((r) => {
@@ -478,21 +512,22 @@ export function CareerGuidanceTool({ initialProfile, cvEnabled = false, onResult
                     onClick={() => toggleTarget(r.id)}
                     className={`flex items-center gap-2 rounded-xl border px-3 py-2.5 text-left text-sm transition disabled:cursor-not-allowed disabled:opacity-40 ${ring} ${
                       checked
-                        ? "border-indigo-500 bg-indigo-50 text-indigo-900 shadow-sm dark:border-indigo-400 dark:bg-indigo-950/50 dark:text-indigo-100"
-                        : "border-slate-200 bg-white hover:border-indigo-300 hover:bg-indigo-50/40 dark:border-slate-700 dark:bg-slate-900 dark:hover:border-indigo-500"
+                        ? "border-blue-500 bg-blue-50 text-blue-900 shadow-sm dark:border-blue-400 dark:bg-blue-950/50 dark:text-blue-100"
+                        : "border-slate-200 bg-white hover:border-blue-300 hover:bg-blue-50/40 dark:border-slate-700 dark:bg-slate-900 dark:hover:border-blue-500"
                     }`}
                   >
-                    <span aria-hidden="true" className="text-lg leading-none">
-                      {ROLE_ICONS[r.id] ?? "💼"}
-                    </span>
+                    <RoleIcon roleId={r.id} className="h-5 w-5" />
                     <span className="flex-1">
                       {label(r.label, language)}
                       {isCommon ? (
-                        <span className="mt-0.5 block text-[11px] font-medium text-violet-700 dark:text-violet-300">★ {t.commonBadge}</span>
+                        <span className="mt-0.5 flex items-center gap-1 text-[11px] font-medium text-blue-700 dark:text-blue-300">
+                          <Star aria-hidden="true" className="h-3 w-3" />
+                          {t.commonBadge}
+                        </span>
                       ) : null}
                     </span>
                     {checked ? (
-                      <span aria-hidden="true" className="flex h-5 w-5 items-center justify-center rounded-full bg-indigo-600 text-[11px] font-bold text-white">
+                      <span aria-hidden="true" className="flex h-5 w-5 items-center justify-center rounded-full bg-blue-600 text-[11px] font-bold text-white">
                         {order + 1}
                       </span>
                     ) : null}
@@ -506,14 +541,16 @@ export function CareerGuidanceTool({ initialProfile, cvEnabled = false, onResult
               </span>
             ) : null}
             {targetError ? (
-              <p id={`${uid}-target-error`} role="alert" className="mt-3 text-sm font-medium text-red-600 dark:text-red-400">
-                ▲ {t.targetError}
+              <p id={`${uid}-target-error`} role="alert" className="mt-3 flex items-center gap-1.5 text-sm font-medium text-red-600 dark:text-red-400">
+                <AlertTriangle aria-hidden="true" className="h-4 w-4 shrink-0" />
+                {t.targetError}
               </p>
             ) : null}
           </fieldset>
           <div className="mt-6 flex justify-end">
             <Button type="button" onClick={nextFromAbout}>
-              {t.next} →
+              {t.next}
+                <ArrowRight aria-hidden="true" className="ml-1.5 inline h-4 w-4 align-[-3px]" />
             </Button>
           </div>
         </Card>
@@ -528,7 +565,7 @@ export function CareerGuidanceTool({ initialProfile, cvEnabled = false, onResult
               {t.stepCv}
             </h3>
             <p className="mt-1 text-sm text-slate-600 dark:text-slate-300">{t.cvStepIntro}</p>
-            <div className="mt-4 rounded-2xl border border-dashed border-sky-300 bg-sky-50/50 p-4 dark:border-sky-800 dark:bg-sky-950/20">
+            <div className="mt-4 rounded-2xl border border-dashed border-slate-300 bg-slate-50 p-4 dark:border-slate-700 dark:bg-slate-800/40">
               <h4 className="text-sm font-semibold">{t.cvTitle}</h4>
               <p className="mt-1 text-xs text-slate-600 dark:text-slate-300">{t.cvBody}</p>
               <label className="mt-3 flex items-start gap-2 text-sm">
@@ -557,7 +594,7 @@ export function CareerGuidanceTool({ initialProfile, cvEnabled = false, onResult
                 onChange={(e) => void onCvFile(e)}
                 disabled={!cvConsent || cvFile?.state === "reading"}
                 aria-describedby={`${uid}-cv-file-note`}
-                className={`block w-full text-sm text-slate-600 file:mr-3 file:rounded-lg file:border-0 file:bg-sky-600 file:px-3 file:py-2 file:text-sm file:font-medium file:text-white hover:file:bg-sky-700 disabled:opacity-50 dark:text-slate-300 ${ring}`}
+                className={`block w-full text-sm text-slate-600 file:mr-3 file:rounded-lg file:border-0 file:bg-primary file:px-3 file:py-2 file:text-sm file:font-medium file:text-white hover:file:bg-blue-700 disabled:opacity-50 dark:text-slate-300 ${ring}`}
               />
               <p id={`${uid}-cv-file-note`} className="mt-1 text-xs text-slate-500 dark:text-slate-400">
                 {t.cvUploadNote}
@@ -609,10 +646,12 @@ export function CareerGuidanceTool({ initialProfile, cvEnabled = false, onResult
             </div>
             <div className="mt-6 flex justify-between gap-3">
               <Button type="button" variant="ghost" onClick={() => goTo("about")}>
-                ← {t.back}
+                <ArrowLeft aria-hidden="true" className="mr-1.5 inline h-4 w-4 align-[-3px]" />
+                {t.back}
               </Button>
               <Button type="button" onClick={() => goTo("skills")}>
-                {t.next} →
+                {t.next}
+                <ArrowRight aria-hidden="true" className="ml-1.5 inline h-4 w-4 align-[-3px]" />
               </Button>
             </div>
           </Card>
@@ -698,9 +737,10 @@ export function CareerGuidanceTool({ initialProfile, cvEnabled = false, onResult
           </div>
           <div className="mt-6 flex flex-wrap justify-between gap-3">
             <Button type="button" variant="ghost" onClick={() => goTo(cvEnabled ? "cv" : "about")}>
-              ← {t.back}
+              <ArrowLeft aria-hidden="true" className="mr-1.5 inline h-4 w-4 align-[-3px]" />
+                {t.back}
             </Button>
-            <Button type="button" onClick={analyse} className="bg-gradient-to-r from-indigo-600 to-violet-600 hover:from-indigo-700 hover:to-violet-700">
+            <Button type="button" onClick={analyse}>
               {t.analyse}
             </Button>
           </div>
@@ -732,10 +772,12 @@ export function CareerGuidanceTool({ initialProfile, cvEnabled = false, onResult
             {resultsFooter}
             <div className="flex flex-wrap items-center justify-between gap-3">
               <Button type="button" variant="secondary" onClick={() => goTo("skills")}>
-                ← {t.editAnswers}
+                <ArrowLeft aria-hidden="true" className="mr-1.5 inline h-4 w-4 align-[-3px]" />
+                {t.editAnswers}
               </Button>
               <Button type="button" data-testid="c3-report-open" onClick={() => setReportOpen(true)}>
-                ⬇ {t.rpButton}
+                <Download aria-hidden="true" className="mr-1.5 inline h-4 w-4 align-[-3px]" />
+                {t.rpButton}
               </Button>
             </div>
           </div>
@@ -885,23 +927,24 @@ const Results = memo(function Results({
   return (
     <section data-testid="c3-results" className="space-y-5" aria-live="polite">
       {detail ? (
-        <div className="overflow-hidden rounded-2xl bg-gradient-to-br from-indigo-600 via-blue-600 to-sky-500 p-5 text-white shadow-md">
+        <div className="rounded-2xl border border-slate-200 bg-white p-5 shadow-sm dark:border-slate-800 dark:bg-slate-900">
           <div className="flex flex-col items-center gap-4 sm:flex-row">
-            <div className="rounded-full bg-white p-1.5 shadow-inner dark:bg-slate-900">
-              <ScoreRing score={detail.readiness.score} />
-            </div>
+            <ScoreRing score={detail.readiness.score} />
             <div className="text-center sm:text-left">
-              <p className="text-sm text-white/80">{fmt(t.heroTitle, { role: roleName(detail.roleId, language) })}</p>
-              <p className="mt-1 text-3xl font-bold">
+              <p className="text-sm text-slate-600 dark:text-slate-300">{fmt(t.heroTitle, { role: roleName(detail.roleId, language) })}</p>
+              <p className="mt-1 text-3xl font-bold text-slate-900 dark:text-white">
                 {Math.round(detail.readiness.score)}
-                <span className="text-lg font-medium text-white/80">/100</span>
+                <span className="text-lg font-medium text-slate-500 dark:text-slate-400">/100</span>
               </p>
-              <span className="mt-2 inline-block rounded-full bg-white/20 px-3 py-0.5 text-xs font-semibold">{bandText(detail.readiness.score, t)}</span>
-              <p className="mt-2 max-w-md text-sm text-white/90">{heroMsg}</p>
+              <span className={`mt-2 inline-block rounded-full px-3 py-0.5 text-xs font-semibold ${BAND[readinessBand(detail.readiness.score)].chip}`}>
+                {bandText(detail.readiness.score, t)}
+              </span>
+              <p className="mt-2 max-w-md text-sm text-slate-700 dark:text-slate-200">{heroMsg}</p>
             </div>
           </div>
-          <p data-testid="c3-year-context" className="mt-4 rounded-xl bg-white/15 px-3 py-2 text-xs text-white">
-            🎓 {year === 3 ? t.yearContext3 : t.yearContext4}
+          <p data-testid="c3-year-context" className="mt-4 flex items-start gap-2 rounded-xl bg-slate-50 px-3 py-2 text-xs text-slate-600 dark:bg-slate-800/60 dark:text-slate-300">
+            <GraduationCap aria-hidden="true" className="h-4 w-4 shrink-0 text-slate-500" />
+            {year === 3 ? t.yearContext3 : t.yearContext4}
           </p>
         </div>
       ) : null}
@@ -933,7 +976,7 @@ const Results = memo(function Results({
               aria-checked={researchView}
               aria-label={t.researchView}
               onClick={() => onResearchView(!researchView)}
-              className={`relative h-5 w-9 rounded-full transition ${ring} ${researchView ? "bg-indigo-600" : "bg-slate-300 dark:bg-slate-600"}`}
+              className={`relative h-5 w-9 rounded-full transition ${ring} ${researchView ? "bg-blue-600" : "bg-slate-300 dark:bg-slate-600"}`}
             >
               <span className={`absolute top-0.5 h-4 w-4 rounded-full bg-white shadow transition-all ${researchView ? "left-[18px]" : "left-0.5"}`} />
             </button>
@@ -954,16 +997,16 @@ const Results = memo(function Results({
                   onClick={() => onSelect(r.roleId)}
                   className={`w-full rounded-xl border px-3 py-2.5 text-left transition ${ring} ${
                     active
-                      ? "border-indigo-500 bg-indigo-50 shadow-sm dark:border-indigo-400 dark:bg-indigo-950/40"
-                      : "border-slate-200 hover:border-indigo-300 hover:bg-slate-50 dark:border-slate-800 dark:hover:bg-slate-800/50"
+                      ? "border-blue-500 bg-blue-50 shadow-sm dark:border-blue-400 dark:bg-blue-950/40"
+                      : "border-slate-200 hover:border-blue-300 hover:bg-slate-50 dark:border-slate-800 dark:hover:bg-slate-800/50"
                   }`}
                 >
                   <div className="flex items-center justify-between gap-2 text-sm">
                     <span className="flex min-w-0 items-center gap-2 font-medium">
-                      <span aria-hidden="true">{ROLE_ICONS[r.roleId] ?? "💼"}</span>
+                      <RoleIcon roleId={r.roleId} />
                       <span className="truncate">{roleName(r.roleId, language)}</span>
                       {isTarget ? (
-                        <span className="shrink-0 rounded-full bg-indigo-100 px-2 py-0.5 text-[11px] text-indigo-700 dark:bg-indigo-900/60 dark:text-indigo-200">
+                        <span className="shrink-0 rounded-full bg-blue-100 px-2 py-0.5 text-[11px] text-blue-700 dark:bg-blue-900/60 dark:text-blue-200">
                           {t.targetTag}
                         </span>
                       ) : null}
@@ -1014,9 +1057,9 @@ function JobTitlesCard({ roleId, ctx }: { roleId: string; ctx: Ctx }) {
   const { ads, titles } = titlesForRole(roleId);
   const role = roleName(roleId, language);
   return (
-    <section data-testid="c3-job-titles" className="rounded-2xl border border-sky-200 bg-gradient-to-br from-sky-50 to-indigo-50 p-4 dark:border-sky-900 dark:from-sky-950/40 dark:to-indigo-950/40">
-      <h3 className="flex items-center gap-2 text-base font-semibold text-sky-900 dark:text-sky-100">
-        <span aria-hidden="true">🔎</span>
+    <section data-testid="c3-job-titles" className="rounded-2xl border border-slate-200 bg-white p-4 shadow-sm dark:border-slate-800 dark:bg-slate-900">
+      <h3 className="flex items-center gap-2 text-base font-semibold">
+        <Search aria-hidden="true" className="h-4 w-4 text-primary" />
         {t.jtTitle}
       </h3>
       {titles.length === 0 ? (
@@ -1027,7 +1070,7 @@ function JobTitlesCard({ roleId, ctx }: { roleId: string; ctx: Ctx }) {
             {titles.map((x) => (
               <li
                 key={x.title}
-                className="flex items-center gap-2 rounded-full border border-sky-200 bg-white py-1 pl-3 pr-1 text-sm shadow-sm dark:border-sky-800 dark:bg-slate-900"
+                className="flex items-center gap-2 rounded-full border border-slate-200 bg-white py-1 pl-3 pr-1 text-sm dark:border-slate-700 dark:bg-slate-900"
               >
                 <span className="font-medium text-slate-800 dark:text-slate-100">{x.title}</span>
                 <span className="rounded-full bg-sky-100 px-2 py-0.5 text-[11px] font-semibold text-sky-800 dark:bg-sky-900/60 dark:text-sky-200">
@@ -1056,9 +1099,9 @@ function AdCheckCard({ levels, onSelect, ctx }: { levels: SkillLevels; onSelect:
   const missingList = check?.skills.filter((s) => !s.have) ?? [];
 
   return (
-    <section data-testid="c3-ad-check" aria-labelledby={`${uid}-ac`} className="rounded-2xl border border-teal-200 bg-gradient-to-br from-teal-50 to-emerald-50 p-4 dark:border-teal-900 dark:from-teal-950/40 dark:to-emerald-950/40">
-      <h3 id={`${uid}-ac`} className="flex items-center gap-2 text-base font-semibold text-teal-900 dark:text-teal-100">
-        <span aria-hidden="true">📋</span>
+    <section data-testid="c3-ad-check" aria-labelledby={`${uid}-ac`} className="rounded-2xl border border-slate-200 bg-white p-4 shadow-sm dark:border-slate-800 dark:bg-slate-900">
+      <h3 id={`${uid}-ac`} className="flex items-center gap-2 text-base font-semibold">
+        <ClipboardList aria-hidden="true" className="h-4 w-4 text-primary" />
         {t.acTitle}
       </h3>
       <p className="mt-1 text-sm text-slate-600 dark:text-slate-300">{t.acIntro}</p>
@@ -1075,8 +1118,9 @@ function AdCheckCard({ levels, onSelect, ctx }: { levels: SkillLevels; onSelect:
         aria-describedby={`${uid}-ac-privacy`}
         className={`w-full rounded-xl border border-slate-300 bg-white px-3 py-2 text-sm dark:border-slate-700 dark:bg-slate-900 ${ring}`}
       />
-      <p id={`${uid}-ac-privacy`} className="mt-1 text-xs text-slate-500 dark:text-slate-400">
-        🔒 {t.acPrivacy}
+      <p id={`${uid}-ac-privacy`} className="mt-1 flex items-center gap-1.5 text-xs text-slate-500 dark:text-slate-400">
+        <Lock aria-hidden="true" className="h-3.5 w-3.5 shrink-0" />
+        {t.acPrivacy}
       </p>
       <div className="mt-3 flex flex-wrap gap-2">
         <Button type="button" onClick={() => setCheck(checkAgainstAd(text, levels))} disabled={!text.trim()} className="disabled:opacity-50">
@@ -1122,7 +1166,10 @@ function AdCheckCard({ levels, onSelect, ctx }: { levels: SkillLevels; onSelect:
 
               <div className="grid gap-4 sm:grid-cols-2">
                 <div>
-                  <h4 className="text-sm font-semibold text-emerald-800 dark:text-emerald-300">✅ {t.acHave} ({haveList.length})</h4>
+                  <h4 className="flex items-center gap-1.5 text-sm font-semibold text-emerald-800 dark:text-emerald-300">
+                    <CheckCircle2 aria-hidden="true" className="h-4 w-4" />
+                    {t.acHave} ({haveList.length})
+                  </h4>
                   <ul data-testid="c3-ad-check-have" className="mt-2 flex flex-wrap gap-1.5">
                     {haveList.map((s) => (
                       <li key={s.skillId} className="rounded-full bg-emerald-100 px-2.5 py-0.5 text-xs text-emerald-900 dark:bg-emerald-900/50 dark:text-emerald-100">
@@ -1132,7 +1179,10 @@ function AdCheckCard({ levels, onSelect, ctx }: { levels: SkillLevels; onSelect:
                   </ul>
                 </div>
                 <div>
-                  <h4 className="text-sm font-semibold text-amber-800 dark:text-amber-300">📚 {t.acMissing} ({missingList.length})</h4>
+                  <h4 className="flex items-center gap-1.5 text-sm font-semibold text-amber-800 dark:text-amber-300">
+                    <BookOpen aria-hidden="true" className="h-4 w-4" />
+                    {t.acMissing} ({missingList.length})
+                  </h4>
                   <ul data-testid="c3-ad-check-missing" className="mt-2 space-y-1.5">
                     {missingList.map((s) => (
                       <li key={s.skillId} className="rounded-lg border border-amber-200 bg-amber-50 px-2.5 py-1.5 text-xs dark:border-amber-900 dark:bg-amber-950/40">
@@ -1156,9 +1206,9 @@ function AdCheckCard({ levels, onSelect, ctx }: { levels: SkillLevels; onSelect:
                           key={r.roleId}
                           type="button"
                           onClick={() => onSelect(r.roleId)}
-                          className={`flex items-center gap-1.5 rounded-full border border-teal-300 bg-teal-50 px-3 py-1 text-sm font-medium text-teal-900 hover:bg-teal-100 dark:border-teal-800 dark:bg-teal-950/40 dark:text-teal-100 ${ring}`}
+                          className={`flex items-center gap-1.5 rounded-full border border-slate-300 bg-white px-3 py-1 text-sm font-medium text-slate-800 hover:bg-slate-50 dark:border-slate-700 dark:bg-slate-900 dark:text-slate-100 ${ring}`}
                         >
-                          <span aria-hidden="true">{ROLE_ICONS[r.roleId] ?? "💼"}</span>
+                          <RoleIcon roleId={r.roleId} />
                           {roleName(r.roleId, language)}
                         </button>
                       ))}
@@ -1432,8 +1482,9 @@ function Gaps({ gaps, roleId, ctx }: { gaps: SkillGap[]; roleId: string; ctx: Ct
     <Card>
       <h3 className="text-base font-semibold">{t.gapsTitle}</h3>
       {gaps.length === 0 ? (
-        <p className="mt-2 rounded-xl bg-emerald-50 p-3 text-sm text-emerald-800 dark:bg-emerald-950/40 dark:text-emerald-200">
-          🎉 {fmt(t.noGaps, { role: roleName(roleId, language) })}
+        <p className="mt-2 flex items-start gap-2 rounded-xl bg-emerald-50 p-3 text-sm text-emerald-800 dark:bg-emerald-950/40 dark:text-emerald-200">
+          <CheckCircle2 aria-hidden="true" className="mt-0.5 h-4 w-4 shrink-0" />
+          {fmt(t.noGaps, { role: roleName(roleId, language) })}
         </p>
       ) : (
         <ol data-testid="c3-gaps" className="mt-3 space-y-2">
@@ -1470,15 +1521,15 @@ function BackgroundTips({ background, roleId, topGapSkillId, ctx }: { background
   const tips = backgroundTips(background, roleId, topGapSkillId);
   if (tips.length === 0) return null;
   return (
-    <section data-testid="c3-background-tips" className="rounded-2xl border border-violet-200 bg-gradient-to-br from-violet-50 to-indigo-50 p-4 dark:border-violet-900 dark:from-violet-950/40 dark:to-indigo-950/40">
-      <h3 className="flex items-center gap-2 text-base font-semibold text-violet-900 dark:text-violet-100">
-        <span aria-hidden="true">🎓</span>
+    <section data-testid="c3-background-tips" className="rounded-2xl border border-slate-200 bg-white p-4 shadow-sm dark:border-slate-800 dark:bg-slate-900">
+      <h3 className="flex items-center gap-2 text-base font-semibold">
+        <GraduationCap aria-hidden="true" className="h-4 w-4 text-primary" />
         {t.bgTipsTitle}
       </h3>
       <ul className="mt-2 space-y-1.5 text-sm text-slate-700 dark:text-slate-200">
         {tips.map((tip) => (
           <li key={tip.code} className="flex gap-2">
-            <span aria-hidden="true" className="text-violet-500">
+            <span aria-hidden="true" className="text-primary">
               •
             </span>
             <span>{backgroundTipText(tip, t, language)}</span>
@@ -1499,10 +1550,8 @@ function Plan({ plan, ctx }: { plan: GapToActionPlan; ctx: Ctx }) {
         <p className="mt-2 text-sm">{t.planEmpty}</p>
       ) : (
         <>
-          <div className="mt-3 flex flex-wrap items-center gap-3 rounded-xl bg-gradient-to-r from-emerald-50 to-sky-50 p-3 text-sm dark:from-emerald-950/30 dark:to-sky-950/30">
-            <span className="text-2xl" aria-hidden="true">
-              🚀
-            </span>
+          <div className="mt-3 flex flex-wrap items-center gap-3 rounded-xl bg-slate-50 p-3 text-sm dark:bg-slate-800/60">
+            <Route aria-hidden="true" className="h-6 w-6 shrink-0 text-primary" />
             <p className="flex-1 text-slate-700 dark:text-slate-200">
               {fmt(t.planSummary, {
                 n: plan.steps.length,
@@ -1531,7 +1580,7 @@ function Plan({ plan, ctx }: { plan: GapToActionPlan; ctx: Ctx }) {
                     ) : null}
                     <span className="font-medium">
                       {s.action.url ? (
-                        <a href={s.action.url} target="_blank" rel="noopener noreferrer" className={`text-indigo-700 underline hover:text-indigo-900 dark:text-indigo-300 ${ring}`}>
+                        <a href={s.action.url} target="_blank" rel="noopener noreferrer" className={`text-blue-700 underline hover:text-blue-900 dark:text-blue-300 ${ring}`}>
                           {s.action.title}
                         </a>
                       ) : (

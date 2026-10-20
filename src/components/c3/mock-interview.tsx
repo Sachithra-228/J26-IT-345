@@ -1,5 +1,6 @@
 "use client";
 
+import { ArrowRight, Check } from "lucide-react";
 import { useEffect, useId, useMemo, useState } from "react";
 import { Button } from "@/components/shared/Button";
 import { Card } from "@/components/shared/Card";
@@ -446,12 +447,16 @@ function FeedbackHeadline({ feedback, t }: { feedback: AnswerFeedback; t: C3Text
   const weak = weakestOf(feedback);
   return (
     <div className="space-y-3 text-sm">
-      <p data-testid="c3-iv-went-well" className="rounded-xl bg-emerald-50 px-3 py-2 text-emerald-900 dark:bg-emerald-950/40 dark:text-emerald-100">
-        ✓ {good.length ? fmt(t.ivWentWell, { list: good.map((c) => t[CRITERION_LABEL[c]]).join(", ") }) : t.ivWentWellNone}
+      <p data-testid="c3-iv-went-well" className="flex items-start gap-2 rounded-xl bg-emerald-50 px-3 py-2 text-emerald-900 dark:bg-emerald-950/40 dark:text-emerald-100">
+        <Check aria-hidden="true" className="mt-0.5 h-4 w-4 shrink-0" />
+        {good.length ? fmt(t.ivWentWell, { list: good.map((c) => t[CRITERION_LABEL[c]]).join(", ") }) : t.ivWentWellNone}
       </p>
       {weak || feedback.missedPoints.length ? (
         <div data-testid="c3-iv-to-improve" className="rounded-xl bg-amber-50 px-3 py-2 text-amber-900 dark:bg-amber-950/40 dark:text-amber-100">
-          <p className="font-medium">→ {t.ivToImprove}</p>
+          <p className="flex items-center gap-2 font-medium">
+            <ArrowRight aria-hidden="true" className="h-4 w-4 shrink-0" />
+            {t.ivToImprove}
+          </p>
           {weak ? <p className="mt-1">{t[CRITERION_TIP[weak]]}</p> : null}
           {feedback.missedPoints.length ? (
             <>
