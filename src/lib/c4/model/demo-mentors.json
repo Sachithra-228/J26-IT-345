@@ -1,0 +1,300 @@
+[
+  {
+    "id": "M001",
+    "name": "Ruwan Silva",
+    "headline": "Software engineer",
+    "expertise": {
+      "databases": 2,
+      "programming_fundamentals": 3,
+      "web_backend": 2,
+      "web_frontend": 3
+    },
+    "interests": [
+      "freelancing",
+      "teaching",
+      "volunteering"
+    ],
+    "languages": [
+      "en",
+      "si"
+    ],
+    "slots": [
+      "weekday_afternoon",
+      "weekday_morning"
+    ],
+    "capacity": 7,
+    "load": 1
+  },
+  {
+    "id": "M002",
+    "name": "Nethmi Perera",
+    "headline": "Product manager",
+    "expertise": {
+      "communication": 2,
+      "project_management": 2,
+      "ui_ux": 2
+    },
+    "interests": [
+      "entrepreneurship",
+      "higher_studies",
+      "industry_internships",
+      "research"
+    ],
+    "languages": [
+      "en"
+    ],
+    "slots": [
+      "saturday",
+      "weekday_evening",
+      "weekday_morning"
+    ],
+    "capacity": 6,
+    "load": 6
+  },
+  {
+    "id": "M003",
+    "name": "Sanduni Silva",
+    "headline": "Security analyst",
+    "expertise": {
+      "cybersecurity": 3,
+      "data_analysis": 1,
+      "networking": 3,
+      "ui_ux": 1
+    },
+    "interests": [
+      "freelancing",
+      "open_source",
+      "research"
+    ],
+    "languages": [
+      "en",
+      "si"
+    ],
+    "slots": [
+      "saturday",
+      "weekday_evening"
+    ],
+    "capacity": 8,
+    "load": 2
+  },
+  {
+    "id": "M004",
+    "name": "Nethmi Bandara",
+    "headline": "Senior QA engineer",
+    "expertise": {
+      "programming_fundamentals": 3,
+      "research_writing": 2,
+      "software_testing": 3
+    },
+    "interests": [
+      "freelancing",
+      "teaching"
+    ],
+    "languages": [
+      "en",
+      "si"
+    ],
+    "slots": [
+      "saturday",
+      "sunday",
+      "weekday_evening"
+    ],
+    "capacity": 5,
+    "load": 1
+  },
+  {
+    "id": "M005",
+    "name": "Arjun Gunawardena",
+    "headline": "Network engineer",
+    "expertise": {
+      "cloud_devops": 2,
+      "cybersecurity": 2,
+      "networking": 3
+    },
+    "interests": [
+      "competitions",
+      "higher_studies",
+      "volunteering"
+    ],
+    "languages": [
+      "en",
+      "ta"
+    ],
+    "slots": [
+      "weekday_evening"
+    ],
+    "capacity": 3,
+    "load": 1
+  },
+  {
+    "id": "M006",
+    "name": "Rizwan Weerasinghe",
+    "headline": "Software engineer",
+    "expertise": {
+      "databases": 2,
+      "programming_fundamentals": 2,
+      "web_backend": 3
+    },
+    "interests": [
+      "entrepreneurship",
+      "industry_internships"
+    ],
+    "languages": [
+      "en",
+      "si"
+    ],
+    "slots": [
+      "weekday_evening",
+      "weekday_morning"
+    ],
+    "capacity": 5,
+    "load": 2
+  },
+  {
+    "id": "M007",
+    "name": "Kasun Perera",
+    "headline": "Tech lead",
+    "expertise": {
+      "interview_prep": 3,
+      "project_management": 2,
+      "web_backend": 2
+    },
+    "interests": [
+      "startups",
+      "volunteering"
+    ],
+    "languages": [
+      "en",
+      "si"
+    ],
+    "slots": [
+      "saturday",
+      "weekday_afternoon",
+      "weekday_morning"
+    ],
+    "capacity": 4,
+    "load": 0
+  },
+  {
+    "id": "M008",
+    "name": "Kavindi Wickramasinghe",
+    "headline": "UI/UX designer",
+    "expertise": {
+      "cybersecurity": 1,
+      "ui_ux": 2,
+      "web_frontend": 3
+    },
+    "interests": [
+      "competitions",
+      "teaching"
+    ],
+    "languages": [
+      "en",
+      "ta"
+    ],
+    "slots": [
+      "saturday",
+      "weekday_afternoon",
+      "weekday_evening"
+    ],
+    "capacity": 8,
+    "load": 2
+  },
+  {
+    "id": "M009",
+    "name": "Suresh Jayasinghe",
+    "headline": "Lecturer",
+    "expertise": {
+      "interview_prep": 1,
+      "programming_fundamentals": 2,
+      "research_writing": 2
+    },
+    "interests": [
+      "freelancing",
+      "higher_studies",
+      "industry_internships",
+      "teaching"
+    ],
+    "languages": [
+      "en",
+      "ta"
+    ],
+    "slots": [
+      "sunday",
+      "weekday_afternoon"
+    ],
+    "capacity": 5,
+    "load": 0
+  },
+  {
+    "id": "M010",
+    "name": "Tharindu Gunawardena",
+    "headline": "Tech lead",
+    "expertise": {
+      "interview_prep": 2,
+      "mobile_dev": 1,
+      "programming_fundamentals": 1,
+      "project_management": 2,
+      "web_backend": 3
+    },
+    "interests": [
+      "higher_studies",
+      "research"
+    ],
+    "languages": [
+      "en"
+    ],
+    "slots": [
+      "weekday_evening"
+    ],
+    "capacity": 6,
+    "load": 1
+  },
+  {
+    "id": "M011",
+    "name": "Kavindi Silva",
+    "headline": "DevOps engineer",
+    "expertise": {
+      "cloud_devops": 2,
+      "machine_learning": 1,
+      "networking": 3
+    },
+    "interests": [
+      "freelancing",
+      "open_source"
+    ],
+    "languages": [
+      "en"
+    ],
+    "slots": [
+      "sunday",
+      "weekday_afternoon"
+    ],
+    "capacity": 7,
+    "load": 1
+  },
+  {
+    "id": "M012",
+    "name": "Mohamed Fernando",
+    "headline": "Network engineer",
+    "expertise": {
+      "cloud_devops": 2,
+      "cybersecurity": 2,
+      "networking": 2,
+      "research_writing": 1
+    },
+    "interests": [
+      "competitions",
+      "open_source"
+    ],
+    "languages": [
+      "en",
+      "ta"
+    ],
+    "slots": [
+      "saturday"
+    ],
+    "capacity": 8,
+    "load": 2
+  }
+]
