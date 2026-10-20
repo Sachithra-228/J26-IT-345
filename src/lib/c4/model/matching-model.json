@@ -1,0 +1,175 @@
+{
+  "version": "c4-matching-v1-synthetic",
+  "warning": "SYNTHETIC DATA: validates the pipeline, not real-world accuracy.",
+  "criteria": [
+    "skill",
+    "interest",
+    "language",
+    "availability",
+    "capacity"
+  ],
+  "weights": {
+    "skill": 0.36893954202699314,
+    "interest": 0.10926522622902285,
+    "language": 0.20626500275748064,
+    "availability": 0.20626500275748064,
+    "capacity": 0.1092652262290229
+  },
+  "consistencyRatio": 0.00296,
+  "maxSkillLevel": 3,
+  "taxonomy": {
+    "skills": [
+      {
+        "id": "programming_fundamentals",
+        "label": "Programming fundamentals"
+      },
+      {
+        "id": "web_frontend",
+        "label": "Web front-end"
+      },
+      {
+        "id": "web_backend",
+        "label": "Web back-end and APIs"
+      },
+      {
+        "id": "mobile_dev",
+        "label": "Mobile development"
+      },
+      {
+        "id": "databases",
+        "label": "Databases"
+      },
+      {
+        "id": "data_analysis",
+        "label": "Data analysis"
+      },
+      {
+        "id": "machine_learning",
+        "label": "Machine learning"
+      },
+      {
+        "id": "cloud_devops",
+        "label": "Cloud and DevOps"
+      },
+      {
+        "id": "networking",
+        "label": "Networking"
+      },
+      {
+        "id": "cybersecurity",
+        "label": "Cybersecurity"
+      },
+      {
+        "id": "software_testing",
+        "label": "Software testing / QA"
+      },
+      {
+        "id": "ui_ux",
+        "label": "UI / UX design"
+      },
+      {
+        "id": "project_management",
+        "label": "Project management"
+      },
+      {
+        "id": "research_writing",
+        "label": "Research and academic writing"
+      },
+      {
+        "id": "interview_prep",
+        "label": "Interview preparation"
+      },
+      {
+        "id": "communication",
+        "label": "Communication and presentation"
+      }
+    ],
+    "interests": [
+      {
+        "id": "startups",
+        "label": "Startups"
+      },
+      {
+        "id": "research",
+        "label": "Research"
+      },
+      {
+        "id": "industry_internships",
+        "label": "Industry internships"
+      },
+      {
+        "id": "competitions",
+        "label": "Hackathons and competitions"
+      },
+      {
+        "id": "open_source",
+        "label": "Open source"
+      },
+      {
+        "id": "higher_studies",
+        "label": "Higher studies abroad"
+      },
+      {
+        "id": "freelancing",
+        "label": "Freelancing"
+      },
+      {
+        "id": "volunteering",
+        "label": "Community volunteering"
+      },
+      {
+        "id": "entrepreneurship",
+        "label": "Entrepreneurship"
+      },
+      {
+        "id": "teaching",
+        "label": "Teaching and tutoring"
+      }
+    ],
+    "languages": [
+      {
+        "id": "en",
+        "label": "English"
+      },
+      {
+        "id": "si",
+        "label": "Sinhala"
+      },
+      {
+        "id": "ta",
+        "label": "Tamil"
+      }
+    ],
+    "slots": [
+      {
+        "id": "weekday_morning",
+        "label": "Weekday mornings"
+      },
+      {
+        "id": "weekday_afternoon",
+        "label": "Weekday afternoons"
+      },
+      {
+        "id": "weekday_evening",
+        "label": "Weekday evenings"
+      },
+      {
+        "id": "saturday",
+        "label": "Saturdays"
+      },
+      {
+        "id": "sunday",
+        "label": "Sundays"
+      }
+    ]
+  },
+  "results": {
+    "ndcgBaseline": 0.435681,
+    "ndcgProposed": 0.859171,
+    "overloadBaseline": 79,
+    "overloadProposed": 0,
+    "giniBaseline": 0.450212,
+    "giniProposed": 0.079819,
+    "intake": 150
+  }
+}

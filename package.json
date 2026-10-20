@@ -16,6 +16,8 @@
     "c1:audit-report": "tsx scripts/c1/export-audit-report.ts",
     "c1:ml": "python ml/synthetic_data.py && python ml/train_vulnerability.py",
     "c1:chain:test": "npm --prefix blockchain test",
+    "c4:ml": "python ml/c4/run_pipeline.py",
+    "c4:test:py": "python -m pytest tests/unit/c4 -q",
     "c3:ml": "python ml/c3/run_pipeline.py",
     "c3:test:py": "python -m pytest tests/unit/c3 -q",
     "c3:benchmark": "tsx scripts/c3/benchmark.ts",
