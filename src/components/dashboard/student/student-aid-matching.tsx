@@ -3,8 +3,9 @@
 import { useCallback, useEffect, useState } from "react";
 import { AssessmentTool } from "@/components/c1/assessment-tool";
 import { ScholarshipUpdates } from "@/components/c1/scholarship-updates";
+import { Share2 } from "lucide-react";
 import { Button } from "@/components/shared/Button";
-import { Card } from "@/components/shared/Card";
+import { studentBentoIconClass, studentBentoInsetClass, studentBentoTileClass } from "./student-card-theme";
 import { useLanguage } from "@/context/language-context";
 import { getC1Text } from "@/lib/c1/i18n";
 import type { ScholarshipCriteria } from "@/lib/c1/matching";
@@ -80,21 +81,20 @@ export function StudentAidMatching() {
     }
   }
 
-  return (
-    <div className="space-y-6">
-      <header>
-        <h2 className="text-2xl font-semibold">{t.toolTitle}</h2>
-        <p className="mt-1 max-w-3xl text-sm text-slate-600 dark:text-slate-300">{t.toolSubtitle}</p>
-      </header>
-
-      <ScholarshipUpdates />
-
-      <AssessmentTool scholarships={catalogue} onResult={onResult} />
-
-      <Card>
-        <h3 className="text-base font-semibold">{t.shareTitle}</h3>
-        <p className="mt-1 text-sm text-slate-600 dark:text-slate-300">{t.shareBody}</p>
-        <label className="mt-3 flex items-start gap-2 text-sm">
+  const shareTile = (
+    <div className={studentBentoTileClass}>
+      <div className="mb-4 flex items-center gap-3">
+        <span className={studentBentoIconClass}>
+          <Share2 className="size-5" />
+        </span>
+        <div>
+          <h3 className="text-base font-bold tracking-tight text-slate-900 dark:text-white">{t.shareTitle}</h3>
+          <p className="text-xs text-slate-500 dark:text-neutral-400">{t.shareBody}</p>
+        </div>
+      </div>
+      <label
+        className={`${studentBentoInsetClass} flex cursor-pointer items-start gap-2.5 px-3.5 py-3 text-sm text-slate-700 dark:text-neutral-200`}
+      >
           <input
             type="checkbox"
             checked={consent}
@@ -117,14 +117,20 @@ export function StudentAidMatching() {
               {t.deleteSaved}
             </Button>
           ) : null}
-          <p role="status" className="text-sm text-slate-600 dark:text-slate-300">
+          <p role="status" className="text-xs text-slate-500 dark:text-neutral-400">
             {saveState === "saved" && savedAt ? `${t.savedAt} ${new Date(savedAt).toLocaleString()}` : null}
             {saveState === "deleted" ? t.deletedNote : null}
             {saveState === "error" ? t.saveError : null}
             {!last && saveState === "idle" ? t.calculateFirst : null}
           </p>
         </div>
-      </Card>
+    </div>
+  );
+
+  return (
+    <div className="space-y-4">
+      <ScholarshipUpdates />
+      <AssessmentTool scholarships={catalogue} onResult={onResult} aside={shareTile} />
     </div>
   );
 }
