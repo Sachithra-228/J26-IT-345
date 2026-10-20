@@ -1,5 +1,6 @@
 "use client";
 
+import { ArrowRight } from "lucide-react";
 import { useId, useMemo, useRef, useState, type FormEvent } from "react";
 import { Button } from "@/components/shared/Button";
 import { Card } from "@/components/shared/Card";
@@ -211,14 +212,16 @@ function OpenSection({
     // Saves {role, levels} in this tab's sessionStorage only - never in the URL - then opens Career.
     return (
       <a href={JOB_BOARD_HREF} data-testid="c3-assistant-open" onClick={() => saveJobMatchContext(answer.roleId as string, levels)} className={cls}>
-        {a[OPEN_KEYS.jobs]} →
+        {a[OPEN_KEYS.jobs]}
+        <ArrowRight aria-hidden="true" className="h-3.5 w-3.5" />
       </a>
     );
   }
   if (!onOpenSection) return null;
   return (
     <button type="button" data-testid="c3-assistant-open" onClick={() => onOpenSection(section)} className={cls}>
-      {a[OPEN_KEYS[section]]} →
+      {a[OPEN_KEYS[section]]}
+      <ArrowRight aria-hidden="true" className="h-3.5 w-3.5" />
     </button>
   );
 }

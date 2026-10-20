@@ -1,0 +1,1172 @@
+{
+ "label": "PRELIMINARY: descriptive comparison only, no accuracy claim; one annotator",
+ "v1": "c3-readiness-v1-synthetic",
+ "v2": "c3-readiness-v2-real-preliminary",
+ "lowDataThreshold": 15,
+ "levelSources": {
+  "seniorityDefault": 796,
+  "cue": 520
+ },
+ "notes": [
+  "network_engineer includes IT-support ads (IT support / helpdesk titles) labelled as Network Engineer until IT Support has its own role; this can add support skills to the v2 network profile."
+ ],
+ "roles": [
+  {
+   "roleId": "software_engineer",
+   "adsV1Synthetic": 33,
+   "adsV2Real": 25,
+   "lowData": false,
+   "topV1": [
+    {
+     "skillId": "prog_oop",
+     "weight": 0.186
+    },
+    {
+     "skillId": "backend_api",
+     "weight": 0.141
+    },
+    {
+     "skillId": "databases_sql",
+     "weight": 0.107
+    },
+    {
+     "skillId": "version_control",
+     "weight": 0.1
+    },
+    {
+     "skillId": "containers",
+     "weight": 0.078
+    },
+    {
+     "skillId": "frontend",
+     "weight": 0.075
+    },
+    {
+     "skillId": "javascript_ts",
+     "weight": 0.075
+    },
+    {
+     "skillId": "communication",
+     "weight": 0.059
+    }
+   ],
+   "topV2": [
+    {
+     "skillId": "frontend",
+     "weight": 0.14
+    },
+    {
+     "skillId": "prog_oop",
+     "weight": 0.114
+    },
+    {
+     "skillId": "backend_api",
+     "weight": 0.111
+    },
+    {
+     "skillId": "communication",
+     "weight": 0.093
+    },
+    {
+     "skillId": "problem_solving",
+     "weight": 0.089
+    },
+    {
+     "skillId": "javascript_ts",
+     "weight": 0.086
+    },
+    {
+     "skillId": "version_control",
+     "weight": 0.086
+    },
+    {
+     "skillId": "databases_sql",
+     "weight": 0.075
+    }
+   ],
+   "spearman": 0.527,
+   "added": [
+    "python",
+    "testing_manual"
+   ],
+   "dropped": [
+    "containers",
+    "linux"
+   ]
+  },
+  {
+   "roleId": "frontend_engineer",
+   "adsV1Synthetic": 35,
+   "adsV2Real": 13,
+   "lowData": true,
+   "topV1": [
+    {
+     "skillId": "frontend",
+     "weight": 0.262
+    },
+    {
+     "skillId": "javascript_ts",
+     "weight": 0.216
+    },
+    {
+     "skillId": "version_control",
+     "weight": 0.153
+    },
+    {
+     "skillId": "ui_ux",
+     "weight": 0.123
+    },
+    {
+     "skillId": "agile",
+     "weight": 0.083
+    },
+    {
+     "skillId": "communication",
+     "weight": 0.057
+    },
+    {
+     "skillId": "backend_api",
+     "weight": 0.056
+    },
+    {
+     "skillId": "problem_solving",
+     "weight": 0.049
+    }
+   ],
+   "topV2": [
+    {
+     "skillId": "frontend",
+     "weight": 0.213
+    },
+    {
+     "skillId": "javascript_ts",
+     "weight": 0.16
+    },
+    {
+     "skillId": "backend_api",
+     "weight": 0.146
+    },
+    {
+     "skillId": "communication",
+     "weight": 0.098
+    },
+    {
+     "skillId": "version_control",
+     "weight": 0.093
+    },
+    {
+     "skillId": "problem_solving",
+     "weight": 0.083
+    },
+    {
+     "skillId": "prog_oop",
+     "weight": 0.057
+    },
+    {
+     "skillId": "databases_sql",
+     "weight": 0.056
+    }
+   ],
+   "spearman": 0.532,
+   "added": [
+    "databases_sql",
+    "prog_oop",
+    "security"
+   ],
+   "dropped": [
+    "agile"
+   ]
+  },
+  {
+   "roleId": "mobile_developer",
+   "adsV1Synthetic": 38,
+   "adsV2Real": 15,
+   "lowData": false,
+   "topV1": [
+    {
+     "skillId": "mobile",
+     "weight": 0.269
+    },
+    {
+     "skillId": "prog_oop",
+     "weight": 0.17
+    },
+    {
+     "skillId": "version_control",
+     "weight": 0.121
+    },
+    {
+     "skillId": "ui_ux",
+     "weight": 0.092
+    },
+    {
+     "skillId": "nosql",
+     "weight": 0.09
+    },
+    {
+     "skillId": "backend_api",
+     "weight": 0.078
+    },
+    {
+     "skillId": "communication",
+     "weight": 0.062
+    },
+    {
+     "skillId": "javascript_ts",
+     "weight": 0.044
+    }
+   ],
+   "topV2": [
+    {
+     "skillId": "mobile",
+     "weight": 0.247
+    },
+    {
+     "skillId": "version_control",
+     "weight": 0.142
+    },
+    {
+     "skillId": "ui_ux",
+     "weight": 0.116
+    },
+    {
+     "skillId": "backend_api",
+     "weight": 0.108
+    },
+    {
+     "skillId": "problem_solving",
+     "weight": 0.1
+    },
+    {
+     "skillId": "communication",
+     "weight": 0.1
+    },
+    {
+     "skillId": "testing_manual",
+     "weight": 0.091
+    },
+    {
+     "skillId": "javascript_ts",
+     "weight": 0.059
+    }
+   ],
+   "spearman": 0.355,
+   "added": [
+    "problem_solving",
+    "testing_manual"
+   ],
+   "dropped": [
+    "agile",
+    "nosql",
+    "prog_oop"
+   ]
+  },
+  {
+   "roleId": "qa_engineer",
+   "adsV1Synthetic": 34,
+   "adsV2Real": 21,
+   "lowData": false,
+   "topV1": [
+    {
+     "skillId": "testing_manual",
+     "weight": 0.298
+    },
+    {
+     "skillId": "test_automation",
+     "weight": 0.202
+    },
+    {
+     "skillId": "agile",
+     "weight": 0.094
+    },
+    {
+     "skillId": "communication",
+     "weight": 0.083
+    },
+    {
+     "skillId": "prog_oop",
+     "weight": 0.08
+    },
+    {
+     "skillId": "version_control",
+     "weight": 0.08
+    },
+    {
+     "skillId": "databases_sql",
+     "weight": 0.063
+    },
+    {
+     "skillId": "devops_cicd",
+     "weight": 0.052
+    }
+   ],
+   "topV2": [
+    {
+     "skillId": "test_automation",
+     "weight": 0.211
+    },
+    {
+     "skillId": "testing_manual",
+     "weight": 0.188
+    },
+    {
+     "skillId": "backend_api",
+     "weight": 0.111
+    },
+    {
+     "skillId": "problem_solving",
+     "weight": 0.096
+    },
+    {
+     "skillId": "communication",
+     "weight": 0.096
+    },
+    {
+     "skillId": "agile",
+     "weight": 0.074
+    },
+    {
+     "skillId": "python",
+     "weight": 0.049
+    },
+    {
+     "skillId": "javascript_ts",
+     "weight": 0.049
+    }
+   ],
+   "spearman": 0.26,
+   "added": [
+    "backend_api",
+    "mobile",
+    "problem_solving",
+    "python"
+   ],
+   "dropped": [
+    "devops_cicd",
+    "version_control"
+   ]
+  },
+  {
+   "roleId": "devops_engineer",
+   "adsV1Synthetic": 37,
+   "adsV2Real": 20,
+   "lowData": false,
+   "topV1": [
+    {
+     "skillId": "containers",
+     "weight": 0.199
+    },
+    {
+     "skillId": "devops_cicd",
+     "weight": 0.175
+    },
+    {
+     "skillId": "linux",
+     "weight": 0.148
+    },
+    {
+     "skillId": "cloud",
+     "weight": 0.134
+    },
+    {
+     "skillId": "version_control",
+     "weight": 0.096
+    },
+    {
+     "skillId": "networking",
+     "weight": 0.068
+    },
+    {
+     "skillId": "python",
+     "weight": 0.053
+    },
+    {
+     "skillId": "security",
+     "weight": 0.051
+    }
+   ],
+   "topV2": [
+    {
+     "skillId": "devops_cicd",
+     "weight": 0.132
+    },
+    {
+     "skillId": "networking",
+     "weight": 0.132
+    },
+    {
+     "skillId": "linux",
+     "weight": 0.119
+    },
+    {
+     "skillId": "cloud",
+     "weight": 0.105
+    },
+    {
+     "skillId": "containers",
+     "weight": 0.103
+    },
+    {
+     "skillId": "security",
+     "weight": 0.082
+    },
+    {
+     "skillId": "problem_solving",
+     "weight": 0.072
+    },
+    {
+     "skillId": "communication",
+     "weight": 0.068
+    }
+   ],
+   "spearman": 0.667,
+   "added": [
+    "databases_sql",
+    "problem_solving"
+   ],
+   "dropped": []
+  },
+  {
+   "roleId": "data_analyst",
+   "adsV1Synthetic": 38,
+   "adsV2Real": 15,
+   "lowData": false,
+   "topV1": [
+    {
+     "skillId": "data_analysis",
+     "weight": 0.248
+    },
+    {
+     "skillId": "databases_sql",
+     "weight": 0.205
+    },
+    {
+     "skillId": "python",
+     "weight": 0.195
+    },
+    {
+     "skillId": "statistics",
+     "weight": 0.164
+    },
+    {
+     "skillId": "communication",
+     "weight": 0.095
+    },
+    {
+     "skillId": "business_analysis",
+     "weight": 0.093
+    }
+   ],
+   "topV2": [
+    {
+     "skillId": "data_analysis",
+     "weight": 0.169
+    },
+    {
+     "skillId": "databases_sql",
+     "weight": 0.126
+    },
+    {
+     "skillId": "business_analysis",
+     "weight": 0.11
+    },
+    {
+     "skillId": "communication",
+     "weight": 0.106
+    },
+    {
+     "skillId": "problem_solving",
+     "weight": 0.092
+    },
+    {
+     "skillId": "python",
+     "weight": 0.088
+    },
+    {
+     "skillId": "machine_learning",
+     "weight": 0.087
+    },
+    {
+     "skillId": "nosql",
+     "weight": 0.061
+    }
+   ],
+   "spearman": 0.573,
+   "added": [
+    "backend_api",
+    "cloud",
+    "devops_cicd",
+    "linux",
+    "machine_learning",
+    "nosql",
+    "problem_solving"
+   ],
+   "dropped": [
+    "statistics"
+   ]
+  },
+  {
+   "roleId": "data_scientist",
+   "adsV1Synthetic": 35,
+   "adsV2Real": 8,
+   "lowData": true,
+   "topV1": [
+    {
+     "skillId": "machine_learning",
+     "weight": 0.219
+    },
+    {
+     "skillId": "python",
+     "weight": 0.213
+    },
+    {
+     "skillId": "statistics",
+     "weight": 0.176
+    },
+    {
+     "skillId": "data_analysis",
+     "weight": 0.086
+    },
+    {
+     "skillId": "databases_sql",
+     "weight": 0.081
+    },
+    {
+     "skillId": "version_control",
+     "weight": 0.074
+    },
+    {
+     "skillId": "problem_solving",
+     "weight": 0.058
+    },
+    {
+     "skillId": "cloud",
+     "weight": 0.049
+    }
+   ],
+   "topV2": [
+    {
+     "skillId": "machine_learning",
+     "weight": 0.231
+    },
+    {
+     "skillId": "python",
+     "weight": 0.166
+    },
+    {
+     "skillId": "cloud",
+     "weight": 0.095
+    },
+    {
+     "skillId": "problem_solving",
+     "weight": 0.094
+    },
+    {
+     "skillId": "communication",
+     "weight": 0.094
+    },
+    {
+     "skillId": "containers",
+     "weight": 0.087
+    },
+    {
+     "skillId": "version_control",
+     "weight": 0.083
+    },
+    {
+     "skillId": "devops_cicd",
+     "weight": 0.076
+    }
+   ],
+   "spearman": 0.166,
+   "added": [
+    "agile",
+    "backend_api",
+    "containers",
+    "devops_cicd"
+   ],
+   "dropped": [
+    "data_analysis",
+    "databases_sql",
+    "statistics"
+   ]
+  },
+  {
+   "roleId": "business_analyst",
+   "adsV1Synthetic": 38,
+   "adsV2Real": 24,
+   "lowData": false,
+   "topV1": [
+    {
+     "skillId": "business_analysis",
+     "weight": 0.346
+    },
+    {
+     "skillId": "agile",
+     "weight": 0.19
+    },
+    {
+     "skillId": "communication",
+     "weight": 0.159
+    },
+    {
+     "skillId": "databases_sql",
+     "weight": 0.082
+    },
+    {
+     "skillId": "project_management",
+     "weight": 0.075
+    },
+    {
+     "skillId": "data_analysis",
+     "weight": 0.074
+    },
+    {
+     "skillId": "ui_ux",
+     "weight": 0.074
+    }
+   ],
+   "topV2": [
+    {
+     "skillId": "business_analysis",
+     "weight": 0.264
+    },
+    {
+     "skillId": "communication",
+     "weight": 0.147
+    },
+    {
+     "skillId": "data_analysis",
+     "weight": 0.147
+    },
+    {
+     "skillId": "agile",
+     "weight": 0.129
+    },
+    {
+     "skillId": "problem_solving",
+     "weight": 0.129
+    },
+    {
+     "skillId": "testing_manual",
+     "weight": 0.108
+    },
+    {
+     "skillId": "project_management",
+     "weight": 0.076
+    }
+   ],
+   "spearman": 0.46,
+   "added": [
+    "problem_solving",
+    "testing_manual"
+   ],
+   "dropped": [
+    "databases_sql",
+    "ui_ux"
+   ]
+  },
+  {
+   "roleId": "ui_ux_designer",
+   "adsV1Synthetic": 34,
+   "adsV2Real": 25,
+   "lowData": false,
+   "topV1": [
+    {
+     "skillId": "ui_ux",
+     "weight": 0.426
+    },
+    {
+     "skillId": "communication",
+     "weight": 0.18
+    },
+    {
+     "skillId": "frontend",
+     "weight": 0.136
+    },
+    {
+     "skillId": "agile",
+     "weight": 0.104
+    },
+    {
+     "skillId": "business_analysis",
+     "weight": 0.081
+    },
+    {
+     "skillId": "javascript_ts",
+     "weight": 0.074
+    }
+   ],
+   "topV2": [
+    {
+     "skillId": "ui_ux",
+     "weight": 0.382
+    },
+    {
+     "skillId": "frontend",
+     "weight": 0.26
+    },
+    {
+     "skillId": "communication",
+     "weight": 0.175
+    },
+    {
+     "skillId": "problem_solving",
+     "weight": 0.133
+    },
+    {
+     "skillId": "javascript_ts",
+     "weight": 0.05
+    }
+   ],
+   "spearman": 0.631,
+   "added": [
+    "problem_solving"
+   ],
+   "dropped": [
+    "agile",
+    "business_analysis"
+   ]
+  },
+  {
+   "roleId": "network_engineer",
+   "adsV1Synthetic": 36,
+   "adsV2Real": 28,
+   "lowData": false,
+   "topV1": [
+    {
+     "skillId": "networking",
+     "weight": 0.377
+    },
+    {
+     "skillId": "security",
+     "weight": 0.228
+    },
+    {
+     "skillId": "linux",
+     "weight": 0.204
+    },
+    {
+     "skillId": "communication",
+     "weight": 0.116
+    },
+    {
+     "skillId": "cloud",
+     "weight": 0.074
+    }
+   ],
+   "topV2": [
+    {
+     "skillId": "networking",
+     "weight": 0.26
+    },
+    {
+     "skillId": "security",
+     "weight": 0.201
+    },
+    {
+     "skillId": "linux",
+     "weight": 0.156
+    },
+    {
+     "skillId": "communication",
+     "weight": 0.131
+    },
+    {
+     "skillId": "problem_solving",
+     "weight": 0.126
+    },
+    {
+     "skillId": "cloud",
+     "weight": 0.091
+    },
+    {
+     "skillId": "databases_sql",
+     "weight": 0.035
+    }
+   ],
+   "spearman": 0.937,
+   "added": [
+    "databases_sql",
+    "problem_solving"
+   ],
+   "dropped": []
+  },
+  {
+   "roleId": "cybersecurity_analyst",
+   "adsV1Synthetic": 38,
+   "adsV2Real": 10,
+   "lowData": true,
+   "topV1": [
+    {
+     "skillId": "security",
+     "weight": 0.255
+    },
+    {
+     "skillId": "networking",
+     "weight": 0.246
+    },
+    {
+     "skillId": "linux",
+     "weight": 0.217
+    },
+    {
+     "skillId": "python",
+     "weight": 0.084
+    },
+    {
+     "skillId": "cloud",
+     "weight": 0.076
+    },
+    {
+     "skillId": "communication",
+     "weight": 0.064
+    },
+    {
+     "skillId": "problem_solving",
+     "weight": 0.058
+    }
+   ],
+   "topV2": [
+    {
+     "skillId": "security",
+     "weight": 0.268
+    },
+    {
+     "skillId": "networking",
+     "weight": 0.179
+    },
+    {
+     "skillId": "communication",
+     "weight": 0.137
+    },
+    {
+     "skillId": "cloud",
+     "weight": 0.133
+    },
+    {
+     "skillId": "problem_solving",
+     "weight": 0.123
+    },
+    {
+     "skillId": "linux",
+     "weight": 0.08
+    },
+    {
+     "skillId": "business_analysis",
+     "weight": 0.08
+    }
+   ],
+   "spearman": 0.467,
+   "added": [
+    "business_analysis"
+   ],
+   "dropped": [
+    "python"
+   ]
+  },
+  {
+   "roleId": "project_coordinator",
+   "adsV1Synthetic": 38,
+   "adsV2Real": 19,
+   "lowData": false,
+   "topV1": [
+    {
+     "skillId": "project_management",
+     "weight": 0.349
+    },
+    {
+     "skillId": "agile",
+     "weight": 0.197
+    },
+    {
+     "skillId": "communication",
+     "weight": 0.168
+    },
+    {
+     "skillId": "business_analysis",
+     "weight": 0.131
+    },
+    {
+     "skillId": "problem_solving",
+     "weight": 0.081
+    },
+    {
+     "skillId": "data_analysis",
+     "weight": 0.075
+    }
+   ],
+   "topV2": [
+    {
+     "skillId": "project_management",
+     "weight": 0.338
+    },
+    {
+     "skillId": "business_analysis",
+     "weight": 0.252
+    },
+    {
+     "skillId": "communication",
+     "weight": 0.153
+    },
+    {
+     "skillId": "problem_solving",
+     "weight": 0.113
+    },
+    {
+     "skillId": "data_analysis",
+     "weight": 0.079
+    },
+    {
+     "skillId": "agile",
+     "weight": 0.065
+    }
+   ],
+   "spearman": 0.371,
+   "added": [],
+   "dropped": []
+  }
+ ],
+ "exampleProfile": {
+  "levels": {
+   "prog_oop": 2,
+   "databases_sql": 1,
+   "communication": 2,
+   "problem_solving": 1,
+   "version_control": 1,
+   "testing_manual": 2,
+   "test_automation": 1,
+   "agile": 1,
+   "business_analysis": 1,
+   "frontend": 1,
+   "javascript_ts": 1
+  },
+  "roles": [
+   {
+    "roleId": "software_engineer",
+    "v1": {
+     "readiness": 30.1,
+     "topGaps": [
+      "backend_api",
+      "containers",
+      "databases_sql"
+     ]
+    },
+    "v2": {
+     "readiness": 54.3,
+     "topGaps": [
+      "backend_api",
+      "python",
+      "frontend"
+     ]
+    }
+   },
+   {
+    "roleId": "frontend_engineer",
+    "v1": {
+     "readiness": 16.7,
+     "topGaps": [
+      "frontend",
+      "javascript_ts",
+      "ui_ux"
+     ]
+    },
+    "v2": {
+     "readiness": 32.1,
+     "topGaps": [
+      "backend_api",
+      "frontend",
+      "javascript_ts"
+     ]
+    }
+   },
+   {
+    "roleId": "mobile_developer",
+    "v1": {
+     "readiness": 5.8,
+     "topGaps": [
+      "mobile",
+      "ui_ux",
+      "nosql"
+     ]
+    },
+    "v2": {
+     "readiness": 27.0,
+     "topGaps": [
+      "mobile",
+      "ui_ux",
+      "backend_api"
+     ]
+    }
+   },
+   {
+    "roleId": "qa_engineer",
+    "v1": {
+     "readiness": 62.2,
+     "topGaps": [
+      "test_automation",
+      "testing_manual",
+      "devops_cicd"
+     ]
+    },
+    "v2": {
+     "readiness": 56.1,
+     "topGaps": [
+      "backend_api",
+      "test_automation",
+      "python"
+     ]
+    }
+   },
+   {
+    "roleId": "devops_engineer",
+    "v1": {
+     "readiness": 0.0,
+     "topGaps": [
+      "containers",
+      "devops_cicd",
+      "linux"
+     ]
+    },
+    "v2": {
+     "readiness": 0.0,
+     "topGaps": [
+      "devops_cicd",
+      "networking",
+      "linux"
+     ]
+    }
+   },
+   {
+    "roleId": "data_analyst",
+    "v1": {
+     "readiness": 0.0,
+     "topGaps": [
+      "data_analysis",
+      "python",
+      "statistics"
+     ]
+    },
+    "v2": {
+     "readiness": 0.0,
+     "topGaps": [
+      "data_analysis",
+      "python",
+      "machine_learning"
+     ]
+    }
+   },
+   {
+    "roleId": "data_scientist",
+    "v1": {
+     "readiness": 0.0,
+     "topGaps": [
+      "machine_learning",
+      "python",
+      "statistics"
+     ]
+    },
+    "v2": {
+     "readiness": 0.0,
+     "topGaps": [
+      "machine_learning",
+      "python",
+      "cloud"
+     ]
+    }
+   },
+   {
+    "roleId": "business_analyst",
+    "v1": {
+     "readiness": 17.7,
+     "topGaps": [
+      "business_analysis",
+      "agile",
+      "project_management"
+     ]
+    },
+    "v2": {
+     "readiness": 66.6,
+     "topGaps": [
+      "data_analysis",
+      "project_management"
+     ]
+    }
+   },
+   {
+    "roleId": "ui_ux_designer",
+    "v1": {
+     "readiness": 31.0,
+     "topGaps": [
+      "ui_ux",
+      "business_analysis"
+     ]
+    },
+    "v2": {
+     "readiness": 39.6,
+     "topGaps": [
+      "ui_ux",
+      "javascript_ts"
+     ]
+    }
+   },
+   {
+    "roleId": "network_engineer",
+    "v1": {
+     "readiness": 0.0,
+     "topGaps": [
+      "networking",
+      "security",
+      "linux"
+     ]
+    },
+    "v2": {
+     "readiness": 0.0,
+     "topGaps": [
+      "networking",
+      "security",
+      "linux"
+     ]
+    }
+   },
+   {
+    "roleId": "cybersecurity_analyst",
+    "v1": {
+     "readiness": 0.0,
+     "topGaps": [
+      "security",
+      "networking",
+      "linux"
+     ]
+    },
+    "v2": {
+     "readiness": 0.0,
+     "topGaps": [
+      "security",
+      "networking",
+      "cloud"
+     ]
+    }
+   },
+   {
+    "roleId": "project_coordinator",
+    "v1": {
+     "readiness": 17.6,
+     "topGaps": [
+      "project_management",
+      "agile",
+      "data_analysis"
+     ]
+    },
+    "v2": {
+     "readiness": 26.4,
+     "topGaps": [
+      "project_management",
+      "data_analysis",
+      "problem_solving"
+     ]
+    }
+   }
+  ]
+ }
+}
