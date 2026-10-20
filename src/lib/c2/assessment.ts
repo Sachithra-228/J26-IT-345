@@ -1,4 +1,6 @@
 /** Standard scores are independent of the optional, unvalidated context questions. */
+import type { SupportEstimate } from "./support-runtime";
+import type { ConcernAnalysis } from "./concern-routing";
 export const QUESTIONNAIRE_VERSION = "c2-phq9-gad7-en-v1";
 export const QUESTIONNAIRE_SOURCE =
   "https://www.phqscreeners.com/images/sites/g/files/g10016261/f/201412/instructions.pdf";
@@ -75,6 +77,13 @@ export type Assessment = {
   context: Record<string, string>;
   completedAt: string;
   version: string;
+  supportModel?: SupportEstimate;
+  concernAnalysis?: ConcernAnalysis;
+  questionPath?: { id: string; text?: string; reason: string }[];
+  questionBankVersion?: string;
+  questionBankSource?: "database" | "bundled";
+  supportTopics?: Concern[];
+  contextRouting?: "model" | "rules" | "distilbert" | "student-topics";
 };
 export function scoreScale(
   kind: "phq9" | "gad7",
@@ -223,6 +232,15 @@ export function followUps(
 }
 export function assessmentConcerns(assessment: Assessment | null): Concern[] {
   if (!assessment) return [];
+  // New main flow uses student-confirmed concerns and explicit context answers.
+  // Do not reintroduce a topic the student rejected from a symptom score alone.
+  if (assessment.concernAnalysis) {
+    if (assessment.supportTopics) return assessment.supportTopics;
+    const confirmed = [...assessment.concernAnalysis.confirmed];
+    if (assessment.context.worry === "Study or exams") confirmed.push("study");
+    if (assessment.context.worry === "Relationships" || assessment.context.mood === "Feeling connected") confirmed.push("connection");
+    return Array.from(new Set(confirmed));
+  }
   const topics: Concern[] = [];
   if (assessment.phq9.slice(0, 2).some((v) => (v ?? 0) > 0))
     topics.push("low-mood");
@@ -235,7 +253,10 @@ export function assessmentConcerns(assessment: Assessment | null): Concern[] {
     assessment.context.worry === "Relationships"
   )
     topics.push("connection");
-  return topics;
+  if (assessment.supportModel?.status === "ready") {
+    topics.push(...assessment.supportModel.topics.filter((item) => item.score >= 0.5).slice(0, 3).map((item) => item.topic));
+  }
+  return Array.from(new Set(topics));
 }
 export function supportSuggestion(assessment: Assessment): {
   title: string;

@@ -1,6 +1,6 @@
 ﻿"use client";
 
-import { useCallback, useEffect, useMemo, useState } from "react";
+import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import { Card } from "@/components/shared/Card";
 import { Badge } from "@/components/shared/Badge";
 import { Button } from "@/components/shared/Button";
@@ -30,7 +30,7 @@ type Booking = {
   createdAt?: string;
 };
 
-export function CounselorBooking({ topics = [] }: { topics?: Concern[] }) {
+export function CounselorBooking({ topics = [], topicWeights, initialCatalog = "university", researchOnly = false }: { topics?: Concern[]; topicWeights?: Partial<Record<Concern, number>>; initialCatalog?: "university" | "research"; researchOnly?: boolean }) {
   const [counselors, setCounselors] = useState<Counselor[]>([]);
   const [bookings, setBookings] = useState<Booking[]>([]);
   const [selectedCounselorId, setSelectedCounselorId] = useState("");
@@ -45,38 +45,47 @@ export function CounselorBooking({ topics = [] }: { topics?: Concern[] }) {
     useState<SupportPreferences>(EMPTY_PREFERENCES);
   const [directoryError, setDirectoryError] = useState<string | null>(null);
   const [needsSignIn, setNeedsSignIn] = useState(false);
-  const matched = matchProviders(counselors, topics, preferences);
+  const [catalog, setCatalog] = useState<"university" | "research">(researchOnly ? "research" : initialCatalog);
+  const refreshRun = useRef(0);
+  const matched = matchProviders(counselors, topics, preferences, topicWeights);
 
   const refreshData = useCallback(() => {
+    const run = ++refreshRun.current;
     setLoading(true);
     setDirectoryError(null);
+    setCounselors([]);
+    setBookings([]);
     Promise.all([
-      fetch("/api/wellness-counselors").then(async (response) => {
-        setNeedsSignIn(response.status === 401 || response.status === 403);
+      fetch(catalog === "research" ? "/api/c2/research-professionals" : "/api/wellness-counselors").then(async (response) => {
+        if (run === refreshRun.current) setNeedsSignIn(response.status === 401 || response.status === 403);
         if (!response.ok) throw new Error("Directory unavailable");
         return response.json();
       }),
-      fetch("/api/counselor-bookings").then((response) =>
+      catalog === "research" ? Promise.resolve([]) : fetch("/api/counselor-bookings").then((response) =>
         response.ok ? response.json() : [],
       ),
     ])
       .then(([counselorData, bookingData]) => {
+        if (run !== refreshRun.current) return;
         setCounselors(Array.isArray(counselorData) ? counselorData : []);
         setBookings(Array.isArray(bookingData) ? bookingData : []);
       })
       .catch(() => {
+        if (run !== refreshRun.current) return;
         setCounselors([]);
         setBookings([]);
         setDirectoryError(
           "The counselor directory could not be loaded. Sign in if needed, or retry.",
         );
       })
-      .finally(() => setLoading(false));
-  }, []);
+      .finally(() => { if (run === refreshRun.current) setLoading(false); });
+  }, [catalog]);
 
+  const invalidateRefresh = useCallback(() => { refreshRun.current++; }, []);
   useEffect(() => {
     refreshData();
-  }, [refreshData]);
+    return invalidateRefresh;
+  }, [refreshData, invalidateRefresh]);
 
   useEffect(() => {
     const canPoll = () =>
@@ -103,6 +112,10 @@ export function CounselorBooking({ topics = [] }: { topics?: Concern[] }) {
     event.preventDefault();
     setError(null);
     setMessage(null);
+    if (catalog === "research" || selectedCounselor?.isResearchProfile) {
+      setError("Demonstration profiles cannot receive real appointment requests.");
+      return;
+    }
     if (!selectedCounselorId || !preferredDate || !preferredTime) {
       setError("Please choose counselor, date and time.");
       return;
@@ -170,10 +183,19 @@ export function CounselorBooking({ topics = [] }: { topics?: Concern[] }) {
     <div className="space-y-4">
       <Card className={`space-y-4 p-4 ${studentBlueCardClass}`}>
         <h3 className="text-lg font-semibold">Find a professional</h3>
+        <label className="block text-sm font-medium">Directory source
+          <Select aria-label="Directory source" value={catalog} disabled={researchOnly} onChange={(event) => {
+            setSelectedCounselorId(""); setMessage(null); setError(null);
+            setCatalog(event.target.value as "university" | "research");
+          }} className="mt-2">
+            {!researchOnly ? <option value="university">University professionals</option> : null}
+            <option value="research">Sample profiles · matching preview</option>
+          </Select>
+        </label>
+        {catalog === "research" ? <p className="rounded-xl bg-blue-50 p-3 text-xs leading-5 text-blue-800 dark:bg-blue-950 dark:text-blue-200">These eight sample profiles let you explore matching. They are fictional and unavailable for appointments. Choose University professionals to request a session.</p> : null}
         <p className="text-sm leading-6 text-slate-600 dark:text-slate-300">
-          Choose the preferences that matter to you. Suggestions use listed
-          expertise and the topics from your check-in; they are not a clinical
-          assignment. Your answers are not sent to this directory.
+          Find someone whose expertise and preferences fit you. Your private
+          check-in answers are not shared with professionals.
         </p>
         <div className="grid gap-3 sm:grid-cols-2 lg:grid-cols-4">
           <label className="space-y-2 text-sm">
@@ -253,10 +275,9 @@ export function CounselorBooking({ topics = [] }: { topics?: Concern[] }) {
           </label>
         </div>
         <p className="text-xs leading-5 text-slate-500 dark:text-slate-400">
-          A profile with missing gender, profession or language details cannot
-          match that specific filter. Names and titles are never used to infer
-          them.
+          Specific preferences show only profiles with those details listed.
         </p>
+        {!loading && !directoryError ? <p role="status" className="text-sm font-medium text-slate-700 dark:text-slate-200">{matched.length} {matched.length === 1 ? "profile matches" : "profiles match"} your preferences{topics.length ? " · ordered by your support topics" : ""}</p> : null}
         {directoryError ? (
           <div
             role="alert"
@@ -289,11 +310,12 @@ export function CounselorBooking({ topics = [] }: { topics?: Concern[] }) {
             {matched.map(({ provider: counselor, reasons }) => (
               <div
                 key={counselor._id}
-                className="rounded-xl border border-slate-200 bg-white p-3 dark:border-slate-700 dark:bg-slate-900"
+                className={`rounded-2xl border bg-white p-5 transition-colors dark:bg-slate-900 ${selectedCounselorId === counselor._id ? "border-blue-500 ring-1 ring-blue-500" : "border-slate-200 dark:border-slate-700"}`}
               >
                 <p className="font-medium text-slate-900 dark:text-white">
                   {counselor.name}
                 </p>
+                {counselor.isResearchProfile ? <p className="mt-1 text-xs font-semibold text-blue-600 dark:text-blue-300">Sample profile · appointments unavailable</p> : null}
                 <p className="text-sm text-slate-500">
                   {counselor.specialization}
                 </p>
@@ -321,9 +343,9 @@ export function CounselorBooking({ topics = [] }: { topics?: Concern[] }) {
                         .join(", ")
                     : "Not listed"}
                 </p>
-                <p className="text-xs text-slate-500">
+                {!counselor.isResearchProfile ? <p className="text-xs text-slate-500">
                   Availability: {counselor.availability}
-                </p>
+                </p> : null}
                 <p className="text-xs text-slate-500">Mode: {counselor.mode}</p>
                 {counselor.contactEmail ? (
                   <p className="truncate text-xs text-slate-500">
@@ -337,6 +359,7 @@ export function CounselorBooking({ topics = [] }: { topics?: Concern[] }) {
                 </ul>
                 <Button
                   type="button"
+                  aria-pressed={selectedCounselorId === counselor._id}
                   variant={
                     selectedCounselorId === counselor._id
                       ? "primary"
@@ -346,7 +369,7 @@ export function CounselorBooking({ topics = [] }: { topics?: Concern[] }) {
                 >
                   {selectedCounselorId === counselor._id
                     ? "Selected"
-                    : "Choose this professional"}
+                    : catalog === "research" ? "Select sample profile" : "Choose this professional"}
                 </Button>
               </div>
             ))}
@@ -354,6 +377,11 @@ export function CounselorBooking({ topics = [] }: { topics?: Concern[] }) {
         )}
       </Card>
 
+      {catalog === "research" ? <Card className={`space-y-3 p-4 ${studentBlueCardClass}`}>
+        <h3 className="font-semibold">{selectedCounselor ? "Your selected profile" : "Explore your matches"}</h3>
+        <p role="status" className="text-sm leading-6">{selectedCounselor ? `Selected: ${selectedCounselor.name}. This sample profile cannot receive appointment requests.` : "Choose a profile to review your match."}</p>
+        {!researchOnly ? <Button variant="secondary" onClick={() => { setSelectedCounselorId(""); setMessage(null); setError(null); setCatalog("university"); }}>View university professionals</Button> : null}
+      </Card> : <>
       <Card className={`space-y-4 p-4 ${studentBlueCardClass}`}>
         <h3 className="text-lg font-semibold">Request a counseling slot</h3>
         <p className="text-xs leading-5 text-slate-500 dark:text-slate-400">
@@ -465,6 +493,7 @@ export function CounselorBooking({ topics = [] }: { topics?: Concern[] }) {
           </ul>
         )}
       </Card>
+      </>}
     </div>
   );
 }

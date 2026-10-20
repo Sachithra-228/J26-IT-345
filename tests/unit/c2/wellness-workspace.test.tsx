@@ -40,7 +40,7 @@ function click(name: string) {
 }
 function answer(name: string) {
   fireEvent.click(screen.getByRole("radio", { name, exact: true }));
-  click("Continue");
+  click(screen.queryByRole("button", { name: "See my summary", exact: true }) ? "See my summary" : "Continue");
 }
 function coreResponses(skipFirst = false, safety = false) {
   PHQ9.forEach((_, index) => {
@@ -48,6 +48,7 @@ function coreResponses(skipFirst = false, safety = false) {
     else answer(index === 8 && safety ? "Several days" : "Not at all");
   });
   GAD7.forEach(() => answer("Not at all"));
+  if (screen.queryByRole("button", { name: "Continue without text analysis", exact: true })) click("Continue without text analysis");
 }
 function skipContext() {
   while (
@@ -79,7 +80,7 @@ it("completes both questionnaires and keeps all assessment data on-device", () =
     screen.getByRole("button", { name: "Continue", exact: true }),
   ).toBeDisabled();
   coreResponses();
-  expect(screen.getByRole("heading", { name: /How long/ })).toBeInTheDocument();
+  expect(screen.getByRole("heading", { name: /How much are these concerns/ })).toBeInTheDocument();
   skipContext();
   expect(screen.getAllByText("Minimal symptom range")).toHaveLength(2);
   expect(complete.mock.calls[0][0]).toMatchObject({
@@ -87,7 +88,7 @@ it("completes both questionnaires and keeps all assessment data on-device", () =
     gad7: Array(7).fill(0),
     context: {},
   });
-  expect(global.fetch).not.toHaveBeenCalled();
+  expect(global.fetch).toHaveBeenCalledWith("/api/c2/follow-up-questions", { cache: "no-store" });
 });
 it("shows incomplete results rather than treating skipped answers as zero", () => {
   render(
@@ -155,18 +156,19 @@ it("keeps core answers when navigating back and selects context without adding a
   click("Continue");
   for (let i = 1; i < 9; i++) answer("Not at all");
   GAD7.forEach(() => answer("Not at all"));
-  answer("Very difficult");
+  fireEvent.click(screen.getByRole("checkbox", { name: "Low mood & motivation" }));
+  click("Use these topics");
   answer("Getting started");
-  answer("More than a month");
-  fireEvent.click(
-    screen.getByRole("radio", { name: "Talk to a professional" }),
-  );
-  click("See my summary");
+  while (screen.queryByRole("button", { name: "Skip this question", exact: true })) {
+    const heading = screen.getByRole("heading", { level: 3 }).textContent ?? "";
+    if (heading.startsWith("How much are these concerns")) answer("Very difficult");
+    else if (heading.startsWith("What would feel most useful")) answer("Talk to a professional");
+    else click("Skip this question");
+  }
   const result: Assessment = complete.mock.calls[0][0];
   expect(result.context).toMatchObject({
     impact: "Very difficult",
     mood: "Getting started",
-    duration: "More than a month",
     goal: "Talk to a professional",
   });
   expect(result.phq9.reduce<number>((sum, x) => sum + (x ?? 0), 0)).toBe(1);
@@ -185,12 +187,13 @@ it("skipping a previously answered final context item removes its old value", ()
   );
   click("Begin my check-in");
   coreResponses();
-  answer("No current concern");
+  for (let i = 0; i < 3; i++) click("Skip this question");
   fireEvent.click(
     screen.getByRole("radio", { name: "Talk to a professional" }),
   );
-  click("Back");
   click("Continue");
+  click("Back");
+  click("Skip this question");
   click("Skip this question");
   expect(complete.mock.calls[0][0].context.goal).toBeUndefined();
 });

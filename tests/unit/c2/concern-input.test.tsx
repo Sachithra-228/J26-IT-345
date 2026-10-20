@@ -1,0 +1,30 @@
+import { act, fireEvent, render, screen } from "@testing-library/react";
+import { WellnessConcernInput } from "@/components/c2/wellness-concern-input";
+import { predictConcerns, type ConcernPrediction } from "@/lib/c2/concern-runtime";
+jest.mock("@/lib/c2/concern-runtime",()=>({predictConcerns:jest.fn()}));
+const predict=jest.mocked(predictConcerns);
+const result:ConcernPrediction={runId:"test",checkpointSha256:"a".repeat(64),tokenCount:4,inputIds:[101,102],threshold:.5,scores:[{topic:"sleep",score:.8,selected:true},{topic:"worry",score:.1,selected:false}]};
+beforeEach(()=>jest.clearAllMocks());
+it("does not analyse automatically, lets students reject suggestions, and clears stale output on edits",async()=>{
+ predict.mockResolvedValue(result);const complete=jest.fn();
+ render(<WellnessConcernInput description="I cannot get enough rest lately." analysis={null} onContinue={complete} onBack={jest.fn()}/>);
+ expect(predict).not.toHaveBeenCalled();
+ await act(async()=>{fireEvent.click(screen.getByRole("button",{name:"Suggest topics"}));});
+ expect(screen.getByRole("checkbox",{name:"Sleep & routines"})).toBeChecked();
+ fireEvent.click(screen.getByRole("checkbox",{name:"Sleep & routines"}));
+ fireEvent.click(screen.getByRole("button",{name:"Use these topics"}));
+ expect(complete.mock.calls[0][0].confirmed).toEqual([]);
+ fireEvent.change(screen.getByRole("textbox"),{target:{value:"I feel connected and well today."}});
+ expect(screen.queryByText("Review the suggested topics below. Change any that do not fit before continuing.")).not.toBeInTheDocument();
+ expect(screen.getAllByRole("checkbox").every(x=>!(x as HTMLInputElement).checked)).toBe(true);
+});
+it("ignores a late prediction after the description changes",async()=>{
+ let resolve!:(value:ConcernPrediction)=>void;
+ predict.mockReturnValue(new Promise(r=>{resolve=r;}));
+ render(<WellnessConcernInput description="I cannot sleep through the night." analysis={null} onContinue={jest.fn()} onBack={jest.fn()}/>);
+ fireEvent.click(screen.getByRole("button",{name:"Suggest topics"}));
+ fireEvent.change(screen.getByRole("textbox"),{target:{value:"I feel well and rested today."}});
+ await act(async()=>{resolve(result);});
+ expect(screen.queryByText("Review the suggested topics below. Change any that do not fit before continuing.")).not.toBeInTheDocument();
+ expect(screen.getByRole("checkbox",{name:"Sleep & routines"})).not.toBeChecked();
+});

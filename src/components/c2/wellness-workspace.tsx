@@ -1,9 +1,11 @@
 "use client";
 
 import { useState } from "react";
+import Link from "next/link";
 import {
   ArrowRight,
   BookOpen,
+  FlaskConical,
   Heart,
   Info,
   Leaf,
@@ -20,10 +22,12 @@ import {
   assessmentConcerns,
   CONCERNS,
   QUESTIONNAIRE_SOURCE,
+  scoreScale,
   type Assessment,
   type Concern,
 } from "@/lib/c2/assessment";
 import { STRESS_GUIDE } from "@/lib/c2/assistant";
+import { confirmedTopicWeights } from "@/lib/c2/concern-routing";
 import status from "@/lib/c2/model/text-status.json";
 import { WellnessAssessment } from "./wellness-assessment";
 import { WellnessChat } from "./wellness-chat";
@@ -58,6 +62,9 @@ export function WellnessWorkspace() {
   );
   const [communityTopic, setCommunityTopic] = useState<Concern | "all">("all");
   const topics = assessmentConcerns(assessment);
+  const topicWeights = assessment?.concernAnalysis ? confirmedTopicWeights(assessment.concernAnalysis) : assessment?.supportModel?.status === "ready"
+    ? Object.fromEntries(assessment.supportModel.topics.map((item) => [item.topic, item.score]))
+    : undefined;
   function go(next: View) {
     setView(next);
     setNotice("");
@@ -92,7 +99,7 @@ export function WellnessWorkspace() {
           UniCare wellness
         </p>
         <h2 className="relative mt-3 max-w-2xl text-3xl font-semibold tracking-tight sm:text-4xl">
-          A little space for you.
+          Your wellbeing, your next step.
         </h2>
         <p className="relative mt-3 max-w-xl text-sm leading-6 text-blue-50">
           Understand your check-in, put things into words, and find the support
@@ -109,7 +116,7 @@ export function WellnessWorkspace() {
       </header>
       <nav
         aria-label="Wellness workspace views"
-        className="flex flex-wrap gap-1.5 border-b border-slate-200 pb-4 dark:border-slate-700"
+        className="flex gap-1 overflow-x-auto rounded-2xl bg-slate-100 p-1 dark:bg-slate-800"
       >
         {TABS.map(({ id, name, icon: Icon }) => (
           <button
@@ -117,7 +124,7 @@ export function WellnessWorkspace() {
             type="button"
             aria-current={view === id ? "page" : undefined}
             onClick={() => go(id)}
-            className={`inline-flex items-center gap-2 rounded-full px-3 py-2.5 text-sm font-medium transition focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-blue-500 focus-visible:ring-offset-2 sm:px-4 ${view === id ? "bg-blue-600 text-white" : "text-slate-600 hover:bg-blue-50 dark:text-slate-300 dark:hover:bg-slate-800"}`}
+            className={`inline-flex shrink-0 items-center gap-2 whitespace-nowrap rounded-xl px-3 py-2.5 text-sm font-medium transition focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-blue-500 focus-visible:ring-offset-2 sm:px-4 ${view === id ? "bg-white text-indigo-700 shadow-sm dark:bg-slate-900 dark:text-indigo-300" : "text-slate-600 hover:text-slate-900 dark:text-slate-300 dark:hover:text-white"}`}
           >
             <Icon aria-hidden="true" className="h-4 w-4" />
             {name}
@@ -139,20 +146,34 @@ export function WellnessWorkspace() {
       {immediateHelp ? <SafetySupport /> : null}
       {view === "home" ? (
         <div className="space-y-5">
+          <section aria-label="Your wellness overview" className="grid gap-3 sm:grid-cols-3">
+            <div className="rounded-2xl border border-blue-100 bg-blue-50/70 p-5 dark:border-blue-900 dark:bg-blue-950/30">
+              <p className="text-xs font-medium text-slate-500 dark:text-slate-400">Your check-in</p>
+              <p className="mt-2 text-lg font-semibold">{assessment ? "Summary ready" : "Ready when you are"}</p>
+              <p className="mt-1 text-xs leading-5 text-slate-600 dark:text-slate-300">{assessment ? "Review your answers and explore your next step." : "A private space to understand how you’ve been feeling."}</p>
+            </div>
+            {(["phq9", "gad7"] as const).map((kind) => {
+              const value = assessment ? scoreScale(kind, assessment[kind]) : null;
+              return <div key={kind} className="rounded-2xl border border-slate-200 bg-white p-5 dark:border-slate-700 dark:bg-slate-900">
+                <p className="text-xs font-medium text-slate-500 dark:text-slate-400">{kind === "phq9" ? "Mood check-in · PHQ-9" : "Worry check-in · GAD-7"}</p>
+                <p className="mt-2 text-lg font-semibold">{value ? value.band ? `${value.band} symptom range` : "Incomplete questionnaire" : "Awaiting your check-in"}</p>
+                <p className="mt-1 text-xs leading-5 text-slate-600 dark:text-slate-300">{value ? value.total === null ? `${value.answered} answers recorded · review missing items` : `${value.total} / ${value.maximum} · based on the last two weeks` : "Your summary will appear here after you finish."}</p>
+              </div>;
+            })}
+          </section>
           <div className="grid gap-5 lg:grid-cols-[1.4fr_1fr]">
             <section className={`${panel} flex flex-col justify-between`}>
               <div>
                 <p className="text-xs font-semibold uppercase tracking-widest text-blue-600 dark:text-blue-300">
-                  Start where you are
+                  {assessment ? "Your next step" : "Start where you are"}
                 </p>
                 <h3 className="mt-4 max-w-md text-2xl font-semibold tracking-tight">
-                  How have things been feeling lately?
+                  {assessment ? "Make space for the support you need." : "How have things been feeling lately?"}
                 </h3>
                 <p className={`mt-3 max-w-xl ${secondaryText}`}>
-                  A guided check-in can help you describe the last two weeks.
-                  Answer at your pace, add the context that matters, and explore
-                  a clear summary.
+                  {assessment ? "Your check-in is ready. Revisit your summary, explore professionals who match your preferences, or find a conversation with other students." : "A guided check-in can help you describe the last two weeks. Answer at your pace, add the context that matters, and explore a clear summary."}
                 </p>
+                {assessment && topics.length ? <div className="mt-4 flex flex-wrap gap-2" aria-label="Your support topics">{topics.map((topic) => <span key={topic} className="rounded-full bg-blue-50 px-3 py-1.5 text-xs font-medium text-blue-700 dark:bg-blue-950 dark:text-blue-200">{CONCERNS[topic].label}</span>)}</div> : null}
               </div>
               <div className="mt-7 flex flex-wrap gap-3">
                 <Button onClick={() => go("assessment")}>
@@ -162,8 +183,8 @@ export function WellnessWorkspace() {
                     className="ml-2 inline h-4 w-4"
                   />
                 </Button>
-                <Button variant="secondary" onClick={() => go("chat")}>
-                  Talk it through
+                <Button variant="secondary" onClick={() => assessment ? support() : go("chat")}>
+                  {assessment ? "Explore my support options" : "Talk it through"}
                 </Button>
               </div>
             </section>
@@ -250,6 +271,7 @@ export function WellnessWorkspace() {
       <div key={`assessment-${session}`} hidden={view !== "assessment"}>
         <WellnessAssessment
           onComplete={setAssessment}
+          onEdit={() => setAssessment(null)}
           onSupport={support}
           onChat={() => go("chat")}
         />
@@ -300,15 +322,17 @@ export function WellnessWorkspace() {
             </div>
           </section>
           {service === "professionals" ? (
-            <CounselorBooking topics={topics} />
+            <>
+              {topicWeights ? <p className={secondaryText}>Suggestions reflect your check-in topics. Use the filters to find the expertise, language and session style that suit you.</p> : null}
+              <CounselorBooking topics={topics} topicWeights={topicWeights} initialCatalog={assessment?.concernAnalysis ? "research" : "university"} />
+            </>
           ) : (
             <>
               <section className={panel}>
                 <h4 className="font-semibold">Find a conversation topic</h4>
                 <p className={`mt-2 ${secondaryText}`}>
-                  These are topic filters for the student forum, rather than
-                  separate clinical support groups. Suggestions come from the
-                  concerns you reported. You choose what to browse or share.
+                  Explore student conversations by topic. Your check-in helps
+                  suggest where to start; you choose what to browse or share.
                 </p>
                 <div className="mt-4 flex flex-wrap gap-2">
                   <button
@@ -362,8 +386,8 @@ export function WellnessWorkspace() {
             <p className={`mt-2 ${secondaryText}`}>
               PHQ-9 and GAD-7 scores are calculated separately from complete
               answers using standard scoring. Missing items produce an
-              incomplete result. Additional questions come from a fixed context
-              bank and never alter the scores. Those additional questions and
+              incomplete result. Five to nine additional questions are selected from a 100-question
+              context bank and never alter the scores. Optional DistilBERT text analysis suggests concern topics; you confirm them before they guide follow-up questions and support matching. Those additional questions and
               support suggestions still require professional review.
             </p>
             <a
@@ -391,6 +415,12 @@ export function WellnessWorkspace() {
               . This is not mental-health or referral accuracy. No local student
               clinical validation is claimed. Other languages are not evaluated.
             </p>
+          </div>
+          <div>
+            <h4 className="font-semibold">The main DistilBERT concern model</h4>
+            <p className={`mt-2 ${secondaryText}`}>DistilBERT is fine-tuned on synthetic English student narratives for five concern topics: low mood, worry, sleep, study and connection. You can correct all suggested topics. The model guides topic ordering; answer-driven rules choose five to nine questions from the 100-question bank, explain questionnaire ranges and match profile attributes. It does not diagnose conditions or predict which professional will produce better outcomes. Research & ML shows its own training results and the separate earlier experiments.</p>
+            <p className={`mt-2 ${secondaryText}`}>These custom follow-up questions are stored in the website database and await professional review. They are support context, not a validated diagnostic instrument. Questionnaire scores are calculated separately using standard PHQ-9 and GAD-7 scoring.</p>
+            <Link href="/wellness/research" className="mt-3 inline-flex items-center gap-2 text-sm font-medium text-blue-700 underline dark:text-blue-300"><FlaskConical aria-hidden="true" className="h-4 w-4" />Research & ML</Link>
           </div>
           <div>
             <h4 className="font-semibold">Support chat and matching</h4>

@@ -1,0 +1,10 @@
+[
+  {"_id":"c2-research-01","name":"Demo Counselor 01","profession":"counselor","gender":"female","languages":["en","si"],"supportAreas":["study","worry"],"specialization":"Study and exam pressure; worry and stress","mode":"online"},
+  {"_id":"c2-research-02","name":"Demo Counselor 02","profession":"counselor","gender":"male","languages":["en","ta"],"supportAreas":["study","connection"],"specialization":"Study routines; connection and belonging","mode":"in-person"},
+  {"_id":"c2-research-03","name":"Demo Psychologist 03","profession":"psychologist","gender":"female","languages":["en","si"],"supportAreas":["low-mood","worry","sleep"],"specialization":"Low mood; anxiety and worry; sleep and routines","mode":"hybrid"},
+  {"_id":"c2-research-04","name":"Demo Psychologist 04","profession":"psychologist","gender":"male","languages":["en","ta"],"supportAreas":["worry","sleep"],"specialization":"Worry and anxiety; sleep and routines","mode":"online"},
+  {"_id":"c2-research-05","name":"Demo Psychiatrist 05","profession":"psychiatrist","gender":"female","languages":["en"],"supportAreas":["low-mood","worry"],"specialization":"Demonstration of low-mood and anxiety support-area matching","mode":"in-person"},
+  {"_id":"c2-research-06","name":"Demo Psychiatrist 06","profession":"psychiatrist","gender":"male","languages":["en","si","ta"],"supportAreas":["low-mood","sleep"],"specialization":"Demonstration of low-mood and sleep support-area matching","mode":"hybrid"},
+  {"_id":"c2-research-07","name":"Demo Counselor 07","profession":"counselor","gender":"other","languages":["en","si","ta"],"supportAreas":["connection","study"],"specialization":"Connection and belonging; academic support","mode":"online"},
+  {"_id":"c2-research-08","name":"Demo Psychologist 08","profession":"psychologist","gender":"female","languages":["en","ta"],"supportAreas":["connection","low-mood","study"],"specialization":"Connection; low mood and motivation; study pressure","mode":"hybrid"}
+]
