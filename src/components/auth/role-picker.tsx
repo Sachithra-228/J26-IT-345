@@ -1,7 +1,7 @@
 "use client";
 
-import { useState, useRef } from "react";
-import { DropdownPortal } from "./dropdown-portal";
+import { useState, useRef, useEffect } from "react";
+import { Check, ChevronDown } from "lucide-react";
 import { useLanguage } from "@/context/language-context";
 
 export type RoleOption = { value: string; label: string };
@@ -27,43 +27,35 @@ export function RolePicker({
 }: RolePickerProps) {
   const { language } = useLanguage();
   const [open, setOpen] = useState(false);
-  const [search, setSearch] = useState("");
   const containerRef = useRef<HTMLDivElement>(null);
-  const text =
+
+  const defaultPlaceholder =
     language === "si"
-      ? {
-          defaultPlaceholder: "ඔබගේ භූමිකාව තෝරන්න",
-          searchPlaceholder: "සෙවීමට ටයිප් කරන්න...",
-          searchAria: "භූමිකා සෙවීම",
-          noMatch: "ගැලපෙන භූමිකාවක් නොමැත."
-        }
+      ? "ඔබගේ භූමිකාව තෝරන්න"
       : language === "ta"
-        ? {
-            defaultPlaceholder: "உங்கள் பங்கையை தேர்ந்தெடுக்கவும்",
-            searchPlaceholder: "தேட தட்டச்சு செய்யவும்...",
-            searchAria: "பங்குகளை தேடுங்கள்",
-            noMatch: "பொருந்தும் பங்கு இல்லை."
-          }
-        : {
-            defaultPlaceholder: "Choose your role",
-            searchPlaceholder: "Type to search...",
-            searchAria: "Search roles",
-            noMatch: "No matching role."
-          };
+        ? "உங்கள் பங்கையை தேர்ந்தெடுக்கவும்"
+        : "Choose your role";
+
+  useEffect(() => {
+    if (!open) return;
+    const handleOutside = (e: MouseEvent) => {
+      if (containerRef.current && !containerRef.current.contains(e.target as Node)) {
+        setOpen(false);
+      }
+    };
+    document.addEventListener("mousedown", handleOutside);
+    return () => document.removeEventListener("mousedown", handleOutside);
+  }, [open]);
 
   const displayValue = options.find((o) => o.value === value)?.label ?? "";
-  const filtered = options.filter((o) =>
-    o.label.toLowerCase().includes(search.toLowerCase().trim())
-  );
 
   const select = (v: string) => {
     onChange(v);
     setOpen(false);
-    setSearch("");
   };
 
   return (
-    <div ref={containerRef} className={"relative " + className}>
+    <div ref={containerRef} className={"w-full " + className}>
       <button
         type="button"
         id={id}
@@ -71,53 +63,49 @@ export function RolePicker({
         aria-expanded={open}
         aria-haspopup="listbox"
         onClick={() => setOpen((o) => !o)}
-        className="flex w-full items-center justify-between rounded-xl border border-slate-200 bg-white px-3 py-2.5 text-left text-sm shadow-sm transition focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary/20 dark:border-slate-700 dark:bg-slate-900"
+        className={`flex h-10 w-full items-center justify-between rounded-xl border bg-neutral-900 px-3.5 text-left text-sm transition focus:outline-none ${
+          open ? "border-white/40 ring-1 ring-white/20" : "border-white/15 hover:border-white/30"
+        }`}
       >
-        <span className={displayValue ? "text-slate-900 dark:text-slate-100" : "text-slate-500"}>
-          {displayValue || (placeholder === "Choose your role" ? text.defaultPlaceholder : placeholder)}
+        <span className={displayValue ? "truncate pr-2 font-medium text-white" : "truncate pr-2 text-neutral-500"}>
+          {displayValue || (placeholder === "Choose your role" ? defaultPlaceholder : placeholder)}
         </span>
-        <svg
-          className={"h-4 w-4 shrink-0 text-slate-400 transition " + (open ? "rotate-180" : "")}
-          fill="none"
-          viewBox="0 0 24 24"
-          stroke="currentColor"
-        >
-          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" />
-        </svg>
+        <ChevronDown
+          className={`h-4 w-4 shrink-0 text-neutral-400 transition-transform duration-200 ${
+            open ? "rotate-180 text-white" : ""
+          }`}
+        />
       </button>
 
-      <DropdownPortal open={open} anchorRef={containerRef} onClose={() => setOpen(false)}>
-        <div role="listbox" className="flex max-h-[300px] flex-col">
-          <div className="shrink-0 border-b border-slate-100 p-2 dark:border-slate-700">
-            <input
-              type="text"
-              value={search}
-              onChange={(e) => setSearch(e.target.value)}
-              placeholder={text.searchPlaceholder}
-              className="w-full rounded-lg border border-slate-200 bg-slate-50 px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-primary/20 dark:border-slate-600 dark:bg-slate-800"
-              autoFocus
-              aria-label={text.searchAria}
-            />
-          </div>
-          <div className="min-h-0 flex-1 overflow-y-auto py-2">
-            {filtered.map((o) => (
-              <button
-                key={o.value}
-                type="button"
-                role="option"
-                aria-selected={value === o.value}
-                onClick={() => select(o.value)}
-                className="w-full rounded-lg px-3 py-2.5 text-left text-sm hover:bg-primary/10 focus:bg-primary/10 focus:outline-none aria-selected:bg-primary/15 aria-selected:font-medium"
-              >
-                {o.label}
-              </button>
-            ))}
-            {filtered.length === 0 && search.trim() && (
-              <p className="px-4 py-3 text-sm text-slate-500">{text.noMatch}</p>
-            )}
+      {open ? (
+        <div
+          role="listbox"
+          className="mt-1.5 overflow-hidden rounded-xl border border-white/15 bg-black/95 shadow-xl"
+        >
+          <div className="max-h-36 overflow-y-auto p-1 [&::-webkit-scrollbar]:w-1.5 [&::-webkit-scrollbar-thumb]:rounded-full [&::-webkit-scrollbar-thumb]:bg-white/20 [&::-webkit-scrollbar-track]:bg-transparent">
+            {options.map((o) => {
+              const isSelected = value === o.value;
+              return (
+                <button
+                  key={o.value}
+                  type="button"
+                  role="option"
+                  aria-selected={isSelected}
+                  onClick={() => select(o.value)}
+                  className={`flex w-full items-center justify-between rounded-lg px-3 py-2 text-left text-sm transition-colors ${
+                    isSelected
+                      ? "bg-white/15 font-semibold text-white"
+                      : "text-neutral-300 hover:bg-white/[0.07] hover:text-white"
+                  }`}
+                >
+                  <span>{o.label}</span>
+                  {isSelected ? <Check className="h-4 w-4 shrink-0 text-white" /> : null}
+                </button>
+              );
+            })}
           </div>
         </div>
-      </DropdownPortal>
+      ) : null}
     </div>
   );
 }

@@ -1,8 +1,7 @@
-import { createHash } from "node:crypto";
 import { NextRequest } from "next/server";
 import { errorMessageForDev, jsonResponse } from "@/lib/api";
-import { loadLedger } from "@/lib/c1/chain";
-import { canonicalLedgerString, summarizeLedger } from "@/lib/c1/ledger";
+import { ledgerDigest, loadLedger } from "@/lib/c1/chain";
+import { summarizeLedger } from "@/lib/c1/ledger";
 
 export const dynamic = "force-dynamic";
 
@@ -21,7 +20,7 @@ export async function GET(request: NextRequest) {
   try {
     const ledger = await loadLedger();
     const summary = summarizeLedger(ledger.events);
-    const digest = createHash("sha256").update(canonicalLedgerString(ledger.events)).digest("hex");
+    const digest = ledgerDigest(ledger.events);
     const recent = [...ledger.events]
       .sort((a, b) => b.blockNumber - a.blockNumber || b.logIndex - a.logIndex)
       .slice(0, limit);

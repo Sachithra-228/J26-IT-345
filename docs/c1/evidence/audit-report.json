@@ -1,0 +1,696 @@
+{
+  "report": "UniCare Connect - C1 scholarship audit report",
+  "generatedAt": "2026-10-19T09:45:34.951Z",
+  "meta": {
+    "network": "hardhat-local-simulation",
+    "chainId": 31337,
+    "contractAddress": "0x5FbDB2315678afecb367f032d93F642f64180aa3",
+    "contract": "ScholarshipEscrow",
+    "note": "LOCAL SIMULATION. Genuine EVM execution of the real contract; not a public-network record. Regenerate with `npm run simulate` in /blockchain. Student refs are pseudonymous demo values.",
+    "simulatedFrom": "2026-09-01T09:00:00.000Z",
+    "eventCount": 36,
+    "source": "simulation"
+  },
+  "integrity": {
+    "algorithm": "sha256",
+    "digest": "723f2d8367ce74f26c24adfca3dd199a2cf3665630c86297a4f8d99958da608e",
+    "howToVerify": "Sort events by block then log index, build the canonical list [type, block, logIndex, txHash, sorted args] as JSON (canonicalLedgerString in src/lib/c1/ledger.ts) and compare its SHA-256 with this digest."
+  },
+  "summary": {
+    "totals": {
+      "funded": "35000000000000000000",
+      "disbursed": "16000000000000000000",
+      "committed": "6000000000000000000",
+      "available": "13000000000000000000",
+      "campaigns": 2,
+      "awards": 6,
+      "activeAwards": 3,
+      "completedAwards": 2,
+      "revokedAwards": 1,
+      "uniqueStudents": 6,
+      "disbursementCount": 12
+    },
+    "campaigns": [
+      {
+        "id": "1",
+        "donor": "0x3C44CdDdB6a900fa2b585dd299e03d12FA4293BC",
+        "metadataHash": "0x5d90288fc18e18d5de14e673c149b83cedb0953072d2abf535ab7a092265c760",
+        "funded": "15000000000000000000",
+        "allocated": "1000000000000000000",
+        "disbursed": "6000000000000000000",
+        "closed": false,
+        "awardCount": 3,
+        "createdAt": 1788340524
+      },
+      {
+        "id": "2",
+        "donor": "0x90F79bf6EB2c4f870365E785982E1f101E93b906",
+        "metadataHash": "0xfd4f71e51dbddd888d436e80f50f7cf0e412d2072ddab5eaf75d6f85296958db",
+        "funded": "20000000000000000000",
+        "allocated": "5000000000000000000",
+        "disbursed": "10000000000000000000",
+        "closed": false,
+        "awardCount": 3,
+        "createdAt": 1788513324
+      }
+    ],
+    "awards": [
+      {
+        "id": "1",
+        "campaignId": "1",
+        "studentRef": "0xda35768b46b6323d7de01a98599e74ab5004bf71aba7195fcc98d17652c0d87f",
+        "beneficiary": "0x15d34AAf54267DB7D7c367839AAf71A00a2C6A65",
+        "assessmentHash": "0xcb54f7acf8653aa12198f22c47e3e2b6c06a6d2dd5b5d65bf5067d76367c2f33",
+        "totalAmount": "4000000000000000000",
+        "released": "3000000000000000000",
+        "milestoneCount": 4,
+        "milestonesVerified": 3,
+        "status": "active",
+        "awardedAt": 1788945324,
+        "lastActivityAt": 1791226284
+      },
+      {
+        "id": "2",
+        "campaignId": "1",
+        "studentRef": "0xdc1fdb813a5745379283dad4d0f7b29ae0c521c71ab0bab09dfe037d4dd12976",
+        "beneficiary": "0x9965507D1a55bcC2695C58ba16FB37d819B0A4dc",
+        "assessmentHash": "0xd98361b1885e425cac2dfb522c57dea44b893733eced3e050ce53232f2c16794",
+        "totalAmount": "3000000000000000000",
+        "released": "1000000000000000000",
+        "milestoneCount": 3,
+        "milestonesVerified": 1,
+        "status": "revoked",
+        "awardedAt": 1788953964,
+        "lastActivityAt": 1790880684
+      },
+      {
+        "id": "3",
+        "campaignId": "1",
+        "studentRef": "0x693045a495ba19699db82513df2a3e26870c9b1b44239547181bd0f0c9c208e7",
+        "beneficiary": "0x976EA74026E726554dB657fA54763abd0C3a0aa9",
+        "assessmentHash": "0xe8bd16663ba114e9dc1cfbb9147b87e038b8680eddb7df9be45659cc73283fef",
+        "totalAmount": "2000000000000000000",
+        "released": "2000000000000000000",
+        "milestoneCount": 2,
+        "milestonesVerified": 2,
+        "status": "completed",
+        "awardedAt": 1788962604,
+        "lastActivityAt": 1790535085
+      },
+      {
+        "id": "4",
+        "campaignId": "2",
+        "studentRef": "0x12b0e8abeec79e13d85a593f785a35c5aae5abf0afdf6a75396b193ca44bc339",
+        "beneficiary": "0x14dC79964da2C08b23698B3D3cc7Ca32193d9955",
+        "assessmentHash": "0xca1dfbe970ce03eaba42dd1e2a3cf5341a5a9ee779121eba9bc995798a0f6608",
+        "totalAmount": "6000000000000000000",
+        "released": "6000000000000000000",
+        "milestoneCount": 3,
+        "milestonesVerified": 3,
+        "status": "completed",
+        "awardedAt": 1789049004,
+        "lastActivityAt": 1791226285
+      },
+      {
+        "id": "5",
+        "campaignId": "2",
+        "studentRef": "0x46e62b1ae451f0e7af59d3e77a4a701ab9158eaa1f804b0ae164a478ebbaaf26",
+        "beneficiary": "0x23618e81E3f5cdF7f54C3d65f7FBc0aBf5B21E8f",
+        "assessmentHash": "0x6b96cfc03c6a314f038fd2b7f9c3079acd2bbc33276986a0bd8e9ddd9704ddc1",
+        "totalAmount": "5000000000000000000",
+        "released": "2000000000000000000",
+        "milestoneCount": 5,
+        "milestonesVerified": 2,
+        "status": "active",
+        "awardedAt": 1789057644,
+        "lastActivityAt": 1791226286
+      },
+      {
+        "id": "6",
+        "campaignId": "2",
+        "studentRef": "0x7ec0e1d937e991625152594ab36df25fc2356a66e6bcbe4d21030462afdc6201",
+        "beneficiary": "0xa0Ee7A142d267C1f36714E4a8F75612F20a79720",
+        "assessmentHash": "0x5f9ace8bf5ee21c63b6d7d72a69a91a850b75c9c578e94d20a26e59349b5fb68",
+        "totalAmount": "4000000000000000000",
+        "released": "2000000000000000000",
+        "milestoneCount": 2,
+        "milestonesVerified": 1,
+        "status": "active",
+        "awardedAt": 1789066284,
+        "lastActivityAt": 1791226287
+      }
+    ]
+  },
+  "events": [
+    {
+      "id": "0x935c7c186ff25821fabb11c42b748e63d2bf02418d043a59412562da331d3a77:0",
+      "type": "CampaignCreated",
+      "blockNumber": 5,
+      "timestamp": 1788340524,
+      "txHash": "0x935c7c186ff25821fabb11c42b748e63d2bf02418d043a59412562da331d3a77",
+      "logIndex": 0,
+      "gasUsed": 139397,
+      "args": {
+        "campaignId": "1",
+        "donor": "0x3C44CdDdB6a900fa2b585dd299e03d12FA4293BC",
+        "metadataHash": "0x5d90288fc18e18d5de14e673c149b83cedb0953072d2abf535ab7a092265c760",
+        "amount": "12000000000000000000"
+      }
+    },
+    {
+      "id": "0x8c5743525bfba3592ddcaa1f21b070ec4fb99a6f322f7b712ef38617f37d1b13:0",
+      "type": "CampaignCreated",
+      "blockNumber": 6,
+      "timestamp": 1788513324,
+      "txHash": "0x8c5743525bfba3592ddcaa1f21b070ec4fb99a6f322f7b712ef38617f37d1b13",
+      "logIndex": 0,
+      "gasUsed": 105197,
+      "args": {
+        "campaignId": "2",
+        "donor": "0x90F79bf6EB2c4f870365E785982E1f101E93b906",
+        "metadataHash": "0xfd4f71e51dbddd888d436e80f50f7cf0e412d2072ddab5eaf75d6f85296958db",
+        "amount": "20000000000000000000"
+      }
+    },
+    {
+      "id": "0xa915bac3fd7ed2838814a2d5ae1fd155f5e22794c19d168b4b65cb9082fc2183:0",
+      "type": "CampaignToppedUp",
+      "blockNumber": 7,
+      "timestamp": 1788772524,
+      "txHash": "0xa915bac3fd7ed2838814a2d5ae1fd155f5e22794c19d168b4b65cb9082fc2183",
+      "logIndex": 0,
+      "gasUsed": 38240,
+      "args": {
+        "campaignId": "1",
+        "donor": "0x3C44CdDdB6a900fa2b585dd299e03d12FA4293BC",
+        "amount": "3000000000000000000"
+      }
+    },
+    {
+      "id": "0x0d25f5c65714237e4dab1c036bf07c51392720fefb7a88383f48e181493abfca:0",
+      "type": "ScholarshipAwarded",
+      "blockNumber": 8,
+      "timestamp": 1788945324,
+      "txHash": "0x0d25f5c65714237e4dab1c036bf07c51392720fefb7a88383f48e181493abfca",
+      "logIndex": 0,
+      "gasUsed": 218672,
+      "args": {
+        "awardId": "1",
+        "campaignId": "1",
+        "studentRef": "0xda35768b46b6323d7de01a98599e74ab5004bf71aba7195fcc98d17652c0d87f",
+        "beneficiary": "0x15d34AAf54267DB7D7c367839AAf71A00a2C6A65",
+        "totalAmount": "4000000000000000000",
+        "milestoneCount": "4",
+        "assessmentHash": "0xcb54f7acf8653aa12198f22c47e3e2b6c06a6d2dd5b5d65bf5067d76367c2f33"
+      }
+    },
+    {
+      "id": "0x8cd1bff1cd721fd422d64d37c9d00e2ee563bb8a01c6c4faa33211384341a388:0",
+      "type": "ScholarshipAwarded",
+      "blockNumber": 9,
+      "timestamp": 1788953964,
+      "txHash": "0x8cd1bff1cd721fd422d64d37c9d00e2ee563bb8a01c6c4faa33211384341a388",
+      "logIndex": 0,
+      "gasUsed": 184472,
+      "args": {
+        "awardId": "2",
+        "campaignId": "1",
+        "studentRef": "0xdc1fdb813a5745379283dad4d0f7b29ae0c521c71ab0bab09dfe037d4dd12976",
+        "beneficiary": "0x9965507D1a55bcC2695C58ba16FB37d819B0A4dc",
+        "totalAmount": "3000000000000000000",
+        "milestoneCount": "3",
+        "assessmentHash": "0xd98361b1885e425cac2dfb522c57dea44b893733eced3e050ce53232f2c16794"
+      }
+    },
+    {
+      "id": "0x066563c085bfde3ae7ec8b1d91769bbcf04986115c378630f7a19569f80819ba:0",
+      "type": "ScholarshipAwarded",
+      "blockNumber": 10,
+      "timestamp": 1788962604,
+      "txHash": "0x066563c085bfde3ae7ec8b1d91769bbcf04986115c378630f7a19569f80819ba",
+      "logIndex": 0,
+      "gasUsed": 184472,
+      "args": {
+        "awardId": "3",
+        "campaignId": "1",
+        "studentRef": "0x693045a495ba19699db82513df2a3e26870c9b1b44239547181bd0f0c9c208e7",
+        "beneficiary": "0x976EA74026E726554dB657fA54763abd0C3a0aa9",
+        "totalAmount": "2000000000000000000",
+        "milestoneCount": "2",
+        "assessmentHash": "0xe8bd16663ba114e9dc1cfbb9147b87e038b8680eddb7df9be45659cc73283fef"
+      }
+    },
+    {
+      "id": "0xef26a306d18e307229ea64da04b40fb4f316302fe16d1572521ef37d7d252e3c:0",
+      "type": "ScholarshipAwarded",
+      "blockNumber": 11,
+      "timestamp": 1789049004,
+      "txHash": "0xef26a306d18e307229ea64da04b40fb4f316302fe16d1572521ef37d7d252e3c",
+      "logIndex": 0,
+      "gasUsed": 201572,
+      "args": {
+        "awardId": "4",
+        "campaignId": "2",
+        "studentRef": "0x12b0e8abeec79e13d85a593f785a35c5aae5abf0afdf6a75396b193ca44bc339",
+        "beneficiary": "0x14dC79964da2C08b23698B3D3cc7Ca32193d9955",
+        "totalAmount": "6000000000000000000",
+        "milestoneCount": "3",
+        "assessmentHash": "0xca1dfbe970ce03eaba42dd1e2a3cf5341a5a9ee779121eba9bc995798a0f6608"
+      }
+    },
+    {
+      "id": "0x35795f8f89613158d7acb5d0175d749f83fd9e27b469f50892c88e8c06c583c4:0",
+      "type": "ScholarshipAwarded",
+      "blockNumber": 12,
+      "timestamp": 1789057644,
+      "txHash": "0x35795f8f89613158d7acb5d0175d749f83fd9e27b469f50892c88e8c06c583c4",
+      "logIndex": 0,
+      "gasUsed": 184472,
+      "args": {
+        "awardId": "5",
+        "campaignId": "2",
+        "studentRef": "0x46e62b1ae451f0e7af59d3e77a4a701ab9158eaa1f804b0ae164a478ebbaaf26",
+        "beneficiary": "0x23618e81E3f5cdF7f54C3d65f7FBc0aBf5B21E8f",
+        "totalAmount": "5000000000000000000",
+        "milestoneCount": "5",
+        "assessmentHash": "0x6b96cfc03c6a314f038fd2b7f9c3079acd2bbc33276986a0bd8e9ddd9704ddc1"
+      }
+    },
+    {
+      "id": "0x5f4eb1cee78fd667bd6cc8ce840a1b8fa455517f672f141ade80b4f5d13bf82c:0",
+      "type": "ScholarshipAwarded",
+      "blockNumber": 13,
+      "timestamp": 1789066284,
+      "txHash": "0x5f4eb1cee78fd667bd6cc8ce840a1b8fa455517f672f141ade80b4f5d13bf82c",
+      "logIndex": 0,
+      "gasUsed": 184472,
+      "args": {
+        "awardId": "6",
+        "campaignId": "2",
+        "studentRef": "0x7ec0e1d937e991625152594ab36df25fc2356a66e6bcbe4d21030462afdc6201",
+        "beneficiary": "0xa0Ee7A142d267C1f36714E4a8F75612F20a79720",
+        "totalAmount": "4000000000000000000",
+        "milestoneCount": "2",
+        "assessmentHash": "0x5f9ace8bf5ee21c63b6d7d72a69a91a850b75c9c578e94d20a26e59349b5fb68"
+      }
+    },
+    {
+      "id": "0x4e3b00446d4d9b37d1b6dada335e0fe4196fda9e20e5eec15ea27f1851a98cde:0",
+      "type": "MilestoneVerified",
+      "blockNumber": 14,
+      "timestamp": 1789671084,
+      "txHash": "0x4e3b00446d4d9b37d1b6dada335e0fe4196fda9e20e5eec15ea27f1851a98cde",
+      "logIndex": 0,
+      "gasUsed": 125945,
+      "args": {
+        "awardId": "1",
+        "milestoneIndex": "0",
+        "evidenceHash": "0xc2f325ecd03e7c04de57891adbb698441beb97cfb74d688eee247c5ca662b403",
+        "verifier": "0x70997970C51812dc3A010C7d01b50e0d17dc79C8"
+      }
+    },
+    {
+      "id": "0x4e3b00446d4d9b37d1b6dada335e0fe4196fda9e20e5eec15ea27f1851a98cde:1",
+      "type": "FundsDisbursed",
+      "blockNumber": 14,
+      "timestamp": 1789671084,
+      "txHash": "0x4e3b00446d4d9b37d1b6dada335e0fe4196fda9e20e5eec15ea27f1851a98cde",
+      "logIndex": 1,
+      "gasUsed": 125945,
+      "args": {
+        "awardId": "1",
+        "milestoneIndex": "0",
+        "beneficiary": "0x15d34AAf54267DB7D7c367839AAf71A00a2C6A65",
+        "amount": "1000000000000000000"
+      }
+    },
+    {
+      "id": "0xe88cf788d54db0898b740aa6f6dc91b5b46584ee7c210c745cdcc35f84a73166:0",
+      "type": "MilestoneVerified",
+      "blockNumber": 15,
+      "timestamp": 1789671085,
+      "txHash": "0xe88cf788d54db0898b740aa6f6dc91b5b46584ee7c210c745cdcc35f84a73166",
+      "logIndex": 0,
+      "gasUsed": 91745,
+      "args": {
+        "awardId": "2",
+        "milestoneIndex": "0",
+        "evidenceHash": "0xd9c516a69a833170fb0a0737a1c989fdc75dfc5b932c0260c04d4e35d24e2082",
+        "verifier": "0x70997970C51812dc3A010C7d01b50e0d17dc79C8"
+      }
+    },
+    {
+      "id": "0xe88cf788d54db0898b740aa6f6dc91b5b46584ee7c210c745cdcc35f84a73166:1",
+      "type": "FundsDisbursed",
+      "blockNumber": 15,
+      "timestamp": 1789671085,
+      "txHash": "0xe88cf788d54db0898b740aa6f6dc91b5b46584ee7c210c745cdcc35f84a73166",
+      "logIndex": 1,
+      "gasUsed": 91745,
+      "args": {
+        "awardId": "2",
+        "milestoneIndex": "0",
+        "beneficiary": "0x9965507D1a55bcC2695C58ba16FB37d819B0A4dc",
+        "amount": "1000000000000000000"
+      }
+    },
+    {
+      "id": "0x9dba3c6b741ec1372953f421b67d1ea0d7712b0e6e7df535ade8978d0556b0dc:0",
+      "type": "MilestoneVerified",
+      "blockNumber": 16,
+      "timestamp": 1789671086,
+      "txHash": "0x9dba3c6b741ec1372953f421b67d1ea0d7712b0e6e7df535ade8978d0556b0dc",
+      "logIndex": 0,
+      "gasUsed": 91745,
+      "args": {
+        "awardId": "3",
+        "milestoneIndex": "0",
+        "evidenceHash": "0xd24961b1f77eeea18f4b4ae48608d37b22614fbd570c6cf23c0367c68abb549e",
+        "verifier": "0x70997970C51812dc3A010C7d01b50e0d17dc79C8"
+      }
+    },
+    {
+      "id": "0x9dba3c6b741ec1372953f421b67d1ea0d7712b0e6e7df535ade8978d0556b0dc:1",
+      "type": "FundsDisbursed",
+      "blockNumber": 16,
+      "timestamp": 1789671086,
+      "txHash": "0x9dba3c6b741ec1372953f421b67d1ea0d7712b0e6e7df535ade8978d0556b0dc",
+      "logIndex": 1,
+      "gasUsed": 91745,
+      "args": {
+        "awardId": "3",
+        "milestoneIndex": "0",
+        "beneficiary": "0x976EA74026E726554dB657fA54763abd0C3a0aa9",
+        "amount": "1000000000000000000"
+      }
+    },
+    {
+      "id": "0x40345f8066a3045dc1f93703a9cf2982fe15ff121a356b3302ed3fed30b55a20:0",
+      "type": "MilestoneVerified",
+      "blockNumber": 17,
+      "timestamp": 1789671087,
+      "txHash": "0x40345f8066a3045dc1f93703a9cf2982fe15ff121a356b3302ed3fed30b55a20",
+      "logIndex": 0,
+      "gasUsed": 108845,
+      "args": {
+        "awardId": "4",
+        "milestoneIndex": "0",
+        "evidenceHash": "0x79e736cdf1be2e013cfbf524ac3a5eddda4950bc29cf56c92d034de09e2c01cf",
+        "verifier": "0x70997970C51812dc3A010C7d01b50e0d17dc79C8"
+      }
+    },
+    {
+      "id": "0x40345f8066a3045dc1f93703a9cf2982fe15ff121a356b3302ed3fed30b55a20:1",
+      "type": "FundsDisbursed",
+      "blockNumber": 17,
+      "timestamp": 1789671087,
+      "txHash": "0x40345f8066a3045dc1f93703a9cf2982fe15ff121a356b3302ed3fed30b55a20",
+      "logIndex": 1,
+      "gasUsed": 108845,
+      "args": {
+        "awardId": "4",
+        "milestoneIndex": "0",
+        "beneficiary": "0x14dC79964da2C08b23698B3D3cc7Ca32193d9955",
+        "amount": "2000000000000000000"
+      }
+    },
+    {
+      "id": "0xc81fb2ea03fb2135511cead45ab914798dba90a27f00a157af9953c5431ae636:0",
+      "type": "MilestoneVerified",
+      "blockNumber": 18,
+      "timestamp": 1789671088,
+      "txHash": "0xc81fb2ea03fb2135511cead45ab914798dba90a27f00a157af9953c5431ae636",
+      "logIndex": 0,
+      "gasUsed": 91745,
+      "args": {
+        "awardId": "5",
+        "milestoneIndex": "0",
+        "evidenceHash": "0x452b86890cdfea7b02f852cc170d3debaebdb893e6df038d813a91dedc475ecc",
+        "verifier": "0x70997970C51812dc3A010C7d01b50e0d17dc79C8"
+      }
+    },
+    {
+      "id": "0xc81fb2ea03fb2135511cead45ab914798dba90a27f00a157af9953c5431ae636:1",
+      "type": "FundsDisbursed",
+      "blockNumber": 18,
+      "timestamp": 1789671088,
+      "txHash": "0xc81fb2ea03fb2135511cead45ab914798dba90a27f00a157af9953c5431ae636",
+      "logIndex": 1,
+      "gasUsed": 91745,
+      "args": {
+        "awardId": "5",
+        "milestoneIndex": "0",
+        "beneficiary": "0x23618e81E3f5cdF7f54C3d65f7FBc0aBf5B21E8f",
+        "amount": "1000000000000000000"
+      }
+    },
+    {
+      "id": "0xc8b98796ccd8571e3e31a5f0d0079e6464f3825719d230e30b8e2fc8dba054b5:0",
+      "type": "MilestoneVerified",
+      "blockNumber": 19,
+      "timestamp": 1790535084,
+      "txHash": "0xc8b98796ccd8571e3e31a5f0d0079e6464f3825719d230e30b8e2fc8dba054b5",
+      "logIndex": 0,
+      "gasUsed": 74645,
+      "args": {
+        "awardId": "1",
+        "milestoneIndex": "1",
+        "evidenceHash": "0xec3c4a0bf3e086367db46ab7b12160876d55860b2bcb48d19862e14a1c29a20a",
+        "verifier": "0x70997970C51812dc3A010C7d01b50e0d17dc79C8"
+      }
+    },
+    {
+      "id": "0xc8b98796ccd8571e3e31a5f0d0079e6464f3825719d230e30b8e2fc8dba054b5:1",
+      "type": "FundsDisbursed",
+      "blockNumber": 19,
+      "timestamp": 1790535084,
+      "txHash": "0xc8b98796ccd8571e3e31a5f0d0079e6464f3825719d230e30b8e2fc8dba054b5",
+      "logIndex": 1,
+      "gasUsed": 74645,
+      "args": {
+        "awardId": "1",
+        "milestoneIndex": "1",
+        "beneficiary": "0x15d34AAf54267DB7D7c367839AAf71A00a2C6A65",
+        "amount": "1000000000000000000"
+      }
+    },
+    {
+      "id": "0x1774a41cc411153781bf8e154246c0c018634ca9b0f8ed2dde8a2d2b79445186:0",
+      "type": "MilestoneVerified",
+      "blockNumber": 20,
+      "timestamp": 1790535085,
+      "txHash": "0x1774a41cc411153781bf8e154246c0c018634ca9b0f8ed2dde8a2d2b79445186",
+      "logIndex": 0,
+      "gasUsed": 76557,
+      "args": {
+        "awardId": "3",
+        "milestoneIndex": "1",
+        "evidenceHash": "0x8333ffb3db2ff5b493c5534b55bf302bba26f56d3dec78656b4e5bf5b34c20c0",
+        "verifier": "0x70997970C51812dc3A010C7d01b50e0d17dc79C8"
+      }
+    },
+    {
+      "id": "0x1774a41cc411153781bf8e154246c0c018634ca9b0f8ed2dde8a2d2b79445186:1",
+      "type": "AwardCompleted",
+      "blockNumber": 20,
+      "timestamp": 1790535085,
+      "txHash": "0x1774a41cc411153781bf8e154246c0c018634ca9b0f8ed2dde8a2d2b79445186",
+      "logIndex": 1,
+      "gasUsed": 76557,
+      "args": {
+        "awardId": "3"
+      }
+    },
+    {
+      "id": "0x1774a41cc411153781bf8e154246c0c018634ca9b0f8ed2dde8a2d2b79445186:2",
+      "type": "FundsDisbursed",
+      "blockNumber": 20,
+      "timestamp": 1790535085,
+      "txHash": "0x1774a41cc411153781bf8e154246c0c018634ca9b0f8ed2dde8a2d2b79445186",
+      "logIndex": 2,
+      "gasUsed": 76557,
+      "args": {
+        "awardId": "3",
+        "milestoneIndex": "1",
+        "beneficiary": "0x976EA74026E726554dB657fA54763abd0C3a0aa9",
+        "amount": "1000000000000000000"
+      }
+    },
+    {
+      "id": "0x2acd7982464eac0186ee55f76b0cd1586328850fe56e29ceaee65ae6c23057ba:0",
+      "type": "MilestoneVerified",
+      "blockNumber": 21,
+      "timestamp": 1790535086,
+      "txHash": "0x2acd7982464eac0186ee55f76b0cd1586328850fe56e29ceaee65ae6c23057ba",
+      "logIndex": 0,
+      "gasUsed": 74645,
+      "args": {
+        "awardId": "4",
+        "milestoneIndex": "1",
+        "evidenceHash": "0xabf02325bd49910313fe0dd2170aa8912df7df17aa529a3abba7d117b36a6844",
+        "verifier": "0x70997970C51812dc3A010C7d01b50e0d17dc79C8"
+      }
+    },
+    {
+      "id": "0x2acd7982464eac0186ee55f76b0cd1586328850fe56e29ceaee65ae6c23057ba:1",
+      "type": "FundsDisbursed",
+      "blockNumber": 21,
+      "timestamp": 1790535086,
+      "txHash": "0x2acd7982464eac0186ee55f76b0cd1586328850fe56e29ceaee65ae6c23057ba",
+      "logIndex": 1,
+      "gasUsed": 74645,
+      "args": {
+        "awardId": "4",
+        "milestoneIndex": "1",
+        "beneficiary": "0x14dC79964da2C08b23698B3D3cc7Ca32193d9955",
+        "amount": "2000000000000000000"
+      }
+    },
+    {
+      "id": "0x90902ee154e2fe1c128c68e599065b09c28d8617f52489df53528a63488887de:0",
+      "type": "AwardRevoked",
+      "blockNumber": 22,
+      "timestamp": 1790880684,
+      "txHash": "0x90902ee154e2fe1c128c68e599065b09c28d8617f52489df53528a63488887de",
+      "logIndex": 0,
+      "gasUsed": 47598,
+      "args": {
+        "awardId": "2",
+        "returnedToCampaign": "2000000000000000000",
+        "reasonHash": "0x3e1ec587a2d8648ba1d20fd52669cd25bab4bac53f94da889f7a6e168e49472b"
+      }
+    },
+    {
+      "id": "0x0dd0ba762e4ab35e15c5342a95ce7c1ac8b8b9211841a6b0bd9b2fe50c02899a:0",
+      "type": "MilestoneVerified",
+      "blockNumber": 23,
+      "timestamp": 1791226284,
+      "txHash": "0x0dd0ba762e4ab35e15c5342a95ce7c1ac8b8b9211841a6b0bd9b2fe50c02899a",
+      "logIndex": 0,
+      "gasUsed": 74645,
+      "args": {
+        "awardId": "1",
+        "milestoneIndex": "2",
+        "evidenceHash": "0xaab4c1eaf76bfe37df7692ad3e29a37cb1cec97ab74234ff6f6417ae5f7b9f8a",
+        "verifier": "0x70997970C51812dc3A010C7d01b50e0d17dc79C8"
+      }
+    },
+    {
+      "id": "0x0dd0ba762e4ab35e15c5342a95ce7c1ac8b8b9211841a6b0bd9b2fe50c02899a:1",
+      "type": "FundsDisbursed",
+      "blockNumber": 23,
+      "timestamp": 1791226284,
+      "txHash": "0x0dd0ba762e4ab35e15c5342a95ce7c1ac8b8b9211841a6b0bd9b2fe50c02899a",
+      "logIndex": 1,
+      "gasUsed": 74645,
+      "args": {
+        "awardId": "1",
+        "milestoneIndex": "2",
+        "beneficiary": "0x15d34AAf54267DB7D7c367839AAf71A00a2C6A65",
+        "amount": "1000000000000000000"
+      }
+    },
+    {
+      "id": "0xa6bd11d8c870cff067957be1777e2217a037ed162a2c5497484a31b3a04f2a05:0",
+      "type": "MilestoneVerified",
+      "blockNumber": 24,
+      "timestamp": 1791226285,
+      "txHash": "0xa6bd11d8c870cff067957be1777e2217a037ed162a2c5497484a31b3a04f2a05",
+      "logIndex": 0,
+      "gasUsed": 76557,
+      "args": {
+        "awardId": "4",
+        "milestoneIndex": "2",
+        "evidenceHash": "0x294bae2ae09343db6e5824962ce7a2598c65e75ade8d73b737e7f66f029dcca1",
+        "verifier": "0x70997970C51812dc3A010C7d01b50e0d17dc79C8"
+      }
+    },
+    {
+      "id": "0xa6bd11d8c870cff067957be1777e2217a037ed162a2c5497484a31b3a04f2a05:1",
+      "type": "AwardCompleted",
+      "blockNumber": 24,
+      "timestamp": 1791226285,
+      "txHash": "0xa6bd11d8c870cff067957be1777e2217a037ed162a2c5497484a31b3a04f2a05",
+      "logIndex": 1,
+      "gasUsed": 76557,
+      "args": {
+        "awardId": "4"
+      }
+    },
+    {
+      "id": "0xa6bd11d8c870cff067957be1777e2217a037ed162a2c5497484a31b3a04f2a05:2",
+      "type": "FundsDisbursed",
+      "blockNumber": 24,
+      "timestamp": 1791226285,
+      "txHash": "0xa6bd11d8c870cff067957be1777e2217a037ed162a2c5497484a31b3a04f2a05",
+      "logIndex": 2,
+      "gasUsed": 76557,
+      "args": {
+        "awardId": "4",
+        "milestoneIndex": "2",
+        "beneficiary": "0x14dC79964da2C08b23698B3D3cc7Ca32193d9955",
+        "amount": "2000000000000000000"
+      }
+    },
+    {
+      "id": "0xbd5650590e3a8d6d3e8c0479b575b22dc2e6051e867f67195c942577a6546e62:0",
+      "type": "MilestoneVerified",
+      "blockNumber": 25,
+      "timestamp": 1791226286,
+      "txHash": "0xbd5650590e3a8d6d3e8c0479b575b22dc2e6051e867f67195c942577a6546e62",
+      "logIndex": 0,
+      "gasUsed": 74645,
+      "args": {
+        "awardId": "5",
+        "milestoneIndex": "1",
+        "evidenceHash": "0x47192a3f9c64c0a77fce1334cda71010789d2b1241d21765e392e104be58e54a",
+        "verifier": "0x70997970C51812dc3A010C7d01b50e0d17dc79C8"
+      }
+    },
+    {
+      "id": "0xbd5650590e3a8d6d3e8c0479b575b22dc2e6051e867f67195c942577a6546e62:1",
+      "type": "FundsDisbursed",
+      "blockNumber": 25,
+      "timestamp": 1791226286,
+      "txHash": "0xbd5650590e3a8d6d3e8c0479b575b22dc2e6051e867f67195c942577a6546e62",
+      "logIndex": 1,
+      "gasUsed": 74645,
+      "args": {
+        "awardId": "5",
+        "milestoneIndex": "1",
+        "beneficiary": "0x23618e81E3f5cdF7f54C3d65f7FBc0aBf5B21E8f",
+        "amount": "1000000000000000000"
+      }
+    },
+    {
+      "id": "0x71308e4f2799b7a548554462b3adaffb6a9e57f1422228fb819a8f8338a20d1c:0",
+      "type": "MilestoneVerified",
+      "blockNumber": 26,
+      "timestamp": 1791226287,
+      "txHash": "0x71308e4f2799b7a548554462b3adaffb6a9e57f1422228fb819a8f8338a20d1c",
+      "logIndex": 0,
+      "gasUsed": 91745,
+      "args": {
+        "awardId": "6",
+        "milestoneIndex": "0",
+        "evidenceHash": "0xa6c0e520d43c109cebc8d9d2a3d8d1fd7a41b5d82eb133829c876d928bea4f98",
+        "verifier": "0x70997970C51812dc3A010C7d01b50e0d17dc79C8"
+      }
+    },
+    {
+      "id": "0x71308e4f2799b7a548554462b3adaffb6a9e57f1422228fb819a8f8338a20d1c:1",
+      "type": "FundsDisbursed",
+      "blockNumber": 26,
+      "timestamp": 1791226287,
+      "txHash": "0x71308e4f2799b7a548554462b3adaffb6a9e57f1422228fb819a8f8338a20d1c",
+      "logIndex": 1,
+      "gasUsed": 91745,
+      "args": {
+        "awardId": "6",
+        "milestoneIndex": "0",
+        "beneficiary": "0xa0Ee7A142d267C1f36714E4a8F75612F20a79720",
+        "amount": "2000000000000000000"
+      }
+    }
+  ]
+}

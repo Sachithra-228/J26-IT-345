@@ -17,10 +17,10 @@ type ThemeProviderProps = {
 };
 
 export function ThemeProvider({ children }: ThemeProviderProps) {
-  const [theme, setThemeState] = useState<Theme>("light");
+  const [theme, setThemeState] = useState<Theme>("dark");
 
   useEffect(() => {
-    const saved = window.localStorage.getItem("unicare-theme");
+    const saved = window.localStorage.getItem("unicare-theme-v2");
     if (saved === "light" || saved === "dark") {
       setThemeState(saved);
     }
@@ -33,7 +33,7 @@ export function ThemeProvider({ children }: ThemeProviderProps) {
     } else {
       root.classList.remove("dark");
     }
-    window.localStorage.setItem("unicare-theme", theme);
+    window.localStorage.setItem("unicare-theme-v2", theme);
   }, [theme]);
 
   const value = useMemo(

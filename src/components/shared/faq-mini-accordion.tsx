@@ -112,11 +112,9 @@ export function FaqMiniAccordion() {
   return (
     <section
       ref={sectionRef}
-      className="relative w-full overflow-hidden bg-gradient-to-br from-[#0b1732] via-[#0b1d3f] to-[#0a1632] py-16"
+      className="relative w-full overflow-hidden bg-black py-16"
     >
-      <div className="pointer-events-none absolute -right-16 -top-20 h-72 w-72 rounded-full bg-cyan-400/12 blur-3xl" />
-      <div className="pointer-events-none absolute -bottom-24 left-1/3 h-64 w-64 rounded-full bg-blue-500/10 blur-3xl" />
-      <div className="pointer-events-none absolute inset-0 bg-[linear-gradient(to_right,rgba(148,163,184,0.06)_1px,transparent_1px),linear-gradient(to_bottom,rgba(148,163,184,0.05)_1px,transparent_1px)] bg-[size:38px_38px] opacity-35" />
+      <div className="pointer-events-none absolute inset-0 bg-[linear-gradient(to_right,rgba(255,255,255,0.04)_1px,transparent_1px),linear-gradient(to_bottom,rgba(255,255,255,0.04)_1px,transparent_1px)] bg-[size:38px_38px] opacity-35" />
 
       <div className="relative z-10 mx-auto w-full max-w-6xl px-4">
         <div className="hidden gap-8 md:grid md:grid-cols-[0.95fr_1.05fr]">

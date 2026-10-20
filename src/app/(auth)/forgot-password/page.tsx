@@ -1,11 +1,11 @@
-﻿"use client";
+"use client";
 
 import Image from "next/image";
 import Link from "next/link";
 import { useState } from "react";
 import { useAuth } from "@/context/auth-context";
-import { Button } from "@/components/shared/Button";
-import { Input } from "@/components/shared/Input";
+import { ScrollReveal } from "@/components/ui/scroll-reveal";
+import { LanguageSwitcher } from "@/components/shared/language-switcher";
 import { useLanguage } from "@/context/language-context";
 
 export default function ForgotPasswordPage() {
@@ -20,7 +20,6 @@ export default function ForgotPasswordPage() {
           sending: "යවමින්...",
           title: "ඔබගේ මුරපදය යළි සකසන්න",
           subtitle: "තත්පර කිහිපයකින් ආරක්ෂිත යළි සැකසුම් සබැඳිය ඔබගේ විද්‍යුත් තැපෑලට ලැබේ.",
-          badge: "ආරක්ෂිත ප්‍රවේශය",
           email: "විද්‍යුත් තැපෑල",
           emailPlaceholder: "name@example.com",
           submit: "යළි සැකසුම් සබැඳිය යවන්න",
@@ -28,7 +27,7 @@ export default function ForgotPasswordPage() {
           tip1: "ඔබගේ ලියාපදිංචි විද්‍යුත් තැපෑල ඇතුල් කරන්න",
           tip2: "Inbox සහ Spam ෆෝල්ඩර දෙකම පරීක්ෂා කරන්න",
           tip3: "ආරක්ෂාව සඳහා සබැඳිය කෙටි කාලයකින් කල් ඉකුත් වේ",
-          backToSignIn: "පිවිසුමට ආපසු යන්න"
+          backToSignIn: "← පිවිසුමට ආපසු යන්න"
         }
       : language === "ta"
         ? {
@@ -38,7 +37,6 @@ export default function ForgotPasswordPage() {
             sending: "அனுப்புகிறது...",
             title: "உங்கள் கடவுச்சொல்லை மீட்டமைக்கவும்",
             subtitle: "சில வினாடிகளில் பாதுகாப்பான மீட்டமைப்பு இணைப்பு உங்கள் மின்னஞ்சலுக்கு வரும்.",
-            badge: "பாதுகாப்பான அணுகல்",
             email: "மின்னஞ்சல்",
             emailPlaceholder: "name@example.com",
             submit: "மீட்டமைப்பு இணைப்பை அனுப்பவும்",
@@ -46,7 +44,7 @@ export default function ForgotPasswordPage() {
             tip1: "உங்கள் பதிவு செய்யப்பட்ட மின்னஞ்சலை உள்ளிடவும்",
             tip2: "Inbox மற்றும் Spam கோப்புறைகளையும் சரிபார்க்கவும்",
             tip3: "பாதுகாப்புக்காக இணைப்பு விரைவில் காலாவதியாகும்",
-            backToSignIn: "உள்நுழைவுக்கு திரும்பவும்"
+            backToSignIn: "← உள்நுழைவுக்கு திரும்பவும்"
           }
         : {
             invalid: "Please enter a valid email.",
@@ -55,7 +53,6 @@ export default function ForgotPasswordPage() {
             sending: "Sending...",
             title: "Reset your password",
             subtitle: "A secure reset link will arrive in your inbox in a few seconds.",
-            badge: "Secure access",
             email: "Email",
             emailPlaceholder: "name@example.com",
             submit: "Send reset link",
@@ -63,8 +60,9 @@ export default function ForgotPasswordPage() {
             tip1: "Enter the email used for your UniCare account",
             tip2: "Check both inbox and spam folders",
             tip3: "For security, the link expires shortly",
-            backToSignIn: "Back to sign in"
+            backToSignIn: "← Back to sign in"
           };
+
   const [message, setMessage] = useState<{ type: "success" | "error"; text: string } | null>(null);
   const [isSubmitting, setIsSubmitting] = useState(false);
 
@@ -90,81 +88,87 @@ export default function ForgotPasswordPage() {
   };
 
   return (
-    <div className="relative min-h-screen overflow-hidden bg-slate-950">
-      <div className="pointer-events-none absolute inset-0 opacity-70">
-        <div className="absolute -left-16 top-10 h-64 w-64 rounded-full bg-cyan-400/25 blur-3xl" />
-        <div className="absolute bottom-8 right-0 h-72 w-72 rounded-full bg-blue-500/30 blur-3xl" />
-      </div>
-      <div className="relative mx-auto flex min-h-screen w-full max-w-3xl items-center px-4 py-10 sm:px-8">
-        <section className="w-full">
-          <div className="w-full rounded-3xl border border-slate-200/70 bg-white/95 p-6 shadow-2xl backdrop-blur-sm sm:p-8">
-            <div className="mb-6 space-y-3">
-              <div className="inline-flex items-center rounded-xl bg-white p-2 shadow-md ring-1 ring-slate-200">
-                <Image src="/logo.png" alt="UniCare Connect" width={120} height={48} className="h-10 w-auto" priority />
-              </div>
-              <h1 className="text-3xl font-semibold text-slate-900">{text.title}</h1>
-              <p className="text-sm text-slate-600">{text.subtitle}</p>
+    <div className="relative flex h-screen w-full flex-col overflow-hidden bg-black text-white">
+      <div className="pointer-events-none absolute inset-0 bg-[linear-gradient(to_right,rgba(255,255,255,0.035)_1px,transparent_1px),linear-gradient(to_bottom,rgba(255,255,255,0.035)_1px,transparent_1px)] bg-[size:44px_44px]" />
+
+      {/* Top minimal bar */}
+      <header className="relative z-10 mx-auto flex w-full max-w-6xl shrink-0 items-center justify-between px-6 pt-5">
+        <Link href="/" aria-label="UniCare Connect Home" className="inline-flex items-center">
+          <Image
+            src="/logo.png"
+            alt="UniCare Connect"
+            width={150}
+            height={44}
+            className="h-9 w-auto object-contain"
+            priority
+          />
+        </Link>
+        <LanguageSwitcher />
+      </header>
+
+      <div className="relative z-10 mx-auto flex flex-1 w-full max-w-lg items-center justify-center px-4 py-2">
+        <ScrollReveal className="w-full">
+          <div className="w-full rounded-3xl border border-white/15 bg-neutral-950/95 p-6 shadow-2xl sm:p-7">
+            <div className="mb-6 space-y-2">
+              <h1 className="text-2xl font-bold tracking-tight text-white sm:text-3xl">{text.title}</h1>
+              <p className="text-sm text-neutral-400">{text.subtitle}</p>
             </div>
 
             <form className="space-y-4" onSubmit={handleSubmit}>
               <div className="space-y-2">
-                <label className="text-sm font-medium text-slate-800" htmlFor="email">
+                <label className="text-sm font-medium text-neutral-200" htmlFor="email">
                   {text.email}
                 </label>
-                <div className="relative">
-                  <span className="pointer-events-none absolute inset-y-0 left-3 flex items-center text-slate-400">
-                    <svg viewBox="0 0 24 24" className="h-4 w-4" fill="none" stroke="currentColor" strokeWidth="2">
-                      <path d="M3 6h18v12H3z" />
-                      <path d="m3 7 9 7 9-7" />
-                    </svg>
-                  </span>
-                  <Input
-                    id="email"
-                    name="email"
-                    type="email"
-                    required
-                    autoComplete="email"
-                    aria-required="true"
-                    placeholder={text.emailPlaceholder}
-                    className="h-11 pl-10"
-                  />
-                </div>
+                <input
+                  id="email"
+                  name="email"
+                  type="email"
+                  required
+                  autoComplete="email"
+                  aria-required="true"
+                  placeholder={text.emailPlaceholder}
+                  className="h-11 w-full rounded-xl border border-white/15 bg-neutral-900 px-3.5 text-sm text-white placeholder:text-neutral-500 focus:border-white/40 focus:outline-none"
+                />
               </div>
 
               {message ? (
                 <p
                   role="status"
-                  className={`rounded-xl border px-3 py-2 text-sm ${
+                  className={`rounded-xl border px-3.5 py-2.5 text-sm ${
                     message.type === "success"
-                      ? "border-emerald-200 bg-emerald-50 text-emerald-700"
-                      : "border-rose-200 bg-rose-50 text-rose-700"
+                      ? "border-emerald-500/30 bg-emerald-500/10 text-emerald-300"
+                      : "border-rose-500/30 bg-rose-500/10 text-rose-300"
                   }`}
                 >
                   {message.text}
                 </p>
               ) : null}
 
-              <Button type="submit" disabled={isSubmitting} className="h-11 w-full text-sm font-semibold">
+              <button
+                type="submit"
+                disabled={isSubmitting}
+                className="h-11 w-full rounded-full bg-white text-sm font-semibold text-black transition hover:bg-neutral-200 disabled:opacity-50"
+              >
                 {isSubmitting ? text.sending : text.submit}
-              </Button>
+              </button>
             </form>
 
-            <div className="mt-6 rounded-2xl border border-slate-200 bg-slate-50 p-4">
-              <p className="text-sm font-semibold text-slate-800">{text.tipTitle}</p>
-              <ul className="mt-2 space-y-1 text-sm text-slate-600">
-                <li>{text.tip1}</li>
-                <li>{text.tip2}</li>
-                <li>{text.tip3}</li>
+            <div className="mt-6 rounded-2xl border border-white/10 bg-black/60 p-4">
+              <p className="text-xs font-semibold uppercase tracking-wider text-neutral-300">{text.tipTitle}</p>
+              <ul className="mt-2 space-y-1.5 text-xs text-neutral-400">
+                <li>• {text.tip1}</li>
+                <li>• {text.tip2}</li>
+                <li>• {text.tip3}</li>
               </ul>
             </div>
 
             <div className="mt-6">
-              <Link href="/login" className="text-sm font-medium text-blue-700 hover:text-blue-800 hover:underline">
+              <Link href="/login" className="text-sm font-medium text-neutral-300 transition hover:text-white">
                 {text.backToSignIn}
               </Link>
             </div>
           </div>
-        </section>
+        </ScrollReveal>
       </div>
     </div>
   );

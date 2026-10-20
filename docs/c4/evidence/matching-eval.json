@@ -1,0 +1,171 @@
+{
+  "warning": "SYNTHETIC DATA: validates the pipeline, not real-world accuracy.",
+  "model_version": "c4-matching-v1-synthetic",
+  "seed": 42,
+  "data": {
+    "mentors": 60,
+    "students": 480,
+    "assignment_intake": 150,
+    "total_free_capacity": 182
+  },
+  "ahp": {
+    "criteria": [
+      "skill",
+      "interest",
+      "language",
+      "availability",
+      "capacity"
+    ],
+    "weights": [
+      0.36894,
+      0.109265,
+      0.206265,
+      0.206265,
+      0.109265
+    ],
+    "lambda_max": 5.013263,
+    "consistency_ratio": 0.00296,
+    "note": "Provisional pairwise judgements drafted by the research team; validate with SLIIT mentors."
+  },
+  "ranking": {
+    "baseline_skill_cosine": {
+      "precision_at_3": 0.465972,
+      "precision_at_3_ci95": [
+        0.439566,
+        0.491684
+      ],
+      "ndcg_at_5": 0.435681,
+      "ndcg_at_5_ci95": [
+        0.413326,
+        0.459098
+      ]
+    },
+    "baseline_skill_cosine_capacity_filter": {
+      "precision_at_3": 0.596528,
+      "precision_at_3_ci95": [
+        0.570139,
+        0.62434
+      ],
+      "ndcg_at_5": 0.536407,
+      "ndcg_at_5_ci95": [
+        0.51177,
+        0.559746
+      ]
+    },
+    "proposed_ahp_multi_criteria": {
+      "precision_at_3": 0.925694,
+      "precision_at_3_ci95": [
+        0.9125,
+        0.938889
+      ],
+      "ndcg_at_5": 0.859171,
+      "ndcg_at_5_ci95": [
+        0.84656,
+        0.871076
+      ]
+    },
+    "ablation_without_skill": {
+      "precision_at_3": 0.407639,
+      "precision_at_3_ci95": [
+        0.379861,
+        0.432639
+      ],
+      "ndcg_at_5": 0.347354,
+      "ndcg_at_5_ci95": [
+        0.325398,
+        0.369818
+      ]
+    },
+    "ablation_without_interest": {
+      "precision_at_3": 0.909028,
+      "precision_at_3_ci95": [
+        0.895139,
+        0.923611
+      ],
+      "ndcg_at_5": 0.834105,
+      "ndcg_at_5_ci95": [
+        0.820691,
+        0.846185
+      ]
+    },
+    "ablation_without_language": {
+      "precision_at_3": 0.718056,
+      "precision_at_3_ci95": [
+        0.690955,
+        0.743767
+      ],
+      "ndcg_at_5": 0.700692,
+      "ndcg_at_5_ci95": [
+        0.67844,
+        0.720533
+      ]
+    },
+    "ablation_without_availability": {
+      "precision_at_3": 0.802083,
+      "precision_at_3_ci95": [
+        0.780556,
+        0.824306
+      ],
+      "ndcg_at_5": 0.701918,
+      "ndcg_at_5_ci95": [
+        0.681227,
+        0.721582
+      ]
+    },
+    "ablation_without_capacity": {
+      "precision_at_3": 0.938889,
+      "precision_at_3_ci95": [
+        0.926372,
+        0.951389
+      ],
+      "ndcg_at_5": 0.879083,
+      "ndcg_at_5_ci95": [
+        0.868766,
+        0.890137
+      ]
+    },
+    "difference_proposed_minus_baseline": {
+      "ndcg_at_5": 0.423489,
+      "ndcg_at_5_ci95": [
+        0.401253,
+        0.447092
+      ]
+    }
+  },
+  "assignment": {
+    "baseline_top_skill_mentor": {
+      "students_assigned": 150,
+      "students_unassigned": 0,
+      "students_beyond_capacity": 79,
+      "mentors_over_capacity": 21,
+      "load_ratio_gini": 0.450212,
+      "max_load_ratio": 3.333333,
+      "mean_skill_fit": 0.801132,
+      "share_language_preferred": 0.666667,
+      "share_some_shared_slot": 0.666667
+    },
+    "greedy_first_come_capacity_aware": {
+      "students_assigned": 150,
+      "students_unassigned": 0,
+      "students_beyond_capacity": 0,
+      "mentors_over_capacity": 0,
+      "load_ratio_gini": 0.087102,
+      "max_load_ratio": 1.0,
+      "mean_skill_fit": 0.645725,
+      "share_language_preferred": 0.913333,
+      "share_some_shared_slot": 0.906667
+    },
+    "optimal_capacity_aware_hungarian": {
+      "students_assigned": 150,
+      "students_unassigned": 0,
+      "students_beyond_capacity": 0,
+      "mentors_over_capacity": 0,
+      "load_ratio_gini": 0.079819,
+      "max_load_ratio": 1.0,
+      "mean_skill_fit": 0.703569,
+      "share_language_preferred": 0.913333,
+      "share_some_shared_slot": 0.94
+    }
+  },
+  "labels": "Simulated expert relevance (hidden world with its own weights, non-linear skill term, language penalty and noise)."
+}
