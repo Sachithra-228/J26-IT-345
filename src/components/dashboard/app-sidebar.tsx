@@ -2,9 +2,10 @@
 
 import { useEffect, useMemo, useRef, useState } from "react";
 import clsx from "clsx";
+import Image from "next/image";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
-import { User, PanelLeftClose, ChevronDown, UserCircle, LogOut, Moon, Sun } from "lucide-react";
+import { User, PanelLeftClose, ChevronRight, UserCircle, LogOut, Moon, Sun } from "lucide-react";
 import {
   Sidebar,
   SidebarContent,
@@ -176,19 +177,20 @@ export function AppSidebar({ role, user }: AppSidebarProps) {
   return (
     <Sidebar>
       <SidebarHeader className="gap-2">
-        <div className="flex min-w-0 flex-1 items-center gap-2">
-          <div className="flex size-9 shrink-0 items-center justify-center rounded-lg bg-primary text-white">
-            <span className="text-sm font-semibold">UC</span>
-          </div>
-          {!isCompact && (
-            <div className="min-w-0 flex-1">
-              <p className="truncate text-sm font-semibold text-slate-900 dark:text-white">UniCare Connect</p>
-              <p className="truncate text-xs text-slate-500">{config.label}</p>
-            </div>
-          )}
-        </div>
+        {!isCompact ? (
+          <Link href="/" className="flex min-w-0 flex-1 items-center gap-2.5" aria-label="UniCare Connect">
+            <Image
+              src="/logo.png"
+              alt="UniCare Connect"
+              width={136}
+              height={38}
+              className="h-8 w-auto object-contain"
+              priority
+            />
+          </Link>
+        ) : null}
         <SidebarTrigger className="shrink-0">
-          <PanelLeftClose className="size-5" />
+          <PanelLeftClose className="size-5 text-white dark:text-neutral-800" />
         </SidebarTrigger>
       </SidebarHeader>
 
@@ -198,7 +200,7 @@ export function AppSidebar({ role, user }: AppSidebarProps) {
           <SidebarMenu>
             {config.sections.map((section: DashboardSection) => {
               const href = `/dashboard/${role}#${section.id}`;
-              const isActive = pathname === `/dashboard/${role}` && hash === section.id;
+              const isActive = pathname === `/dashboard/${role}` && (hash || config.sections[0]?.id) === section.id;
               const SectionIcon = getSectionIcon(section.id);
               const unreadCount = sectionNotificationCounts[section.id] ?? 0;
               const handleClick = (e: React.MouseEvent) => {
@@ -211,18 +213,41 @@ export function AppSidebar({ role, user }: AppSidebarProps) {
               return (
                 <SidebarMenuItem key={section.id}>
                   <SidebarMenuButton asChild isActive={isActive}>
-                    <Link href={href} onClick={handleClick} className="flex w-full items-center gap-3">
+                    <Link href={href} onClick={handleClick} className="flex w-full items-center gap-3.5">
                       <span className="relative inline-flex shrink-0">
-                        <SectionIcon className="size-5 text-slate-600 dark:text-slate-400" />
+                        <SectionIcon
+                          className={clsx(
+                            "size-[18px] transition-colors",
+                            isActive
+                              ? "text-white dark:text-white"
+                              : "text-white dark:text-neutral-800"
+                          )}
+                        />
                         {isCompact && unreadCount > 0 ? (
-                          <span className="absolute -right-1 -top-1 h-2.5 w-2.5 rounded-full bg-primary" aria-hidden />
+                          <span className="absolute -right-1 -top-1 h-2 w-2 rounded-full bg-white dark:bg-neutral-900" aria-hidden />
                         ) : null}
                       </span>
                       {!isCompact && (
                         <>
-                          <span className="flex-1">{section.menuLabel}</span>
+                          <span
+                            className={clsx(
+                              "flex-1 truncate transition-colors",
+                              isActive
+                                ? "text-white dark:text-white"
+                                : "text-white dark:text-neutral-800"
+                            )}
+                          >
+                            {section.menuLabel}
+                          </span>
                           {unreadCount > 0 ? (
-                            <span className="inline-flex min-w-5 items-center justify-center rounded-full bg-primary px-1.5 py-0.5 text-[10px] font-semibold leading-none text-white">
+                            <span
+                              className={clsx(
+                                "inline-flex min-w-5 items-center justify-center rounded-full px-1.5 py-0.5 text-[10px] font-bold leading-none",
+                                isActive
+                                  ? "bg-white text-black dark:bg-white dark:text-black"
+                                  : "bg-white text-black dark:bg-neutral-900 dark:text-white"
+                              )}
+                            >
                               {unreadCount > 99 ? "99+" : unreadCount}
                             </span>
                           ) : null}
@@ -238,88 +263,91 @@ export function AppSidebar({ role, user }: AppSidebarProps) {
       </SidebarContent>
 
       <SidebarFooter>
-        <div className="mb-2">
-          <button
-            type="button"
-            onClick={toggleTheme}
-            className={clsx(
-              "flex w-full items-center rounded-lg border border-slate-200 bg-white px-3 py-2.5 text-left text-sm font-medium text-slate-700 transition-colors hover:bg-slate-100 dark:border-slate-800 dark:bg-slate-950 dark:text-slate-200 dark:hover:bg-slate-800",
-              isCompact ? "justify-center px-2" : "gap-2"
-            )}
-            aria-label={theme === "dark" ? "Switch to light mode" : "Switch to dark mode"}
-          >
-            {theme === "dark" ? <Sun className="size-4 shrink-0" /> : <Moon className="size-4 shrink-0" />}
-            {!isCompact && <span>{theme === "dark" ? "Light mode" : "Dark mode"}</span>}
-          </button>
-        </div>
-
         <div className="relative" ref={accountRef}>
           <button
             type="button"
             onClick={() => setAccountOpen((o) => !o)}
-            className="flex w-full items-center gap-2 rounded-lg border border-slate-200 bg-white px-3 py-2.5 text-left transition-colors hover:bg-slate-50 dark:border-slate-800 dark:bg-slate-950 dark:hover:bg-slate-800/80"
+            className={clsx(
+              "flex w-full items-center gap-2.5 rounded-xl border border-white/15 bg-neutral-950 px-3 py-2.5 text-left text-white transition-colors hover:border-white/30 hover:bg-neutral-900 dark:border-neutral-400/50 dark:bg-white/50 dark:text-neutral-900 dark:hover:bg-white/75",
+              isCompact && "justify-center px-1.5"
+            )}
             aria-expanded={accountOpen}
             aria-haspopup="true"
           >
-            <div className="flex size-9 shrink-0 items-center justify-center rounded-full bg-slate-200 text-slate-600 dark:bg-slate-700 dark:text-slate-300">
-              <User className="size-5" />
+            <div className="flex size-8 shrink-0 items-center justify-center overflow-hidden rounded-full bg-white/15 text-white dark:bg-neutral-300 dark:text-neutral-800">
+              {user?.profilePic ? (
+                <img src={user.profilePic} alt="" className="h-full w-full object-cover" />
+              ) : (
+                <User className="size-4 text-white dark:text-neutral-800" />
+              )}
             </div>
             {!isCompact && user && (
               <div className="min-w-0 flex-1">
-                <p className="truncate text-sm font-medium text-slate-900 dark:text-white">{user.name}</p>
-                <p className="truncate text-xs text-slate-500">{user.email}</p>
+                <p className="truncate text-xs font-semibold text-white dark:text-neutral-900">{user.name}</p>
+                <p className="truncate text-[11px] text-white/60 dark:text-neutral-600">{user.email}</p>
               </div>
             )}
             {!isCompact && (
-              <ChevronDown
-                className={clsx("size-4 shrink-0 text-slate-400 transition-transform", accountOpen && "rotate-180")}
+              <ChevronRight
+                className={clsx(
+                  "size-4 shrink-0 text-white/70 transition-transform dark:text-neutral-600",
+                  accountOpen && "translate-x-0.5"
+                )}
               />
             )}
           </button>
 
           {accountOpen && (
             <div
-              className="absolute bottom-full left-0 z-50 mb-1 min-w-[12rem] overflow-hidden rounded-lg border border-slate-200 bg-white shadow-lg dark:border-slate-800 dark:bg-slate-900"
-              style={
-                isCompact
-                  ? { left: "100%", bottom: 0, marginBottom: 0, marginLeft: 8, minWidth: "11rem" }
-                  : { right: 0 }
-              }
+              className={clsx(
+                "absolute z-50 min-w-[11.5rem] overflow-hidden rounded-2xl border border-white/15 bg-neutral-950 p-1.5 text-white shadow-2xl dark:border-neutral-300 dark:bg-neutral-200/95 dark:text-neutral-900 dark:backdrop-blur-xl",
+                isMobile
+                  ? "bottom-full left-0 right-0 mb-2"
+                  : "bottom-0 left-full ml-3"
+              )}
               role="menu"
             >
-              {user && (
-                <div className="border-b border-slate-200 px-3 py-2.5 dark:border-slate-800">
-                  <p className="truncate text-sm font-medium text-slate-900 dark:text-white">{user.name}</p>
-                  <p className="truncate text-xs text-slate-500">{user.email}</p>
-                </div>
-              )}
-              <div className="py-1">
-                <Link
-                  href={`/dashboard/${role}#profile`}
-                  onClick={() => {
-                    setAccountOpen(false);
-                    if (isMobile) setMobileOpen(false);
-                  }}
-                  className="flex items-center gap-2 px-3 py-2 text-sm text-slate-700 hover:bg-slate-100 dark:text-slate-200 dark:hover:bg-slate-800"
-                  role="menuitem"
-                >
-                  <UserCircle className="size-4 shrink-0" />
-                  {text.account}
-                </Link>
-                <button
-                  type="button"
-                  onClick={() => {
-                    setAccountOpen(false);
-                    if (isMobile) setMobileOpen(false);
-                    signOutUser();
-                  }}
-                  className="flex w-full items-center gap-2 px-3 py-2 text-sm text-slate-700 hover:bg-slate-100 dark:text-slate-200 dark:hover:bg-slate-800"
-                  role="menuitem"
-                >
-                  <LogOut className="size-4 shrink-0" />
-                  {text.signOut}
-                </button>
-              </div>
+              <Link
+                href={`/dashboard/${role}#profile`}
+                onClick={() => {
+                  setAccountOpen(false);
+                  if (isMobile) setMobileOpen(false);
+                }}
+                className="flex items-center gap-2.5 rounded-xl px-3 py-2 text-xs font-medium text-white/90 transition-colors hover:bg-white/10 hover:text-white dark:text-neutral-800 dark:hover:bg-black/10 dark:hover:text-black"
+                role="menuitem"
+              >
+                <UserCircle className="size-4 shrink-0 text-white dark:text-neutral-800" />
+                {text.account}
+              </Link>
+              <button
+                type="button"
+                onClick={() => {
+                  toggleTheme();
+                }}
+                className="flex w-full items-center gap-2.5 rounded-xl px-3 py-2 text-xs font-medium text-white/90 transition-colors hover:bg-white/10 hover:text-white dark:text-neutral-800 dark:hover:bg-black/10 dark:hover:text-black"
+                role="menuitem"
+                aria-label={theme === "dark" ? "Switch to light mode" : "Switch to dark mode"}
+              >
+                {theme === "dark" ? (
+                  <Sun className="size-4 shrink-0 text-white dark:text-neutral-800" />
+                ) : (
+                  <Moon className="size-4 shrink-0 text-white dark:text-neutral-800" />
+                )}
+                <span>{theme === "dark" ? "Light mode" : "Dark mode"}</span>
+              </button>
+              <button
+                type="button"
+                onClick={() => {
+                  setAccountOpen(false);
+                  if (isMobile) setMobileOpen(false);
+                  signOutUser();
+                }}
+                className="mt-0.5 flex w-full items-center gap-2.5 rounded-xl border-t border-white/10 px-3 py-2 text-xs font-medium text-rose-400 transition-colors hover:bg-white/10 hover:text-rose-300 dark:border-neutral-300 dark:text-rose-600 dark:hover:bg-rose-500/10"
+                role="menuitem"
+              >
+                <LogOut className="size-4 shrink-0" />
+                {text.signOut}
+              </button>
             </div>
           )}
         </div>

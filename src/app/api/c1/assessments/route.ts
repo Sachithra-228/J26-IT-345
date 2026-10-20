@@ -2,10 +2,13 @@ import { NextRequest } from "next/server";
 import { isDemoMode, isMongoConnectionError, jsonResponse } from "@/lib/api";
 import {
   deleteDemoAssessment,
+  fromEncryptedAssessmentDoc,
   getDemoAssessment,
   listDemoAssessments,
   saveDemoAssessment,
   toAdminQueueItem,
+  toEncryptedAssessmentDoc,
+  type EncryptedAssessmentDoc,
   type StoredAssessment
 } from "@/lib/c1/assessment-store";
 import { illustrativeScholarships } from "@/lib/c1/demo-scholarships";
@@ -77,7 +80,7 @@ export async function GET(request: NextRequest) {
     try {
       const database = await getMongoDatabase();
       const docs = await database.collection(COLLECTION).find({}).sort({ "assessment.vulnerabilityIndex": -1 }).limit(200).toArray();
-      const items = docs.map((d) => toAdminQueueItem(d as unknown as StoredAssessment, String(d._id)));
+      const items = docs.map((d) => toAdminQueueItem(d as unknown as EncryptedAssessmentDoc, String(d._id)));
       return jsonResponse({ items });
     } catch (error) {
       if (isMongoConnectionError(error)) return jsonResponse({ message: "Database temporarily unavailable." }, 503);
@@ -102,14 +105,15 @@ export async function GET(request: NextRequest) {
     ];
     if (ors.length === 0) return jsonResponse({ assessment: null });
     const doc = await database.collection(COLLECTION).findOne({ $or: ors });
-    return jsonResponse(doc ? present(doc as unknown as StoredAssessment, catalogue) : { assessment: null });
+    const record = doc ? fromEncryptedAssessmentDoc(doc as unknown as EncryptedAssessmentDoc) : null;
+    return jsonResponse(record ? present(record, catalogue) : { assessment: null });
   } catch (error) {
     if (isMongoConnectionError(error)) return jsonResponse({ message: "Database temporarily unavailable." }, 503);
     throw error;
   }
 }
 
-/** POST /api/c1/assessments - a student saves their assessment (explicit consent required). */
+/** POST /api/c1/assessments - a student saves their assessment (explicit consent required; encrypted at rest with AES-256-GCM). */
 export async function POST(request: NextRequest) {
   const authResult = await requireSession(request);
   if (authResult.error) return authResult.error;
@@ -149,7 +153,7 @@ export async function POST(request: NextRequest) {
   try {
     const database = await getMongoDatabase();
     const filter = record.userId ? { userId: record.userId } : { firebaseUid: record.firebaseUid };
-    await database.collection(COLLECTION).replaceOne(filter, record, { upsert: true });
+    await database.collection(COLLECTION).replaceOne(filter, toEncryptedAssessmentDoc(record), { upsert: true });
     return jsonResponse(present(record, catalogue), 201);
   } catch (error) {
     if (isMongoConnectionError(error)) return jsonResponse({ message: "Database temporarily unavailable." }, 503);

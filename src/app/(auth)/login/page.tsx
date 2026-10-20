@@ -1,4 +1,4 @@
-﻿"use client";
+"use client";
 
 import Link from "next/link";
 import Image from "next/image";
@@ -6,11 +6,10 @@ import { useEffect, useState } from "react";
 import { useRouter, useSearchParams } from "next/navigation";
 import { useAuth } from "@/context/auth-context";
 import { useLanguage, type Language } from "@/context/language-context";
-import { Button } from "@/components/shared/Button";
 import { Input } from "@/components/shared/Input";
+import { ScrollReveal } from "@/components/ui/scroll-reveal";
 import { getDashboardPathForRole } from "@/lib/auth-redirect";
 import { loginSchema, registerSchema, optionalUrlSchema, sriLankaPhoneSchema } from "@/lib/validation";
-import { UserRole as AppUserRole } from "@/types";
 import {
   OTHER_UNIVERSITY_VALUE,
   getDegreeProgramsForUniversity,
@@ -194,7 +193,7 @@ const AUTH_TEXT: Record<
     accountCreatedSuccess:
       "Your account was created successfully. Please check your email and verify your account before signing in.",
     selectRole: "Select your role",
-    rolePlaceholder: "Search or choose your role",
+    rolePlaceholder: "Choose your role",
     roleAria: "Role",
     fullName: "Full name",
     yourFullName: "Your full name",
@@ -203,10 +202,10 @@ const AUTH_TEXT: Record<
     confirmPassword: "Confirm password",
     min6Chars: "Minimum 6 characters",
     reenterPassword: "Re-enter password",
-    universityPlaceholder: "Search or choose your university",
+    universityPlaceholder: "Choose your university",
     universityAria: "University",
     enterUniversityName: "Enter university name",
-    degreePlaceholder: "Search or select degree program",
+    degreePlaceholder: "Select degree program",
     degreeAria: "Degree program",
     enterDegreeProgram: "Enter degree program",
     pleaseSpecify: "Please specify",
@@ -236,261 +235,169 @@ const AUTH_TEXT: Record<
     ok: "OK"
   },
   si: {
-    verifyEmailFirst: "à¶´à·…à¶¸à·”à·€ à¶”à¶¶à¶œà·š à¶Šà¶¸à·šà¶½à·Š à¶½à·’à¶´à·’à¶±à¶º à¶­à·„à·€à·”à¶»à·” à¶šà¶» à¶´à·’à·€à·’à·ƒà·™à¶±à·Šà¶±.",
-    noAccountProfile: "à¶œà·’à¶«à·”à¶¸à·Š à¶´à·à¶­à·’à¶šà¶©à¶šà·Š à·„à¶¸à·” à¶±à·œà·€à·“à¶º. à·ƒà·„à·à¶º à¶…à¶¸à¶­à¶±à·Šà¶±.",
-    accountDeleted: "à¶¸à·™à¶¸ à¶œà·’à¶«à·”à¶¸ à¶¸à¶šà· à¶¯à¶¸à· à¶‡à¶­.",
-    accountBlocked: "à¶”à¶¶à¶œà·š à¶œà·’à¶«à·”à¶¸ à¶…à·€à·„à·’à¶» à¶šà¶» à¶‡à¶­. à·ƒà·„à·à¶º à¶…à¶¸à¶­à¶±à·Šà¶±.",
-    dbConnectionFailed: "à¶¯à¶­à·Šà¶­ à·ƒà¶¸à·”à¶¯à· à·ƒà¶¸à·Šà¶¶à¶±à·Šà¶°à¶­à·à·€à¶º à¶…à·ƒà¶¸à¶­à·Š à·€à·’à¶º. à¶¸à·’à¶±à·’à¶­à·Šà¶­à·”à·€à¶šà·’à¶±à·Š à¶±à·à·€à¶­ à¶‹à¶­à·Šà·ƒà·à·„ à¶šà¶»à¶±à·Šà¶±.",
-    unableValidateStatus: "à¶¯à·à¶±à¶§ à¶œà·’à¶«à·”à¶¸à·Š à¶­à¶­à·Šà¶­à·Šà·€à¶º à¶­à·„à·€à·”à¶»à·” à¶šà·… à¶±à·œà·„à·à¶š. à¶±à·à·€à¶­ à¶‹à¶­à·Šà·ƒà·à·„ à¶šà¶»à¶±à·Šà¶±.",
-    incorrectEmailOrPassword: "à¶Šà¶¸à·šà¶½à·Š à·„à· à¶¸à·”à¶»à¶´à¶¯à¶º à·€à·à¶»à¶¯à·’à¶ºà·’. à¶±à·à·€à¶­ à¶‹à¶­à·Šà·ƒà·à·„ à¶šà¶»à¶±à·Šà¶±.",
-    noAccountForEmail: "à¶¸à·™à¶¸ à¶Šà¶¸à·šà¶½à·Š à·ƒà¶³à·„à· à¶œà·’à¶«à·”à¶¸à¶šà·Š à¶±à·œà¶¸à·à¶­.",
-    incorrectPassword: "à¶¸à·”à¶»à¶´à¶¯à¶º à·€à·à¶»à¶¯à·’à¶ºà·’. à¶±à·à·€à¶­ à¶‹à¶­à·Šà·ƒà·à·„ à¶šà¶»à¶±à·Šà¶±.",
-    tooManyLoginAttempts: "à¶´à·Šâ€à¶»à·€à·šà· à¶‹à¶­à·Šà·ƒà·à·„à¶ºà¶±à·Š à·€à·à¶©à·’à¶ºà·’. à¶§à·’à¶šà¶šà·Š à¶»à·à¶³à·“ à¶±à·à·€à¶­ à¶‹à¶­à·Šà·ƒà·à·„ à¶šà¶»à¶±à·Šà¶±.",
-    networkIssue: "à¶¢à·à¶½ à¶œà·à¶§à·…à·”à·€à¶šà·Š à¶‡à¶­. à·ƒà¶¸à·Šà¶¶à¶±à·Šà¶°à¶­à·à·€à¶º à¶´à¶»à·“à¶šà·Šà·‚à· à¶šà¶» à¶±à·à·€à¶­ à¶‹à¶­à·Šà·ƒà·à·„ à¶šà¶»à¶±à·Šà¶±.",
-    invalidEmail: "à¶šà¶»à·”à¶«à·à¶šà¶» à·€à¶½à¶‚à¶œà·” à¶Šà¶¸à·šà¶½à·Š à¶½à·’à¶´à·’à¶±à¶ºà¶šà·Š à¶‡à¶­à·”à·…à¶­à·Š à¶šà¶»à¶±à·Šà¶±.",
-    unableSignIn: "à¶´à·’à·€à·’à·ƒà·“à¶¸à¶§ à¶±à·œà·„à·à¶šà·’ à·€à·’à¶º. à¶±à·à·€à¶­ à¶‹à¶­à·Šà·ƒà·à·„ à¶šà¶»à¶±à·Šà¶±.",
-    accountCreationFailed: "à¶”à¶¶à¶œà·š à¶´à·à¶­à·’à¶šà¶© à·ƒà·”à¶»à¶šà·’à¶± à¶…à¶­à¶»à¶­à·”à¶» à¶œà·’à¶«à·”à¶¸à·Š à¶±à·’à¶»à·Šà¶¸à·à¶«à¶º à¶…à·ƒà¶¸à¶­à·Š à·€à·’à¶º. à¶±à·à·€à¶­ à¶‹à¶­à·Šà·ƒà·à·„ à¶šà¶»à¶±à·Šà¶±.",
-    verificationEmailFailed: "à¶œà·’à¶«à·”à¶¸ à¶±à·’à¶»à·Šà¶¸à·à¶«à¶º à¶šà·…à·šà¶º, à¶±à¶¸à·”à¶­à·Š à¶­à·„à·€à·”à¶»à·” à¶šà·’à¶»à·“à¶¸à·š à¶Šà¶¸à·šà¶½à·Š à¶ºà·à·€à·“à¶¸ à¶…à·ƒà¶¸à¶­à·Š à·€à·’à¶º. à¶±à·à·€à¶­ à¶‹à¶­à·Šà·ƒà·à·„ à¶šà¶»à¶±à·Šà¶±.",
-    emailAlreadyInUse: "à¶¸à·™à¶¸ à¶Šà¶¸à·šà¶½à·Š à·ƒà¶¸à¶Ÿ à¶œà·’à¶«à·”à¶¸à¶šà·Š à¶¯à·à¶±à¶§à¶¸à¶­à·Š à¶‡à¶­. à¶´à·’à·€à·’à·ƒà·™à¶±à·Šà¶± à·„à· à·€à·™à¶±à¶­à·Š à¶Šà¶¸à·šà¶½à·Š à¶·à·à·€à·’à¶­à· à¶šà¶»à¶±à·Šà¶±.",
-    strongerPassword: "à·€à¶©à· à·à¶šà·Šà¶­à·’à¶¸à¶­à·Š à¶¸à·”à¶»à¶´à¶¯à¶ºà¶šà·Š à¶·à·à·€à·’à¶­à· à¶šà¶»à¶±à·Šà¶± (à¶…à·€à¶¸ à¶…à¶šà·Šà·‚à¶» 6à¶šà·Š).",
-    emailPasswordSignupDisabled: "Email/password à¶½à·’à¶ºà·à¶´à¶¯à·’à¶‚à¶ à·’à¶º à·ƒà¶šà·Šâ€à¶»à·“à¶º à¶šà¶» à¶±à·à¶­. Firebase Console à·„à·’ Authentication -> Sign-in method à¶ºà¶§à¶­à·š à·ƒà¶šà·Šâ€à¶»à·“à¶º à¶šà¶»à¶±à·Šà¶±.",
-    authMisconfigured: "Authentication à·ƒà·à¶šà·ƒà·”à¶¸ à·€à·à¶»à¶¯à·’à¶ºà·’. Firebase API key à¶´à¶»à·“à¶šà·Šà·‚à· à¶šà¶»à¶±à·Šà¶±.",
-    tooManyAttempts: "à¶‹à¶­à·Šà·ƒà·à·„à¶ºà¶±à·Š à·€à·à¶©à·’à¶ºà·’. à¶´à·ƒà·”à·€ à¶±à·à·€à¶­ à¶‹à¶­à·Šà·ƒà·à·„ à¶šà¶»à¶±à·Šà¶±.",
-    unableCreateAccount: "à¶œà·’à¶«à·”à¶¸ à·ƒà·‘à¶¯à·“à¶¸à¶§ à¶±à·œà·„à·à¶šà·’ à·€à·’à¶º. à¶±à·à·€à¶­ à¶‹à¶­à·Šà·ƒà·à·„ à¶šà¶»à¶±à·Šà¶±.",
-    validEmailPasswordRequired: "à¶šà¶»à·”à¶«à·à¶šà¶» à·€à¶½à¶‚à¶œà·” à¶Šà¶¸à·šà¶½à·Š à·ƒà·„ à¶¸à·”à¶»à¶´à¶¯à¶ºà¶šà·Š à¶½à¶¶à· à¶¯à·™à¶±à·Šà¶±.",
-    adminSignupDisabled: "Admin account signup is disabled. Please contact support.",
-    selectRoleContinue: "à¶‰à¶¯à·’à¶»à·’à¶ºà¶§ à¶ºà·à¶¸à¶§ à¶”à¶¶à¶œà·š à¶·à·–à¶¸à·’à¶šà·à·€ à¶­à·à¶»à¶±à·Šà¶±.",
-    fullNameRequired: "à·ƒà¶¸à·Šà¶´à·–à¶»à·Šà¶« à¶±à¶¸ à¶…à¶±à·’à·€à·à¶»à·Šà¶ºà¶ºà·’.",
-    atLeastTwoChars: "à¶…à·€à¶¸ à·€à·à¶ºà·™à¶±à·Š à¶…à¶šà·Šà·‚à¶» 2à¶šà·Š à¶‡à¶­à·”à·…à¶­à·Š à¶šà¶»à¶±à·Šà¶±.",
-    emailRequired: "à¶Šà¶¸à·šà¶½à·Š à¶…à¶±à·’à·€à·à¶»à·Šà¶ºà¶ºà·’.",
-    passwordRequired: "à¶¸à·”à¶»à¶´à¶¯à¶º à¶…à¶±à·’à·€à·à¶»à·Šà¶ºà¶ºà·’.",
-    passwordAtLeast6: "à¶¸à·”à¶»à¶´à¶¯à¶º à¶…à·€à¶¸ à·€à·à¶ºà·™à¶±à·Š à¶…à¶šà·Šà·‚à¶» 6à¶šà·Š à·€à·’à¶º à¶ºà·”à¶­à·”à¶º.",
-    confirmPasswordRequired: "à¶šà¶»à·”à¶«à·à¶šà¶» à¶¸à·”à¶»à¶´à¶¯à¶º à¶­à·„à·€à·”à¶»à·” à¶šà¶»à¶±à·Šà¶±.",
-    passwordsMismatch: "à¶¸à·”à¶»à¶´à¶¯ à¶œà·à·…à¶´à·™à¶±à·Šà¶±à·š à¶±à·à¶­.",
-    completeRequiredFixErrors: "à¶…à·€à·à·Šâ€à¶º à¶šà·Šà·‚à·šà¶­à·Šâ€à¶» à¶´à·”à¶»à·€à· à¶¯à·à·‚ à¶±à·’à·€à·à¶»à¶¯à·’ à¶šà¶»à¶±à·Šà¶±.",
-    selectOrEnterUniversity: "à¶”à¶¶à¶œà·š à·€à·’à·à·Šà·€à·€à·’à¶¯à·Šâ€à¶ºà·à¶½à¶º à¶­à·à¶»à¶±à·Šà¶± à·„à· à¶‡à¶­à·”à·…à¶­à·Š à¶šà¶»à¶±à·Šà¶±.",
-    selectOrEnterDegree: "à¶”à¶¶à¶œà·š à¶‹à¶´à·à¶°à·’ à·€à·à¶©à·ƒà¶§à·„à¶± à¶­à·à¶»à¶±à·Šà¶± à·„à· à¶‡à¶­à·”à·…à¶­à·Š à¶šà¶»à¶±à·Šà¶±.",
-    enterField: (fieldLabel) => `${fieldLabel} à¶‡à¶­à·”à·…à¶­à·Š à¶šà¶»à¶±à·Šà¶±.`,
-    invalidUrl: "à·€à¶½à¶‚à¶œà·” à¶±à·œà·€à¶± URL à¶‘à¶šà¶šà·’.",
-    invalidPhone: "à·€à¶½à¶‚à¶œà·” à¶±à·œà·€à¶± à¶¯à·”à¶»à¶šà¶®à¶± à¶…à¶‚à¶šà¶º.",
-    acceptTerms: "à¶œà·’à¶«à·”à¶¸ à·ƒà·‘à¶¯à·“à¶¸à¶§ à¶´à·™à¶» à¶šà·œà¶±à·Šà¶¯à·šà·ƒà·’ à¶´à·’à·…à·’à¶œà¶±à·Šà¶±.",
-    accountCreatedSuccess: "à¶”à¶¶à¶œà·š à¶œà·’à¶«à·”à¶¸ à·ƒà·à¶»à·Šà¶®à¶šà·€ à·ƒà·‘à¶¯à·’à¶«à·’. à¶´à·’à·€à·’à·ƒà·“à¶¸à¶§ à¶´à·™à¶» à¶Šà¶¸à·šà¶½à·Š à¶­à·„à·€à·”à¶»à·” à¶šà·’à¶»à·“à¶¸ à·ƒà¶¸à·Šà¶´à·–à¶»à·Šà¶« à¶šà¶»à¶±à·Šà¶±.",
-    selectRole: "à¶”à¶¶à¶œà·š à¶·à·–à¶¸à·’à¶šà·à·€ à¶­à·à¶»à¶±à·Šà¶±",
-    rolePlaceholder: "à¶”à¶¶à¶œà·š à¶·à·–à¶¸à·’à¶šà·à·€ à·ƒà·œà¶ºà¶±à·Šà¶± à·„à· à¶­à·à¶»à¶±à·Šà¶±",
-    roleAria: "à¶·à·–à¶¸à·’à¶šà·à·€",
-    fullName: "à·ƒà¶¸à·Šà¶´à·–à¶»à·Šà¶« à¶±à¶¸",
-    yourFullName: "à¶”à¶¶à¶œà·š à·ƒà¶¸à·Šà¶´à·–à¶»à·Šà¶« à¶±à¶¸",
-    email: "à¶Šà¶¸à·šà¶½à·Š",
-    password: "à¶¸à·”à¶»à¶´à¶¯à¶º",
-    confirmPassword: "à¶¸à·”à¶»à¶´à¶¯à¶º à¶­à·„à·€à·”à¶»à·” à¶šà¶»à¶±à·Šà¶±",
-    min6Chars: "à¶…à·€à¶¸ à¶…à¶šà·Šà·‚à¶» 6à¶šà·Š",
-    reenterPassword: "à¶¸à·”à¶»à¶´à¶¯à¶º à¶±à·à·€à¶­ à¶‡à¶­à·”à·…à¶­à·Š à¶šà¶»à¶±à·Šà¶±",
-    universityPlaceholder: "à¶”à¶¶à¶œà·š à·€à·’à·à·Šà·€à·€à·’à¶¯à·Šâ€à¶ºà·à¶½à¶º à·ƒà·œà¶ºà¶±à·Šà¶± à·„à· à¶­à·à¶»à¶±à·Šà¶±",
-    universityAria: "à·€à·’à·à·Šà·€à·€à·’à¶¯à·Šâ€à¶ºà·à¶½à¶º",
-    enterUniversityName: "à·€à·’à·à·Šà·€à·€à·’à¶¯à·Šâ€à¶ºà·à¶½ à¶±à¶¸ à¶‡à¶­à·”à·…à¶­à·Š à¶šà¶»à¶±à·Šà¶±",
-    degreePlaceholder: "à¶‹à¶´à·à¶°à·’ à·€à·à¶©à·ƒà¶§à·„à¶± à·ƒà·œà¶ºà¶±à·Šà¶± à·„à· à¶­à·à¶»à¶±à·Šà¶±",
-    degreeAria: "à¶‹à¶´à·à¶°à·’ à·€à·à¶©à·ƒà¶§à·„à¶±",
-    enterDegreeProgram: "à¶‹à¶´à·à¶°à·’ à·€à·à¶©à·ƒà¶§à·„à¶± à¶‡à¶­à·”à·…à¶­à·Š à¶šà¶»à¶±à·Šà¶±",
-    pleaseSpecify: "à·€à·’à·ƒà·Šà¶­à¶» à¶šà¶»à¶±à·Šà¶±",
-    optionalLabel: "(à·€à·’à¶šà¶½à·Šà¶´)",
-    reviewDetails: "à¶­à·œà¶»à¶­à·”à¶»à·” à·ƒà¶¸à·à¶½à·à¶ à¶±à¶º",
-    name: "à¶±à¶¸",
-    role: "à¶·à·–à¶¸à·’à¶šà·à·€",
-    termsStatement: "à¶¸à¶¸ UniCare Connect à¶šà·œà¶±à·Šà¶¯à·šà·ƒà·’ à¶´à·’à·…à·’à¶œà¶±à·’à¶¸à·’ à·ƒà·„ à¶¸à·™à¶¸ à¶œà·’à¶«à·”à¶¸ à¶­à·„à·€à·”à¶»à·” à¶šà·… à·ƒà·„à¶º à¶´à·Šâ€à¶»à·€à·šà·à¶ºà¶§ à¶¶à·€ à¶…à·€à¶¶à·à¶° à¶šà¶»à¶¸à·’.",
-    signInTab: "à¶´à·’à·€à·’à·ƒà·™à¶±à·Šà¶±",
-    signUpTab: "à¶½à·’à¶ºà·à¶´à¶¯à·’à¶‚à¶ à·’ à·€à¶±à·Šà¶±",
-    welcomeBack: "UniCare Connect à·€à·™à¶­ à¶±à·à·€à¶­ à·ƒà·à¶¯à¶»à¶ºà·™à¶±à·Š à¶´à·’à·…à·’à¶œà¶±à·’à¶¸à·”",
-    createUniCareAccount: "à¶”à¶¶à¶œà·š UniCare à¶œà·’à¶«à·”à¶¸ à·ƒà·à¶¯à¶±à·Šà¶±",
-    signInSubtitle: "à¶”à¶¶à¶œà·š à·ƒà·„à¶º à¶œà¶¸à¶± à¶‰à¶¯à·’à¶»à·’à¶ºà¶§ à¶œà·™à¶± à¶ºà·à¶¸à¶§ à¶´à·’à·€à·’à·ƒà·™à¶±à·Šà¶±.",
-    signUpSubtitle: "à¶”à¶¶à¶œà·š à¶·à·–à¶¸à·’à¶šà·à·€ à¶…à¶±à·”à·€ à¶´à·’à¶ºà·€à¶» 4à¶š à·ƒà¶»à¶½ à·ƒà·à¶šà·ƒà·”à¶¸ à·ƒà¶¸à·Šà¶´à·–à¶»à·Šà¶« à¶šà¶»à¶±à·Šà¶±.",
-    emailVerifiedSuccess: "à¶Šà¶¸à·šà¶½à·Š à·ƒà·à¶»à·Šà¶®à¶šà·€ à¶­à·„à·€à·”à¶»à·” à·€à·’à¶º. à¶¯à·à¶±à·Š à¶”à¶¶à¶§ à¶´à·’à·€à·’à·ƒà·’à¶º à·„à·à¶š.",
-    signInButton: "à¶´à·’à·€à·’à·ƒà·™à¶±à·Šà¶±",
-    signingIn: "Signing in...",
-    signInWithGoogle: "Google à¶¸à¶Ÿà·’à¶±à·Š à¶´à·’à·€à·’à·ƒà·™à¶±à·Šà¶±",
-    forgotPassword: "à¶¸à·”à¶»à¶´à¶¯à¶º à¶…à¶¸à¶­à¶šà¶¯?",
-    createAccountLink: "à¶œà·’à¶«à·”à¶¸ à·ƒà·à¶¯à¶±à·Šà¶±",
-    step: "à¶´à·’à¶ºà·€à¶»",
-    back: "à¶†à¶´à·ƒà·”",
-    alreadyHaveAccount: "à¶¯à·à¶±à¶§à¶¸à¶­à·Š à¶œà·’à¶«à·”à¶¸à¶šà·Š à¶­à·’à¶¶à·šà¶¯?",
-    continue: "à¶‰à¶¯à·’à¶»à·’à¶ºà¶§",
-    createAccountButton: "à¶œà·’à¶«à·”à¶¸ à·ƒà·à¶¯à¶±à·Šà¶±",
-    accountCreatedTitle: "à¶œà·’à¶«à·”à¶¸ à·ƒà·‘à¶¯à·’à¶«à·’",
-    ok: "à·„à¶»à·’"
+    verifyEmailFirst: "පළමුව ඔබගේ ඊමේල් ලිපිනය තහවුරු කර පිවිසෙන්න.",
+    noAccountProfile: "ගිණුම් පැතිකඩක් හමු නොවීය. සහාය අමතන්න.",
+    accountDeleted: "මෙම ගිණුම මකා දමා ඇත.",
+    accountBlocked: "ඔබගේ ගිණුම අවහිර කර ඇත. සහාය අමතන්න.",
+    dbConnectionFailed: "දත්ත සමුදා සම්බන්ධතාවය අසමත් විය. මිනිත්තුවකින් නැවත උත්සාහ කරන්න.",
+    unableValidateStatus: "දැනට ගිණුම් තත්ත්වය තහවුරු කළ නොහැක. නැවත උත්සාහ කරන්න.",
+    incorrectEmailOrPassword: "ඊමේල් හෝ මුරපදය වැරදියි. නැවත උත්සාහ කරන්න.",
+    noAccountForEmail: "මෙම ඊමේල් සඳහා ගිණුමක් නොමැත.",
+    incorrectPassword: "මුරපදය වැරදියි. නැවත උත්සාහ කරන්න.",
+    tooManyLoginAttempts: "ප්‍රවේශ උත්සාහයන් වැඩියි. ටිකක් රැඳී නැවත උත්සාහ කරන්න.",
+    networkIssue: "ජාල ගැටළුවක් ඇත. සම්බන්ධතාවය පරීක්ෂා කර නැවත උත්සාහ කරන්න.",
+    invalidEmail: "කරුණාකර වලංගු ඊමේල් ලිපිනයක් ඇතුළත් කරන්න.",
+    unableSignIn: "පිවිසීමට නොහැකි විය. නැවත උත්සාහ කරන්න.",
+    accountCreationFailed: "ඔබගේ පැතිකඩ සුරකින අතරතුර ගිණුම සෑදීම අසමත් විය. නැවත උත්සාහ කරන්න.",
+    verificationEmailFailed: "ගිණුම සෑදිණි, නමුත් තහවුරු කිරීමේ ඊමේල් යැවීම අසමත් විය.",
+    emailAlreadyInUse: "මෙම ඊමේල් සමඟ ගිණුමක් දැනටමත් ඇත. පිවිසෙන්න හෝ වෙනත් ඊමේල් භාවිතා කරන්න.",
+    strongerPassword: "වඩා ශක්තිමත් මුරපදයක් භාවිතා කරන්න (අවම අක්ෂර 6ක්).",
+    emailPasswordSignupDisabled: "Email/password ලියාපදිංචිය සක්‍රීය කර නැත.",
+    authMisconfigured: "Authentication සැකසුම වැරදියි.",
+    tooManyAttempts: "උත්සාහයන් වැඩියි. පසුව නැවත උත්සාහ කරන්න.",
+    unableCreateAccount: "ගිණුම සෑදීමට නොහැකි විය. නැවත උත්සාහ කරන්න.",
+    validEmailPasswordRequired: "කරුණාකර වලංගු ඊමේල් සහ මුරපදයක් ලබා දෙන්න.",
+    adminSignupDisabled: "පරිපාලක ගිණුම් සඳහා අනුමැතිය අවශ්‍ය වේ.",
+    selectRoleContinue: "ඉදිරියට යාමට ඔබගේ භූමිකාව තෝරන්න.",
+    fullNameRequired: "සම්පූර්ණ නම අනිවාර්යයි.",
+    atLeastTwoChars: "අවම වශයෙන් අක්ෂර 2ක් ඇතුළත් කරන්න.",
+    emailRequired: "ඊමේල් අනිවාර්යයි.",
+    passwordRequired: "මුරපදය අනිවාර්යයි.",
+    passwordAtLeast6: "මුරපදය අවම වශයෙන් අක්ෂර 6ක් විය යුතුය.",
+    confirmPasswordRequired: "කරුණාකර මුරපදය තහවුරු කරන්න.",
+    passwordsMismatch: "මුරපද ගැළපෙන්නේ නැත.",
+    completeRequiredFixErrors: "අවශ්‍ය ක්ෂේත්‍ර පුරවා දෝෂ නිවැරදි කරන්න.",
+    selectOrEnterUniversity: "ඔබගේ විශ්වවිද්‍යාලය තෝරන්න හෝ ඇතුළත් කරන්න.",
+    selectOrEnterDegree: "ඔබගේ උපාධි වැඩසටහන තෝරන්න හෝ ඇතුළත් කරන්න.",
+    enterField: (fieldLabel) => `${fieldLabel} ඇතුළත් කරන්න.`,
+    invalidUrl: "වලංගු නොවන URL එකකි.",
+    invalidPhone: "වලංගු නොවන දුරකථන අංකය.",
+    acceptTerms: "ගිණුම සෑදීමට පෙර කොන්දේසි පිළිගන්න.",
+    accountCreatedSuccess: "ඔබගේ ගිණුම සාර්ථකව සෑදිණි. පිවිසීමට පෙර ඊමේල් තහවුරු කිරීම සම්පූර්ණ කරන්න.",
+    selectRole: "ඔබගේ භූමිකාව තෝරන්න",
+    rolePlaceholder: "ඔබගේ භූමිකාව තෝරන්න",
+    roleAria: "භූමිකාව",
+    fullName: "සම්පූර්ණ නම",
+    yourFullName: "ඔබගේ සම්පූර්ණ නම",
+    email: "ඊමේල්",
+    password: "මුරපදය",
+    confirmPassword: "මුරපදය තහවුරු කරන්න",
+    min6Chars: "අවම අක්ෂර 6ක්",
+    reenterPassword: "මුරපදය නැවත ඇතුළත් කරන්න",
+    universityPlaceholder: "ඔබගේ විශ්වවිද්‍යාලය තෝරන්න",
+    universityAria: "විශ්වවිද්‍යාලය",
+    enterUniversityName: "විශ්වවිද්‍යාල නම ඇතුළත් කරන්න",
+    degreePlaceholder: "උපාධි වැඩසටහන තෝරන්න",
+    degreeAria: "උපාධි වැඩසටහන",
+    enterDegreeProgram: "උපාධි වැඩසටහන ඇතුළත් කරන්න",
+    pleaseSpecify: "විස්තර කරන්න",
+    optionalLabel: "(විකල්ප)",
+    reviewDetails: "තොරතුරු සමාලෝචනය",
+    name: "නම",
+    role: "භූමිකාව",
+    termsStatement: "මම UniCare Connect කොන්දේසි පිළිගනිමි සහ මෙම ගිණුම තහවුරු කළ සහය ප්‍රවේශයට බව අවබෝධ කරමි.",
+    signInTab: "පිවිසෙන්න",
+    signUpTab: "ලියාපදිංචි වන්න",
+    welcomeBack: "UniCare Connect වෙත නැවත සාදරයෙන් පිළිගනිමු",
+    createUniCareAccount: "ඔබගේ UniCare ගිණුම සාදන්න",
+    signInSubtitle: "ඔබගේ සහය ගමන ඉදිරියට ගෙන යාමට පිවිසෙන්න.",
+    signUpSubtitle: "ඔබගේ භූමිකාව අනුව පියවර 4ක සරල සැකසුම සම්පූර්ණ කරන්න.",
+    emailVerifiedSuccess: "ඊමේල් සාර්ථකව තහවුරු විය. දැන් ඔබට පිවිසිය හැක.",
+    signInButton: "පිවිසෙන්න",
+    signingIn: "පිවිසෙමින්...",
+    signInWithGoogle: "Google මඟින් පිවිසෙන්න",
+    forgotPassword: "මුරපදය අමතකද?",
+    createAccountLink: "ගිණුම සාදන්න",
+    step: "පියවර",
+    back: "ආපසු",
+    alreadyHaveAccount: "දැනටමත් ගිණුමක් තිබේද?",
+    continue: "ඉදිරියට",
+    createAccountButton: "ගිණුම සාදන්න",
+    accountCreatedTitle: "ගිණුම සෑදිණි",
+    ok: "හරි"
   },
   ta: {
-    verifyEmailFirst: "à®®à¯à®¤à®²à®¿à®²à¯ à®‰à®™à¯à®•à®³à¯ à®®à®¿à®©à¯à®©à®žà¯à®šà®²à¯ˆ à®šà®°à®¿à®ªà®¾à®°à¯à®¤à¯à®¤à¯ à®ªà®¿à®©à¯à®©à®°à¯ à®‰à®³à¯à®¨à¯à®´à¯ˆà®¯à®µà¯à®®à¯.",
-    noAccountProfile: "à®•à®£à®•à¯à®•à¯ à®šà¯à®¯à®µà®¿à®µà®°à®®à¯ à®•à®¿à®Ÿà¯ˆà®•à¯à®•à®µà®¿à®²à¯à®²à¯ˆ. à®†à®¤à®°à®µà¯ˆà®•à¯ à®¤à¯Šà®Ÿà®°à¯à®ªà¯ à®•à¯Šà®³à¯à®³à®µà¯à®®à¯.",
-    accountDeleted: "à®‡à®¨à¯à®¤ à®•à®£à®•à¯à®•à¯ à®¨à¯€à®•à¯à®•à®ªà¯à®ªà®Ÿà¯à®Ÿà¯à®³à¯à®³à®¤à¯.",
-    accountBlocked: "à®‰à®™à¯à®•à®³à¯ à®•à®£à®•à¯à®•à¯ à®¤à®Ÿà¯à®•à¯à®•à®ªà¯à®ªà®Ÿà¯à®Ÿà¯à®³à¯à®³à®¤à¯. à®†à®¤à®°à®µà¯ˆà®•à¯ à®¤à¯Šà®Ÿà®°à¯à®ªà¯ à®•à¯Šà®³à¯à®³à®µà¯à®®à¯.",
-    dbConnectionFailed: "à®¤à®°à®µà¯à®¤à¯à®¤à®³ à®‡à®£à¯ˆà®ªà¯à®ªà¯ à®¤à¯‹à®²à¯à®µà®¿à®¯à®Ÿà¯ˆà®¨à¯à®¤à®¤à¯. à®’à®°à¯ à®¨à®¿à®®à®¿à®Ÿà®¤à¯à®¤à®¿à®²à¯ à®®à¯€à®£à¯à®Ÿà¯à®®à¯ à®®à¯à®¯à®±à¯à®šà®¿à®•à¯à®•à®µà¯à®®à¯.",
-    unableValidateStatus: "à®‡à®ªà¯à®ªà¯‹à®¤à¯ à®•à®£à®•à¯à®•à¯ à®¨à®¿à®²à¯ˆà®¯à¯ˆ à®šà®°à®¿à®ªà®¾à®°à¯à®•à¯à®• à®®à¯à®Ÿà®¿à®¯à®µà®¿à®²à¯à®²à¯ˆ. à®®à¯€à®£à¯à®Ÿà¯à®®à¯ à®®à¯à®¯à®±à¯à®šà®¿à®•à¯à®•à®µà¯à®®à¯.",
-    incorrectEmailOrPassword: "à®®à®¿à®©à¯à®©à®žà¯à®šà®²à¯ à®…à®²à¯à®²à®¤à¯ à®•à®Ÿà®µà¯à®šà¯à®šà¯Šà®²à¯ à®¤à®µà®±à¯. à®®à¯€à®£à¯à®Ÿà¯à®®à¯ à®®à¯à®¯à®±à¯à®šà®¿à®•à¯à®•à®µà¯à®®à¯.",
-    noAccountForEmail: "à®‡à®¨à¯à®¤ à®®à®¿à®©à¯à®©à®žà¯à®šà®²à¯à®•à¯à®•à¯ à®•à®£à®•à¯à®•à¯ à®‡à®²à¯à®²à¯ˆ.",
-    incorrectPassword: "à®•à®Ÿà®µà¯à®šà¯à®šà¯Šà®²à¯ à®¤à®µà®±à¯. à®®à¯€à®£à¯à®Ÿà¯à®®à¯ à®®à¯à®¯à®±à¯à®šà®¿à®•à¯à®•à®µà¯à®®à¯.",
-    tooManyLoginAttempts: "à®®à®¿à®• à®…à®¤à®¿à®• à®‰à®³à¯à®¨à¯à®´à¯ˆà®µà¯ à®®à¯à®¯à®±à¯à®šà®¿à®•à®³à¯. à®šà®¿à®±à®¿à®¤à¯ à®¨à¯‡à®°à®®à¯ à®•à®¾à®¤à¯à®¤à®¿à®°à¯à®¨à¯à®¤à¯ à®®à¯à®¯à®±à¯à®šà®¿à®•à¯à®•à®µà¯à®®à¯.",
-    networkIssue: "à®¨à¯†à®Ÿà¯à®µà¯Šà®°à¯à®•à¯ à®šà®¿à®•à¯à®•à®²à¯. à®‡à®£à¯ˆà®ªà¯à®ªà¯ˆà®šà¯ à®šà®°à®¿à®ªà®¾à®°à¯à®¤à¯à®¤à¯ à®®à¯€à®£à¯à®Ÿà¯à®®à¯ à®®à¯à®¯à®±à¯à®šà®¿à®•à¯à®•à®µà¯à®®à¯.",
-    invalidEmail: "à®šà®°à®¿à®¯à®¾à®© à®®à®¿à®©à¯à®©à®žà¯à®šà®²à¯ à®®à¯à®•à®µà®°à®¿à®¯à¯ˆ à®‰à®³à¯à®³à®¿à®Ÿà®µà¯à®®à¯.",
-    unableSignIn: "à®‰à®³à¯à®¨à¯à®´à¯ˆà®¯ à®®à¯à®Ÿà®¿à®¯à®µà®¿à®²à¯à®²à¯ˆ. à®®à¯€à®£à¯à®Ÿà¯à®®à¯ à®®à¯à®¯à®±à¯à®šà®¿à®•à¯à®•à®µà¯à®®à¯.",
-    accountCreationFailed: "à®šà¯à®¯à®µà®¿à®µà®°à®¤à¯à®¤à¯ˆ à®šà¯‡à®®à®¿à®•à¯à®•à¯à®®à¯ à®ªà¯‹à®¤à¯ à®•à®£à®•à¯à®•à¯ à®‰à®°à¯à®µà®¾à®•à¯à®•à®®à¯ à®¤à¯‹à®²à¯à®µà®¿à®¯à®Ÿà¯ˆà®¨à¯à®¤à®¤à¯. à®®à¯€à®£à¯à®Ÿà¯à®®à¯ à®®à¯à®¯à®±à¯à®šà®¿à®•à¯à®•à®µà¯à®®à¯.",
-    verificationEmailFailed: "à®•à®£à®•à¯à®•à¯ à®‰à®°à¯à®µà®¾à®•à¯à®•à®ªà¯à®ªà®Ÿà¯à®Ÿà®¤à¯, à®†à®©à®¾à®²à¯ à®šà®°à®¿à®ªà®¾à®°à¯à®ªà¯à®ªà¯ à®®à®¿à®©à¯à®©à®žà¯à®šà®²à¯ à®…à®©à¯à®ªà¯à®ªà®²à¯ à®¤à¯‹à®²à¯à®µà®¿à®¯à®Ÿà¯ˆà®¨à¯à®¤à®¤à¯. à®®à¯€à®£à¯à®Ÿà¯à®®à¯ à®®à¯à®¯à®±à¯à®šà®¿à®•à¯à®•à®µà¯à®®à¯.",
-    emailAlreadyInUse: "à®‡à®¨à¯à®¤ à®®à®¿à®©à¯à®©à®žà¯à®šà®²à¯à®Ÿà®©à¯ à®à®±à¯à®•à®©à®µà¯‡ à®’à®°à¯ à®•à®£à®•à¯à®•à¯ à®‰à®³à¯à®³à®¤à¯. à®‰à®³à¯à®¨à¯à®´à¯ˆà®¯à®µà¯à®®à¯ à®…à®²à¯à®²à®¤à¯ à®µà¯‡à®±à¯ à®®à®¿à®©à¯à®©à®žà¯à®šà®²à¯ˆà®ªà¯ à®ªà®¯à®©à¯à®ªà®Ÿà¯à®¤à¯à®¤à®µà¯à®®à¯.",
-    strongerPassword: "à®µà®²à¯à®µà®¾à®© à®•à®Ÿà®µà¯à®šà¯à®šà¯Šà®²à¯à®²à¯ˆà®ªà¯ à®ªà®¯à®©à¯à®ªà®Ÿà¯à®¤à¯à®¤à®µà¯à®®à¯ (à®•à¯à®±à¯ˆà®¨à¯à®¤à®¤à¯ 6 à®Žà®´à¯à®¤à¯à®¤à¯à®•à®³à¯).",
-    emailPasswordSignupDisabled: "Email/password à®ªà®¤à®¿à®µà¯ à®šà¯†à®¯à®²à¯à®ªà®Ÿà¯à®¤à¯à®¤à®ªà¯à®ªà®Ÿà®µà®¿à®²à¯à®²à¯ˆ. Firebase Console à®‡à®²à¯ Authentication -> Sign-in method à®ªà®•à¯à®¤à®¿à®¯à®¿à®²à¯ à®šà¯†à®¯à®²à¯à®ªà®Ÿà¯à®¤à¯à®¤à®µà¯à®®à¯.",
-    authMisconfigured: "Authentication à®¤à®µà®±à®¾à®• à®…à®®à¯ˆà®•à¯à®•à®ªà¯à®ªà®Ÿà¯à®Ÿà¯à®³à¯à®³à®¤à¯. Firebase API key à® à®šà®°à®¿à®ªà®¾à®°à¯à®•à¯à®•à®µà¯à®®à¯.",
-    tooManyAttempts: "à®®à®¿à®• à®…à®¤à®¿à®• à®®à¯à®¯à®±à¯à®šà®¿à®•à®³à¯. à®ªà®¿à®©à¯à®©à®°à¯ à®®à¯€à®£à¯à®Ÿà¯à®®à¯ à®®à¯à®¯à®±à¯à®šà®¿à®•à¯à®•à®µà¯à®®à¯.",
-    unableCreateAccount: "à®•à®£à®•à¯à®•à¯ˆ à®‰à®°à¯à®µà®¾à®•à¯à®• à®®à¯à®Ÿà®¿à®¯à®µà®¿à®²à¯à®²à¯ˆ. à®®à¯€à®£à¯à®Ÿà¯à®®à¯ à®®à¯à®¯à®±à¯à®šà®¿à®•à¯à®•à®µà¯à®®à¯.",
-    validEmailPasswordRequired: "à®šà®°à®¿à®¯à®¾à®© à®®à®¿à®©à¯à®©à®žà¯à®šà®²à¯ à®®à®±à¯à®±à¯à®®à¯ à®•à®Ÿà®µà¯à®šà¯à®šà¯Šà®²à¯à®²à¯ˆ à®µà®´à®™à¯à®•à®µà¯à®®à¯.",
-    adminSignupDisabled: "Admin account signup is disabled. Please contact support.",
-    selectRoleContinue: "à®¤à¯Šà®Ÿà®° à®‰à®™à¯à®•à®³à¯ à®ªà®™à¯à®•à¯ˆ à®¤à¯‡à®°à¯à®¨à¯à®¤à¯†à®Ÿà¯à®•à¯à®•à®µà¯à®®à¯.",
-    fullNameRequired: "à®®à¯à®´à¯à®ªà¯à®ªà¯†à®¯à®°à¯ à®…à®µà®šà®¿à®¯à®®à¯.",
-    atLeastTwoChars: "à®•à¯à®±à¯ˆà®¨à¯à®¤à®¤à¯ 2 à®Žà®´à¯à®¤à¯à®¤à¯à®•à®³à¯ˆ à®‰à®³à¯à®³à®¿à®Ÿà®µà¯à®®à¯.",
-    emailRequired: "à®®à®¿à®©à¯à®©à®žà¯à®šà®²à¯ à®…à®µà®šà®¿à®¯à®®à¯.",
-    passwordRequired: "à®•à®Ÿà®µà¯à®šà¯à®šà¯Šà®²à¯ à®…à®µà®šà®¿à®¯à®®à¯.",
-    passwordAtLeast6: "à®•à®Ÿà®µà¯à®šà¯à®šà¯Šà®²à¯ à®•à¯à®±à¯ˆà®¨à¯à®¤à®¤à¯ 6 à®Žà®´à¯à®¤à¯à®¤à¯à®•à®³à¯ à®‡à®°à¯à®•à¯à®• à®µà¯‡à®£à¯à®Ÿà¯à®®à¯.",
-    confirmPasswordRequired: "à®¤à®¯à®µà¯à®šà¯†à®¯à¯à®¤à¯ à®‰à®™à¯à®•à®³à¯ à®•à®Ÿà®µà¯à®šà¯à®šà¯Šà®²à¯à®²à¯ˆ à®‰à®±à¯à®¤à®¿à®ªà¯à®ªà®Ÿà¯à®¤à¯à®¤à®µà¯à®®à¯.",
-    passwordsMismatch: "à®•à®Ÿà®µà¯à®šà¯à®šà¯Šà®±à¯à®•à®³à¯ à®ªà¯Šà®°à¯à®¨à¯à®¤à®µà®¿à®²à¯à®²à¯ˆ.",
-    completeRequiredFixErrors: "à®¤à¯‡à®µà¯ˆà®¯à®¾à®© à®ªà¯à®²à®™à¯à®•à®³à¯ˆ à®ªà¯‚à®°à¯à®¤à¯à®¤à®¿ à®šà¯†à®¯à¯à®¤à¯ à®ªà®¿à®´à¯ˆà®•à®³à¯ˆà®šà¯ à®šà®°à®¿à®šà¯†à®¯à¯à®¯à®µà¯à®®à¯.",
-    selectOrEnterUniversity: "à®‰à®™à¯à®•à®³à¯ à®ªà®²à¯à®•à®²à¯ˆà®•à¯à®•à®´à®•à®¤à¯à®¤à¯ˆ à®¤à¯‡à®°à¯à®¨à¯à®¤à¯†à®Ÿà¯à®•à¯à®•à®µà¯à®®à¯ à®…à®²à¯à®²à®¤à¯ à®‰à®³à¯à®³à®¿à®Ÿà®µà¯à®®à¯.",
-    selectOrEnterDegree: "à®‰à®™à¯à®•à®³à¯ à®ªà®Ÿà¯à®Ÿà®ªà¯à®ªà®Ÿà®¿à®ªà¯à®ªà¯ à®¤à®¿à®Ÿà¯à®Ÿà®¤à¯à®¤à¯ˆ à®¤à¯‡à®°à¯à®¨à¯à®¤à¯†à®Ÿà¯à®•à¯à®•à®µà¯à®®à¯ à®…à®²à¯à®²à®¤à¯ à®‰à®³à¯à®³à®¿à®Ÿà®µà¯à®®à¯.",
-    enterField: (fieldLabel) => `${fieldLabel} à® à®‰à®³à¯à®³à®¿à®Ÿà®µà¯à®®à¯.`,
-    invalidUrl: "à®¤à®µà®±à®¾à®© URL.",
-    invalidPhone: "à®¤à®µà®±à®¾à®© à®¤à¯Šà®²à¯ˆà®ªà¯‡à®šà®¿ à®Žà®£à¯.",
-    acceptTerms: "à®•à®£à®•à¯à®•à¯ˆ à®‰à®°à¯à®µà®¾à®•à¯à®• à®µà®¿à®¤à®¿à®®à¯à®±à¯ˆà®•à®³à¯ˆ à®à®±à¯à®•à®µà¯à®®à¯.",
-    accountCreatedSuccess: "à®‰à®™à¯à®•à®³à¯ à®•à®£à®•à¯à®•à¯ à®µà¯†à®±à¯à®±à®¿à®•à®°à®®à®¾à®• à®‰à®°à¯à®µà®¾à®•à¯à®•à®ªà¯à®ªà®Ÿà¯à®Ÿà®¤à¯. à®‰à®³à¯à®¨à¯à®´à¯ˆà®µà®¤à®±à¯à®•à¯ à®®à¯à®©à¯ à®®à®¿à®©à¯à®©à®žà¯à®šà®²à¯ à®šà®°à®¿à®ªà®¾à®°à¯à®ªà¯à®ªà¯ˆ à®®à¯à®Ÿà®¿à®•à¯à®•à®µà¯à®®à¯.",
-    selectRole: "à®‰à®™à¯à®•à®³à¯ à®ªà®™à¯à®•à¯ˆ à®¤à¯‡à®°à¯à®¨à¯à®¤à¯†à®Ÿà¯à®•à¯à®•à®µà¯à®®à¯",
-    rolePlaceholder: "à®‰à®™à¯à®•à®³à¯ à®ªà®™à¯à®•à¯ˆ à®¤à¯‡à®Ÿà®µà¯à®®à¯ à®…à®²à¯à®²à®¤à¯ à®¤à¯‡à®°à¯à®¨à¯à®¤à¯†à®Ÿà¯à®•à¯à®•à®µà¯à®®à¯",
-    roleAria: "à®ªà®™à¯à®•à¯",
-    fullName: "à®®à¯à®´à¯à®ªà¯à®ªà¯†à®¯à®°à¯",
-    yourFullName: "à®‰à®™à¯à®•à®³à¯ à®®à¯à®´à¯à®ªà¯à®ªà¯†à®¯à®°à¯",
-    email: "à®®à®¿à®©à¯à®©à®žà¯à®šà®²à¯",
-    password: "à®•à®Ÿà®µà¯à®šà¯à®šà¯Šà®²à¯",
-    confirmPassword: "à®•à®Ÿà®µà¯à®šà¯à®šà¯Šà®²à¯à®²à¯ˆ à®‰à®±à¯à®¤à®¿à®ªà¯à®ªà®Ÿà¯à®¤à¯à®¤à®µà¯à®®à¯",
-    min6Chars: "à®•à¯à®±à¯ˆà®¨à¯à®¤à®¤à¯ 6 à®Žà®´à¯à®¤à¯à®¤à¯à®•à®³à¯",
-    reenterPassword: "à®•à®Ÿà®µà¯à®šà¯à®šà¯Šà®²à¯à®²à¯ˆ à®®à¯€à®£à¯à®Ÿà¯à®®à¯ à®‰à®³à¯à®³à®¿à®Ÿà®µà¯à®®à¯",
-    universityPlaceholder: "à®‰à®™à¯à®•à®³à¯ à®ªà®²à¯à®•à®²à¯ˆà®•à¯à®•à®´à®•à®¤à¯à®¤à¯ˆ à®¤à¯‡à®Ÿà®µà¯à®®à¯ à®…à®²à¯à®²à®¤à¯ à®¤à¯‡à®°à¯à®¨à¯à®¤à¯†à®Ÿà¯à®•à¯à®•à®µà¯à®®à¯",
-    universityAria: "à®ªà®²à¯à®•à®²à¯ˆà®•à¯à®•à®´à®•à®®à¯",
-    enterUniversityName: "à®ªà®²à¯à®•à®²à¯ˆà®•à¯à®•à®´à®• à®ªà¯†à®¯à®°à¯ˆ à®‰à®³à¯à®³à®¿à®Ÿà®µà¯à®®à¯",
-    degreePlaceholder: "à®ªà®Ÿà¯à®Ÿà®ªà¯à®ªà®Ÿà®¿à®ªà¯à®ªà¯ à®¤à®¿à®Ÿà¯à®Ÿà®¤à¯à®¤à¯ˆ à®¤à¯‡à®Ÿà®µà¯à®®à¯ à®…à®²à¯à®²à®¤à¯ à®¤à¯‡à®°à¯à®¨à¯à®¤à¯†à®Ÿà¯à®•à¯à®•à®µà¯à®®à¯",
-    degreeAria: "à®ªà®Ÿà¯à®Ÿà®ªà¯à®ªà®Ÿà®¿à®ªà¯à®ªà¯ à®¤à®¿à®Ÿà¯à®Ÿà®®à¯",
-    enterDegreeProgram: "à®ªà®Ÿà¯à®Ÿà®ªà¯à®ªà®Ÿà®¿à®ªà¯à®ªà¯ à®¤à®¿à®Ÿà¯à®Ÿà®¤à¯à®¤à¯ˆ à®‰à®³à¯à®³à®¿à®Ÿà®µà¯à®®à¯",
-    pleaseSpecify: "à®¤à®¯à®µà¯à®šà¯†à®¯à¯à®¤à¯ à®•à¯à®±à®¿à®ªà¯à®ªà®¿à®Ÿà®µà¯à®®à¯",
-    optionalLabel: "(à®µà®¿à®°à¯à®ªà¯à®ªà®®à¯)",
-    reviewDetails: "à®µà®¿à®µà®°à®™à¯à®•à®³à¯ˆ à®šà®°à®¿à®ªà®¾à®°à¯à®•à¯à®•à®µà¯à®®à¯",
-    name: "à®ªà¯†à®¯à®°à¯",
-    role: "à®ªà®™à¯à®•à¯",
-    termsStatement: "UniCare Connect à®µà®¿à®¤à®¿à®®à¯à®±à¯ˆà®•à®³à¯ˆ à®à®±à¯à®•à®¿à®±à¯‡à®©à¯, à®®à¯‡à®²à¯à®®à¯ à®‡à®¨à¯à®¤ à®•à®£à®•à¯à®•à¯ à®šà®°à®¿à®ªà®¾à®°à¯à®•à¯à®•à®ªà¯à®ªà®Ÿà¯à®Ÿ à®†à®¤à®°à®µà¯ à®…à®£à¯à®•à®²à¯à®•à¯à®•à®¾à®©à®¤à¯ à®Žà®©à¯à®ªà®¤à¯ˆ à®ªà¯à®°à®¿à®¨à¯à®¤à¯à®•à¯Šà®³à¯à®•à®¿à®±à¯‡à®©à¯.",
-    signInTab: "à®‰à®³à¯à®¨à¯à®´à¯ˆ",
-    signUpTab: "à®ªà®¤à®¿à®µà¯ à®šà¯†à®¯à¯",
-    welcomeBack: "UniCare Connect à®•à¯à®•à¯ à®®à¯€à®£à¯à®Ÿà¯à®®à¯ à®µà®°à®µà¯‡à®±à¯à®•à®¿à®±à¯‹à®®à¯",
-    createUniCareAccount: "à®‰à®™à¯à®•à®³à¯ UniCare à®•à®£à®•à¯à®•à¯ˆ à®‰à®°à¯à®µà®¾à®•à¯à®•à®µà¯à®®à¯",
-    signInSubtitle: "à®‰à®™à¯à®•à®³à¯ à®†à®¤à®°à®µà¯ à®ªà®¯à®£à®¤à¯à®¤à¯ˆ à®¤à¯Šà®Ÿà®° à®‰à®³à¯à®¨à¯à®´à¯ˆà®•.",
-    signUpSubtitle: "à®‰à®™à¯à®•à®³à¯ à®ªà®™à¯à®•à¯ˆ à®…à®Ÿà®¿à®ªà¯à®ªà®Ÿà¯ˆà®¯à®¾à®•à®•à¯ à®•à¯Šà®£à¯à®Ÿ à®Žà®³à®¿à®¯ 4 à®ªà®Ÿà®¿ à®…à®®à¯ˆà®ªà¯à®ªà¯ˆ à®®à¯à®Ÿà®¿à®•à¯à®•à®µà¯à®®à¯.",
-    emailVerifiedSuccess: "à®®à®¿à®©à¯à®©à®žà¯à®šà®²à¯ à®µà¯†à®±à¯à®±à®¿à®•à®°à®®à®¾à®• à®šà®°à®¿à®ªà®¾à®°à¯à®•à¯à®•à®ªà¯à®ªà®Ÿà¯à®Ÿà®¤à¯. à®‡à®ªà¯à®ªà¯‹à®¤à¯ à®‰à®³à¯à®¨à¯à®´à¯ˆà®¯à®²à®¾à®®à¯.",
-    signInButton: "à®‰à®³à¯à®¨à¯à®´à¯ˆ",
-    signingIn: "Signing in...",
-    signInWithGoogle: "Google à®®à¯‚à®²à®®à¯ à®‰à®³à¯à®¨à¯à®´à¯ˆ",
-    forgotPassword: "à®•à®Ÿà®µà¯à®šà¯à®šà¯Šà®²à¯ à®®à®±à®¨à¯à®¤à¯à®µà®¿à®Ÿà¯à®Ÿà®¤à®¾?",
-    createAccountLink: "à®•à®£à®•à¯à®•à¯ˆ à®‰à®°à¯à®µà®¾à®•à¯à®•à®µà¯à®®à¯",
-    step: "à®ªà®Ÿà®¿",
-    back: "à®ªà®¿à®©à¯à®©à¯à®•à¯à®•à¯",
-    alreadyHaveAccount: "à®à®±à¯à®•à®©à®µà¯‡ à®•à®£à®•à¯à®•à¯ à®‰à®³à¯à®³à®¤à®¾?",
-    continue: "à®¤à¯Šà®Ÿà®°à®µà¯à®®à¯",
-    createAccountButton: "à®•à®£à®•à¯à®•à¯ˆ à®‰à®°à¯à®µà®¾à®•à¯à®•à®µà¯à®®à¯",
-    accountCreatedTitle: "à®•à®£à®•à¯à®•à¯ à®‰à®°à¯à®µà®¾à®•à¯à®•à®ªà¯à®ªà®Ÿà¯à®Ÿà®¤à¯",
-    ok: "à®šà®°à®¿"
+    verifyEmailFirst: "முதலில் உங்கள் மின்னஞ்சலை சரிபார்த்து பின்னர் உள்நுழையவும்.",
+    noAccountProfile: "கணக்கு சுயவிவரம் கிடைக்கவில்லை. ஆதரவைக் தொடர்பு கொள்ளவும்.",
+    accountDeleted: "இந்த கணக்கு நீக்கப்பட்டுள்ளது.",
+    accountBlocked: "உங்கள் கணக்கு தடுக்கப்பட்டுள்ளது. ஆதரவைக் தொடர்பு கொள்ளவும்.",
+    dbConnectionFailed: "தரவுத்தள இணைப்பு தோல்வியடைந்தது. மீண்டும் முயற்சிக்கவும்.",
+    unableValidateStatus: "இப்போது கணக்கு நிலையை சரிபார்க்க முடியவில்லை.",
+    incorrectEmailOrPassword: "மின்னஞ்சல் அல்லது கடவுச்சொல் தவறு.",
+    noAccountForEmail: "இந்த மின்னஞ்சலுக்கு கணக்கு இல்லை.",
+    incorrectPassword: "கடவுச்சொல் தவறு. மீண்டும் முயற்சிக்கவும்.",
+    tooManyLoginAttempts: "மிக அதிக உள்நுழைவு முயற்சிகள். சிறிது நேரம் காத்திருந்து முயற்சிக்கவும்.",
+    networkIssue: "நெட்வொர்க் சிக்கல். இணைப்பைச் சரிபார்த்து மீண்டும் முயற்சிக்கவும்.",
+    invalidEmail: "சரியான மின்னஞ்சல் முகவரியை உள்ளிடவும்.",
+    unableSignIn: "உள்நுழைய முடியவில்லை. மீண்டும் முயற்சிக்கவும்.",
+    accountCreationFailed: "கணக்கு உருவாக்கம் தோல்வியடைந்தது. மீண்டும் முயற்சிக்கவும்.",
+    verificationEmailFailed: "கணக்கு உருவாக்கப்பட்டது, ஆனால் சரிபார்ப்பு மின்னஞ்சல் அனுப்பல் தோல்வியடைந்தது.",
+    emailAlreadyInUse: "இந்த மின்னஞ்சலுடன் ஏற்கனவே ஒரு கணக்கு உள்ளது.",
+    strongerPassword: "வலுவான கடவுச்சொல்லைப் பயன்படுத்தவும் (குறைந்தது 6 எழுத்துகள்).",
+    emailPasswordSignupDisabled: "Email/password பதிவு செயல்படுத்தப்படவில்லை.",
+    authMisconfigured: "Authentication தவறாக அமைக்கப்பட்டுள்ளது.",
+    tooManyAttempts: "மிக அதிக முயற்சிகள். பின்னர் மீண்டும் முயற்சிக்கவும்.",
+    unableCreateAccount: "கணக்கை உருவாக்க முடியவில்லை.",
+    validEmailPasswordRequired: "சரியான மின்னஞ்சல் மற்றும் கடவுச்சொல்லை வழங்கவும்.",
+    adminSignupDisabled: "நிர்வாக கணக்கு பதிவுக்கு அனுமதி தேவை.",
+    selectRoleContinue: "தொடர உங்கள் பங்கை தேர்ந்தெடுக்கவும்.",
+    fullNameRequired: "முழுப்பெயர் அவசியம்.",
+    atLeastTwoChars: "குறைந்தது 2 எழுத்துகளை உள்ளிடவும்.",
+    emailRequired: "மின்னஞ்சல் அவசியம்.",
+    passwordRequired: "கடவுச்சொல் அவசியம்.",
+    passwordAtLeast6: "கடவுச்சொல் குறைந்தது 6 எழுத்துகள் இருக்க வேண்டும்.",
+    confirmPasswordRequired: "தயவுசெய்து உங்கள் கடவுச்சொல்லை உறுதிப்படுத்தவும்.",
+    passwordsMismatch: "கடவுச்சொற்கள் பொருந்தவில்லை.",
+    completeRequiredFixErrors: "தேவையான புலங்களை பூர்த்தி செய்து பிழைகளைச் சரிசெய்யவும்.",
+    selectOrEnterUniversity: "உங்கள் பல்கலைக்கழகத்தை தேர்ந்தெடுக்கவும் அல்லது உள்ளிடவும்.",
+    selectOrEnterDegree: "உங்கள் பட்டப்படிப்பு திட்டத்தை தேர்ந்தெடுக்கவும் அல்லது உள்ளிடவும்.",
+    enterField: (fieldLabel) => `${fieldLabel} ஐ உள்ளிடவும்.`,
+    invalidUrl: "தவறான URL.",
+    invalidPhone: "தவறான தொலைபேசி எண்.",
+    acceptTerms: "கணக்கை உருவாக்க விதிமுறைகளை ஏற்கவும்.",
+    accountCreatedSuccess: "உங்கள் கணக்கு வெற்றிகரமாக உருவாக்கப்பட்டது. உள்நுழைவதற்கு முன் மின்னஞ்சல் சரிபார்ப்பை முடிக்கவும்.",
+    selectRole: "உங்கள் பங்கை தேர்ந்தெடுக்கவும்",
+    rolePlaceholder: "உங்கள் பங்கை தேர்ந்தெடுக்கவும்",
+    roleAria: "பங்கு",
+    fullName: "முழுப்பெயர்",
+    yourFullName: "உங்கள் முழுப்பெயர்",
+    email: "மின்னஞ்சல்",
+    password: "கடவுச்சொல்",
+    confirmPassword: "கடவுச்சொல்லை உறுதிப்படுத்தவும்",
+    min6Chars: "குறைந்தது 6 எழுத்துகள்",
+    reenterPassword: "கடவுச்சொல்லை மீண்டும் உள்ளிடவும்",
+    universityPlaceholder: "உங்கள் பல்கலைக்கழகத்தை தேர்ந்தெடுக்கவும்",
+    universityAria: "பல்கலைக்கழகம்",
+    enterUniversityName: "பல்கலைக்கழக பெயரை உள்ளிடவும்",
+    degreePlaceholder: "பட்டப்படிப்பு திட்டத்தை தேர்ந்தெடுக்கவும்",
+    degreeAria: "பட்டப்படிப்பு திட்டம்",
+    enterDegreeProgram: "பட்டப்படிப்பு திட்டத்தை உள்ளிடவும்",
+    pleaseSpecify: "தயவுசெய்து குறிப்பிடவும்",
+    optionalLabel: "(விருப்பம்)",
+    reviewDetails: "விவரங்களை சரிபார்க்கவும்",
+    name: "பெயர்",
+    role: "பங்கு",
+    termsStatement: "UniCare Connect விதிமுறைகளை ஏற்கிறேன், மேலும் இந்த கணக்கு சரிபார்க்கப்பட்ட ஆதரவு அணுகலுக்கானது என்பதை புரிந்துகொள்கிறேன்.",
+    signInTab: "உள்நுழை",
+    signUpTab: "பதிவு செய்",
+    welcomeBack: "UniCare Connect க்கு மீண்டும் வரவேற்கிறோம்",
+    createUniCareAccount: "உங்கள் UniCare கணக்கை உருவாக்கவும்",
+    signInSubtitle: "உங்கள் ஆதரவு பயணத்தை தொடர உள்நுழைக.",
+    signUpSubtitle: "உங்கள் பங்கை அடிப்படையாகக் கொண்ட எளிய 4 படி அமைப்பை முடிக்கவும்.",
+    emailVerifiedSuccess: "மின்னஞ்சல் வெற்றிகரமாக சரிபார்க்கப்பட்டது. இப்போது உள்நுழையலாம்.",
+    signInButton: "உள்நுழை",
+    signingIn: "உள்நுழைகிறது...",
+    signInWithGoogle: "Google மூலம் உள்நுழை",
+    forgotPassword: "கடவுச்சொல் மறந்துவிட்டதா?",
+    createAccountLink: "கணக்கை உருவாக்கவும்",
+    step: "படி",
+    back: "பின்னுக்கு",
+    alreadyHaveAccount: "ஏற்கனவே கணக்கு உள்ளதா?",
+    continue: "தொடரவும்",
+    createAccountButton: "கணக்கை உருவாக்கவும்",
+    accountCreatedTitle: "கணக்கு உருவாக்கப்பட்டது",
+    ok: "சரி"
   }
-};
-
-AUTH_TEXT.si = {
-  ...AUTH_TEXT.en,
-  selectRoleContinue: "ඉදිරියට යාමට ඔබගේ භූමිකාව තෝරන්න.",
-  selectRole: "ඔබගේ භූමිකාව තෝරන්න",
-  rolePlaceholder: "ඔබගේ භූමිකාව සොයන්න හෝ තෝරන්න",
-  roleAria: "භූමිකාව",
-  fullName: "සම්පූර්ණ නම",
-  yourFullName: "ඔබගේ සම්පූර්ණ නම",
-  email: "ඊමේල්",
-  password: "මුරපදය",
-  confirmPassword: "මුරපදය තහවුරු කරන්න",
-  min6Chars: "අවම අක්ෂර 6ක්",
-  reenterPassword: "මුරපදය නැවත ඇතුළත් කරන්න",
-  universityPlaceholder: "ඔබගේ විශ්වවිද්‍යාලය සොයන්න හෝ තෝරන්න",
-  universityAria: "විශ්වවිද්‍යාලය",
-  enterUniversityName: "විශ්වවිද්‍යාල නම ඇතුළත් කරන්න",
-  degreePlaceholder: "උපාධි වැඩසටහන සොයන්න හෝ තෝරන්න",
-  degreeAria: "උපාධි වැඩසටහන",
-  enterDegreeProgram: "උපාධි වැඩසටහන ඇතුළත් කරන්න",
-  pleaseSpecify: "විස්තර කරන්න",
-  optionalLabel: "(විකල්ප)",
-  reviewDetails: "තොරතුරු සමාලෝචනය",
-  name: "නම",
-  role: "භූමිකාව",
-  termsStatement: "මම UniCare Connect කොන්දේසි පිළිගනිමි සහ මෙම ගිණුම තහවුරු කළ සහය ප්‍රවේශයට බව අවබෝධ කරමි.",
-  signInTab: "පිවිසෙන්න",
-  signUpTab: "ලියාපදිංචි වන්න",
-  welcomeBack: "UniCare Connect වෙත නැවත සාදරයෙන් පිළිගනිමු",
-  createUniCareAccount: "ඔබගේ UniCare ගිණුම සාදන්න",
-  signInSubtitle: "ඔබගේ සහය ගමන ඉදිරියට ගෙන යාමට පිවිසෙන්න.",
-  signUpSubtitle: "ඔබගේ භූමිකාව අනුව පියවර 4ක සරල සැකසුම සම්පූර්ණ කරන්න.",
-  emailVerifiedSuccess: "ඊමේල් සාර්ථකව තහවුරු විය. දැන් ඔබට පිවිසිය හැක.",
-  signInButton: "පිවිසෙන්න",
-  signingIn: "Signing in...",
-  signInWithGoogle: "Google මඟින් පිවිසෙන්න",
-  forgotPassword: "මුරපදය අමතකද?",
-  createAccountLink: "ගිණුම සාදන්න",
-  step: "පියවර",
-  back: "ආපසු",
-  alreadyHaveAccount: "දැනටමත් ගිණුමක් තිබේද?",
-  continue: "ඉදිරියට",
-  createAccountButton: "ගිණුම සාදන්න",
-  accountCreatedTitle: "ගිණුම සෑදිණි",
-  ok: "හරි"
-};
-
-AUTH_TEXT.ta = {
-  ...AUTH_TEXT.en,
-  selectRoleContinue: "தொடர உங்கள் பங்கை தேர்ந்தெடுக்கவும்.",
-  selectRole: "உங்கள் பங்கை தேர்ந்தெடுக்கவும்",
-  rolePlaceholder: "உங்கள் பங்கை தேடவும் அல்லது தேர்ந்தெடுக்கவும்",
-  roleAria: "பங்கு",
-  fullName: "முழுப்பெயர்",
-  yourFullName: "உங்கள் முழுப்பெயர்",
-  email: "மின்னஞ்சல்",
-  password: "கடவுச்சொல்",
-  confirmPassword: "கடவுச்சொல்லை உறுதிப்படுத்தவும்",
-  min6Chars: "குறைந்தது 6 எழுத்துகள்",
-  reenterPassword: "கடவுச்சொல்லை மீண்டும் உள்ளிடவும்",
-  universityPlaceholder: "உங்கள் பல்கலைக்கழகத்தை தேடவும் அல்லது தேர்ந்தெடுக்கவும்",
-  universityAria: "பல்கலைக்கழகம்",
-  enterUniversityName: "பல்கலைக்கழக பெயரை உள்ளிடவும்",
-  degreePlaceholder: "பட்டப்படிப்பு திட்டத்தை தேடவும் அல்லது தேர்ந்தெடுக்கவும்",
-  degreeAria: "பட்டப்படிப்பு திட்டம்",
-  enterDegreeProgram: "பட்டப்படிப்பு திட்டத்தை உள்ளிடவும்",
-  pleaseSpecify: "தயவுசெய்து குறிப்பிடவும்",
-  optionalLabel: "(விருப்பம்)",
-  reviewDetails: "விவரங்களை சரிபார்க்கவும்",
-  name: "பெயர்",
-  role: "பங்கு",
-  termsStatement: "UniCare Connect விதிமுறைகளை ஏற்கிறேன், மேலும் இந்த கணக்கு சரிபார்க்கப்பட்ட ஆதரவு அணுகலுக்கானது என்பதை புரிந்துகொள்கிறேன்.",
-  signInTab: "உள்நுழை",
-  signUpTab: "பதிவு செய்",
-  welcomeBack: "UniCare Connect க்கு மீண்டும் வரவேற்கிறோம்",
-  createUniCareAccount: "உங்கள் UniCare கணக்கை உருவாக்கவும்",
-  signInSubtitle: "உங்கள் ஆதரவு பயணத்தை தொடர உள்நுழைக.",
-  signUpSubtitle: "உங்கள் பங்கை அடிப்படையாகக் கொண்ட எளிய 4 படி அமைப்பை முடிக்கவும்.",
-  emailVerifiedSuccess: "மின்னஞ்சல் வெற்றிகரமாக சரிபார்க்கப்பட்டது. இப்போது உள்நுழையலாம்.",
-  signInButton: "உள்நுழை",
-  signingIn: "Signing in...",
-  signInWithGoogle: "Google மூலம் உள்நுழை",
-  forgotPassword: "கடவுச்சொல் மறந்துவிட்டதா?",
-  createAccountLink: "கணக்கை உருவாக்கவும்",
-  step: "படி",
-  back: "பின்னுக்கு",
-  alreadyHaveAccount: "ஏற்கனவே கணக்கு உள்ளதா?",
-  continue: "தொடரவும்",
-  createAccountButton: "கணக்கை உருவாக்கவும்",
-  accountCreatedTitle: "கணக்கு உருவாக்கப்பட்டது",
-  ok: "சரி"
 };
 
 export default function LoginPage() {
@@ -834,6 +741,9 @@ export default function LoginPage() {
     }
   };
 
+  const darkInputClass =
+    "border-white/15 bg-neutral-900 text-white placeholder:text-neutral-500 focus:border-white/40 dark:border-white/15 dark:bg-neutral-900";
+
   const renderSignUpStep = () => {
     if (signUpStep === 1) {
       const signupRoles: UserRole[] = [
@@ -851,7 +761,7 @@ export default function LoginPage() {
       }));
       return (
         <div className="space-y-2">
-          <label className="text-sm font-medium text-slate-900" htmlFor="role">
+          <label className="text-sm font-medium text-neutral-200" htmlFor="role">
             {t.selectRole}
           </label>
           <RolePicker
@@ -863,7 +773,7 @@ export default function LoginPage() {
             aria-label={t.roleAria}
           />
           {selectedRoleConfig ? (
-            <p className="text-xs text-slate-500">{selectedRoleConfig.helper}</p>
+            <p className="text-xs text-neutral-400">{selectedRoleConfig.helper}</p>
           ) : null}
         </div>
       );
@@ -871,10 +781,10 @@ export default function LoginPage() {
 
     if (signUpStep === 2) {
       return (
-        <div className="grid gap-3 md:grid-cols-2">
+        <div className="grid gap-3.5 md:grid-cols-2">
           <div className="space-y-2 md:col-span-2">
-            <label className="text-sm font-medium text-slate-900" htmlFor="signup-name">
-              {t.fullName} <span className="text-red-500">*</span>
+            <label className="text-sm font-medium text-neutral-200" htmlFor="signup-name">
+              {t.fullName} <span className="text-rose-400">*</span>
             </label>
             <Input
               id="signup-name"
@@ -885,13 +795,13 @@ export default function LoginPage() {
               }}
               placeholder={t.yourFullName}
               required
-              className={step2Errors.name ? "border-red-400 focus-visible:ring-red-400/30" : ""}
+              className={`${darkInputClass} ${step2Errors.name ? "border-rose-400" : ""}`}
             />
-            {step2Errors.name && <p className="text-xs text-red-500">{step2Errors.name}</p>}
+            {step2Errors.name && <p className="text-xs text-rose-400">{step2Errors.name}</p>}
           </div>
           <div className="space-y-2 md:col-span-2">
-            <label className="text-sm font-medium text-slate-900" htmlFor="signup-email">
-              {t.email} <span className="text-red-500">*</span>
+            <label className="text-sm font-medium text-neutral-200" htmlFor="signup-email">
+              {t.email} <span className="text-rose-400">*</span>
             </label>
             <Input
               id="signup-email"
@@ -903,13 +813,13 @@ export default function LoginPage() {
               }}
               placeholder="name@domain.com"
               required
-              className={step2Errors.email ? "border-red-400 focus-visible:ring-red-400/30" : ""}
+              className={`${darkInputClass} ${step2Errors.email ? "border-rose-400" : ""}`}
             />
-            {step2Errors.email && <p className="text-xs text-red-500">{step2Errors.email}</p>}
+            {step2Errors.email && <p className="text-xs text-rose-400">{step2Errors.email}</p>}
           </div>
           <div className="space-y-2">
-            <label className="text-sm font-medium text-slate-900" htmlFor="signup-password">
-              {t.password} <span className="text-red-500">*</span>
+            <label className="text-sm font-medium text-neutral-200" htmlFor="signup-password">
+              {t.password} <span className="text-rose-400">*</span>
             </label>
             <div className="relative">
               <Input
@@ -922,13 +832,13 @@ export default function LoginPage() {
                 }}
                 placeholder={t.min6Chars}
                 required
-                className={`pr-10 ${step2Errors.password ? "border-red-400 focus-visible:ring-red-400/30" : ""}`}
+                className={`pr-10 ${darkInputClass} ${step2Errors.password ? "border-rose-400" : ""}`}
               />
               <button
                 type="button"
                 onClick={() => setShowSignUpPassword((v) => !v)}
                 aria-label={showSignUpPassword ? "Hide password" : "Show password"}
-                className="absolute right-2 top-1/2 -translate-y-1/2 rounded-full p-1 text-slate-500 hover:text-slate-700"
+                className="absolute right-2 top-1/2 -translate-y-1/2 rounded-full p-1 text-neutral-400 hover:text-white"
               >
                 {showSignUpPassword ? (
                   <svg viewBox="0 0 24 24" className="h-4 w-4" fill="none" stroke="currentColor" strokeWidth="2">
@@ -944,11 +854,11 @@ export default function LoginPage() {
                 )}
               </button>
             </div>
-            {step2Errors.password && <p className="text-xs text-red-500">{step2Errors.password}</p>}
+            {step2Errors.password && <p className="text-xs text-rose-400">{step2Errors.password}</p>}
           </div>
           <div className="space-y-2">
-            <label className="text-sm font-medium text-slate-900" htmlFor="signup-confirm-password">
-              {t.confirmPassword} <span className="text-red-500">*</span>
+            <label className="text-sm font-medium text-neutral-200" htmlFor="signup-confirm-password">
+              {t.confirmPassword} <span className="text-rose-400">*</span>
             </label>
             <div className="relative">
               <Input
@@ -961,13 +871,13 @@ export default function LoginPage() {
                 }}
                 placeholder={t.reenterPassword}
                 required
-                className={`pr-10 ${step2Errors.confirmPassword ? "border-red-400 focus-visible:ring-red-400/30" : ""}`}
+                className={`pr-10 ${darkInputClass} ${step2Errors.confirmPassword ? "border-rose-400" : ""}`}
               />
               <button
                 type="button"
                 onClick={() => setShowSignUpConfirmPassword((v) => !v)}
                 aria-label={showSignUpConfirmPassword ? "Hide password" : "Show password"}
-                className="absolute right-2 top-1/2 -translate-y-1/2 rounded-full p-1 text-slate-500 hover:text-slate-700"
+                className="absolute right-2 top-1/2 -translate-y-1/2 rounded-full p-1 text-neutral-400 hover:text-white"
               >
                 {showSignUpConfirmPassword ? (
                   <svg viewBox="0 0 24 24" className="h-4 w-4" fill="none" stroke="currentColor" strokeWidth="2">
@@ -984,7 +894,7 @@ export default function LoginPage() {
               </button>
             </div>
             {step2Errors.confirmPassword && (
-              <p className="text-xs text-red-500">{step2Errors.confirmPassword}</p>
+              <p className="text-xs text-rose-400">{step2Errors.confirmPassword}</p>
             )}
           </div>
         </div>
@@ -1003,12 +913,12 @@ export default function LoginPage() {
         (!isStudent && config.field2Kind === "dropdown" && isOtherSelection(signUpData.fieldB));
 
       return (
-        <div className="grid gap-4">
+        <div className="grid gap-3">
           {/* Field 1 - University dropdown or text */}
-          <div className="space-y-2">
-            <label className="text-sm font-medium text-slate-900" htmlFor="fieldA">
+          <div className="space-y-1.5">
+            <label className="text-sm font-medium text-neutral-200" htmlFor="fieldA">
               {f1.label}
-              {!f1.optional && <span className="text-red-500"> *</span>}
+              {!f1.optional && <span className="text-rose-400"> *</span>}
             </label>
             {config.field1Kind === "university" ? (
               <>
@@ -1027,7 +937,7 @@ export default function LoginPage() {
                     value={signUpData.fieldAOther}
                     onChange={(e) => updateSignUpField("fieldAOther", e.target.value)}
                     placeholder={t.enterUniversityName}
-                    className="mt-2"
+                    className={`mt-2 ${darkInputClass}`}
                   />
                 )}
               </>
@@ -1037,16 +947,17 @@ export default function LoginPage() {
                 value={signUpData.fieldA}
                 onChange={(e) => updateSignUpField("fieldA", e.target.value)}
                 placeholder={f1.placeholder}
+                className={darkInputClass}
               />
             )}
-            {fieldErrors.fieldA && <p className="text-xs text-red-500">{fieldErrors.fieldA}</p>}
+            {fieldErrors.fieldA && <p className="text-xs text-rose-400">{fieldErrors.fieldA}</p>}
           </div>
 
           {/* Field 2 - Degree (dynamic), dropdown, or text */}
           <div className="space-y-2">
-            <label className="text-sm font-medium text-slate-900" htmlFor="fieldB">
+            <label className="text-sm font-medium text-neutral-200" htmlFor="fieldB">
               {f2.label}
-              {!f2.optional && <span className="text-red-500"> *</span>}
+              {!f2.optional && <span className="text-rose-400"> *</span>}
             </label>
             {config.field2Kind === "degree" ? (
               <>
@@ -1064,31 +975,29 @@ export default function LoginPage() {
                     value={signUpData.fieldBOther}
                     onChange={(e) => updateSignUpField("fieldBOther", e.target.value)}
                     placeholder={t.enterDegreeProgram}
-                    className="mt-2"
+                    className={`mt-2 ${darkInputClass}`}
                   />
                 )}
               </>
             ) : config.field2Kind === "dropdown" && config.field2Options ? (
               <>
-                <select
+                <RolePicker
                   id="fieldB"
+                  options={config.field2Options.map((opt) => ({
+                    value: opt,
+                    label: localizeSignupOptionLabel(opt, language)
+                  }))}
                   value={signUpData.fieldB}
-                  onChange={(e) => updateSignUpField("fieldB", e.target.value)}
-                  className="w-full rounded-xl border border-slate-200 bg-white px-3 py-2.5 text-sm focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary/20 dark:border-slate-700 dark:bg-slate-900"
-                >
-                  <option value="">{f2.placeholder}</option>
-                  {config.field2Options.map((opt) => (
-                    <option key={opt} value={opt}>
-                      {localizeSignupOptionLabel(opt, language)}
-                    </option>
-                  ))}
-                </select>
+                  onChange={(v) => updateSignUpField("fieldB", v)}
+                  placeholder={f2.placeholder}
+                  aria-label={f2.label}
+                />
                 {showFieldBOther && (
                   <Input
                     value={signUpData.fieldBOther}
                     onChange={(e) => updateSignUpField("fieldBOther", e.target.value)}
                     placeholder={t.pleaseSpecify}
-                    className="mt-2"
+                    className={`mt-2 ${darkInputClass}`}
                   />
                 )}
               </>
@@ -1098,17 +1007,18 @@ export default function LoginPage() {
                 value={signUpData.fieldB}
                 onChange={(e) => updateSignUpField("fieldB", e.target.value)}
                 placeholder={f2.placeholder}
+                className={darkInputClass}
               />
             )}
-            {fieldErrors.fieldB && <p className="text-xs text-red-500">{fieldErrors.fieldB}</p>}
+            {fieldErrors.fieldB && <p className="text-xs text-rose-400">{fieldErrors.fieldB}</p>}
           </div>
 
           {/* Field 3 */}
           <div className="space-y-2">
-            <label className="text-sm font-medium text-slate-900" htmlFor="fieldC">
+            <label className="text-sm font-medium text-neutral-200" htmlFor="fieldC">
               {f3.label}
-              {!f3.optional && <span className="text-red-500"> *</span>}
-              {f3.optional && <span className="ml-1 text-slate-400">{t.optionalLabel}</span>}
+              {!f3.optional && <span className="text-rose-400"> *</span>}
+              {f3.optional && <span className="ml-1 text-neutral-500">{t.optionalLabel}</span>}
             </label>
             {f3.type === "tel" ? (
               <Input
@@ -1123,13 +1033,7 @@ export default function LoginPage() {
                   updateSignUpField("fieldC", digits);
                 }}
                 placeholder={f3.placeholder}
-                className={
-                  fieldErrors.fieldC
-                    ? "border-red-400 focus-visible:ring-red-400/30"
-                    : f3.optional
-                      ? "border-slate-200 bg-slate-50/50 dark:bg-slate-800/50"
-                      : ""
-                }
+                className={`${darkInputClass} ${fieldErrors.fieldC ? "border-rose-400" : ""}`}
               />
             ) : (
               <Input
@@ -1138,11 +1042,11 @@ export default function LoginPage() {
                 value={signUpData.fieldC}
                 onChange={(e) => updateSignUpField("fieldC", e.target.value)}
                 placeholder={f3.placeholder}
-                className={f3.optional ? "border-slate-200 bg-slate-50/50 dark:bg-slate-800/50" : ""}
+                className={darkInputClass}
               />
             )}
-            {f3.helpText && <p className="text-xs text-slate-500">{f3.helpText}</p>}
-            {fieldErrors.fieldC && <p className="text-xs text-red-500">{fieldErrors.fieldC}</p>}
+            {f3.helpText && <p className="text-xs text-neutral-400">{f3.helpText}</p>}
+            {fieldErrors.fieldC && <p className="text-xs text-rose-400">{fieldErrors.fieldC}</p>}
           </div>
         </div>
       );
@@ -1150,9 +1054,9 @@ export default function LoginPage() {
 
     return (
       <div className="space-y-4">
-        <div className="rounded-2xl border border-slate-200 bg-slate-50 p-4 text-sm dark:bg-slate-800/50 dark:border-slate-700">
-          <p className="font-semibold text-slate-900 dark:text-slate-100">{t.reviewDetails}</p>
-          <ul className="mt-2 space-y-1 text-slate-600 dark:text-slate-300">
+        <div className="rounded-2xl border border-white/10 bg-black/60 p-4 text-sm">
+          <p className="font-semibold text-white">{t.reviewDetails}</p>
+          <ul className="mt-2 space-y-1 text-neutral-300">
             <li>{t.name}: {signUpData.name}</li>
             <li>{t.email}: {signUpData.email}</li>
             <li>{t.role}: {signUpData.role ? roleConfigs[signUpData.role].label : "-"}</li>
@@ -1161,7 +1065,7 @@ export default function LoginPage() {
             <li>{selectedRoleConfig?.fields[2].label}: {signUpData.fieldC.trim() || "-"}</li>
           </ul>
         </div>
-        <label className="flex items-start gap-2 text-sm text-slate-600">
+        <label className="flex items-start gap-2.5 text-sm text-neutral-300">
           <input
             type="checkbox"
             checked={signUpData.acceptedTerms}
@@ -1169,7 +1073,7 @@ export default function LoginPage() {
               updateSignUpField("acceptedTerms", event.target.checked);
               if (signUpError === t.acceptTerms) setSignUpError(null);
             }}
-            className="mt-1 h-4 w-4 rounded border-slate-300"
+            className="mt-1 h-4 w-4 rounded border-white/25 bg-neutral-900 accent-white"
           />
           {t.termsStatement}
         </label>
@@ -1178,245 +1082,266 @@ export default function LoginPage() {
   };
 
   return (
-    <div className="min-h-screen w-full bg-slate-100 lg:grid lg:grid-cols-2">
-      <aside className="relative hidden lg:block">
-        <Image
-          src={mode === "signin" ? "/signin.png" : "/signup.png"}
-          alt={mode === "signin" ? "Sign in visual" : "Sign up visual"}
-          fill
-          className="object-cover"
-          priority
-        />
-        <div className="absolute inset-0 bg-gradient-to-b from-slate-950/45 via-slate-900/25 to-primary/45" />
-        <div className="relative z-10 flex h-full flex-col justify-end p-10 text-white">
-          <div className="space-y-2">
-            <h2 className="text-3xl font-semibold leading-tight">
-              {mode === "signin" ? t.welcomeBack : t.createUniCareAccount}
-            </h2>
-            <p className="max-w-md text-base text-white/85">
-              {mode === "signin" ? t.signInSubtitle : t.signUpSubtitle}
-            </p>
-          </div>
-        </div>
-      </aside>
-      <section className="relative flex min-h-screen items-center bg-white px-4 py-10 sm:px-8 lg:px-12">
-        <div className="absolute left-4 top-4 flex flex-col items-start gap-2 sm:left-8 sm:top-6 sm:flex-row sm:items-center sm:gap-3 lg:left-12 lg:top-8">
-          <LanguageSwitcher />
-        </div>
-        <div className="absolute right-4 top-4 sm:right-8 sm:top-6 lg:right-12 lg:top-8">
-          <Link href="/" aria-label="Go to landing page">
-            <Image
-              src="/logo.png"
-              alt="UniCare Connect"
-              width={220}
-              height={88}
-              className="h-12 w-auto rounded-lg bg-white/90 p-1.5 shadow-sm sm:h-14 sm:p-2 lg:h-16"
-              priority
-            />
-          </Link>
-        </div>
-        <div className="w-full max-w-xl">
-          <div className="border-b border-slate-200 p-5 sm:p-6">
-            <div className="inline-flex rounded-full border border-slate-200 bg-slate-50 p-1">
-              <button
-                type="button"
-                onClick={() => setMode("signin")}
-                className={`rounded-full px-4 py-1.5 text-sm font-medium transition ${
-                  mode === "signin" ? "bg-primary text-white" : "text-slate-600"
-                }`}
-              >
-                {t.signInTab}
-              </button>
-              <button
-                type="button"
-                onClick={() => setMode("signup")}
-                className={`rounded-full px-4 py-1.5 text-sm font-medium transition ${
-                  mode === "signup" ? "bg-primary text-white" : "text-slate-600"
-                }`}
-              >
-                {t.signUpTab}
-              </button>
+    <div className="relative flex h-screen w-full flex-col overflow-hidden bg-black text-white">
+      <div className="pointer-events-none absolute inset-0 bg-[linear-gradient(to_right,rgba(255,255,255,0.035)_1px,transparent_1px),linear-gradient(to_bottom,rgba(255,255,255,0.035)_1px,transparent_1px)] bg-[size:44px_44px]" />
+
+      {/* Minimal Top Bar: Logo left, Language switcher right */}
+      <header className="relative z-10 mx-auto flex w-full max-w-6xl shrink-0 items-center justify-between px-6 pt-5">
+        <Link href="/" aria-label="Go to landing page" className="inline-flex items-center">
+          <Image
+            src="/logo.png"
+            alt="UniCare Connect"
+            width={150}
+            height={44}
+            className="h-9 w-auto object-contain"
+            priority
+          />
+        </Link>
+        <LanguageSwitcher />
+      </header>
+
+      {/* Centered Sleek Dark Auth Card */}
+      <section className="relative z-10 mx-auto flex flex-1 w-full max-w-lg items-center justify-center px-4 py-2">
+        <ScrollReveal className="w-full">
+          <div className="w-full rounded-3xl border border-white/15 bg-neutral-950/95 shadow-2xl">
+            <div className="border-b border-white/10 p-5 sm:p-6">
+              <div className="flex items-center gap-6 border-b border-white/10 pb-2.5">
+                <button
+                  type="button"
+                  onClick={() => setMode("signin")}
+                  className={`relative pb-1.5 text-sm font-semibold transition-colors ${
+                    mode === "signin"
+                      ? "text-white after:absolute after:bottom-[-11px] after:left-0 after:right-0 after:h-0.5 after:bg-white"
+                      : "text-neutral-500 hover:text-neutral-300"
+                  }`}
+                >
+                  {t.signInTab}
+                </button>
+                <button
+                  type="button"
+                  onClick={() => setMode("signup")}
+                  className={`relative pb-1.5 text-sm font-semibold transition-colors ${
+                    mode === "signup"
+                      ? "text-white after:absolute after:bottom-[-11px] after:left-0 after:right-0 after:h-0.5 after:bg-white"
+                      : "text-neutral-500 hover:text-neutral-300"
+                  }`}
+                >
+                  {t.signUpTab}
+                </button>
+              </div>
+              <h1 className="mt-4 text-xl font-bold tracking-tight text-white sm:text-2xl">
+                {mode === "signin" ? t.welcomeBack : t.createUniCareAccount}
+              </h1>
+              <p className="mt-1 text-xs text-neutral-400 sm:text-sm">
+                {mode === "signin" ? t.signInSubtitle : t.signUpSubtitle}
+              </p>
             </div>
-            <h1 className="mt-4 text-2xl font-semibold text-slate-900">
-              {mode === "signin" ? t.welcomeBack : t.createUniCareAccount}
-            </h1>
-            <p className="mt-1 text-sm text-slate-500">
-              {mode === "signin"
-                ? t.signInSubtitle
-                : t.signUpSubtitle}
-            </p>
-          </div>
-          <div className="p-5 sm:p-6">
-            {mode === "signin" ? (
-              <form className="space-y-4" onSubmit={handleSignInSubmit}>
-                <div className="space-y-2">
-                  <label className="text-sm font-medium" htmlFor="email">
-                    {t.email}
-                  </label>
-                  <Input
-                    id="email"
-                    name="email"
-                    type="email"
-                    required
-                    aria-required="true"
-                    defaultValue={recentlyRegisteredEmail ?? ""}
-                  />
-                </div>
-                <div className="space-y-2">
-                  <label className="text-sm font-medium" htmlFor="password">
-                    {t.password}
-                  </label>
-                  <div className="relative">
+
+            <div className="p-5 sm:p-6">
+              {mode === "signin" ? (
+                <form className="space-y-4" onSubmit={handleSignInSubmit}>
+                  <div className="space-y-2">
+                    <label className="text-sm font-medium text-neutral-200" htmlFor="email">
+                      {t.email}
+                    </label>
                     <Input
-                      id="password"
-                      name="password"
-                      type={showSignInPassword ? "text" : "password"}
+                      id="email"
+                      name="email"
+                      type="email"
                       required
                       aria-required="true"
-                      className="pr-10"
+                      placeholder="name@domain.com"
+                      defaultValue={recentlyRegisteredEmail ?? ""}
+                      className={`h-11 ${darkInputClass}`}
                     />
+                  </div>
+                  <div className="space-y-2">
+                    <label className="text-sm font-medium text-neutral-200" htmlFor="password">
+                      {t.password}
+                    </label>
+                    <div className="relative">
+                      <Input
+                        id="password"
+                        name="password"
+                        type={showSignInPassword ? "text" : "password"}
+                        required
+                        aria-required="true"
+                        className={`h-11 pr-10 ${darkInputClass}`}
+                      />
+                      <button
+                        type="button"
+                        onClick={() => setShowSignInPassword((v) => !v)}
+                        aria-label={showSignInPassword ? "Hide password" : "Show password"}
+                        className="absolute right-2.5 top-1/2 -translate-y-1/2 rounded-full p-1 text-neutral-400 hover:text-white"
+                      >
+                        {showSignInPassword ? (
+                          <svg viewBox="0 0 24 24" className="h-4 w-4" fill="none" stroke="currentColor" strokeWidth="2">
+                            <path d="M17.94 17.94A10.94 10.94 0 0 1 12 20c-5.52 0-10.19-3.51-11.83-8.38a10.93 10.93 0 0 1 5.17-6.07" />
+                            <path d="M1 1l22 22" />
+                            <path d="M9.88 9.88a3 3 0 0 0 4.24 4.24" />
+                          </svg>
+                        ) : (
+                          <svg viewBox="0 0 24 24" className="h-4 w-4" fill="none" stroke="currentColor" strokeWidth="2">
+                            <path d="M1.5 12s4.5-7 10.5-7 10.5 7 10.5 7-4.5 7-10.5 7-10.5-7-10.5-7z" />
+                            <circle cx="12" cy="12" r="3" />
+                          </svg>
+                        )}
+                      </button>
+                    </div>
+                  </div>
+                  {isVerifiedRedirect ? (
+                    <p className="rounded-xl border border-emerald-500/30 bg-emerald-500/10 px-3.5 py-2 text-sm text-emerald-300">
+                      {t.emailVerifiedSuccess}
+                    </p>
+                  ) : null}
+                  {signUpSuccess ? (
+                    <p className="rounded-xl border border-emerald-500/30 bg-emerald-500/10 px-3.5 py-2 text-sm text-emerald-300">
+                      {signUpSuccess}
+                    </p>
+                  ) : null}
+                  {signInError ? (
+                    <p className="rounded-xl border border-rose-500/30 bg-rose-500/10 px-3.5 py-2 text-sm text-rose-300">
+                      {signInError}
+                    </p>
+                  ) : null}
+                  <div className="grid gap-3 pt-1 sm:grid-cols-2">
+                    <button
+                      type="submit"
+                      disabled={signInBusy || pendingRedirect || loading}
+                      className="h-11 rounded-full bg-white px-5 text-sm font-semibold text-black transition hover:bg-neutral-200 disabled:opacity-50"
+                    >
+                      {signInBusy || pendingRedirect || loading ? t.signingIn : t.signInButton}
+                    </button>
                     <button
                       type="button"
-                      onClick={() => setShowSignInPassword((v) => !v)}
-                      aria-label={showSignInPassword ? "Hide password" : "Show password"}
-                      className="absolute right-2 top-1/2 -translate-y-1/2 rounded-full p-1 text-slate-500 hover:text-slate-700"
+                      onClick={handleGoogleSignIn}
+                      disabled={signInBusy || pendingRedirect || loading}
+                      className="inline-flex h-11 items-center justify-center gap-2 rounded-full border border-white/15 bg-neutral-900 px-5 text-sm font-medium text-white transition hover:border-white/35 hover:bg-neutral-800 disabled:opacity-50"
                     >
-                      {showSignInPassword ? (
-                        <svg viewBox="0 0 24 24" className="h-4 w-4" fill="none" stroke="currentColor" strokeWidth="2">
-                          <path d="M17.94 17.94A10.94 10.94 0 0 1 12 20c-5.52 0-10.19-3.51-11.83-8.38a10.93 10.93 0 0 1 5.17-6.07" />
-                          <path d="M1 1l22 22" />
-                          <path d="M9.88 9.88a3 3 0 0 0 4.24 4.24" />
-                        </svg>
+                      {signInBusy || pendingRedirect || loading ? (
+                        t.signingIn
                       ) : (
-                        <svg viewBox="0 0 24 24" className="h-4 w-4" fill="none" stroke="currentColor" strokeWidth="2">
-                          <path d="M1.5 12s4.5-7 10.5-7 10.5 7 10.5 7-4.5 7-10.5 7-10.5-7-10.5-7z" />
-                          <circle cx="12" cy="12" r="3" />
-                        </svg>
+                        <>
+                          <svg viewBox="0 0 24 24" className="h-4 w-4" aria-hidden="true">
+                            <path
+                              fill="#EA4335"
+                              d="M12 10.2v3.9h5.4c-.2 1.3-1.5 3.9-5.4 3.9-3.3 0-6-2.7-6-6s2.7-6 6-6c1.9 0 3.1.8 3.8 1.5l2.6-2.5C16.8 3.5 14.6 2.6 12 2.6a9.4 9.4 0 1 0 0 18.8c5.4 0 9-3.8 9-9.1 0-.6-.1-1.1-.2-1.6H12Z"
+                            />
+                            <path
+                              fill="#34A853"
+                              d="M3.6 7.7 6.8 10c.9-1.8 2.8-3.1 5.2-3.1 1.9 0 3.1.8 3.8 1.5l2.6-2.5C16.8 3.5 14.6 2.6 12 2.6c-3.6 0-6.7 2-8.4 5.1Z"
+                            />
+                            <path
+                              fill="#FBBC05"
+                              d="M12 21.4c2.6 0 4.9-.9 6.5-2.4l-3-2.4c-.8.6-1.9 1-3.5 1-3 0-5.5-2-6.4-4.7l-3.1 2.4c1.7 3.2 5 5.1 9.5 5.1Z"
+                            />
+                            <path
+                              fill="#4285F4"
+                              d="M21 12.3c0-.6-.1-1.1-.2-1.6H12v3.9h5.4c-.2 1.1-.9 2.1-1.9 2.8l3 2.4c1.7-1.6 2.5-4 2.5-7.5Z"
+                            />
+                          </svg>
+                          <span>{t.signInWithGoogle}</span>
+                        </>
                       )}
                     </button>
                   </div>
-                </div>
-                {isVerifiedRedirect ? (
-                  <p className="text-sm text-green-600">
-                    {t.emailVerifiedSuccess}
-                  </p>
-                ) : null}
-                {signUpSuccess ? <p className="text-sm text-green-600">{signUpSuccess}</p> : null}
-                {signInError ? <p className="text-sm text-red-500">{signInError}</p> : null}
-                <div className="grid gap-2 sm:grid-cols-2">
-                  <Button type="submit" disabled={signInBusy || pendingRedirect || loading}>
-                    {signInBusy || pendingRedirect || loading ? t.signingIn : t.signInButton}
-                  </Button>
-                  <Button
-                    type="button"
-                    variant="secondary"
-                    onClick={handleGoogleSignIn}
-                    disabled={signInBusy || pendingRedirect || loading}
-                    className="inline-flex items-center justify-center gap-2"
-                  >
-                    {signInBusy || pendingRedirect || loading ? (
-                      t.signingIn
-                    ) : (
-                      <>
-                        <svg viewBox="0 0 24 24" className="h-4 w-4" aria-hidden="true">
-                          <path
-                            fill="#EA4335"
-                            d="M12 10.2v3.9h5.4c-.2 1.3-1.5 3.9-5.4 3.9-3.3 0-6-2.7-6-6s2.7-6 6-6c1.9 0 3.1.8 3.8 1.5l2.6-2.5C16.8 3.5 14.6 2.6 12 2.6a9.4 9.4 0 1 0 0 18.8c5.4 0 9-3.8 9-9.1 0-.6-.1-1.1-.2-1.6H12Z"
-                          />
-                          <path
-                            fill="#34A853"
-                            d="M3.6 7.7 6.8 10c.9-1.8 2.8-3.1 5.2-3.1 1.9 0 3.1.8 3.8 1.5l2.6-2.5C16.8 3.5 14.6 2.6 12 2.6c-3.6 0-6.7 2-8.4 5.1Z"
-                          />
-                          <path
-                            fill="#FBBC05"
-                            d="M12 21.4c2.6 0 4.9-.9 6.5-2.4l-3-2.4c-.8.6-1.9 1-3.5 1-3 0-5.5-2-6.4-4.7l-3.1 2.4c1.7 3.2 5 5.1 9.5 5.1Z"
-                          />
-                          <path
-                            fill="#4285F4"
-                            d="M21 12.3c0-.6-.1-1.1-.2-1.6H12v3.9h5.4c-.2 1.1-.9 2.1-1.9 2.8l3 2.4c1.7-1.6 2.5-4 2.5-7.5Z"
-                          />
-                        </svg>
-                        <span>{t.signInWithGoogle}</span>
-                      </>
-                    )}
-                  </Button>
-                </div>
-                <div className="flex items-center justify-between text-sm text-slate-500">
-                  <Link href="/forgot-password">{t.forgotPassword}</Link>
-                  <button
-                    type="button"
-                    onClick={() => {
-                      setMode("signup");
-                      setSignInError(null);
-                    }}
-                    className="font-medium text-primary hover:underline"
-                  >
-                    {t.createAccountLink}
-                  </button>
-                </div>
-              </form>
-            ) : (
-              <form className="space-y-5" onSubmit={handleSignUpSubmit}>
-                <div className="grid grid-cols-4 gap-2">
-                  {[1, 2, 3, 4].map((step) => (
-                    <div key={step} className="space-y-2">
-                      <div
-                        className={`h-1 rounded-full ${
-                          signUpStep >= step ? "bg-primary" : "bg-slate-200"
-                        }`}
-                      />
-                      <p className="text-[11px] font-medium uppercase tracking-[0.12em] text-slate-500">
-                        {t.step} {step}
-                      </p>
-                    </div>
-                  ))}
-                </div>
-
-                {renderSignUpStep()}
-                {signUpError ? <p className="text-sm text-red-500">{signUpError}</p> : null}
-
-                <div className="flex flex-wrap items-center justify-between gap-2">
-                  <Button
-                    type="button"
-                    variant="secondary"
-                    onClick={goToPreviousSignUpStep}
-                    disabled={signUpStep === 1}
-                    className={signUpStep === 1 ? "cursor-not-allowed opacity-50" : ""}
-                  >
-                    {t.back}
-                  </Button>
-                  <div className="flex items-center gap-2">
+                  <div className="flex items-center justify-between pt-2 text-sm text-neutral-400">
+                    <Link href="/forgot-password" className="hover:text-white">
+                      {t.forgotPassword}
+                    </Link>
                     <button
                       type="button"
-                      onClick={() => setMode("signin")}
-                      className="text-sm font-medium text-slate-500 hover:text-slate-700"
+                      onClick={() => {
+                        setMode("signup");
+                        setSignInError(null);
+                      }}
+                      className="font-semibold text-white hover:underline"
                     >
-                      {t.alreadyHaveAccount}
+                      {t.createAccountLink}
                     </button>
-                    {signUpStep < 4 ? (
-                      <Button type="button" onClick={goToNextSignUpStep}>
-                        {t.continue}
-                      </Button>
-                    ) : (
-                      <Button type="submit">{t.createAccountButton}</Button>
-                    )}
                   </div>
-                </div>
-              </form>
-            )}
+                </form>
+              ) : (
+                <form className="space-y-5" onSubmit={handleSignUpSubmit}>
+                  <div className="grid grid-cols-4 gap-2">
+                    {[1, 2, 3, 4].map((step) => (
+                      <div key={step} className="space-y-2">
+                        <div
+                          className={`h-1 rounded-full transition-colors ${
+                            signUpStep >= step ? "bg-white" : "bg-white/15"
+                          }`}
+                        />
+                        <p className="text-[11px] font-medium uppercase tracking-[0.12em] text-neutral-400">
+                          {t.step} {step}
+                        </p>
+                      </div>
+                    ))}
+                  </div>
+
+                  {renderSignUpStep()}
+                  {signUpError ? (
+                    <p className="rounded-xl border border-rose-500/30 bg-rose-500/10 px-3.5 py-2 text-sm text-rose-300">
+                      {signUpError}
+                    </p>
+                  ) : null}
+
+                  <div className="flex flex-wrap items-center justify-between gap-2 pt-2">
+                    <button
+                      type="button"
+                      onClick={goToPreviousSignUpStep}
+                      disabled={signUpStep === 1}
+                      className={`rounded-full border border-white/15 bg-neutral-900 px-4 py-2 text-sm font-medium text-white transition hover:border-white/35 ${
+                        signUpStep === 1 ? "cursor-not-allowed opacity-40" : ""
+                      }`}
+                    >
+                      {t.back}
+                    </button>
+                    <div className="flex items-center gap-3">
+                      <button
+                        type="button"
+                        onClick={() => setMode("signin")}
+                        className="text-sm font-medium text-neutral-400 hover:text-white"
+                      >
+                        {t.alreadyHaveAccount}
+                      </button>
+                      {signUpStep < 4 ? (
+                        <button
+                          type="button"
+                          onClick={goToNextSignUpStep}
+                          className="rounded-full bg-white px-5 py-2 text-sm font-semibold text-black transition hover:bg-neutral-200"
+                        >
+                          {t.continue}
+                        </button>
+                      ) : (
+                        <button
+                          type="submit"
+                          className="rounded-full bg-white px-5 py-2 text-sm font-semibold text-black transition hover:bg-neutral-200"
+                        >
+                          {t.createAccountButton}
+                        </button>
+                      )}
+                    </div>
+                  </div>
+                </form>
+              )}
+            </div>
           </div>
-        </div>
+        </ScrollReveal>
       </section>
 
       {signUpPopupMessage ? (
-        <div className="fixed inset-0 z-50 grid place-items-center bg-slate-900/45 px-4">
-          <div className="w-full max-w-md rounded-2xl border border-slate-200 bg-white p-5 shadow-2xl">
-            <h2 className="text-lg font-semibold text-slate-900">{t.accountCreatedTitle}</h2>
-            <p className="mt-2 text-sm text-slate-600">{signUpPopupMessage}</p>
-            <div className="mt-5 flex justify-end">
-              <Button type="button" onClick={() => setSignUpPopupMessage(null)}>
+        <div className="fixed inset-0 z-50 grid place-items-center bg-black/75 px-4 backdrop-blur-sm">
+          <div className="w-full max-w-md rounded-3xl border border-white/15 bg-neutral-950 p-6 text-white shadow-2xl">
+            <h2 className="text-lg font-semibold text-white">{t.accountCreatedTitle}</h2>
+            <p className="mt-2 text-sm text-neutral-300">{signUpPopupMessage}</p>
+            <div className="mt-6 flex justify-end">
+              <button
+                type="button"
+                onClick={() => setSignUpPopupMessage(null)}
+                className="rounded-full bg-white px-5 py-2 text-sm font-semibold text-black transition hover:bg-neutral-200"
+              >
                 {t.ok}
-              </Button>
+              </button>
             </div>
           </div>
         </div>
@@ -1424,6 +1349,3 @@ export default function LoginPage() {
     </div>
   );
 }
-
-
-

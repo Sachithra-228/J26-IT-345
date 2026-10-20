@@ -282,6 +282,12 @@ export function formatEth(wei: string | bigint, decimals = 4): string {
   return `${negative ? "-" : ""}${whole.toString()}${frac ? `.${frac}` : ""}`;
 }
 
+/** Block-explorer link for a transaction, or null on networks without a public explorer (local simulation). */
+export function explorerTxUrl(chainId: number, txHash: string): string | null {
+  if (chainId === 11155111) return `https://sepolia.etherscan.io/tx/${txHash}`;
+  return null;
+}
+
 export function shortHash(value: string, head = 6, tail = 4): string {
   if (!value || value.length <= head + tail + 2) return value;
   return `${value.slice(0, head + 2)}…${value.slice(-tail)}`;

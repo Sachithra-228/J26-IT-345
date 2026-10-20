@@ -1,273 +1,219 @@
-﻿"use client";
+"use client";
 
-import { ChevronLeft, ChevronRight } from "lucide-react";
-import { useEffect, useRef, useState } from "react";
-import type { PointerEvent as ReactPointerEvent } from "react";
-import { Libre_Baskerville } from "next/font/google";
+import { useEffect, useRef } from "react";
+import { gsap } from "gsap";
+import { ScrollTrigger } from "gsap/ScrollTrigger";
 import { useLanguage } from "@/context/language-context";
 import { getUiTranslations } from "@/lib/ui-translations";
 
-type JourneySlide = {
-  step: string;
-  module: string;
-  thought: string;
-  resolved: string;
-  accent: string;
-};
-
-const slideAccents = [
-  "from-emerald-500/20 to-emerald-500/5",
-  "from-sky-500/20 to-sky-500/5",
-  "from-violet-500/20 to-violet-500/5",
-  "from-rose-500/20 to-rose-500/5",
-  "from-primary/20 to-primary/5"
-] as const;
-
-const libreBaskerville = Libre_Baskerville({
-  subsets: ["latin"],
-  weight: ["400", "700"]
-});
-
-function WalkingAvatar() {
-  return (
-    <div className="walking-avatar h-24 w-16">
-      <svg viewBox="0 0 96 140" className="h-full w-full" aria-hidden="true">
-        <defs>
-          <linearGradient id="walkShirtV2" x1="0%" y1="0%" x2="100%" y2="100%">
-            <stop offset="0%" stopColor="#2563eb" />
-            <stop offset="100%" stopColor="#1d4ed8" />
-          </linearGradient>
-        </defs>
-
-        <circle cx="48" cy="18" r="12" fill="#f8d5b9" stroke="#d4a985" strokeWidth="1.2" />
-        <path d="M38 30h20l4 32H34z" fill="url(#walkShirtV2)" />
-        <path d="M34 61h28v13H34z" fill="#0f172a" opacity="0.86" />
-
-        <g className="walk-arm-left">
-          <line x1="38" y1="40" x2="22" y2="63" stroke="#f8d5b9" strokeWidth="5" strokeLinecap="round" />
-        </g>
-        <g className="walk-arm-right">
-          <line x1="58" y1="40" x2="74" y2="66" stroke="#f8d5b9" strokeWidth="5" strokeLinecap="round" />
-        </g>
-
-        <g className="walk-leg-left">
-          <line x1="44" y1="74" x2="34" y2="114" stroke="#1e293b" strokeWidth="7" strokeLinecap="round" />
-          <ellipse cx="31" cy="118" rx="8" ry="4" fill="#111827" />
-        </g>
-        <g className="walk-leg-right">
-          <line x1="54" y1="74" x2="64" y2="114" stroke="#1e293b" strokeWidth="7" strokeLinecap="round" />
-          <ellipse cx="67" cy="118" rx="8" ry="4" fill="#111827" />
-        </g>
-      </svg>
-    </div>
-  );
+if (typeof window !== "undefined") {
+  gsap.registerPlugin(ScrollTrigger);
 }
 
 export function CoreModulesJourney() {
   const { language } = useLanguage();
   const text = getUiTranslations(language).coreJourney;
-  const slides: JourneySlide[] = text.slides.map((slide, index) => ({
-    ...slide,
-    accent: slideAccents[index] ?? "from-primary/20 to-primary/5"
-  }));
+
+  const modules =
+    language === "si"
+      ? [
+          { num: "01", label: "මූල්‍ය සහාය" },
+          { num: "02", label: "වෘත්තීය හා ශිෂ්‍යත්ව" },
+          { num: "03", label: "මාර්ගෝපදේශනය හා කැම්පස්" },
+          { num: "04", label: "සෞඛ්‍ය හා සුවතා" },
+        ]
+      : language === "ta"
+        ? [
+            { num: "01", label: "நிதி ஆதரவு" },
+            { num: "02", label: "தொழில் & உதவித்தொகை" },
+            { num: "03", label: "வழிகாட்டல் & வளாகம்" },
+            { num: "04", label: "ஆரோக்கியம் & நலன்" },
+          ]
+        : [
+            { num: "01", label: "Financial Support" },
+            { num: "02", label: "Career & Scholarships" },
+            { num: "03", label: "Mentorship & Campus" },
+            { num: "04", label: "Health & Wellness" },
+          ];
 
   const sectionRef = useRef<HTMLElement | null>(null);
-  const dragStateRef = useRef<{ pointerId: number | null; startX: number; startShift: number }>(
-    {
-      pointerId: null,
-      startX: 0,
-      startShift: 0
-    }
-  );
-  const [activeIndex, setActiveIndex] = useState(0);
-  const [entered, setEntered] = useState(false);
-  const [dragShift, setDragShift] = useState<number | null>(null);
+  const pinWrapRef = useRef<HTMLDivElement | null>(null);
+  const headerRef = useRef<HTMLDivElement | null>(null);
+  const rowRef = useRef<HTMLDivElement | null>(null);
+  const itemRefs = useRef<Array<HTMLDivElement | null>>([]);
+  const unicareRef = useRef<HTMLDivElement | null>(null);
 
   useEffect(() => {
-    if (!sectionRef.current) return;
+    if (typeof window === "undefined") return;
+    if (!sectionRef.current || !pinWrapRef.current) return;
 
-    const observer = new IntersectionObserver(
-      ([entry]) => {
-        if (entry.isIntersecting) {
-          setEntered(true);
-          observer.disconnect();
-        }
-      },
-      { threshold: 0.12 }
-    );
+    const ctx = gsap.context(() => {
+      const items = itemRefs.current.filter(Boolean);
 
-    observer.observe(sectionRef.current);
-    return () => observer.disconnect();
+      gsap.set(items, {
+        y: 90,
+        opacity: 0,
+        scale: 0.86,
+        filter: "blur(10px)",
+      });
+
+      gsap.set(rowRef.current, {
+        x: "0vw",
+        opacity: 1,
+      });
+
+      gsap.set(unicareRef.current, {
+        x: "110vw",
+        opacity: 0,
+        scale: 0.92,
+        filter: "blur(8px)",
+      });
+
+      const tl = gsap.timeline({
+        scrollTrigger: {
+          trigger: sectionRef.current,
+          pin: pinWrapRef.current,
+          start: "top top",
+          end: "+=320%",
+          scrub: 1,
+          anticipatePin: 1,
+          invalidateOnRefresh: true,
+        },
+      });
+
+      // Step 1: Float in the 4 modules one-by-one into one horizontal line
+      tl.to(items, {
+        y: 0,
+        opacity: 1,
+        scale: 1,
+        filter: "blur(0px)",
+        duration: 1.2,
+        stagger: 0.45,
+        ease: "power3.out",
+      });
+
+      // Brief pause with all 4 aligned on one line
+      tl.to({}, { duration: 0.5 });
+
+      // Step 2: Swipe the 4-item line from right to left off-screen, while fading out header
+      tl.to(
+        rowRef.current,
+        {
+          x: "-125vw",
+          opacity: 0,
+          duration: 1.4,
+          ease: "power2.inOut",
+        },
+        "swipe"
+      );
+
+      tl.to(
+        headerRef.current,
+        {
+          y: -40,
+          opacity: 0,
+          duration: 0.9,
+          ease: "power2.inOut",
+        },
+        "swipe"
+      );
+
+      // Step 3: Bring "UNICARE" in from right to left and stop in the exact center
+      tl.to(
+        unicareRef.current,
+        {
+          x: "0vw",
+          opacity: 1,
+          scale: 1,
+          filter: "blur(0px)",
+          duration: 1.4,
+          ease: "power3.out",
+        },
+        "swipe+=0.35"
+      );
+
+      // Hold UNICARE at the center
+      tl.to({}, { duration: 0.7 });
+
+      // Step 4: Scroll down further -> UNICARE vanishes smoothly
+      tl.to(unicareRef.current, {
+        scale: 1.22,
+        opacity: 0,
+        filter: "blur(20px)",
+        y: -30,
+        duration: 1.1,
+        ease: "power2.in",
+      });
+    }, sectionRef);
+
+    const refreshTimer = window.setTimeout(() => {
+      ScrollTrigger.refresh();
+    }, 120);
+
+    return () => {
+      window.clearTimeout(refreshTimer);
+      ctx.revert();
+    };
   }, []);
 
-  const prev = () => setActiveIndex((prevIndex) => (prevIndex - 1 + slides.length) % slides.length);
-  const next = () => setActiveIndex((prevIndex) => (prevIndex + 1) % slides.length);
-
-  const current = slides[activeIndex];
-  const isFinal = activeIndex === slides.length - 1;
-  const maxAvatarIndex = slides.length - 1;
-  const hiddenOffset = -100;
-  const stepDistance = 74;
-  const shiftForIndex = (index: number) => index * stepDistance;
-  const clampShift = (shift: number) =>
-    Math.min(shiftForIndex(maxAvatarIndex), Math.max(shiftForIndex(0), shift));
-  const shiftFromIndex = entered ? shiftForIndex(Math.min(activeIndex, maxAvatarIndex)) : hiddenOffset;
-  const avatarShift = dragShift ?? shiftFromIndex;
-
-  const handleAvatarPointerDown = (event: ReactPointerEvent<HTMLDivElement>) => {
-    event.currentTarget.setPointerCapture(event.pointerId);
-    const startShift = dragShift ?? shiftForIndex(Math.min(activeIndex, maxAvatarIndex));
-    dragStateRef.current = {
-      pointerId: event.pointerId,
-      startX: event.clientX,
-      startShift
-    };
-    setEntered(true);
-    setDragShift(startShift);
-  };
-
-  const handleAvatarPointerMove = (event: ReactPointerEvent<HTMLDivElement>) => {
-    if (dragStateRef.current.pointerId !== event.pointerId) return;
-    const delta = event.clientX - dragStateRef.current.startX;
-    setDragShift(clampShift(dragStateRef.current.startShift + delta));
-  };
-
-  const endAvatarDrag = (event: ReactPointerEvent<HTMLDivElement>) => {
-    if (dragStateRef.current.pointerId !== event.pointerId) return;
-    event.currentTarget.releasePointerCapture(event.pointerId);
-    const finalShift = dragShift ?? shiftForIndex(Math.min(activeIndex, maxAvatarIndex));
-    const snappedIndex = Math.round(clampShift(finalShift) / stepDistance);
-    setActiveIndex(Math.min(maxAvatarIndex, Math.max(0, snappedIndex)));
-    dragStateRef.current.pointerId = null;
-    setDragShift(null);
-  };
-
   return (
-    <section id="modules" ref={sectionRef} className="core-journey-section relative overflow-hidden py-16">
-      <div className="pointer-events-none absolute inset-0 core-journey-grid opacity-100" />
-      <div className="pointer-events-none absolute -left-24 top-10 h-72 w-72 rounded-full bg-blue-400/18 blur-3xl core-journey-aurora-a" />
-      <div className="pointer-events-none absolute right-8 top-20 h-80 w-80 rounded-full bg-cyan-300/16 blur-3xl core-journey-aurora-b" />
-      <div className="pointer-events-none absolute left-1/3 top-44 h-64 w-64 rounded-full bg-indigo-300/14 blur-3xl core-journey-aurora-c" />
+    <section
+      id="modules"
+      ref={sectionRef}
+      className="relative w-full overflow-hidden border-b border-white/10 bg-black text-white"
+    >
+      <div
+        ref={pinWrapRef}
+        className="relative flex h-screen w-full flex-col items-center justify-center overflow-hidden px-4"
+      >
+        {/* Subtle grid + radial glow on pure black */}
+        <div className="pointer-events-none absolute inset-0 bg-[linear-gradient(to_right,rgba(255,255,255,0.035)_1px,transparent_1px),linear-gradient(to_bottom,rgba(255,255,255,0.035)_1px,transparent_1px)] bg-[size:48px_48px]" />
+        <div className="pointer-events-none absolute left-1/2 top-1/2 h-[420px] w-[720px] -translate-x-1/2 -translate-y-1/2 rounded-full bg-white/[0.04] blur-[120px]" />
 
-      <div className="relative z-10 mx-auto w-full max-w-6xl space-y-8 px-4">
+        {/* Section Heading */}
         <div
-          className={`mx-auto w-full text-center transition-all duration-700 ${
-            entered ? "translate-y-0 opacity-100" : "-translate-y-12 opacity-0"
-          }`}
+          ref={headerRef}
+          className="relative z-10 mb-14 max-w-3xl text-center"
         >
-          <h2
-            className={`${libreBaskerville.className} text-4xl font-bold leading-tight tracking-tight text-[#13203f] md:text-5xl lg:whitespace-nowrap`}
-          >
+          <h2 className="text-3xl font-extrabold tracking-tight text-white sm:text-5xl">
             {text.heading}
           </h2>
-          <p
-            className={`${libreBaskerville.className} mt-4 text-base text-slate-600 md:text-lg lg:whitespace-nowrap`}
-          >
+          <p className="mt-3 text-sm text-neutral-400 sm:text-base">
             {text.description}
           </p>
         </div>
 
-        <div className="rounded-3xl border border-blue-200/90 bg-gradient-to-br from-[#e8f0ff] via-[#dde8ff] to-[#d2e1ff] p-6 shadow-[0_22px_58px_-34px_rgba(30,64,175,0.5)] md:p-8">
-          <div className="grid gap-8 lg:grid-cols-[0.82fr_1.18fr] lg:items-center">
-            <div className="relative min-h-[360px] overflow-hidden p-1">
-              <div className="p-2">
-                <p className="text-xs font-semibold uppercase tracking-[0.14em] text-primary/80">
-                  {isFinal ? text.stepDone : `${text.currentModule} - ${current.step}`}
-                </p>
-                <h3 className="mt-1 text-xl font-semibold">
-                  {isFinal ? text.finalTitle : current.module}
-                </h3>
-              </div>
-
-              <div className="relative mt-4 h-[126px] px-2">
-                <div className="absolute inset-x-2 top-1/2 h-px -translate-y-1/2 border-t border-dashed border-slate-300" />
-                <div className="relative z-10 flex h-full items-center">
-                  <div
-                    className="cursor-grab select-none touch-none transition-all duration-700 active:cursor-grabbing"
-                    style={{ transform: `translateX(${avatarShift}px)`, opacity: entered ? 1 : 0 }}
-                    onPointerDown={handleAvatarPointerDown}
-                    onPointerMove={handleAvatarPointerMove}
-                    onPointerUp={endAvatarDrag}
-                    onPointerCancel={endAvatarDrag}
-                  >
-                    <div className="journey-runner">
-                      <WalkingAvatar />
-                    </div>
-                  </div>
-                </div>
-              </div>
-
-              <div className="mt-4 rounded-2xl border border-slate-200 bg-white p-4">
-                <p className="mt-2 text-sm leading-6 text-slate-700">{current.thought}</p>
-              </div>
+        {/* One-line 4 Modules Row (floats in one by one, then swipes right-to-left) */}
+        <div
+          ref={rowRef}
+          className="relative z-10 flex w-full max-w-7xl flex-wrap items-center justify-center gap-4 px-2 lg:flex-nowrap lg:justify-between lg:gap-6"
+        >
+          {modules.map((mod, idx) => (
+            <div
+              key={mod.num}
+              ref={(el) => {
+                itemRefs.current[idx] = el;
+              }}
+              className="group relative flex flex-1 items-center justify-center gap-3.5 whitespace-nowrap rounded-full border border-white/15 bg-neutral-950/90 px-6 py-5 shadow-[0_20px_50px_rgba(0,0,0,0.85)] backdrop-blur-xl"
+            >
+              <span className="flex h-8 w-8 shrink-0 items-center justify-center rounded-full border border-white/20 bg-white/5 font-mono text-xs font-bold text-neutral-300">
+                {mod.num}
+              </span>
+              <span className="text-base font-bold tracking-tight text-white sm:text-lg xl:text-xl">
+                {mod.label}
+              </span>
             </div>
+          ))}
+        </div>
 
-            <div className="relative rounded-2xl border border-slate-200 bg-white p-5 shadow-sm md:p-6">
-              <button
-                type="button"
-                onClick={prev}
-                aria-label={text.previousThought}
-                className="absolute left-3 top-1/2 z-10 -translate-y-1/2 rounded-full border border-slate-200 bg-white p-2 text-slate-600 shadow-sm transition-colors hover:border-primary/30 hover:text-primary"
-              >
-                <ChevronLeft className="h-4 w-4" />
-              </button>
-
-              <button
-                type="button"
-                onClick={next}
-                aria-label={text.nextThought}
-                className="absolute right-3 top-1/2 z-10 -translate-y-1/2 rounded-full border border-slate-200 bg-white p-2 text-slate-600 shadow-sm transition-colors hover:border-primary/30 hover:text-primary"
-              >
-                <ChevronRight className="h-4 w-4" />
-              </button>
-
-              <article key={`${current.step}-${activeIndex}`} className="mx-10 space-y-4">
-                {isFinal ? (
-                  <div className="min-h-[300px] rounded-3xl border border-blue-300/40 bg-gradient-to-br from-blue-600 via-blue-700 to-blue-900 p-8 text-white shadow-[0_20px_60px_-24px_rgba(29,78,216,0.6)]">
-                    <p className="text-xs font-semibold uppercase tracking-[0.16em] text-blue-100">
-                      {text.stepDone}
-                    </p>
-                    <div className="mt-8 rounded-2xl border border-white/20 bg-white/10 p-6 backdrop-blur-sm">
-                      <p className="text-lg font-medium lowercase tracking-[0.04em] text-white/95 md:text-xl">
-                        {text.finalTitle}
-                      </p>
-                      <p className="mt-3 text-sm text-blue-100/95">{text.finalSummary}</p>
-                    </div>
-                  </div>
-                ) : (
-                  <>
-                    <div className={`rounded-2xl border bg-gradient-to-r p-4 ${current.accent}`}>
-                      <p className="text-xs font-semibold uppercase tracking-[0.14em] text-primary/80">
-                        Step {current.step}
-                      </p>
-                      <h3 className="mt-1 text-xl font-semibold">{current.module}</h3>
-                    </div>
-
-                    <div className="rounded-2xl border border-emerald-200 bg-emerald-50/80 p-4">
-                      <p className="text-[11px] font-semibold uppercase tracking-[0.12em] text-emerald-700">
-                        {text.resolvedBy}
-                      </p>
-                      <p className="mt-2 text-sm leading-6 text-emerald-900">{current.resolved}</p>
-                    </div>
-                  </>
-                )}
-
-                <div className="flex justify-center gap-2 pt-1">
-                  {slides.map((_, index) => (
-                    <button
-                      key={`dot-${index}`}
-                      type="button"
-                      onClick={() => setActiveIndex(index)}
-                      aria-label={`${text.goToStep} ${index + 1}`}
-                      className={`h-2.5 rounded-full transition-all ${
-                        index === activeIndex ? "w-8 bg-primary" : "w-2.5 bg-slate-300"
-                      }`}
-                    />
-                  ))}
-                </div>
-              </article>
-            </div>
-          </div>
+        {/* Giant Center "UNICARE" Reveal (slides right-to-left to center, then vanishes) */}
+        <div
+          ref={unicareRef}
+          className="pointer-events-none absolute inset-0 z-20 flex items-center justify-center select-none px-4"
+        >
+          <span className="bg-gradient-to-b from-white via-neutral-200 to-neutral-600 bg-clip-text text-[15vw] font-black leading-none tracking-tighter text-transparent drop-shadow-[0_0_45px_rgba(255,255,255,0.16)]">
+            UNICARE
+          </span>
         </div>
       </div>
     </section>
