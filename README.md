@@ -169,7 +169,7 @@ Public C1 pages that work without logging in: `/aid-assessment` (private, on-dev
 | English / Sinhala / Tamil for every C1 screen | `src/lib/c1/i18n.ts` | Done - **needs native-speaker review** |
 | **AES-256-GCM encryption at rest (NFR02 / FR01)** for saved student financial profiles (`c1_assessments`) + `bytes32` assessment commitment hashes | `src/lib/c1/encryption.ts`, `src/lib/c1/assessment-store.ts` | Done |
 | **Donor & Admin wallet signing UI (FR02, FR06, FR09, FR10)**: donor wallet filter, `createCampaign`, `topUpCampaign`, `verifyMilestone`, `awardScholarship` + queue-to-award commitment link | `src/lib/c1/wallet-actions.ts`, `src/components/c1/ledger-explorer.tsx`, `src/components/admin/admin-aid-prioritisation.tsx` | Done |
-| Deployment to Sepolia and live latency measurement | section 6.7 | **Not done** - needs a testnet wallet |
+| Deployment to Sepolia and live latency measurement (`NFR03`, `NFR06`) | `blockchain/deployments/sepolia.json`, `docs/c1/evidence/latency-sepolia.json` | **Done - real Sepolia** (`0xFF768B0CBa1f6B9237ce31f024ACBb3D69a83ae0`, block `11952920`; mean **11.63 s**, p95 **13.47 s** < 30 s) |
 
 ### 6.2 Architecture
 
@@ -234,7 +234,7 @@ Safety: OpenZeppelin `AccessControl`, `ReentrancyGuard`, `Pausable`; checks-effe
 | AI inference time | < 1.5 s | < 1 ms per student | Met - real |
 | Precision / Recall / F1 | >= 0.85 | 0.874 / 0.952 / 0.912 hold-out; F1 0.884 +/- 0.021 5-fold CV | **Synthetic** - pipeline validated only |
 | Matching NDCG@5 vs rule baseline | >= 0.88 | **0.816** vs 0.588 baseline (+0.23, 95% CI 0.19-0.26) | **Not met** - synthetic |
-| Transaction latency | < 30 s | not measured | Open - needs Sepolia |
+| Transaction latency | < 30 s | **11.63 s** mean / **12.10 s** median / **13.47 s** p95 (n = 14 on Sepolia) | **Met - real** (`docs/c1/evidence/latency-sepolia.json`) |
 | SUS usability | >= 75 | not measured | Open - needs user study |
 
 ![Model comparison](docs/c1/evidence/vulnerability-model-comparison.png)
@@ -261,31 +261,31 @@ Safety: OpenZeppelin `AccessControl`, `ReentrancyGuard`, `Pausable`; checks-effe
 | --- | --- |
 | ![ROC](docs/c1/evidence/vulnerability-roc.png) | ![Confusion matrix](docs/c1/evidence/vulnerability-confusion-matrix.png) |
 
-Raw evidence: `docs/c1/evidence/` (`gas-report.json`, `vulnerability-eval.json`, `matching-eval.json`, `slither-report.json`, `demo-cases.json`, `audit-report.csv`, `audit-report.json`).
+Raw evidence: `docs/c1/evidence/` (`gas-report.json`, `latency-sepolia.json`, `latency-hardhat.json`, `vulnerability-eval.json`, `matching-eval.json`, `slither-report.json`, `demo-cases.json`, `audit-report.csv`, `audit-report.json`).
 
 **Sample students (fictional).** Of the 12 hand-written cases, the model rates 6 high, 2 moderate and 4 low need, and ranks every clearly needy case above the comfortable households. It disagrees with the explainable AHP-TOPSIS score on one case, S09 (formal job, rural, boarding: index 3, TOPSIS 0.56) - the kind of borderline case a welfare officer should review. Scores cluster near 0 and 100, a sign of the synthetic training rubric; real data should give more graded scores.
 </details>
 
 ### 6.4 Requirements status
 
-Functional (FR) - 12 done, 0 partial, 0 open (100% implemented in code; real-data retraining & Sepolia deployment pending):
+Functional (FR) - 12 done, 0 partial, 0 open (100% implemented in code and deployed live to Ethereum Sepolia):
 
 | ID | Requirement (short) | Status | Remaining external validation |
 | --- | --- | --- | --- |
 | FR01 | Student profile with socio-economic indicators (AES-256-GCM at rest) | Done | - |
-| FR02 | Donors create campaigns, deposit into escrow | Done | Live Sepolia wallet run |
+| FR02 | Donors create campaigns, deposit into escrow | Done (verified on Sepolia) | - |
 | FR03 | Capture and preprocess indicators | Done | - |
 | FR04 | AI Vulnerability Index 0-100 | Done (synthetic) | Retrain on SLIIT data |
 | FR05 | Rank and recommend scholarships | Done | NDCG target on welfare-officer judgements |
-| FR06 | Admins verify milestones | Done | Live Sepolia wallet run |
-| FR07 | Automated disbursement on verified milestone | Done | - |
-| FR08 | Ledger of tx hashes + audit reports for donors | Done | Live data once deployed to Sepolia (the report reads it automatically) |
+| FR06 | Admins verify milestones | Done (verified on Sepolia) | - |
+| FR07 | Automated disbursement on verified milestone | Done (verified on Sepolia) | - |
+| FR08 | Ledger of tx hashes + audit reports for donors | Done (live on Sepolia) | - |
 | FR09 | Admin dashboard: fund flows, approvals, reports, queue-to-award commitment link | Done | - |
 | FR10 | Donor dashboard with donor wallet filter | Done | - |
 | FR11 | Notifications on status, disbursement and upcoming deadlines (<= 14 days) | Done | - |
 | FR12 | Sinhala / Tamil / English | Done | Native-speaker review |
 
-Non-functional (NFR): met - NFR01 (0 critical), NFR02 (zero PII on-chain; AES-256-GCM off-chain encryption at rest), NFR04 (hashes only; `keccak256` used instead of SHA-256), NFR05, NFR07, NFR09; partial - NFR12 (accessible forms, no formal WCAG audit); open - NFR03 (needs Sepolia), NFR06 (latency), NFR08 (SUS), NFR10 (1,000 users), NFR11 (99.9% uptime).
+Non-functional (NFR): met - NFR01 (0 critical), NFR02 (zero PII on-chain; AES-256-GCM off-chain encryption at rest), NFR03 (100% transaction traceability on Sepolia), NFR04 (hashes only; `keccak256` used instead of SHA-256), NFR05, NFR06 (Sepolia latency mean 11.63 s, p95 13.47 s < 30 s), NFR07, NFR09; partial - NFR12 (accessible forms, no formal WCAG audit); open - NFR08 (SUS), NFR10 (1,000 users), NFR11 (99.9% uptime).
 
 ### 6.5 Interfaces
 
