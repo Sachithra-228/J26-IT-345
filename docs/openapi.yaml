@@ -49,10 +49,15 @@ paths:
           description: Aid requests
   /api/notifications:
     get:
-      summary: List notifications
+      summary: "List notifications (includes C1 blockchain events and 14-day scholarship deadline reminders for students, FR11)"
       responses:
         "200":
-          description: Notifications
+          description: Notifications sorted newest first
+    patch:
+      summary: "Mark notifications as read (supports MongoDB ObjectIds plus C1 c1-chain:* and c1-deadline:* ids)"
+      responses:
+        "200":
+          description: Updated notification read state
   /api/analytics:
     get:
       summary: Analytics summary
@@ -97,9 +102,10 @@ paths:
     get:
       summary: "C1 - assessments (role dependent)"
       description: >
-        student (default) returns the caller's saved assessment and ranked scholarships;
+        student (default) decrypts and returns the caller's saved assessment and ranked scholarships;
         scope=catalogue returns rankable scholarships for on-device matching (student);
-        scope=queue returns students ranked by need with derived fields only (admin, faculty, super_admin).
+        scope=queue returns students ranked by need with derived fields plus cryptographic
+        assessmentHash and pseudonymous studentRef commitments only (admin, faculty, super_admin).
       parameters:
         - in: query
           name: scope
@@ -112,10 +118,12 @@ paths:
         "403":
           description: Role not allowed
     post:
-      summary: "C1 - save an assessment (student only, explicit consent required)"
+      summary: "C1 - save an assessment (student only, explicit consent required, AES-256-GCM at rest)"
       description: >
         Body { profile, consent: true }. The server validates ranges, recomputes the vulnerability
-        index (client-supplied values are ignored) and stores one record per student.
+        index (client-supplied values are ignored), encrypts the raw financial profile at rest using
+        AES-256-GCM (NFR02), computes a bytes32 assessmentHash commitment (NFR04), and stores one
+        record per student.
       responses:
         "201":
           description: Saved; returns assessment and recommendations
