@@ -164,6 +164,33 @@ describe("LedgerExplorer", () => {
     );
   });
 
+  it("lets donors filter by wallet and prepare a createCampaign transaction (FR02, FR10)", async () => {
+    const user = userEvent.setup();
+    mockFetchOnce(response);
+    render(withLanguage(<LedgerExplorer variant="donor" />));
+
+    const filter = await screen.findByLabelText("Filter by donor wallet");
+    const firstDonor = response.summary.campaigns[0].donor;
+    await user.selectOptions(filter, firstDonor);
+
+    await user.click(screen.getByRole("button", { name: "Create & fund campaign" }));
+    const preview = await screen.findByTestId("wallet-prepared-preview");
+    expect(preview).toHaveTextContent("createCampaign");
+    expect(preview).toHaveTextContent("metadataHash");
+  });
+
+  it("lets admins prepare verifyMilestone and awardScholarship calls on-chain (FR06, FR09)", async () => {
+    const user = userEvent.setup();
+    mockFetchOnce(response);
+    render(withLanguage(<LedgerExplorer variant="admin" />));
+
+    await user.click(await screen.findByRole("button", { name: "Verify milestone & release tranche" }));
+    expect(await screen.findByTestId("wallet-prepared-preview")).toHaveTextContent("verifyMilestone");
+
+    await user.click(screen.getByRole("button", { name: "Award scholarship on-chain" }));
+    expect(await screen.findByTestId("wallet-prepared-preview")).toHaveTextContent("awardScholarship");
+  });
+
   it("marks live data differently from a simulation", async () => {
     mockFetchOnce({ ...response, meta: { ...response.meta, source: "live", network: "sepolia", chainId: 11155111 } });
     render(withLanguage(<LedgerExplorer />));
@@ -201,10 +228,13 @@ describe("AdminAidPrioritisation", () => {
     topFactors: [{ feature: "income_per_capita", label: "Low income per household member", sharePercent: 55 }],
     modelVersion: "xgb-v1-synthetic",
     syntheticTraining: true,
-    assessedAt: "2026-10-05T10:00:00.000Z"
+    assessedAt: "2026-10-05T10:00:00.000Z",
+    assessmentHash: "0x" + "c".repeat(64),
+    studentRef: "0x" + "d".repeat(64)
   });
 
   it("lists students in the order the API ranks them, with factors and a synthetic-model badge", async () => {
+    const user = userEvent.setup();
     mockFetchOnce({ items: [item("1", "Nimali", 92, "high"), item("2", "Kasun", 55, "moderate")] });
     render(withLanguage(<AdminAidPrioritisation />));
 
@@ -214,6 +244,11 @@ describe("AdminAidPrioritisation", () => {
     expect(within(rows[1]).getByText("92")).toBeInTheDocument();
     expect(screen.getAllByText("Synthetic-trained model").length).toBe(2);
     expect(screen.getAllByText(/Low income per household member/).length).toBe(2);
+
+    await user.click(within(rows[1]).getByRole("button", { name: "Prepare on-chain award" }));
+    const commitments = await screen.findByTestId("queue-award-commitments");
+    expect(commitments).toHaveTextContent("0x" + "d".repeat(64));
+    expect(commitments).toHaveTextContent("0x" + "c".repeat(64));
   });
 
   it("shows an empty state", async () => {

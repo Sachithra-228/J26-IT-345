@@ -1,10 +1,10 @@
-﻿"use client";
+"use client";
 
 import { useCallback, useEffect, useMemo, useState } from "react";
 import { useRouter } from "next/navigation";
+import { ArrowUpRight, Bell, CalendarClock, FileCheck2 } from "lucide-react";
 import { useAuth } from "@/context/auth-context";
 import { useLanguage } from "@/context/language-context";
-import { Card } from "@/components/shared/Card";
 import {
   DASHBOARD_ROLE_CONFIG,
   DASHBOARD_ROLE_ORDER,
@@ -176,7 +176,7 @@ export default function RoleDashboardPage({ params }: RoleDashboardPageProps) {
 
   if (loading || !roleConfig || !routeRole) {
     return (
-      <div className="rounded-2xl border border-slate-200 bg-white p-6 text-sm text-slate-600 shadow-sm dark:border-slate-800 dark:bg-slate-900 dark:text-slate-300">
+      <div className="rounded-3xl border border-slate-200/80 bg-white p-6 text-sm text-slate-600 shadow-sm dark:border-white/10 dark:bg-neutral-950 dark:text-neutral-300">
         {text.loading}
       </div>
     );
@@ -189,85 +189,125 @@ export default function RoleDashboardPage({ params }: RoleDashboardPageProps) {
   const ActiveSectionIcon = getSectionIcon(activeSection.id);
 
   const isHomeSection = activeSectionId === "home";
+  // These student sections lead with their own bento tiles, so the title bar is redundant.
+  const hideSectionHeader =
+    routeRole === "student" && (activeSection.id === "financial-aid" || activeSection.id === "aid-matching");
 
   return (
-    <div className="space-y-8">
-      {isHomeSection && (
-        <>
-          <DashboardHeader />
-          <div className="grid grid-cols-1 gap-4 sm:grid-cols-3">
+    <div className="space-y-4">
+      {isHomeSection ? (
+        <div className="grid grid-cols-1 gap-4 lg:grid-cols-12">
+          <div className="lg:col-span-6">
+            <DashboardHeader />
+          </div>
+          <div className="grid grid-cols-1 gap-4 sm:grid-cols-3 lg:col-span-6">
             <a
               href={`/dashboard/${routeRole}#my-applications`}
-              className="group relative overflow-hidden rounded-2xl border border-primary/20 bg-gradient-to-br from-primary/5 via-white to-primary/10 py-5 px-5 shadow-sm transition-all duration-200 hover:scale-[1.02] hover:border-primary/30 hover:from-primary/15 hover:to-primary/20 hover:shadow-md hover:shadow-primary/10 dark:from-primary/10 dark:via-slate-900/80 dark:to-primary/15 dark:hover:from-primary/20 dark:hover:to-primary/25"
+              className="group relative flex flex-col justify-between overflow-hidden rounded-3xl border border-slate-200/80 bg-white p-5 shadow-[0_2px_12px_-4px_rgba(15,23,42,0.05)] transition-all duration-200 hover:-translate-y-0.5 hover:border-slate-300 hover:shadow-md dark:border-white/10 dark:bg-neutral-950 dark:hover:border-white/25"
             >
-              <span className="absolute right-0 top-0 h-16 w-20 rounded-bl-full bg-primary/5 transition-colors group-hover:bg-primary/10 dark:bg-primary/10 dark:group-hover:bg-primary/15" aria-hidden />
-              <p className="text-xs font-semibold uppercase tracking-wide text-slate-500 dark:text-slate-400">{text.pendingApplications}</p>
-              <p className="mt-1 text-2xl font-semibold text-primary transition-colors group-hover:text-primary dark:text-primary">{quickStats.pendingApplications}</p>
+              <div className="flex items-center justify-between">
+                <span className="flex size-10 items-center justify-center rounded-2xl bg-blue-50 text-blue-600 dark:bg-neutral-900 dark:text-blue-400">
+                  <FileCheck2 className="size-5" />
+                </span>
+                <ArrowUpRight className="size-4 text-slate-400 transition-transform group-hover:-translate-y-0.5 group-hover:translate-x-0.5 group-hover:text-slate-700 dark:text-neutral-500 dark:group-hover:text-white" />
+              </div>
+              <div className="mt-4">
+                <p className="text-3xl font-bold tracking-tight text-slate-900 dark:text-white">
+                  {quickStats.pendingApplications}
+                </p>
+                <p className="mt-1 text-xs font-medium text-slate-500 dark:text-neutral-400">
+                  {text.pendingApplications}
+                </p>
+              </div>
             </a>
+
             <a
               href={`/dashboard/${routeRole}#home`}
-              className="group relative overflow-hidden rounded-2xl border border-primary/20 bg-gradient-to-br from-primary/5 via-white to-primary/10 py-5 px-5 shadow-sm transition-all duration-200 hover:scale-[1.02] hover:border-primary/30 hover:from-primary/15 hover:to-primary/20 hover:shadow-md hover:shadow-primary/10 dark:from-primary/10 dark:via-slate-900/80 dark:to-primary/15 dark:hover:from-primary/20 dark:hover:to-primary/25"
+              className="group relative flex flex-col justify-between overflow-hidden rounded-3xl border border-slate-200/80 bg-white p-5 shadow-[0_2px_12px_-4px_rgba(15,23,42,0.05)] transition-all duration-200 hover:-translate-y-0.5 hover:border-slate-300 hover:shadow-md dark:border-white/10 dark:bg-neutral-950 dark:hover:border-white/25"
             >
-              <span className="absolute right-0 top-0 h-16 w-20 rounded-bl-full bg-primary/5 transition-colors group-hover:bg-primary/10 dark:bg-primary/10 dark:group-hover:bg-primary/15" aria-hidden />
-              <p className="text-xs font-semibold uppercase tracking-wide text-slate-500 dark:text-slate-400">{text.upcomingDeadlines}</p>
-              <p className="mt-1 text-2xl font-semibold text-primary transition-colors group-hover:text-primary dark:text-primary">{quickStats.upcomingDeadlines}</p>
+              <div className="flex items-center justify-between">
+                <span className="flex size-10 items-center justify-center rounded-2xl bg-amber-50 text-amber-600 dark:bg-neutral-900 dark:text-amber-400">
+                  <CalendarClock className="size-5" />
+                </span>
+                <ArrowUpRight className="size-4 text-slate-400 transition-transform group-hover:-translate-y-0.5 group-hover:translate-x-0.5 group-hover:text-slate-700 dark:text-neutral-500 dark:group-hover:text-white" />
+              </div>
+              <div className="mt-4">
+                <p className="text-3xl font-bold tracking-tight text-slate-900 dark:text-white">
+                  {quickStats.upcomingDeadlines}
+                </p>
+                <p className="mt-1 text-xs font-medium text-slate-500 dark:text-neutral-400">
+                  {text.upcomingDeadlines}
+                </p>
+              </div>
             </a>
+
             <a
               href={`/dashboard/${routeRole}#profile`}
-              className="group relative overflow-hidden rounded-2xl border border-primary/20 bg-gradient-to-br from-primary/5 via-white to-primary/10 py-5 px-5 shadow-sm transition-all duration-200 hover:scale-[1.02] hover:border-primary/30 hover:from-primary/15 hover:to-primary/20 hover:shadow-md hover:shadow-primary/10 dark:from-primary/10 dark:via-slate-900/80 dark:to-primary/15 dark:hover:from-primary/20 dark:hover:to-primary/25"
+              className="group relative flex flex-col justify-between overflow-hidden rounded-3xl border border-slate-200/80 bg-white p-5 shadow-[0_2px_12px_-4px_rgba(15,23,42,0.05)] transition-all duration-200 hover:-translate-y-0.5 hover:border-slate-300 hover:shadow-md dark:border-white/10 dark:bg-neutral-950 dark:hover:border-white/25"
             >
-              <span className="absolute right-0 top-0 h-16 w-20 rounded-bl-full bg-primary/5 transition-colors group-hover:bg-primary/10 dark:bg-primary/10 dark:group-hover:bg-primary/15" aria-hidden />
-              <p className="text-xs font-semibold uppercase tracking-wide text-slate-500 dark:text-slate-400">{text.unreadNotifications}</p>
-              <p className="mt-1 text-2xl font-semibold text-primary transition-colors group-hover:text-primary dark:text-primary">{quickStats.unreadNotifications}</p>
+              <div className="flex items-center justify-between">
+                <span className="flex size-10 items-center justify-center rounded-2xl bg-emerald-50 text-emerald-600 dark:bg-neutral-900 dark:text-emerald-400">
+                  <Bell className="size-5" />
+                </span>
+                <ArrowUpRight className="size-4 text-slate-400 transition-transform group-hover:-translate-y-0.5 group-hover:translate-x-0.5 group-hover:text-slate-700 dark:text-neutral-500 dark:group-hover:text-white" />
+              </div>
+              <div className="mt-4">
+                <p className="text-3xl font-bold tracking-tight text-slate-900 dark:text-white">
+                  {quickStats.unreadNotifications}
+                </p>
+                <p className="mt-1 text-xs font-medium text-slate-500 dark:text-neutral-400">
+                  {text.unreadNotifications}
+                </p>
+              </div>
             </a>
           </div>
-        </>
-      )}
-
-      <Card className="overflow-hidden border-slate-200/80 shadow-sm dark:border-slate-700/50">
-        <div className="flex items-center justify-between border-b border-slate-100 bg-slate-50/50 px-6 py-4 dark:border-slate-800 dark:bg-slate-800/30">
-          <div className="flex items-center gap-4">
-            <div className="flex size-11 shrink-0 items-center justify-center rounded-xl bg-primary/10 text-primary">
-              <ActiveSectionIcon className="size-6" />
+        </div>
+      ) : hideSectionHeader ? null : (
+        <div className="flex items-center justify-between rounded-3xl border border-slate-200/80 bg-white px-6 py-4 shadow-[0_2px_12px_-4px_rgba(15,23,42,0.05)] dark:border-white/10 dark:bg-neutral-950">
+          <div className="flex items-center gap-3.5">
+            <div className="flex size-10 shrink-0 items-center justify-center rounded-2xl bg-slate-100 text-slate-700 dark:bg-neutral-900 dark:text-neutral-200">
+              <ActiveSectionIcon className="size-5" />
             </div>
             <div>
-              <p className="text-xs font-medium uppercase tracking-wide text-slate-500 dark:text-slate-400">
+              <p className="text-[11px] font-semibold uppercase tracking-wider text-slate-400 dark:text-neutral-500">
                 {activeSection.menuLabel}
               </p>
-              <h2 className="text-lg font-semibold text-slate-900 dark:text-white">{activeSection.title}</h2>
+              <h2 className="text-base font-bold tracking-tight text-slate-900 sm:text-lg dark:text-white">
+                {activeSection.title}
+              </h2>
             </div>
           </div>
         </div>
-        <div className="p-6">
-          {routeRole === "student" ? (
-            <StudentSectionContent sectionId={activeSection.id} />
-          ) : routeRole === "admin" || routeRole === "faculty" ? (
-            <AdminSectionContent sectionId={activeSection.id} />
-          ) : routeRole === "donor" ? (
-            <DonorSectionContent sectionId={activeSection.id} />
-          ) : routeRole === "ngo" ? (
-            <NgoSectionContent sectionId={activeSection.id} />
-          ) : routeRole === "employer" ? (
-            <EmployerSectionContent sectionId={activeSection.id} />
-          ) : routeRole === "parent" ? (
-            <ParentSectionContent sectionId={activeSection.id} />
-          ) : routeRole === "mentor" ? (
-            <MentorSectionContent sectionId={activeSection.id} />
-          ) : (
-            <ul className="grid gap-3 sm:grid-cols-2">
-              {activeSection.items.map((item) => (
-                <li
-                  key={item}
-                  className="rounded-xl border border-slate-200 bg-slate-50 px-4 py-3 text-sm text-slate-700 dark:border-slate-800 dark:bg-slate-950 dark:text-slate-200"
-                >
-                  {item}
-                </li>
-              ))}
-            </ul>
-          )}
-        </div>
-      </Card>
+      )}
 
+      <div>
+        {routeRole === "student" ? (
+          <StudentSectionContent sectionId={activeSection.id} />
+        ) : routeRole === "admin" || routeRole === "faculty" ? (
+          <AdminSectionContent sectionId={activeSection.id} />
+        ) : routeRole === "donor" ? (
+          <DonorSectionContent sectionId={activeSection.id} />
+        ) : routeRole === "ngo" ? (
+          <NgoSectionContent sectionId={activeSection.id} />
+        ) : routeRole === "employer" ? (
+          <EmployerSectionContent sectionId={activeSection.id} />
+        ) : routeRole === "parent" ? (
+          <ParentSectionContent sectionId={activeSection.id} />
+        ) : routeRole === "mentor" ? (
+          <MentorSectionContent sectionId={activeSection.id} />
+        ) : (
+          <ul className="grid gap-3 sm:grid-cols-2">
+            {activeSection.items.map((item) => (
+              <li
+                key={item}
+                className="rounded-2xl border border-slate-200/80 bg-white px-4 py-3 text-sm text-slate-700 dark:border-white/10 dark:bg-neutral-950 dark:text-neutral-200"
+              >
+                {item}
+              </li>
+            ))}
+          </ul>
+        )}
+      </div>
     </div>
   );
 }

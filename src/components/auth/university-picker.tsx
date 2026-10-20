@@ -1,12 +1,12 @@
 "use client";
 
-import { useState, useRef } from "react";
+import { useState, useRef, useEffect } from "react";
+import { Check, ChevronDown } from "lucide-react";
 import {
   GOVERNMENT_UNIVERSITIES,
   PRIVATE_UNIVERSITIES,
   OTHER_UNIVERSITY_VALUE
 } from "@/lib/signup-data";
-import { DropdownPortal } from "./dropdown-portal";
 import { useLanguage } from "@/context/language-context";
 
 type UniversityPickerProps = {
@@ -22,66 +22,57 @@ export function UniversityPicker({
   value,
   onChange,
   id,
-  placeholder = "Search or choose your university",
+  placeholder = "Select your university",
   "aria-label": ariaLabel,
   className = ""
 }: UniversityPickerProps) {
   const { language } = useLanguage();
   const [open, setOpen] = useState(false);
-  const [search, setSearch] = useState("");
   const containerRef = useRef<HTMLDivElement>(null);
+
   const text =
     language === "si"
       ? {
           otherLabel: "වෙනත් (විස්තර කරන්න)",
-          defaultPlaceholder: "ඔබගේ විශ්වවිද්‍යාලය සොයන්න හෝ තෝරන්න",
-          searchPlaceholder: "සෙවීමට ටයිප් කරන්න...",
-          searchAria: "විශ්වවිද්‍යාල සෙවීම",
+          defaultPlaceholder: "ඔබගේ විශ්වවිද්‍යාලය තෝරන්න",
           govUniversities: "රජයේ විශ්වවිද්‍යාල",
-          privateUniversities: "පෞද්ගලික විශ්වවිද්‍යාල",
-          noMatches: "ගැලපීම් නොමැත. ඔබේ විස්තරය ටයිප් කිරීමට \"වෙනත්\" තෝරන්න."
+          privateUniversities: "පෞද්ගලික විශ්වවිද්‍යාල"
         }
       : language === "ta"
         ? {
             otherLabel: "மற்றவை (தயவுசெய்து குறிப்பிடவும்)",
-            defaultPlaceholder: "உங்கள் பல்கலைக்கழகத்தை தேடவோ தேர்ந்தெடுக்கவோ செய்யுங்கள்",
-            searchPlaceholder: "தேட தட்டச்சு செய்யவும்...",
-            searchAria: "பல்கலைக்கழகங்களை தேடுங்கள்",
+            defaultPlaceholder: "உங்கள் பல்கலைக்கழகத்தை தேர்ந்தெடுக்கவும்",
             govUniversities: "அரசு பல்கலைக்கழகங்கள்",
-            privateUniversities: "தனியார் பல்கலைக்கழகங்கள்",
-            noMatches: "பொருத்தங்கள் இல்லை. உங்கள் சொந்த விவரத்தை உள்ளிட \"மற்றவை\" ஐ தேர்ந்தெடுக்கவும்."
+            privateUniversities: "தனியார் பல்கலைக்கழகங்கள்"
           }
         : {
             otherLabel: "Other (Please specify)",
-            defaultPlaceholder: "Search or choose your university",
-            searchPlaceholder: "Type to search...",
-            searchAria: "Search universities",
+            defaultPlaceholder: "Select your university",
             govUniversities: "Government Universities",
-            privateUniversities: "Private Universities",
-            noMatches: "No matches. Try \"Other\" to type your own."
+            privateUniversities: "Private Universities"
           };
+
+  useEffect(() => {
+    if (!open) return;
+    const handleOutside = (e: MouseEvent) => {
+      if (containerRef.current && !containerRef.current.contains(e.target as Node)) {
+        setOpen(false);
+      }
+    };
+    document.addEventListener("mousedown", handleOutside);
+    return () => document.removeEventListener("mousedown", handleOutside);
+  }, [open]);
 
   const displayValue =
     value === OTHER_UNIVERSITY_VALUE ? text.otherLabel : value || "";
 
-  const filter = (list: readonly string[]) =>
-    list.filter((u) => u.toLowerCase().includes(search.toLowerCase().trim()));
-
-  const govFiltered = filter(GOVERNMENT_UNIVERSITIES);
-  const privFiltered = filter(PRIVATE_UNIVERSITIES);
-  const showOther =
-    !search.trim() ||
-    text.otherLabel.toLowerCase().includes(search.toLowerCase().trim()) ||
-    (search.trim() && !govFiltered.length && !privFiltered.length);
-
   const select = (v: string) => {
     onChange(v);
     setOpen(false);
-    setSearch("");
   };
 
   return (
-    <div ref={containerRef} className={`relative ${className}`}>
+    <div ref={containerRef} className={`w-full ${className}`}>
       <button
         type="button"
         id={id}
@@ -89,92 +80,95 @@ export function UniversityPicker({
         aria-expanded={open}
         aria-haspopup="listbox"
         onClick={() => setOpen((o) => !o)}
-        className="flex w-full items-center justify-between rounded-xl border border-slate-200 bg-white px-3 py-2.5 text-left text-sm shadow-sm transition focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary/20 dark:border-slate-700 dark:bg-slate-900"
+        className={`flex h-10 w-full items-center justify-between rounded-xl border bg-neutral-900 px-3.5 text-left text-sm transition focus:outline-none ${
+          open ? "border-white/40 ring-1 ring-white/20" : "border-white/15 hover:border-white/30"
+        }`}
       >
-        <span className={displayValue ? "text-slate-900 dark:text-slate-100" : "text-slate-500"}>
-          {displayValue || (placeholder === "Search or choose your university" ? text.defaultPlaceholder : placeholder)}
+        <span className={displayValue ? "truncate pr-2 font-medium text-white" : "truncate pr-2 text-neutral-500"}>
+          {displayValue || placeholder || text.defaultPlaceholder}
         </span>
-        <svg
-          className={`h-4 w-4 shrink-0 text-slate-400 transition ${open ? "rotate-180" : ""}`}
-          fill="none"
-          viewBox="0 0 24 24"
-          stroke="currentColor"
-        >
-          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" />
-        </svg>
+        <ChevronDown
+          className={`h-4 w-4 shrink-0 text-neutral-400 transition-transform duration-200 ${
+            open ? "rotate-180 text-white" : ""
+          }`}
+        />
       </button>
 
-      <DropdownPortal open={open} anchorRef={containerRef} onClose={() => setOpen(false)}>
-        <div role="listbox" className="flex max-h-[300px] flex-col">
-          <div className="shrink-0 border-b border-slate-100 p-2 dark:border-slate-700">
-            <input
-              type="text"
-              value={search}
-              onChange={(e) => setSearch(e.target.value)}
-              placeholder={text.searchPlaceholder}
-              className="w-full rounded-lg border border-slate-200 bg-slate-50 px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-primary/20 dark:border-slate-600 dark:bg-slate-800"
-              autoFocus
-              aria-label={text.searchAria}
-            />
-          </div>
-          <div className="min-h-0 flex-1 overflow-y-auto py-2">
-            {govFiltered.length > 0 && (
-              <div className="px-2 py-1">
-                <p className="sticky top-0 bg-white px-2 py-1 text-xs font-semibold uppercase tracking-wide text-slate-500 dark:bg-slate-900 dark:text-slate-400">
-                  {text.govUniversities}
-                </p>
-                {govFiltered.map((u) => (
+      {open ? (
+        <div
+          role="listbox"
+          className="mt-1.5 overflow-hidden rounded-xl border border-white/15 bg-black/95 shadow-xl"
+        >
+          <div className="max-h-36 overflow-y-auto p-1 [&::-webkit-scrollbar]:w-1.5 [&::-webkit-scrollbar-thumb]:rounded-full [&::-webkit-scrollbar-thumb]:bg-white/20 [&::-webkit-scrollbar-track]:bg-transparent">
+            <div className="py-0.5">
+              <p className="px-3 py-1 text-[10px] font-semibold uppercase tracking-wider text-neutral-500">
+                {text.govUniversities}
+              </p>
+              {GOVERNMENT_UNIVERSITIES.map((u) => {
+                const isSelected = value === u;
+                return (
                   <button
                     key={u}
                     type="button"
                     role="option"
-                    aria-selected={value === u}
+                    aria-selected={isSelected}
                     onClick={() => select(u)}
-                    className="w-full rounded-lg px-3 py-2.5 text-left text-sm hover:bg-primary/10 focus:bg-primary/10 focus:outline-none aria-selected:bg-primary/15 aria-selected:font-medium"
+                    className={`flex w-full items-center justify-between rounded-lg px-3 py-1.5 text-left text-sm transition-colors ${
+                      isSelected
+                        ? "bg-white/15 font-semibold text-white"
+                        : "text-neutral-300 hover:bg-white/[0.07] hover:text-white"
+                    }`}
                   >
-                    {u}
+                    <span>{u}</span>
+                    {isSelected ? <Check className="h-4 w-4 shrink-0 text-white" /> : null}
                   </button>
-                ))}
-              </div>
-            )}
-            {privFiltered.length > 0 && (
-              <div className="px-2 py-1">
-                <p className="sticky top-0 bg-white px-2 py-1 text-xs font-semibold uppercase tracking-wide text-slate-500 dark:bg-slate-900 dark:text-slate-400">
-                  {text.privateUniversities}
-                </p>
-                {privFiltered.map((u) => (
+                );
+              })}
+            </div>
+            <div className="py-0.5">
+              <p className="px-3 py-1 text-[10px] font-semibold uppercase tracking-wider text-neutral-500">
+                {text.privateUniversities}
+              </p>
+              {PRIVATE_UNIVERSITIES.map((u) => {
+                const isSelected = value === u;
+                return (
                   <button
                     key={u}
                     type="button"
                     role="option"
-                    aria-selected={value === u}
+                    aria-selected={isSelected}
                     onClick={() => select(u)}
-                    className="w-full rounded-lg px-3 py-2.5 text-left text-sm hover:bg-primary/10 focus:bg-primary/10 focus:outline-none aria-selected:bg-primary/15 aria-selected:font-medium"
+                    className={`flex w-full items-center justify-between rounded-lg px-3 py-1.5 text-left text-sm transition-colors ${
+                      isSelected
+                        ? "bg-white/15 font-semibold text-white"
+                        : "text-neutral-300 hover:bg-white/[0.07] hover:text-white"
+                    }`}
                   >
-                    {u}
+                    <span>{u}</span>
+                    {isSelected ? <Check className="h-4 w-4 shrink-0 text-white" /> : null}
                   </button>
-                ))}
-              </div>
-            )}
-            {showOther && (
-              <div className="border-t border-slate-100 px-2 py-1 dark:border-slate-700">
-                <button
-                  type="button"
-                  role="option"
-                  aria-selected={value === OTHER_UNIVERSITY_VALUE}
-                  onClick={() => select(OTHER_UNIVERSITY_VALUE)}
-                  className="w-full rounded-lg px-3 py-2.5 text-left text-sm font-medium text-primary hover:bg-primary/10 focus:bg-primary/10 focus:outline-none aria-selected:bg-primary/15"
-                >
-                  {text.otherLabel}
-                </button>
-              </div>
-            )}
-            {!govFiltered.length && !privFiltered.length && !showOther && search.trim() && (
-              <p className="px-4 py-3 text-sm text-slate-500">{text.noMatches}</p>
-            )}
+                );
+              })}
+            </div>
+            <div className="mt-1 border-t border-white/10 pt-1">
+              <button
+                type="button"
+                role="option"
+                aria-selected={value === OTHER_UNIVERSITY_VALUE}
+                onClick={() => select(OTHER_UNIVERSITY_VALUE)}
+                className={`flex w-full items-center justify-between rounded-lg px-3 py-1.5 text-left text-sm font-medium transition-colors ${
+                  value === OTHER_UNIVERSITY_VALUE
+                    ? "bg-white/15 text-white"
+                    : "text-neutral-200 hover:bg-white/[0.07] hover:text-white"
+                }`}
+              >
+                <span>{text.otherLabel}</span>
+                {value === OTHER_UNIVERSITY_VALUE ? <Check className="h-4 w-4 shrink-0 text-white" /> : null}
+              </button>
+            </div>
           </div>
         </div>
-      </DropdownPortal>
+      ) : null}
     </div>
   );
 }
