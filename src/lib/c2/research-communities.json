@@ -1,0 +1,279 @@
+{
+  "version": "c2-community-circles-v1",
+  "sourceType": "synthetic",
+  "communities": [
+    {
+      "_id": "c2-community-study-balance",
+      "name": "Study Balance LK",
+      "tagline": "Make university demands more manageable.",
+      "description": "A sample space for Sri Lankan students to compare study routines, plan assignments and prepare questions about academic support.",
+      "topics": ["study"],
+      "languages": ["en", "si", "ta"],
+      "focusKeys": ["workload", "task-start", "exam-worry"],
+      "sourceType": "synthetic",
+      "isSample": true,
+      "conversationStarters": [
+        {
+          "title": "Making space for a busy assignment week",
+          "prompt": "What small change would make your workload easier to approach?"
+        },
+        {
+          "title": "Starting when an assignment feels too big",
+          "prompt": "What would a manageable first step look like for you?"
+        }
+      ]
+    },
+    {
+      "_id": "c2-community-campus-calm",
+      "name": "Campus Calm Circle",
+      "tagline": "A place to put everyday worries into words.",
+      "description": "A sample circle for discussing everyday worry and preparing questions for professional support when fear affects student life. It cannot assess frightening physical symptoms.",
+      "topics": ["worry", "panic"],
+      "languages": ["en", "si", "ta"],
+      "focusKeys": ["exam-worry"],
+      "sourceType": "synthetic",
+      "isSample": true,
+      "conversationStarters": [
+        {
+          "title": "Getting ready for an approaching exam",
+          "prompt": "What part of preparation feels within your control today?"
+        },
+        {
+          "title": "Preparing a support conversation",
+          "prompt": "What would you like a qualified professional to help you understand?"
+        }
+      ]
+    },
+    {
+      "_id": "c2-community-rest-routine",
+      "name": "Rest & Routine",
+      "tagline": "Share realistic ideas for steadier evenings.",
+      "description": "A sample discussion space about rest and routines around lectures, commuting and shared accommodation. It does not provide medical sleep advice.",
+      "topics": ["sleep"],
+      "languages": ["en", "si"],
+      "focusKeys": ["sleep-routine"],
+      "sourceType": "synthetic",
+      "isSample": true,
+      "conversationStarters": [
+        {
+          "title": "Building an evening that fits hostel life",
+          "prompt": "What quiet transition could fit your living situation?"
+        },
+        {
+          "title": "A routine for a changing timetable",
+          "prompt": "Which part of the day could provide a reliable anchor?"
+        }
+      ]
+    },
+    {
+      "_id": "c2-community-suhada-connections",
+      "name": "Suhada Connections",
+      "tagline": "Find a comfortable first step toward connection.",
+      "description": "A sample circle about belonging at university, making contact at your own pace and finding activities that feel welcoming.",
+      "topics": ["connection"],
+      "languages": ["en", "si", "ta"],
+      "focusKeys": [],
+      "sourceType": "synthetic",
+      "isSample": true,
+      "conversationStarters": [
+        {
+          "title": "A small hello on a new campus",
+          "prompt": "What kind of shared activity would feel comfortable to try?"
+        },
+        {
+          "title": "Keeping a connection during a busy week",
+          "prompt": "What small form of contact would you welcome?"
+        }
+      ]
+    },
+    {
+      "_id": "c2-community-small-steps",
+      "name": "Small Steps Together",
+      "tagline": "Make room for one manageable moment.",
+      "description": "A sample space for talking about motivation and manageable daily activities. Peer discussion is optional and does not replace professional support.",
+      "topics": ["low-mood"],
+      "languages": ["en", "si", "ta"],
+      "focusKeys": [],
+      "sourceType": "synthetic",
+      "isSample": true,
+      "conversationStarters": [
+        {
+          "title": "A smaller version still counts",
+          "prompt": "What is a manageable version of something you value?"
+        },
+        {
+          "title": "Asking for company without explaining everything",
+          "prompt": "What kind of company would feel welcome today?"
+        }
+      ]
+    },
+    {
+      "_id": "c2-community-confidence-kindness",
+      "name": "Confidence & Kindness",
+      "tagline": "Practise a more balanced view of yourself.",
+      "description": "A sample circle for exploring self-criticism, comparison and confidence during university life, without pressure to share personal details.",
+      "topics": ["self-esteem"],
+      "languages": ["en", "si", "ta"],
+      "focusKeys": ["self-criticism"],
+      "sourceType": "synthetic",
+      "isSample": true,
+      "conversationStarters": [
+        {
+          "title": "When the inner critic gets loud",
+          "prompt": "What might you say to a friend facing a similar situation?"
+        },
+        {
+          "title": "Noticing effort beyond a grade",
+          "prompt": "What specific effort would you like to acknowledge?"
+        }
+      ]
+    },
+    {
+      "_id": "c2-community-space-grief",
+      "name": "Space for Grief",
+      "tagline": "Choose company, quiet or practical support.",
+      "description": "A sample space for thinking about support after loss. There is no timetable for how to feel, and no need to describe the loss.",
+      "topics": ["grief"],
+      "languages": ["en", "ta"],
+      "focusKeys": ["grief-company"],
+      "sourceType": "synthetic",
+      "isSample": true,
+      "conversationStarters": [
+        {
+          "title": "What kind of company feels welcome?",
+          "prompt": "Would listening, quiet company or practical help feel useful?"
+        },
+        {
+          "title": "Making a demanding day gentler",
+          "prompt": "Which demand could be made smaller or more flexible?"
+        }
+      ]
+    },
+    {
+      "_id": "c2-community-relationships-boundaries",
+      "name": "Relationships & Boundaries",
+      "tagline": "Put needs and requests into your own words.",
+      "description": "A sample circle about communication, family expectations and respectful boundaries. If a conversation would be unsafe, seek appropriate help rather than practising it here.",
+      "topics": ["relationships"],
+      "languages": ["en", "si", "ta"],
+      "focusKeys": ["boundaries"],
+      "sourceType": "synthetic",
+      "isSample": true,
+      "conversationStarters": [
+        {
+          "title": "A respectful request about study time",
+          "prompt": "What need would you like to express clearly?"
+        },
+        {
+          "title": "Choosing what to share",
+          "prompt": "What information would you prefer to keep private?"
+        }
+      ]
+    },
+    {
+      "_id": "c2-community-room-reset",
+      "name": "Room to Reset",
+      "tagline": "Review demands and make space to pause.",
+      "description": "A sample circle for discussing overload, frustration and realistic requests for help during student life. It does not offer treatment or assess urgency.",
+      "topics": ["stress", "anger"],
+      "languages": ["en", "si"],
+      "focusKeys": ["workload"],
+      "sourceType": "synthetic",
+      "isSample": true,
+      "conversationStarters": [
+        {
+          "title": "One demand I could review",
+          "prompt": "Which commitment could be adjusted or shared?"
+        },
+        {
+          "title": "Preparing a pause before responding",
+          "prompt": "What would help you make room for a calmer next step?"
+        }
+      ]
+    },
+    {
+      "_id": "c2-community-everyday-support",
+      "name": "Everyday Support LK",
+      "tagline": "Prepare a practical request for university support.",
+      "description": "A sample space for preparing questions about everyday needs such as transport, accommodation and essential expenses. No payments, eligibility decisions or financial records are handled here.",
+      "topics": ["practical"],
+      "languages": ["en", "si", "ta"],
+      "focusKeys": ["money", "housing"],
+      "sourceType": "synthetic",
+      "isSample": true,
+      "conversationStarters": [
+        {
+          "title": "Preparing an accommodation question",
+          "prompt": "What would you like to ask your university support office?"
+        },
+        {
+          "title": "Making an essential-expenses support request",
+          "prompt": "What practical help would make the biggest difference to your day?"
+        }
+      ]
+    },
+    {
+      "_id": "c2-community-body-respect",
+      "name": "Body Respect Circle",
+      "tagline": "Talk about body-image support without comparison.",
+      "description": "A sample space for preparing a respectful professional-support conversation about eating or body image. No weights, calorie goals, diet instructions or appearance comparisons are requested.",
+      "topics": ["eating"],
+      "languages": ["en", "ta"],
+      "focusKeys": [],
+      "sourceType": "synthetic",
+      "isSample": true,
+      "conversationStarters": [
+        {
+          "title": "What would make asking for help easier?",
+          "prompt": "What would you like a qualified professional to understand?"
+        },
+        {
+          "title": "Support without comments on appearance",
+          "prompt": "What kind of language would feel respectful to you?"
+        }
+      ]
+    },
+    {
+      "_id": "c2-community-support-choices",
+      "name": "Making Support Choices",
+      "tagline": "Prepare questions for confidential professional advice.",
+      "description": "A sample circle for thinking about confidential advice and support choices around alcohol or substance concerns. It provides no instructions for use, stopping or withdrawal.",
+      "topics": ["substance-use"],
+      "languages": ["en", "si", "ta"],
+      "focusKeys": ["confidential-advice"],
+      "sourceType": "synthetic",
+      "isSample": true,
+      "conversationStarters": [
+        {
+          "title": "Questions before a confidential conversation",
+          "prompt": "What would you like to ask about privacy and available support?"
+        },
+        {
+          "title": "Choosing a first contact",
+          "prompt": "Who could help you find qualified advice?"
+        }
+      ]
+    },
+    {
+      "_id": "c2-community-your-pace",
+      "name": "Support at Your Pace",
+      "tagline": "Explore support while keeping control of what you share.",
+      "description": "A sample circle for considering trusted support after difficult experiences. It does not ask for event details or provide trauma-processing exercises.",
+      "topics": ["trauma"],
+      "languages": ["en", "si", "ta"],
+      "focusKeys": [],
+      "sourceType": "synthetic",
+      "isSample": true,
+      "conversationStarters": [
+        {
+          "title": "Choosing what feels comfortable to share",
+          "prompt": "What boundary would help you feel more in control of a conversation?"
+        },
+        {
+          "title": "A supportive next step at your pace",
+          "prompt": "Would practical help, company or professional support feel useful?"
+        }
+      ]
+    }
+  ]
+}

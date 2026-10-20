@@ -1,0 +1,236 @@
+{
+  "runId": "c2-distilbert-concerns-v2",
+  "sourceType": "synthetic",
+  "challengeSha256": "70ecd749361710e4a57921d54fd572dada306b69466269bc1bc47ad3337650e4",
+  "checkpointSha256": "45192ec0b5f3b46aac991d5db619e3984333ec313bc9d5a8c3a2967a292f4025",
+  "selectionUse": false,
+  "rows": 22,
+  "purpose": "Illustrative developer-authored synthetic probes for direct concerns, mixed topics, negation, recovery, third-person wording and out-of-label safety disclosure. Not independently reviewed; not used for tuning or participant evaluation. The self-harm probe has no learned target: separate application support must handle it.",
+  "metrics": {
+    "micro": {
+      "precision": 0.7619047619047619,
+      "recall": 0.9411764705882353,
+      "f1": 0.8421052631578947
+    },
+    "macro": {
+      "precision": 0.7666666666666667,
+      "recall": 0.9333333333333333,
+      "f1": 0.8222222222222222
+    },
+    "weighted": {
+      "precision": 0.7941176470588235,
+      "recall": 0.9411764705882353,
+      "f1": 0.8431372549019607
+    },
+    "exactMatchAccuracy": 0.7272727272727273,
+    "labelAccuracy": 0.9818181818181818
+  },
+  "cases": [
+    {
+      "id": "C2-V2-CHALLENGE-01",
+      "text": "I feel down and nothing I used to enjoy interests me.",
+      "expected": [
+        "low-mood"
+      ],
+      "predicted": []
+    },
+    {
+      "id": "C2-V2-CHALLENGE-02",
+      "text": "I cannot stop worrying about all the things that could go wrong.",
+      "expected": [
+        "worry"
+      ],
+      "predicted": [
+        "worry"
+      ]
+    },
+    {
+      "id": "C2-V2-CHALLENGE-03",
+      "text": "I am awake for hours every night and cannot get proper rest.",
+      "expected": [
+        "sleep"
+      ],
+      "predicted": [
+        "sleep"
+      ]
+    },
+    {
+      "id": "C2-V2-CHALLENGE-04",
+      "text": "I keep missing my coursework deadlines and need help planning revision.",
+      "expected": [
+        "study"
+      ],
+      "predicted": [
+        "study"
+      ]
+    },
+    {
+      "id": "C2-V2-CHALLENGE-05",
+      "text": "I am lonely here and wish I had someone to talk with.",
+      "expected": [
+        "connection"
+      ],
+      "predicted": [
+        "connection"
+      ]
+    },
+    {
+      "id": "C2-V2-CHALLENGE-06",
+      "text": "I feel burnt out by all my responsibilities and never have time to recover.",
+      "expected": [
+        "stress"
+      ],
+      "predicted": [
+        "stress"
+      ]
+    },
+    {
+      "id": "C2-V2-CHALLENGE-07",
+      "text": "I get sudden terrifying spells with a racing heart and fear another panic episode.",
+      "expected": [
+        "panic"
+      ],
+      "predicted": [
+        "panic"
+      ]
+    },
+    {
+      "id": "C2-V2-CHALLENGE-08",
+      "text": "I keep arguing with my parents and need help setting boundaries.",
+      "expected": [
+        "relationships"
+      ],
+      "predicted": [
+        "relationships"
+      ]
+    },
+    {
+      "id": "C2-V2-CHALLENGE-09",
+      "text": "I need support after the death of someone I loved.",
+      "expected": [
+        "grief"
+      ],
+      "predicted": [
+        "grief"
+      ]
+    },
+    {
+      "id": "C2-V2-CHALLENGE-10",
+      "text": "I constantly criticise myself and feel less capable than everyone else.",
+      "expected": [
+        "self-esteem"
+      ],
+      "predicted": [
+        "self-esteem"
+      ]
+    },
+    {
+      "id": "C2-V2-CHALLENGE-11",
+      "text": "I lose my temper quickly and want help responding without shouting.",
+      "expected": [
+        "anger"
+      ],
+      "predicted": [
+        "anger"
+      ]
+    },
+    {
+      "id": "C2-V2-CHALLENGE-12",
+      "text": "I am distressed about my body and feel guilty when I eat.",
+      "expected": [
+        "eating"
+      ],
+      "predicted": [
+        "eating"
+      ]
+    },
+    {
+      "id": "C2-V2-CHALLENGE-13",
+      "text": "I rely on alcohol to cope and need confidential advice about my drinking.",
+      "expected": [
+        "substance-use"
+      ],
+      "predicted": [
+        "substance-use"
+      ]
+    },
+    {
+      "id": "C2-V2-CHALLENGE-14",
+      "text": "Reminders of a frightening experience are affecting my routine. I do not want to retell it.",
+      "expected": [
+        "trauma"
+      ],
+      "predicted": [
+        "trauma"
+      ]
+    },
+    {
+      "id": "C2-V2-CHALLENGE-15",
+      "text": "I cannot afford my rent or essential bills and need practical assistance.",
+      "expected": [
+        "practical"
+      ],
+      "predicted": [
+        "practical"
+      ]
+    },
+    {
+      "id": "C2-V2-CHALLENGE-16",
+      "text": "I am not grieving or feeling lonely; things are going well for me.",
+      "expected": [],
+      "predicted": []
+    },
+    {
+      "id": "C2-V2-CHALLENGE-17",
+      "text": "I used to panic but I have been feeling calm and coping well recently.",
+      "expected": [],
+      "predicted": [
+        "panic"
+      ]
+    },
+    {
+      "id": "C2-V2-CHALLENGE-18",
+      "text": "My friend drinks too much; I have no concerns about my own alcohol use.",
+      "expected": [],
+      "predicted": [
+        "substance-use"
+      ]
+    },
+    {
+      "id": "C2-V2-CHALLENGE-19",
+      "text": "My class is discussing grief and trauma. I am doing well and just reading.",
+      "expected": [],
+      "predicted": [
+        "study"
+      ]
+    },
+    {
+      "id": "C2-V2-CHALLENGE-20",
+      "text": "I feel good about my body and I am comfortable around food.",
+      "expected": [],
+      "predicted": [
+        "eating"
+      ]
+    },
+    {
+      "id": "C2-V2-CHALLENGE-21",
+      "text": "I want help because I have thoughts of self-harm.",
+      "expected": [],
+      "predicted": [
+        "worry"
+      ]
+    },
+    {
+      "id": "C2-V2-CHALLENGE-22",
+      "text": "I cannot pay my bills and I am exhausted by juggling my responsibilities.",
+      "expected": [
+        "practical",
+        "stress"
+      ],
+      "predicted": [
+        "stress",
+        "practical"
+      ]
+    }
+  ]
+}

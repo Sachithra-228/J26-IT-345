@@ -1,0 +1,106 @@
+{
+  "schemaVersion": 1,
+  "version": "c2-synthetic-concern-narratives-v2",
+  "seed": 23273414,
+  "labels": [
+    "low-mood",
+    "worry",
+    "sleep",
+    "study",
+    "connection",
+    "stress",
+    "panic",
+    "relationships",
+    "grief",
+    "self-esteem",
+    "anger",
+    "eating",
+    "substance-use",
+    "trauma",
+    "practical"
+  ],
+  "sourceType": "synthetic",
+  "generator": "ml/c2/generate_concern_cases_v2.py",
+  "generatorSha256": "bad29383691024d4d6e4244b947e47004381878d8b50d44d94ff6b0e678fa51b",
+  "baseGeneratorSha256": "0ecf0814964f875668167c8a326a9ad3b1af2a92c7ba84b0213391e86e2b5bc0",
+  "partitions": {
+    "train": {
+      "rows": 1800,
+      "labelCounts": [
+        230,
+        247,
+        258,
+        229,
+        245,
+        243,
+        230,
+        230,
+        241,
+        232,
+        224,
+        243,
+        258,
+        243,
+        223
+      ],
+      "emptyLabelRows": 155,
+      "sha256": "77a24959498c93b2f948882ca33460594b5cccc1fb8c4d23d5b9fe7fe238da11"
+    },
+    "dev": {
+      "rows": 600,
+      "labelCounts": [
+        89,
+        90,
+        72,
+        68,
+        103,
+        94,
+        83,
+        71,
+        82,
+        75,
+        75,
+        71,
+        84,
+        73,
+        76
+      ],
+      "emptyLabelRows": 49,
+      "sha256": "1dcb0456daa16e236b503ef9561eced7e607efa253afc142d310fc540009f575"
+    },
+    "test": {
+      "rows": 600,
+      "labelCounts": [
+        79,
+        78,
+        71,
+        85,
+        71,
+        80,
+        80,
+        75,
+        90,
+        71,
+        82,
+        78,
+        73,
+        89,
+        79
+      ],
+      "emptyLabelRows": 58,
+      "sha256": "eaa1297a3ed3bfb27f00cec29ee2c9e6fb17e57ba7505a76113d441b09704a80"
+    }
+  },
+  "familyOverlaps": {
+    "train:dev": 0,
+    "train:test": 0,
+    "dev:test": 0
+  },
+  "limitations": [
+    "Synthetic first-person support narratives, not diagnoses or participant records. No independent professional annotations.",
+    "Wording families are split before composition, but shared vocabulary and artificial phrasing may simplify classification.",
+    "Negation coverage is narrow; recovery, third-person accounts, sarcasm and unfamiliar wording need further evaluation.",
+    "English only; no clinical or Sri Lankan student validation. Topic scores are not illness or risk probabilities.",
+    "Self-harm is not a trained label; a separate direct-disclosure support route must remain available."
+  ]
+}

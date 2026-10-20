@@ -37,7 +37,8 @@ async function main() {
   const [action, archiveArg] = process.argv.slice(2);
   if (action === 'verify') return verify(ROOT);
   if (!['download', 'install'].includes(action)) throw new Error('Use verify, download, or install <path-to-zip>.');
-  if (action === 'install' && !archiveArg) throw new Error('Provide the ZIP path: npm run c2:models:install -- "D:/Downloads/c2-browser-models-v1.zip"');
+  if (action === 'download' && manifest.distribution?.publicReleasePublished === false) throw new Error('No public model Release has been approved or published. Obtain the matching private ZIP from the project owner, then run c2:models:install with its path.');
+  if (action === 'install' && !archiveArg) throw new Error(`Provide the ZIP path: npm run c2:models:install -- "D:/Downloads/${manifest.archive.name}"`);
   const tempBase = path.resolve(os.tmpdir());
   const temp = await fs.mkdtemp(path.join(tempBase, 'unicare-c2-models-'));
   try {

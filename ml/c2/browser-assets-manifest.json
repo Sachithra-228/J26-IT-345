@@ -1,11 +1,11 @@
 {
   "schemaVersion": 1,
-  "releaseTag": "c2-models-pp1-v1",
+  "releaseTag": "c2-models-pp1-v2",
   "runs": [
     {
       "directory": "c2-concerns",
-      "runId": "c2-distilbert-concerns-v1",
-      "checkpointSha256": "c178e5a2a2ea576b15d9135663173abe87dd6746af2b5cdce906611916430144"
+      "runId": "c2-distilbert-concerns-v2",
+      "checkpointSha256": "45192ec0b5f3b46aac991d5db619e3984333ec313bc9d5a8c3a2967a292f4025"
     },
     {
       "directory": "c2-distilbert",
@@ -13,11 +13,15 @@
       "checkpointSha256": "8fbdfb15003660a07f439eb3b418d044a973fb2413c5fb8a66981f564848dd62"
     }
   ],
+  "distribution": {
+    "mode": "private-offline",
+    "publicReleasePublished": false
+  },
   "archive": {
-    "name": "c2-browser-models-v1.zip",
-    "bytes": 515792350,
-    "sha256": "3b64da47e46814a838769c2e69c9fb544b81a02ccdfa16b4f91462a26aee491a",
-    "url": "https://github.com/Sachithra-228/J26-IT-345/releases/download/c2-models-pp1-v1/c2-browser-models-v1.zip"
+    "name": "c2-browser-models-v2.zip",
+    "bytes": 515821517,
+    "sha256": "ab4a8495f847361977dd1e2bf1002da6085e1b6573bd2b4d37dc2473664dc0c5",
+    "url": "https://github.com/Sachithra-228/J26-IT-345/releases/download/c2-models-pp1-v2/c2-browser-models-v2.zip"
   },
   "files": [
     {
@@ -27,8 +31,8 @@
     },
     {
       "path": "public/c2/transformer/c2-concerns/config.json",
-      "bytes": 1046,
-      "sha256": "5cd8d7b227a6bbab23dec3508ad651504d197fd02e08191e7c30123573848abf"
+      "bytes": 1474,
+      "sha256": "5fcdedab0451b596fcbe729ec6028cd62f30880b67afcd74eafdbce03e7f5e3e"
     },
     {
       "path": "public/c2/transformer/c2-concerns/LICENSE.txt",
@@ -37,13 +41,13 @@
     },
     {
       "path": "public/c2/transformer/c2-concerns/manifest.json",
-      "bytes": 1101,
-      "sha256": "e51e77f6027c51bede0f611b63cc9be944e67bb05fe97a9fed2267dd126e094c"
+      "bytes": 1272,
+      "sha256": "802072e0fed211441aa6a88a2c14fae522f467e4461db2372aaa4b190baa1a5c"
     },
     {
       "path": "public/c2/transformer/c2-concerns/onnx/model.onnx",
-      "bytes": 267942207,
-      "sha256": "39684832a364ff26193083e0da4342fd5ffedf738c83bb688ef051da989d00e1"
+      "bytes": 267972969,
+      "sha256": "dcc8e5a5f0938db61d07d709f725b8878a724c18b7752c313a6d84c4f0bf69c7"
     },
     {
       "path": "public/c2/transformer/c2-concerns/tokenizer.json",

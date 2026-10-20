@@ -1,5 +1,6 @@
 """Export only the completed concern checkpoint, preserving its selected threshold."""
 import json
+import argparse
 import os
 os.environ['HF_HUB_OFFLINE']='1'
 os.environ['TRANSFORMERS_OFFLINE']='1'
@@ -10,11 +11,15 @@ import onnx
 import onnxruntime as ort
 import torch
 from transformers import AutoModelForSequenceClassification,AutoTokenizer
-from train_concerns import DATA,rows_for
+import train_concerns as training
 from train_distilbert import ROOT,ARTIFACTS,Batches,metrics,sha,write
 
 RUN='c2-distilbert-concerns-v1'
 PROBES=[
+ 'I am grieving the death of someone close to me and I keep criticising myself.',
+ 'I am worried about my alcohol use and how it affects my responsibilities.',
+ 'I am struggling to cover my rent and need help finding financial assistance.',
+ 'I want support after a frightening experience without describing the event.',
  'I cannot sleep properly and I am worried about finishing my university project.',
  'I feel lonely at university and have nobody I can talk to.',
  'I am not anxious. My sleep is good and I am enjoying time with friends.',
@@ -30,7 +35,7 @@ def export():
  start=time.perf_counter();folder=ARTIFACTS/RUN
  report=json.loads((folder/'evaluation.json').read_text(encoding='utf-8'))
  assert report['status']=='completed' and sha(folder/'selected/model.safetensors')==report['checkpointSha256']
- manifest=json.loads((DATA/'manifest.json').read_text(encoding='utf-8'))
+ manifest=json.loads((training.DATA/'manifest.json').read_text(encoding='utf-8'))
  assert manifest==report['protocol']['source']
  dest=ROOT/'public/c2/transformer/c2-concerns';(dest/'onnx').mkdir(parents=True,exist_ok=True)
  (dest/'manifest.json').unlink(missing_ok=True)
@@ -65,7 +70,7 @@ def export():
   errors.append(float(np.max(np.abs(expected-actual))))
   cases.append({'text':text,'inputIds':batch['input_ids'][0].tolist(),'scores':actual.tolist()})
  assert max(errors)<1e-5
- rows=rows_for('test',manifest);dataset=Batches(rows,tokenizer,report['protocol']['maxLength'],5);all_scores=[]
+ rows=training.rows_for('test',manifest);dataset=Batches(rows,tokenizer,report['protocol']['maxLength'],len(manifest['labels']));all_scores=[]
  for batch in dataset.loader(1):all_scores.append(1/(1+np.exp(-session.run(None,{k:v.numpy() for k,v in batch.items() if k!='labels'})[0])))
  measured=metrics(dataset.y,np.concatenate(all_scores),report['selected']['threshold'])
  # Deploy only when conversion has preserved all held-out decisions/metrics.
@@ -80,4 +85,7 @@ def export():
  write(dest/'manifest.json',{'schemaVersion':1,'task':'c2-concerns','dtype':'fp32',**identity,
   'threshold':report['selected']['threshold'],'maxLength':report['protocol']['maxLength'],**conversion})
  print(json.dumps(conversion),flush=True)
-if __name__=='__main__':torch.set_num_threads(4);export()
+if __name__=='__main__':
+ parser=argparse.ArgumentParser(description=__doc__);parser.add_argument('--run-id',default=RUN);parser.add_argument('--data-dir',type=__import__('pathlib').Path,default=training.DATA)
+ args=parser.parse_args();RUN=args.run_id;training.DATA=args.data_dir.resolve()
+ torch.set_num_threads(4);export()

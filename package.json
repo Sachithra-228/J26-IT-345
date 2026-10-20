@@ -26,6 +26,8 @@
     "c2:support:train": "python ml/c2/train_support.py",
     "c2:support:audit": "python ml/c2/test_support.py",
     "c2:research:seed": "node scripts/c2/seed-research-professionals.cjs",
+    "c2:communities:seed": "node scripts/c2/seed-research-communities.cjs",
+    "c2:communities:verify": "node scripts/c2/seed-research-communities.cjs --verify",
     "c2:followups:seed": "node scripts/c2/seed-followup-questions.cjs",
     "c2:followups:verify": "node scripts/c2/seed-followup-questions.cjs --verify",
     "c2:models:verify": "node scripts/c2/model-assets.cjs verify",
@@ -35,10 +37,10 @@
     "c2:neural:train": "python ml/c2/train_distilbert.py train --mask-ablation",
     "c2:neural:audit": "python ml/c2/audit_distilbert.py",
     "c2:neural:export": "python ml/c2/export_distilbert.py",
-    "c2:concerns:data": "python ml/c2/generate_concern_cases.py",
-    "c2:concerns:train": "python ml/c2/train_concerns.py",
-    "c2:concerns:audit": "python ml/c2/audit_concerns.py",
-    "c2:concerns:export": "python ml/c2/export_concerns.py"
+    "c2:concerns:data": "python ml/c2/generate_concern_cases_v2.py",
+    "c2:concerns:train": "python ml/c2/train_concerns.py --run-id c2-distilbert-concerns-v2 --data-dir ml/c2/data/synthetic/concerns-v2 --selected-rate-only --epochs 4",
+    "c2:concerns:audit": "python ml/c2/audit_concerns.py --run-id c2-distilbert-concerns-v2 --data-dir ml/c2/data/synthetic/concerns-v2",
+    "c2:concerns:export": "python ml/c2/export_concerns.py --run-id c2-distilbert-concerns-v2 --data-dir ml/c2/data/synthetic/concerns-v2"
   },
   "dependencies": {
     "@huggingface/transformers": "4.3.1",

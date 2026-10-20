@@ -21,6 +21,7 @@ import {
   followUps,
   scoreScale,
   selfHarmResponse,
+  assessmentSafetySupport,
   supportSuggestion,
 } from "@/lib/c2/assessment";
 import {
@@ -42,6 +43,8 @@ import {
   loadFollowupBank,
 } from "@/lib/c2/followup-bank";
 import { WellnessConcernInput } from "./wellness-concern-input";
+import { ScreeningResultCard } from "./screening-result-card";
+import { WellnessCommunities } from "./wellness-communities";
 
 type Phase = "intro" | "phq9" | "gad7" | "narrative" | "context" | "results";
 export function WellnessAssessment({
@@ -50,12 +53,16 @@ export function WellnessAssessment({
   onChat,
   onEdit,
   onPlan,
+  onPrepare,
+  onCommunity,
 }: {
   onComplete: (result: Assessment) => void;
   onSupport: () => void;
   onChat: () => void;
   onEdit?: () => void;
   onPlan?: () => void;
+  onPrepare?: () => void;
+  onCommunity?: (id?: string) => void;
 }) {
   const [phase, setPhase] = useState<Phase>("intro");
   const [index, setIndex] = useState(0);
@@ -64,6 +71,7 @@ export function WellnessAssessment({
   const [context, setContext] = useState<Record<string, string>>({});
   const [result, setResult] = useState<Assessment | null>(null);
   const [safetyChoice, setSafetyChoice] = useState("");
+  const [disclosedSafety, setDisclosedSafety] = useState(false);
   const title = useRef<HTMLHeadingElement>(null);
   const [announcement, setAnnouncement] = useState("");
   const [description, setDescription] = useState("");
@@ -91,6 +99,7 @@ export function WellnessAssessment({
         .map((q) => [q.id, contextValues[q.id]]),
     );
     const completed = {
+      safetySupportRequested: disclosedSafety,
       phq9: [...phq9],
       gad7: [...gad7],
       context: activeContext,
@@ -264,6 +273,7 @@ export function WellnessAssessment({
       ) : null}
       {phase === "narrative" ? (
         <WellnessConcernInput
+          onSupport={onSupport}
           description={description}
           analysis={analysis}
           onBack={() => {
@@ -271,6 +281,7 @@ export function WellnessAssessment({
             setIndex(6);
           }}
           onContinue={(confirmed, text) => {
+            setDisclosedSafety(confirmed.safetySupportRequested === true);
             const selectedBank = loadedQuestionBank.current;
             onEdit?.();
             setResult(null);
@@ -296,6 +307,11 @@ export function WellnessAssessment({
 
       {core || phase === "context" ? (
         <section className={panel}>
+          {disclosedSafety && !concernReported ? (
+            <div className="mb-5">
+              <SafetySupport />
+            </div>
+          ) : null}
           <div className="flex flex-wrap items-center justify-between gap-2 text-xs font-medium text-slate-500 dark:text-slate-400">
             <span>
               {phase === "phq9"
@@ -535,8 +551,10 @@ export function WellnessAssessment({
 
       {phase === "results" && result && summary ? (
         <div className="space-y-5">
-          {selfHarmResponse(result.phq9) === "reported" ? (
-            <SafetySupport reported />
+          {assessmentSafetySupport(result) ? (
+            <SafetySupport
+              reported={selfHarmResponse(result.phq9) === "reported"}
+            />
           ) : null}
           <section className={panel}>
             <p className="text-xs font-semibold uppercase tracking-widest text-blue-600 dark:text-blue-300">
@@ -547,7 +565,7 @@ export function WellnessAssessment({
               tabIndex={-1}
               className="mt-3 scroll-mt-32 text-2xl font-semibold outline-none"
             >
-              A starting point for your next step.
+              Your symptom levels and next steps.
             </h3>
             <p className={`mt-3 ${secondaryText}`}>
               These results describe your answers over the last two weeks. They
@@ -556,50 +574,19 @@ export function WellnessAssessment({
             </p>
             <div className="mt-6 grid gap-4 sm:grid-cols-2">
               {(["phq9", "gad7"] as const).map((kind) => {
-                const value = scoreScale(kind, result[kind]);
                 return (
-                  <article
+                  <ScreeningResultCard
                     key={kind}
-                    className="rounded-2xl border border-slate-200 p-5 dark:border-slate-700"
-                  >
-                    <p className="text-xs font-medium text-slate-500 dark:text-slate-400">
-                      {kind === "phq9"
-                        ? "PHQ-9 · depressive symptoms"
-                        : "GAD-7 · anxiety symptoms"}
-                    </p>
-                    <p className="mt-4 text-4xl font-semibold tabular-nums">
-                      {value.total ?? "—"}
-                      <span className="ml-1 text-base font-normal text-slate-500">
-                        / {value.maximum}
-                      </span>
-                    </p>
-                    <p className="mt-3 font-medium text-blue-700 dark:text-blue-300">
-                      {value.band
-                        ? `${value.band} symptom range`
-                        : "Incomplete questionnaire"}
-                    </p>
-                    {value.total === null ? (
-                      <p className={`mt-2 ${secondaryText}`}>
-                        Answered {value.answered} of {kind === "phq9" ? 9 : 7}.
-                        Missing: {value.missing.join(", ")}. No total or band is
-                        calculated.
-                      </p>
-                    ) : null}
-                    <Button
-                      variant="ghost"
-                      className="mt-3 px-0"
-                      onClick={() => {
-                        onEdit?.();
-                        setResult(null);
-                        setPhase(kind);
-                        setIndex(
-                          value.missing.length ? value.missing[0] - 1 : 0,
-                        );
-                      }}
-                    >
-                      Review {kind === "phq9" ? "PHQ-9" : "GAD-7"} answers
-                    </Button>
-                  </article>
+                    kind={kind}
+                    answers={result[kind]}
+                    onReview={() => {
+                      const value = scoreScale(kind, result[kind]);
+                      onEdit?.();
+                      setResult(null);
+                      setPhase(kind);
+                      setIndex(value.missing.length ? value.missing[0] - 1 : 0);
+                    }}
+                  />
                 );
               })}
             </div>
@@ -609,10 +596,47 @@ export function WellnessAssessment({
                 can be drawn from this assessment.
               </p>
             ) : null}
-            <div className="mt-5 rounded-2xl bg-blue-50 p-5 dark:bg-blue-950">
+            <div className="mt-5 rounded-2xl border border-blue-100 bg-blue-50 p-5 dark:border-blue-900 dark:bg-blue-950">
               <h4 className="font-semibold">{summary.title}</h4>
               <p className={`mt-2 ${secondaryText}`}>{summary.body}</p>
+              <div className="mt-5 flex flex-wrap gap-3">
+                <Button onClick={onSupport}>
+                  Find support{" "}
+                  <ArrowRight
+                    aria-hidden="true"
+                    className="ml-2 inline h-4 w-4"
+                  />
+                </Button>
+                {onPlan ? (
+                  <Button variant="secondary" onClick={onPlan}>
+                    Build my wellness plan
+                  </Button>
+                ) : null}
+                {onPrepare ? (
+                  <Button variant="secondary" onClick={onPrepare}>
+                    Prepare appointment notes
+                  </Button>
+                ) : null}
+                <Button variant="ghost" onClick={onChat}>
+                  Talk it through
+                </Button>
+              </div>
+              <p className="mt-4 text-xs leading-5 text-slate-500 dark:text-slate-400">
+                Symptom levels come from PHQ-9 and GAD-7 answers. DistilBERT
+                suggests support topics to help personalise follow-up questions
+                and activities; it does not diagnose an illness.
+              </p>
             </div>
+            {onCommunity ? (
+              <div className="mt-5">
+                <WellnessCommunities
+                  assessment={result}
+                  compact
+                  onBrowse={onCommunity}
+                  onSupport={onSupport}
+                />
+              </div>
+            ) : null}
             <div
               className="mt-5 rounded-2xl border border-slate-200 p-5 dark:border-slate-700"
               aria-label="Personalised explanation"
@@ -667,21 +691,6 @@ export function WellnessAssessment({
                 </dl>
               </div>
             ) : null}
-            <div className="mt-6 flex flex-wrap gap-3">
-              {onPlan ? (
-                <Button onClick={onPlan}>Build my wellness plan</Button>
-              ) : null}
-              <Button onClick={onSupport}>
-                Find support{" "}
-                <ArrowRight
-                  aria-hidden="true"
-                  className="ml-2 inline h-4 w-4"
-                />
-              </Button>
-              <Button variant="secondary" onClick={onChat}>
-                Talk it through
-              </Button>
-            </div>
             <p className="mt-4 flex items-center gap-2 text-xs text-slate-500 dark:text-slate-400">
               <Check aria-hidden="true" className="h-4 w-4" />
               Available in this session. Not shared or saved to your account.

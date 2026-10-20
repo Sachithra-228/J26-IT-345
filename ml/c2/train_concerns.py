@@ -36,26 +36,28 @@ def train(args):
  start=time.perf_counter();folder=ARTIFACTS/args.run_id
  if folder.exists():raise SystemExit('Preserve existing run; choose a new run ID')
  manifest=json.loads((DATA/'manifest.json').read_text(encoding='utf-8'))
- assert manifest['labels']==['low-mood','worry','sleep','study','connection']
+ assert len(manifest['labels']) in (5,15) and len(set(manifest['labels']))==len(manifest['labels'])
+ assert 'self-harm' not in manifest['labels']
  assert not any(manifest['familyOverlaps'].values())
  labels=manifest['labels'];rows={s:rows_for(s,manifest) for s in ('train','dev')}
  tokenizer=AutoTokenizer.from_pretrained(MODEL_ID,revision=MODEL_REVISION,local_files_only=True)
- batches={s:Batches(rows[s],tokenizer,args.max_length,5) for s in rows}
+ batches={s:Batches(rows[s],tokenizer,args.max_length,len(labels)) for s in rows}
  lengths={s:np.array([len(tokenizer.encode(r['text'])) for r in rows[s]]) for s in rows}
  assert all(int(v.max())<=args.max_length for v in lengths.values()),'Inspect length before truncating'
  configs=[{'id':'lr-2e-5','backboneLearningRate':2e-5,'headLearningRate':1e-3,'tokenMaskProbability':0.0},
   {'id':'lr-5e-5','backboneLearningRate':5e-5,'headLearningRate':1e-3,'tokenMaskProbability':0.0},
   {'id':'lr-5e-5-mask','backboneLearningRate':5e-5,'headLearningRate':1e-3,'tokenMaskProbability':.05}]
+ if args.selected_rate_only: configs=[configs[1]]
  protocol={'schemaVersion':1,'runId':args.run_id,'createdUtc':datetime.now(timezone.utc).isoformat(),
   'task':'Synthetic student concern multilabel classification; no clinical targets','model':MODEL_ID,'modelRevision':MODEL_REVISION,
-  'initialization':'Pinned pretrained backbone with new five-output head; emotion checkpoint preserved separately',
+  'initialization':f'Pinned pretrained backbone with new {len(labels)}-output head; previous checkpoints preserved separately',
   'source':manifest,'scriptSha256':sha(Path(__file__)),'sharedTrainingScriptSha256':sha(ROOT/'ml/c2/train_distilbert.py'),
   'seed':SEED,'labels':labels,'maxLength':args.max_length,'batchSize':16,'epochsMaximum':args.epochs,
   'trainableLastBlocks':2,'weightDecay':.01,'gradientClipNorm':1.0,
-  'optimizer':'AdamW; linear decay with 10% warmup','loss':'BCEWithLogitsLoss; five independent concerns',
+  'optimizer':'AdamW; linear decay with 10% warmup','loss':f'BCEWithLogitsLoss; {len(labels)} independent support concerns',
   'configurations':configs,'thresholdCandidates':THRESHOLDS,'selection':'Dev micro-F1 across configurations, epochs and shared thresholds; earliest tie wins',
   'partitions':manifest['partitions'],'tokenLengthAudit':{s:{'maximum':int(v.max()),'median':float(np.median(v)),'truncatedRows':0} for s,v in lengths.items()},
-  'augmentation':'Training-only 5% token masking ablation; protect special tokens and negation; no assumed improvement',
+  'augmentation':('No token masking in this v2 run; learning rate reused from v1 development selection. Synthetic multi-topic composition and explicit denials are recorded in the generator; no augmentation benefit claimed.' if args.selected_rate_only else 'Training-only 5% token masking ablation; protect special tokens and negation; no assumed improvement'),
   'curveThreshold':.5,'environment':environment()}
  folder.mkdir(parents=True);write(folder/'protocol.json',protocol)
  # Exact same narrative inputs and rows for the classical baseline.
@@ -115,7 +117,7 @@ def train(args):
  for a,b in (('train','dev'),('train','test'),('dev','test')):
   assert not ({r['text'].lower() for r in rows[a]} & {r['text'].lower() for r in rows[b]})
   assert not ({f for r in rows[a] for f in r['familyIds']} & {f for r in rows[b] for f in r['familyIds']})
- test=Batches(rows['test'],tokenizer,args.max_length,5)
+ test=Batches(rows['test'],tokenizer,args.max_length,len(labels))
  model=AutoModelForSequenceClassification.from_pretrained(folder/'selected',local_files_only=True).eval()
  loss,scores=evaluate(model,test.loader(16),'cpu')
  p,r,f,support=precision_recall_fscore_support(test.y,scores>=best['threshold'],average=None,zero_division=0)
@@ -134,6 +136,8 @@ def train(args):
 
 if __name__=='__main__':
  parser=argparse.ArgumentParser(description=__doc__);parser.add_argument('--run-id',default='c2-distilbert-concerns-v1');parser.add_argument('--epochs',type=int,default=4);parser.add_argument('--max-length',type=int,default=128)
+ parser.add_argument('--data-dir',type=Path,default=DATA);parser.add_argument('--selected-rate-only',action='store_true')
  args=parser.parse_args()
  if not args.run_id.replace('-','').replace('_','').isalnum() or args.epochs<1:parser.error('Invalid run settings')
+ DATA=args.data_dir.resolve()
  torch.set_num_threads(4);torch.set_num_interop_threads(1);seed_everything();train(args)

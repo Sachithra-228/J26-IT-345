@@ -5,7 +5,7 @@ const bank = require('../../src/lib/c2/followup-bank.json');
 loadEnvConfig(process.cwd(), true, { info() {}, error() {} });
 const COLLECTION = 'c2_followup_questions';
 async function main() {
-  if (!process.env.MONGODB_URI || bank.version !== 'c2-adaptive-followups-v1' || bank.questions.length !== 100) throw new Error('Question bank or database configuration is missing.');
+  if (!process.env.MONGODB_URI || bank.version !== 'c2-adaptive-followups-v2' || bank.questions.length !== 270) throw new Error('Question bank or database configuration is missing.');
   const client = new MongoClient(process.env.MONGODB_URI, { ...(process.env.MONGODB_FORCE_IPV4 === 'true' ? { family: 4 } : {}), serverSelectionTimeoutMS: 20000 });
   try {
     await client.connect();
@@ -23,7 +23,7 @@ async function main() {
       } })));
     }
     const rows = await collection.find({ _id: { $in: ids }, bankVersion: bank.version, sourceType: 'authored-support', isActive: true }).sort({ order: 1 }).toArray();
-    if (rows.length !== 100 || rows.some((row, index) => Object.entries(bank.questions[index]).some(([key, value]) => JSON.stringify(row[key]) !== JSON.stringify(value)))) throw new Error('Stored question bank differs from checked-in definition.');
+    if (rows.length !== 270 || rows.some((row, index) => Object.entries(bank.questions[index]).some(([key, value]) => JSON.stringify(row[key]) !== JSON.stringify(value)))) throw new Error('Stored question bank differs from checked-in definition.');
     console.log(JSON.stringify({ collection: COLLECTION, bankVersion: bank.version, verifiedQuestions: rows.length, generalQuestions: rows.filter((q) => !q.topics.length).length, topicQuestions: rows.filter((q) => q.topics.length).length }));
   } finally { await client.close(); }
 }

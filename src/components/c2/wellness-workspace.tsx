@@ -23,6 +23,7 @@ import { PeerSupport } from "@/components/wellness/peer-support";
 import {
   assessmentConcerns,
   CONCERNS,
+  CONCERN_TOPICS,
   QUESTIONNAIRE_SOURCE,
   scoreScale,
   type Assessment,
@@ -36,6 +37,7 @@ import { WellnessChat } from "./wellness-chat";
 import { WellnessReflections } from "./wellness-reflections";
 import { panel, SafetySupport, secondaryText } from "./wellness-ui";
 import { WellnessPlan } from "./wellness-plan";
+import { WellnessCommunities } from "./wellness-communities";
 import { WellnessProgress } from "./wellness-progress";
 import { AppointmentSummary } from "./appointment-summary";
 import type { ActivityCompletion } from "@/lib/c2/wellness-plan";
@@ -81,6 +83,12 @@ export function WellnessWorkspace() {
     "professionals",
   );
   const [communityTopic, setCommunityTopic] = useState<Concern | "all">("all");
+  const [communitySource, setCommunitySource] = useState<"circles" | "forum">(
+    "circles",
+  );
+  const [selectedCommunity, setSelectedCommunity] = useState<
+    string | undefined
+  >();
   const topics = assessmentConcerns(assessment);
   const topicWeights = assessment?.concernAnalysis
     ? confirmedTopicWeights(assessment.concernAnalysis)
@@ -101,6 +109,12 @@ export function WellnessWorkspace() {
     setService("professionals");
     go("support");
   }
+  function community(id?: string) {
+    setCommunitySource("circles");
+    setSelectedCommunity(id);
+    setService("community");
+    go("support");
+  }
   function clear() {
     navigationRequested.current = true;
     setSession((previous) => previous + 1);
@@ -109,6 +123,8 @@ export function WellnessWorkspace() {
     setView("home");
     setImmediateHelp(false);
     setCommunityTopic("all");
+    setCommunitySource("circles");
+    setSelectedCommunity(undefined);
     setService("professionals");
     setNotice(
       "Your check-in, activity drafts, appointment notes, reflections and chat have been cleared from this session. Saved device history and downloaded files remain until you delete them separately.",
@@ -381,6 +397,8 @@ export function WellnessWorkspace() {
             onSupport={support}
             onChat={() => go("chat")}
             onPlan={() => go("plan")}
+            onPrepare={() => go("appointment")}
+            onCommunity={community}
           />
         </div>
         <div key={`reflections-${session}`} hidden={view !== "reflections"}>
@@ -400,10 +418,7 @@ export function WellnessWorkspace() {
               setCompletions((previous) => [...previous, entry])
             }
             onSupport={support}
-            onCommunity={() => {
-              setService("community");
-              go("support");
-            }}
+            onCommunity={() => community()}
             onProgress={() => go("progress")}
             onSummary={() => go("appointment")}
           />
@@ -482,34 +497,68 @@ export function WellnessWorkspace() {
               </>
             ) : (
               <>
-                <section className={panel}>
-                  <h4 className="font-semibold">Find a conversation topic</h4>
-                  <p className={`mt-2 ${secondaryText}`}>
-                    Explore student conversations by topic. Your check-in helps
-                    suggest where to start; you choose what to browse or share.
-                  </p>
-                  <div className="mt-4 flex flex-wrap gap-2">
-                    <button
-                      aria-pressed={communityTopic === "all"}
-                      onClick={() => setCommunityTopic("all")}
-                      className={`rounded-full border px-3 py-2 text-sm ${communityTopic === "all" ? "border-blue-600 bg-blue-50 text-blue-700 dark:bg-blue-950 dark:text-blue-200" : "border-slate-200 dark:border-slate-700"}`}
-                    >
-                      All conversations
-                    </button>
-                    {(Object.keys(CONCERNS) as Concern[]).map((topic) => (
-                      <button
-                        key={topic}
-                        aria-pressed={communityTopic === topic}
-                        onClick={() => setCommunityTopic(topic)}
-                        className={`rounded-full border px-3 py-2 text-sm ${communityTopic === topic ? "border-blue-600 bg-blue-50 text-blue-700 dark:bg-blue-950 dark:text-blue-200" : "border-slate-200 dark:border-slate-700"}`}
-                      >
-                        {CONCERNS[topic].label}
-                        {topics.includes(topic) ? " · suggested" : ""}
-                      </button>
-                    ))}
-                  </div>
-                </section>
-                <PeerSupport topic={communityTopic} />
+                <div
+                  className="flex flex-wrap gap-3"
+                  aria-label="Community source"
+                >
+                  <Button
+                    variant={
+                      communitySource === "circles" ? "primary" : "secondary"
+                    }
+                    onClick={() => setCommunitySource("circles")}
+                  >
+                    Community circles
+                  </Button>
+                  <Button
+                    variant={
+                      communitySource === "forum" ? "primary" : "secondary"
+                    }
+                    onClick={() => setCommunitySource("forum")}
+                  >
+                    Student forum
+                  </Button>
+                </div>
+                {communitySource === "circles" ? (
+                  <WellnessCommunities
+                    assessment={assessment}
+                    initialSelectedId={selectedCommunity}
+                    onSupport={support}
+                  />
+                ) : (
+                  <>
+                    <section className={panel}>
+                      <h4 className="font-semibold">
+                        Find a conversation topic
+                      </h4>
+                      <p className={`mt-2 ${secondaryText}`}>
+                        Explore student conversations by topic. Your check-in
+                        helps suggest where to start; you choose what to browse
+                        or share.
+                      </p>
+                      <div className="mt-4 flex flex-wrap gap-2">
+                        <button
+                          aria-pressed={communityTopic === "all"}
+                          onClick={() => setCommunityTopic("all")}
+                          className={`rounded-full border px-3 py-2 text-sm ${communityTopic === "all" ? "border-blue-600 bg-blue-50 text-blue-700 dark:bg-blue-950 dark:text-blue-200" : "border-slate-200 dark:border-slate-700"}`}
+                        >
+                          All conversations
+                        </button>
+                        {(Object.keys(CONCERNS) as Concern[]).map((topic) => (
+                          <button
+                            key={topic}
+                            aria-pressed={communityTopic === topic}
+                            onClick={() => setCommunityTopic(topic)}
+                            className={`rounded-full border px-3 py-2 text-sm ${communityTopic === topic ? "border-blue-600 bg-blue-50 text-blue-700 dark:bg-blue-950 dark:text-blue-200" : "border-slate-200 dark:border-slate-700"}`}
+                          >
+                            {CONCERNS[topic].label}
+                            {topics.includes(topic) ? " · suggested" : ""}
+                          </button>
+                        ))}
+                      </div>
+                    </section>
+                    <PeerSupport topic={communityTopic} />
+                  </>
+                )}
               </>
             )}
           </div>
@@ -547,7 +596,7 @@ export function WellnessWorkspace() {
                 PHQ-9 and GAD-7 scores are calculated separately from complete
                 answers using standard scoring. Missing items produce an
                 incomplete result. Five to nine additional questions are
-                selected from a 100-question context bank and never alter the
+                selected from a 270-question context bank and never alter the
                 scores. Optional DistilBERT text analysis suggests concern
                 topics; you confirm them before they guide follow-up questions
                 and support matching. Those additional questions and support
@@ -587,14 +636,13 @@ export function WellnessWorkspace() {
               </h4>
               <p className={`mt-2 ${secondaryText}`}>
                 DistilBERT is fine-tuned on synthetic English student narratives
-                for five concern topics: low mood, worry, sleep, study and
-                connection. You can correct all suggested topics. The model
-                guides topic ordering; answer-driven rules choose five to nine
-                questions from the 100-question bank, explain questionnaire
-                ranges and match profile attributes. It does not diagnose
-                conditions or predict which professional will produce better
-                outcomes. Research & ML shows its own training results and the
-                separate earlier experiments.
+                for {CONCERN_TOPICS.length} support topics. You can correct all
+                suggested topics. The model guides topic ordering; answer-driven
+                rules choose five to nine questions from the 270-question bank,
+                explain questionnaire ranges and match profile attributes. It
+                does not diagnose conditions or predict which professional will
+                produce better outcomes. Research & ML shows its own training
+                results and the separate earlier experiments.
               </p>
               <p className={`mt-2 ${secondaryText}`}>
                 These custom follow-up questions are stored in the website
@@ -625,13 +673,15 @@ export function WellnessWorkspace() {
             <div>
               <h4 className="font-semibold">Your plan and guided activities</h4>
               <p className={`mt-2 ${secondaryText}`}>
-                Your confirmed topics and reported context select from prepared
-                planning activities. Suggestions use explicit application rules;
-                they are not a trained treatment-outcome recommender. The
-                original prompts link to NHS and WHO guidance and await
-                professional review. Activity ratings describe a moment, not
-                clinical change. Device history and appointment downloads
-                include only what you choose to save or select.
+                DistilBERT scores help order only your confirmed topics; your
+                follow-up answers refine the ranking of prepared planning
+                activities. Without text analysis, your choices still guide the
+                plan. Activity selection uses explicit application rules; they
+                are not a trained treatment-outcome recommender. The original
+                prompts link to NHS and WHO guidance and await professional
+                review. Activity ratings describe a moment, not clinical change.
+                Device history and appointment downloads include only what you
+                choose to save or select.
               </p>
             </div>
             <a

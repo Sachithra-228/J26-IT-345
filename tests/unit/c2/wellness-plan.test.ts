@@ -6,18 +6,41 @@ import {
   PROGRESS_KEY,
   screeningEntry,
 } from "@/lib/c2/progress";
-import type { Assessment } from "@/lib/c2/assessment";
+import { CONCERN_TOPICS, type Assessment } from "@/lib/c2/assessment";
+import { activityById } from "@/lib/c2/wellness-plan";
 
 const assessment: Assessment = {
   phq9: Array(9).fill(0),
   gad7: Array(7).fill(0),
   context: {},
   supportTopics: ["study"],
-  concernAnalysis: { confirmed: ["study"], prediction: null, source: "student-selected" },
+  concernAnalysis: {
+    confirmed: ["study"],
+    prediction: null,
+    source: "student-selected",
+  },
   completedAt: "2026-10-20T12:00:00.000Z",
   version: "test",
 };
 beforeEach(() => localStorage.clear());
+it.each(CONCERN_TOPICS)("offers a topic-specific activity for %s", (topic) => {
+  const plan = createWellnessPlan({ ...assessment, supportTopics: [topic] });
+  expect(activityById(plan[0].activityId)?.topic).toBe(topic);
+  expect(new Set(plan.map((item) => item.activityId)).size).toBe(3);
+});
+it("preserves expanded topic summaries without persisting the direct safety disclosure", () => {
+  const value = screeningEntry({
+    ...assessment,
+    supportTopics: [...CONCERN_TOPICS],
+    safetySupportRequested: true,
+  });
+  const parsed = parseProgress({ schemaVersion: 1, entries: [value] });
+  expect(parsed.entries[0]).toMatchObject({
+    kind: "screening",
+    topics: [...CONCERN_TOPICS],
+  });
+  expect(JSON.stringify(parsed)).not.toContain("safetySupportRequested");
+});
 it("uses confirmed topics and the specific workload answer to change the plan", () => {
   expect(createWellnessPlan(assessment)[0].activityId).toBe("small-start");
   const workload = createWellnessPlan({

@@ -1,12 +1,14 @@
 # Main DistilBERT model: PP1 explanation and demonstration
 
+**Current version update:** the expanded main model is `c2-distilbert-concerns-v2`, with 15 non-diagnostic support outputs and a 270-question bank. See [the v2 model, safety-route and evaluation explanation](PP1_EXPANDED_TOPICS.md). The five-output run and measurements below are retained as the historical v1 experiment; do not present them as v2 results.
+
 Completed training and local integration: 20 October 2026. Member 02: D. G. A. Indeepa, IT23273412.
 
-## What is now the main model?
+## Historical v1 explanation (superseded by v2)
 
 **DistilBERT, fine-tuned for five student concern topics**, run `c2-distilbert-concerns-v1`. It predicts low mood, worry, sleep, study pressure and connection from a short English narrative. A student can confirm, remove or add any topic before it affects follow-ups or support matching. It is a separately trained task head, not a new name for the earlier logistic router or the GoEmotions emotion classifier.
 
-The model is active in the main student dashboard Wellness section and the standalone `/wellness` page. The Research & ML page displays this model's own actual measurements and source code; earlier experiments remain separately labelled in expandable panels.
+V1 was integrated into the student dashboard Wellness section and the standalone `/wellness` page. The expanded v2 model now occupies that flow and the main Research & ML evidence panel; use the current-version document linked above for the current results.
 
 ## Explain the pipeline
 

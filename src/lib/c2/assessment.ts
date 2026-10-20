@@ -33,7 +33,24 @@ export const GAD7 = [
   "Feeling afraid, as if something awful might happen",
 ] as const;
 export type Answer = 0 | 1 | 2 | 3 | null;
-export type Concern = "low-mood" | "worry" | "sleep" | "study" | "connection";
+export const CONCERN_TOPICS = [
+  "low-mood",
+  "worry",
+  "sleep",
+  "study",
+  "connection",
+  "stress",
+  "panic",
+  "relationships",
+  "grief",
+  "self-esteem",
+  "anger",
+  "eating",
+  "substance-use",
+  "trauma",
+  "practical",
+] as const;
+export type Concern = (typeof CONCERN_TOPICS)[number];
 export const CONCERNS: Record<
   Concern,
   { label: string; description: string; keywords: string[] }
@@ -63,6 +80,58 @@ export const CONCERNS: Record<
     description: "Finding people to talk to and feeling less alone.",
     keywords: ["lonely", "loneliness", "relationship", "belonging", "friend"],
   },
+  stress: {
+    label: "Stress & burnout",
+    description: "Making room for recovery when demands feel too much.",
+    keywords: ["stress", "burnout", "overwhelm"],
+  },
+  panic: {
+    label: "Panic & sudden fear",
+    description: "Finding support for sudden, frightening episodes.",
+    keywords: ["panic", "sudden fear"],
+  },
+  relationships: {
+    label: "Relationships & family",
+    description: "Support with communication, boundaries and conflict.",
+    keywords: ["relationship", "family", "boundaries"],
+  },
+  grief: {
+    label: "Grief & loss",
+    description: "Choosing support after a bereavement or significant loss.",
+    keywords: ["grief", "bereavement", "loss"],
+  },
+  "self-esteem": {
+    label: "Self-esteem & confidence",
+    description: "Finding a kinder, more balanced way to see yourself.",
+    keywords: ["self-esteem", "confidence", "self-criticism"],
+  },
+  anger: {
+    label: "Anger & difficult emotions",
+    description: "Support with frustration and emotional reactions.",
+    keywords: ["anger", "irritability", "emotional regulation"],
+  },
+  eating: {
+    label: "Eating & body image",
+    description:
+      "A supportive conversation about food or body-related distress.",
+    keywords: ["eating", "body image"],
+  },
+  "substance-use": {
+    label: "Alcohol & substance use",
+    description:
+      "Choosing non-judgmental support for substance-related concerns.",
+    keywords: ["alcohol", "substance", "drug use"],
+  },
+  trauma: {
+    label: "Difficult experiences & trauma",
+    description: "Support without needing to describe an upsetting event.",
+    keywords: ["trauma", "distressing experiences"],
+  },
+  practical: {
+    label: "Money, housing & practical needs",
+    description: "Finding help for pressures around essential needs.",
+    keywords: ["financial", "housing", "practical support"],
+  },
 };
 export type ScaleResult = {
   answered: number;
@@ -72,6 +141,7 @@ export type ScaleResult = {
   missing: number[];
 };
 export type Assessment = {
+  safetySupportRequested?: boolean;
   phq9: Answer[];
   gad7: Answer[];
   context: Record<string, string>;
@@ -139,6 +209,14 @@ export function selfHarmResponse(
     : answers[8]! > 0
       ? "reported"
       : "not-reported";
+}
+/** Direct questionnaire/disclosure support, independent of any learned topic score. */
+export function assessmentSafetySupport(assessment: Assessment): boolean {
+  return (
+    selfHarmResponse(assessment.phq9) === "reported" ||
+    assessment.safetySupportRequested === true ||
+    assessment.concernAnalysis?.safetySupportRequested === true
+  );
 }
 export type FollowUp = {
   id: string;
@@ -238,7 +316,11 @@ export function assessmentConcerns(assessment: Assessment | null): Concern[] {
     if (assessment.supportTopics) return assessment.supportTopics;
     const confirmed = [...assessment.concernAnalysis.confirmed];
     if (assessment.context.worry === "Study or exams") confirmed.push("study");
-    if (assessment.context.worry === "Relationships" || assessment.context.mood === "Feeling connected") confirmed.push("connection");
+    if (
+      assessment.context.worry === "Relationships" ||
+      assessment.context.mood === "Feeling connected"
+    )
+      confirmed.push("connection");
     return Array.from(new Set(confirmed));
   }
   const topics: Concern[] = [];
@@ -254,7 +336,12 @@ export function assessmentConcerns(assessment: Assessment | null): Concern[] {
   )
     topics.push("connection");
   if (assessment.supportModel?.status === "ready") {
-    topics.push(...assessment.supportModel.topics.filter((item) => item.score >= 0.5).slice(0, 3).map((item) => item.topic));
+    topics.push(
+      ...assessment.supportModel.topics
+        .filter((item) => item.score >= 0.5)
+        .slice(0, 3)
+        .map((item) => item.topic),
+    );
   }
   return Array.from(new Set(topics));
 }
@@ -264,10 +351,18 @@ export function supportSuggestion(assessment: Assessment): {
 } {
   const p = scoreScale("phq9", assessment.phq9),
     g = scoreScale("gad7", assessment.gad7);
-  if (selfHarmResponse(assessment.phq9) === "reported")
+  if (assessmentSafetySupport(assessment))
     return {
       title: "Make room for a human conversation",
-      body: "You reported thoughts about death or self-harm. Please speak with a qualified professional about this, regardless of your totals. If you feel unable to stay safe, use the immediate-help options now.",
+      body: "Support with self-harm or staying safe is available regardless of your totals. If this is a concern for you or someone else, speak with a qualified professional. If you feel unable to stay safe, use the immediate-help options now.",
+    };
+  if (
+    (p.total !== null && p.total >= 15) ||
+    (g.total !== null && g.total >= 15)
+  )
+    return {
+      title: "Make professional support your next step",
+      body: "One or both completed questionnaires show elevated symptoms. Arrange a conversation with a qualified mental health professional to discuss your answers, daily-life impact and suitable support. A screening score does not determine a diagnosis or emergency urgency.",
     };
   if (p.total === null || g.total === null)
     return {

@@ -35,7 +35,7 @@ Outputs:
 
 Public source data and documentation are cached under git-ignored `ml/c2/data/raw/goemotions/`. Never put student health records or private journals in tracked directories. See `docs/c2/model-card.md` for attribution, permissions, limits and measured results.
 
-The interfaces are `/wellness`, the student dashboard's Wellness section and `/wellness/research`. Questionnaire answers, reflections and guided chat stay in temporary page memory. The application includes PHQ-9/GAD-7 scoring and a database-backed bank of 100 custom support questions. The fine-tuned DistilBERT classifier ranks five concern topics; explicit application rules choose 5–9 questions and respond to earlier answers. The classifier does not predict question IDs or diagnoses. Proposed text/camera multimodal fusion and confidential assigned-counselor referral remain pending. See [the main model explanation](../../docs/c2/MAIN_DISTILBERT_PP1.md) and [the separate support model card](../../docs/c2/support-model-card.md).
+The interfaces are `/wellness`, the student dashboard's Wellness section and `/wellness/research`. Questionnaire answers, reflections and guided chat stay in temporary page memory. The application includes PHQ-9/GAD-7 scoring and a database-backed bank of 270 custom support questions. The expanded DistilBERT classifier ranks 15 support topics; explicit application rules choose 5–9 questions and respond to earlier answers. Self-harm support is a separate direct-disclosure route. The classifier does not predict question IDs, emergency risk or diagnoses. Proposed text/camera multimodal fusion and confidential assigned-counselor referral remain pending. See [the v2 model explanation](../../docs/c2/PP1_EXPANDED_TOPICS.md) and [the separate support model card](../../docs/c2/support-model-card.md).
 
 ## DistilBERT fine-tuning experiment
 
@@ -53,14 +53,14 @@ The main check-in now has a dedicated concern-analysis flow: standard PHQ-9/GAD-
 Run these commands with the existing `.venv-c2-distilbert` Python environment activated (or use its full interpreter path):
 
 ```powershell
-python ml/c2/generate_concern_cases.py
-python ml/c2/train_concerns.py --run-id c2-distilbert-concerns-v1
-python ml/c2/audit_concerns.py
-python ml/c2/export_concerns.py
+python ml/c2/generate_concern_cases_v2.py
+python ml/c2/train_concerns.py --run-id c2-distilbert-concerns-v2 --data-dir ml/c2/data/synthetic/concerns-v2 --selected-rate-only --epochs 4
+python ml/c2/audit_concerns.py --run-id c2-distilbert-concerns-v2 --data-dir ml/c2/data/synthetic/concerns-v2
+python ml/c2/export_concerns.py --run-id c2-distilbert-concerns-v2 --data-dir ml/c2/data/synthetic/concerns-v2
 ```
 
-Generation creates 1,500 explicitly synthetic narrative cases (900/300/300) under `ml/c2/data/synthetic/concerns/`. Wording families are partitioned before composition. Clinical labels and real participant records are absent. Preserve completed run IDs: training refuses to overwrite an existing run. Do not regenerate/modify the data behind a completed report without creating and documenting a new experiment.
+V2 generation creates 3,000 explicitly synthetic narrative cases (1,800/600/600) under `ml/c2/data/synthetic/concerns-v2/`. Wording families are partitioned before composition. Clinical labels and real participant records are absent. V1's five-label data and completed artifacts are preserved separately. Training refuses to overwrite an existing run ID. Do not regenerate data behind a completed report without documenting a new experiment.
 
-The exporter creates the separate `c2-concerns` browser artifact and writes its committed checkpoint identity only after native parity and held-out export checks pass. Large model/runtime assets remain ignored by Git and are distributed in the [C2 trained-model Release](https://github.com/Sachithra-228/J26-IT-345/releases/tag/c2-models-pp1-v1). After `npm ci`, run `npm run c2:models:download` and `npm run c2:models:verify` to install the exact completed browser exports without retraining. See [setup on another laptop](../../docs/c2/RUN_ON_ANOTHER_LAPTOP.md) for offline installation and separate account/database configuration.
+The exporter creates the `c2-concerns` browser artifact and writes its checkpoint identity after native parity and held-out export checks pass. Large model/runtime assets remain ignored by Git. Use the matching private offline ZIP; no public model Release has been approved or published. See [setup on another laptop](../../docs/c2/RUN_ON_ANOTHER_LAPTOP.md) for installation and separate account/database configuration.
 
-Actual completed reports appear at `docs/c2/evidence/c2-distilbert-concerns-v1-*.json`. The public-comment emotion model's measurements must not be reused as concern-model performance. Student confirmations and preference filters remain in control; this classifier does not diagnose conditions or learn treatment outcomes.
+Current reports use `docs/c2/evidence/c2-distilbert-concerns-v2-*.json`; historical v1 reports remain alongside them. The public-comment emotion model's measurements must not be reused as concern-model performance. Student confirmations and preference filters remain in control; this classifier does not diagnose conditions or learn treatment outcomes.

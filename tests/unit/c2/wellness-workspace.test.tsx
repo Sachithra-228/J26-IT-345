@@ -122,6 +122,58 @@ it("shows incomplete results rather than treating skipped answers as zero", () =
     screen.getByRole("heading", { name: PHQ9[0], exact: true }),
   ).toBeInTheDocument();
 });
+it("shows both moderate levels at 13 points and connects result actions without a diagnostic probability", () => {
+  const onSupport = jest.fn(),
+    onPlan = jest.fn(),
+    onPrepare = jest.fn(),
+    onChat = jest.fn();
+  render(
+    <WellnessAssessment
+      onComplete={jest.fn()}
+      onSupport={onSupport}
+      onPlan={onPlan}
+      onPrepare={onPrepare}
+      onChat={onChat}
+    />,
+  );
+  click("Begin my check-in");
+  [...PHQ9, ...GAD7].forEach((_, index) => {
+    const i = index < 9 ? index : index - 9;
+    answer(
+      i < 4 ? "Nearly every day" : i === 4 ? "Several days" : "Not at all",
+    );
+  });
+  click("Continue without text analysis");
+  skipContext();
+  expect(screen.getAllByText("Moderate symptom range")).toHaveLength(2);
+  expect(
+    screen.getByRole("meter", { name: "PHQ-9 symptom score" }),
+  ).toHaveAttribute("aria-valuenow", "13");
+  expect(
+    screen.getByRole("meter", { name: "GAD-7 symptom score" }),
+  ).toHaveAttribute("aria-valuenow", "13");
+  expect(
+    screen.getAllByRole("heading", {
+      name: "Consider a professional assessment",
+    }),
+  ).toHaveLength(2);
+  expect(
+    screen.getByText(/DistilBERT suggests support topics/),
+  ).toBeInTheDocument();
+  expect(screen.queryByText(/\d+%/)).not.toBeInTheDocument();
+  click("Find support");
+  click("Build my wellness plan");
+  click("Prepare appointment notes");
+  click("Talk it through");
+  [onSupport, onPlan, onPrepare, onChat].forEach((callback) =>
+    expect(callback).toHaveBeenCalledTimes(1),
+  );
+  click("Review GAD-7 answers");
+  expect(
+    screen.getByRole("heading", { name: GAD7[0], exact: true }),
+  ).toBeInTheDocument();
+  expect(screen.getByRole("radio", { name: "Nearly every day" })).toBeChecked();
+});
 it("shows item-9 support before any final total and retains it in the summary", () => {
   render(
     <WellnessAssessment
@@ -151,6 +203,40 @@ it("shows item-9 support before any final total and retains it in the summary", 
     screen.getByRole("region", { name: "Immediate support" }),
   ).toBeInTheDocument();
   expect(screen.getByText(/regardless of your totals/)).toBeInTheDocument();
+});
+it("keeps directly requested safety support independent of low scores and subsequent incomplete edits", () => {
+  const complete = jest.fn();
+  render(
+    <WellnessAssessment
+      onComplete={complete}
+      onSupport={jest.fn()}
+      onChat={jest.fn()}
+    />,
+  );
+  click("Begin my check-in");
+  [...PHQ9, ...GAD7].forEach(() => answer("Not at all"));
+  fireEvent.click(
+    screen.getByRole("checkbox", {
+      name: "I would like support with self-harm or staying safe",
+    }),
+  );
+  click("Use these topics");
+  expect(
+    screen.getByRole("region", { name: "Immediate support" }),
+  ).toBeInTheDocument();
+  skipContext();
+  expect(complete.mock.calls[0][0].safetySupportRequested).toBe(true);
+  expect(screen.getAllByText("Minimal symptom range")).toHaveLength(2);
+  expect(screen.getByText(/regardless of your totals/)).toBeInTheDocument();
+  click("Review GAD-7 answers");
+  click("Skip this question");
+  for (let i = 1; i < 7; i++) click("Continue");
+  skipContext();
+  expect(screen.getByText("Incomplete questionnaire")).toBeInTheDocument();
+  expect(
+    screen.getByRole("region", { name: "Immediate support" }),
+  ).toBeInTheDocument();
+  expect(complete.mock.calls.at(-1)[0].safetySupportRequested).toBe(true);
 });
 it("keeps core answers when navigating back and selects context without adding a score", () => {
   const complete = jest.fn();
@@ -303,6 +389,7 @@ it("provides free-text guided chat without uploading the conversation and clears
 it("separates the community service and exposes immediate help without an assessment", () => {
   render(<WellnessWorkspace />);
   click("Explore community");
+  click("Student forum");
   expect(screen.getByText("Account community service")).toBeInTheDocument();
   expect(
     screen.getByRole("button", { name: "All conversations" }),

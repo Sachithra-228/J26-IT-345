@@ -80,7 +80,7 @@ export function parseProgress(value: unknown): ProgressStore {
         score(entry.phq9, 27) &&
         score(entry.gad7, 21) &&
         Array.isArray(entry.topics) &&
-        entry.topics.length <= 5 &&
+        entry.topics.length <= Object.keys(CONCERNS).length &&
         new Set(entry.topics).size === entry.topics.length &&
         entry.topics.every((topic) =>
           Object.prototype.hasOwnProperty.call(CONCERNS, topic),

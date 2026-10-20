@@ -1,0 +1,155 @@
+{
+  "runId": "c2-distilbert-concerns-v2",
+  "checkpointSha256": "45192ec0b5f3b46aac991d5db619e3984333ec313bc9d5a8c3a2967a292f4025",
+  "sourceType": "synthetic-software-verification",
+  "date": "2026-10-20",
+  "automated": {
+    "c2Regression": {
+      "suites": 17,
+      "passed": 275
+    },
+    "postWordingChecks": {
+      "suites": 4,
+      "passed": 75
+    },
+    "typeScript": "passed",
+    "eslint": "passed",
+    "initialConcurrentRun": "Two existing async UI tests timed out during CPU training; all 275 passed after training without increasing test timeouts."
+  },
+  "bank": {
+    "version": "c2-adaptive-followups-v2",
+    "questions": 270,
+    "apiStatus": 200,
+    "exactRevisionMatch": true,
+    "databaseRecordsVerified": 270
+  },
+  "browser": {
+    "mainCheckIn": {
+      "text": "Since my brother died, I have felt alone and I keep telling myself that I am not good enough.",
+      "illustrativeExpectedTopics": [
+        "grief",
+        "connection",
+        "self-esteem"
+      ],
+      "suggestedTopics": [
+        "self-esteem"
+      ],
+      "missedTopics": [
+        "grief",
+        "connection"
+      ],
+      "interpretation": "Developer-authored example only. Recorded wording-generalisation failure; not used to tune this run.",
+      "firstQuestion": "self-esteem",
+      "answer": "Harsh self-criticism",
+      "nextQuestion": "self-esteem-detail-1",
+      "planActivity": "balanced-self-talk"
+    },
+    "answerRevision": {
+      "topic": "practical",
+      "firstAnswer": "Housing or accommodation",
+      "firstBranch": "practical-detail-2",
+      "revisedAnswer": "Money or essential expenses",
+      "revisedBranch": "practical-detail-1"
+    },
+    "safetyChoice": "Opened support immediately without running ML",
+    "researchPage": "Displayed actual v2 identity, 15 outputs, 1800/600/600 splits and v2 metrics",
+    "parityProbe": {
+      "text": "I am grieving the death of someone close to me and I keep criticising myself.",
+      "outputs": 15,
+      "maximumDisplayedScoreDifference": 5.162622451759802e-7,
+      "decisionsMatch": true,
+      "scores": [
+        {
+          "label": "Self-esteem & confidence",
+          "score": 0.975363,
+          "selected": true
+        },
+        {
+          "label": "Grief & loss",
+          "score": 0.9736455,
+          "selected": true
+        },
+        {
+          "label": "Anger & difficult emotions",
+          "score": 0.1886873,
+          "selected": false
+        },
+        {
+          "label": "Low mood & motivation",
+          "score": 0.010915,
+          "selected": false
+        },
+        {
+          "label": "Study & exam pressure",
+          "score": 0.0091335,
+          "selected": false
+        },
+        {
+          "label": "Alcohol & substance use",
+          "score": 0.0077603,
+          "selected": false
+        },
+        {
+          "label": "Connection & belonging",
+          "score": 0.005122,
+          "selected": false
+        },
+        {
+          "label": "Relationships & family",
+          "score": 0.002344,
+          "selected": false
+        },
+        {
+          "label": "Sleep & routines",
+          "score": 0.0006998,
+          "selected": false
+        },
+        {
+          "label": "Money, housing & practical needs",
+          "score": 0.0004471,
+          "selected": false
+        },
+        {
+          "label": "Eating & body image",
+          "score": 0.0002047,
+          "selected": false
+        },
+        {
+          "label": "Difficult experiences & trauma",
+          "score": 0.0002044,
+          "selected": false
+        },
+        {
+          "label": "Worry & anxiety",
+          "score": 0.000135,
+          "selected": false
+        },
+        {
+          "label": "Stress & burnout",
+          "score": 0.0000102,
+          "selected": false
+        },
+        {
+          "label": "Panic & sudden fear",
+          "score": 0.0000097,
+          "selected": false
+        }
+      ]
+    }
+  },
+  "delivery": {
+    "bundle": "c2-browser-models-v2.zip",
+    "cleanFolderInstall": "All 22 SHA-256 files verified without training",
+    "sourceCheckout": "All 22 model files verified",
+    "publicReleasePublished": false
+  },
+  "notPerformed": [
+    "Real participant or clinical validation",
+    "Independent professional annotation review",
+    "Production deployment",
+    "Physical mobile-device evaluation",
+    "Real bookings or notifications",
+    "Public model upload",
+    "GitHub push"
+  ]
+}

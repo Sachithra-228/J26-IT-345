@@ -1,11 +1,13 @@
 {
-  "version": "c2-adaptive-followups-v1",
+  "version": "c2-adaptive-followups-v2",
   "reviewStatus": "custom-support-questions-awaiting-professional-review",
   "minimumQuestions": 5,
   "maximumQuestions": 9,
   "sources": [
     "https://www.nimh.nih.gov/health/publications/my-mental-health-do-i-need-help",
-    "https://medlineplus.gov/lab-tests/mental-health-screening/"
+    "https://medlineplus.gov/lab-tests/mental-health-screening/",
+    "https://selfhelp.cntw.nhs.uk/",
+    "https://www.nhs.uk/mental-health/feelings-symptoms-behaviours/feelings-and-symptoms/"
   ],
   "questions": [
     {
@@ -685,13 +687,20 @@
         {
           "answer": "Relationships",
           "topics": [
-            "connection"
+            "connection",
+            "relationships"
           ]
         },
         {
           "answer": "No current worry concern",
           "dismissTopics": [
             "worry"
+          ]
+        },
+        {
+          "answer": "Money or practical problems",
+          "topics": [
+            "practical"
           ]
         }
       ],
@@ -2241,6 +2250,3150 @@
       "facet": "connection-support-request",
       "priority": 0,
       "reason": "An optional question to help personalise your support."
+    },
+    {
+      "id": "stress",
+      "text": "Which part of everyday pressure would you most like support with?",
+      "options": [
+        "Too many commitments",
+        "Feeling exhausted",
+        "Difficulty taking breaks",
+        "Pressure from expectations",
+        "No current stress concern"
+      ],
+      "topics": [
+        "stress"
+      ],
+      "facet": "stress-entry",
+      "priority": 5,
+      "reason": "An optional support question, not a diagnostic item.",
+      "signals": [
+        {
+          "answer": "No current stress concern",
+          "dismissTopics": [
+            "stress"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "stress-detail-1",
+      "text": "Which commitment would be most useful to review first?",
+      "options": [
+        "A daily responsibility",
+        "A work commitment",
+        "Something I could postpone",
+        "I need help deciding"
+      ],
+      "topics": [
+        "stress"
+      ],
+      "facet": "stress-detail-1",
+      "priority": 4,
+      "reason": "An optional support question, not a diagnostic item.",
+      "when": [
+        {
+          "questionId": "stress",
+          "answers": [
+            "Too many commitments"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "stress-detail-2",
+      "text": "What kind of recovery feels most accessible at present?",
+      "options": [
+        "A quieter period",
+        "A shorter task list",
+        "Support from someone else",
+        "I am not sure"
+      ],
+      "topics": [
+        "stress"
+      ],
+      "facet": "stress-detail-2",
+      "priority": 4,
+      "reason": "An optional support question, not a diagnostic item.",
+      "when": [
+        {
+          "questionId": "stress",
+          "answers": [
+            "Feeling exhausted"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "stress-detail-3",
+      "text": "What usually makes a short break difficult to take?",
+      "options": [
+        "Feeling guilty",
+        "Not having time",
+        "Other people needing me",
+        "Not noticing I need one"
+      ],
+      "topics": [
+        "stress"
+      ],
+      "facet": "stress-detail-3",
+      "priority": 4,
+      "reason": "An optional support question, not a diagnostic item.",
+      "when": [
+        {
+          "questionId": "stress",
+          "answers": [
+            "Difficulty taking breaks"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "stress-detail-4",
+      "text": "Whose expectations would you like help responding to?",
+      "options": [
+        "My own",
+        "People close to me",
+        "Work or university",
+        "Several sources"
+      ],
+      "topics": [
+        "stress"
+      ],
+      "facet": "stress-detail-4",
+      "priority": 4,
+      "reason": "An optional support question, not a diagnostic item.",
+      "when": [
+        {
+          "questionId": "stress",
+          "answers": [
+            "Pressure from expectations"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "stress-detail-5",
+      "text": "When does the pressure in your day feel most noticeable?",
+      "options": [
+        "Before the day starts",
+        "During busy periods",
+        "When trying to rest",
+        "It varies"
+      ],
+      "topics": [
+        "stress"
+      ],
+      "facet": "stress-detail-5",
+      "priority": 0,
+      "reason": "An optional support question, not a diagnostic item."
+    },
+    {
+      "id": "stress-detail-6",
+      "text": "Which boundary might give you a little more space?",
+      "options": [
+        "A finishing time",
+        "Fewer extra commitments",
+        "Time without messages",
+        "Help saying no"
+      ],
+      "topics": [
+        "stress"
+      ],
+      "facet": "stress-detail-6",
+      "priority": 0,
+      "reason": "An optional support question, not a diagnostic item."
+    },
+    {
+      "id": "stress-detail-7",
+      "text": "What tends to happen when demands build up?",
+      "options": [
+        "I push through",
+        "I put things off",
+        "I withdraw",
+        "I ask for help"
+      ],
+      "topics": [
+        "stress"
+      ],
+      "facet": "stress-detail-7",
+      "priority": 0,
+      "reason": "An optional support question, not a diagnostic item."
+    },
+    {
+      "id": "stress-detail-8",
+      "text": "Which part of your routine would you like to make more manageable?",
+      "options": [
+        "Getting started",
+        "Balancing responsibilities",
+        "Taking a pause",
+        "Ending the day"
+      ],
+      "topics": [
+        "stress"
+      ],
+      "facet": "stress-detail-8",
+      "priority": 0,
+      "reason": "An optional support question, not a diagnostic item."
+    },
+    {
+      "id": "stress-detail-9",
+      "text": "What would make asking for practical help easier?",
+      "options": [
+        "Knowing whom to ask",
+        "Having words ready",
+        "A smaller request",
+        "A private conversation"
+      ],
+      "topics": [
+        "stress"
+      ],
+      "facet": "stress-detail-9",
+      "priority": 0,
+      "reason": "An optional support question, not a diagnostic item."
+    },
+    {
+      "id": "stress-detail-10",
+      "text": "What kind of rest fits your circumstances best?",
+      "options": [
+        "Quiet time",
+        "Gentle enjoyable activity",
+        "Company",
+        "I need to explore options"
+      ],
+      "topics": [
+        "stress"
+      ],
+      "facet": "stress-detail-10",
+      "priority": 0,
+      "reason": "An optional support question, not a diagnostic item."
+    },
+    {
+      "id": "stress-detail-11",
+      "text": "Which change would feel realistic for this week?",
+      "options": [
+        "Reducing one task",
+        "Protecting one break",
+        "Sharing one responsibility",
+        "Talking to someone"
+      ],
+      "topics": [
+        "stress"
+      ],
+      "facet": "stress-detail-11",
+      "priority": 0,
+      "reason": "An optional support question, not a diagnostic item."
+    },
+    {
+      "id": "stress-detail-12",
+      "text": "What makes it harder to notice your limits?",
+      "options": [
+        "Wanting to help everyone",
+        "Comparing myself with others",
+        "Unpredictable demands",
+        "I am not sure"
+      ],
+      "topics": [
+        "stress"
+      ],
+      "facet": "stress-detail-12",
+      "priority": 0,
+      "reason": "An optional support question, not a diagnostic item."
+    },
+    {
+      "id": "stress-detail-13",
+      "text": "How would you prefer to explore pressure with someone?",
+      "options": [
+        "Practical planning",
+        "Talking through feelings",
+        "Discussing boundaries",
+        "A combination"
+      ],
+      "topics": [
+        "stress"
+      ],
+      "facet": "stress-detail-13",
+      "priority": 0,
+      "reason": "An optional support question, not a diagnostic item."
+    },
+    {
+      "id": "stress-detail-14",
+      "text": "Which support is currently missing from your routine?",
+      "options": [
+        "Time to recover",
+        "Practical assistance",
+        "Emotional support",
+        "Information about options"
+      ],
+      "topics": [
+        "stress"
+      ],
+      "facet": "stress-detail-14",
+      "priority": 0,
+      "reason": "An optional support question, not a diagnostic item."
+    },
+    {
+      "id": "stress-detail-15",
+      "text": "What would you like a support conversation to focus on first?",
+      "options": [
+        "Understanding the pressure",
+        "Making a manageable plan",
+        "Finding resources",
+        "I am unsure"
+      ],
+      "topics": [
+        "stress"
+      ],
+      "facet": "stress-detail-15",
+      "priority": 0,
+      "reason": "An optional support question, not a diagnostic item."
+    },
+    {
+      "id": "stress-detail-16",
+      "text": "What would count as a small useful change today?",
+      "options": [
+        "A little more breathing space",
+        "One clearer priority",
+        "One request for help",
+        "Choosing to pause"
+      ],
+      "topics": [
+        "stress"
+      ],
+      "facet": "stress-detail-16",
+      "priority": 0,
+      "reason": "An optional support question, not a diagnostic item."
+    },
+    {
+      "id": "panic",
+      "text": "What would you like support with around sudden fear or panic?",
+      "options": [
+        "During a sudden episode",
+        "Worry about another episode",
+        "Avoiding situations",
+        "Finding professional advice",
+        "No current panic concern"
+      ],
+      "topics": [
+        "panic"
+      ],
+      "facet": "panic-entry",
+      "priority": 5,
+      "reason": "An optional support question, not a diagnostic item.",
+      "signals": [
+        {
+          "answer": "No current panic concern",
+          "dismissTopics": [
+            "panic"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "panic-detail-1",
+      "text": "What kind of support would you prefer during a frightening episode?",
+      "options": [
+        "A trusted person nearby",
+        "A quiet familiar space",
+        "Professional guidance",
+        "I am unsure"
+      ],
+      "topics": [
+        "panic"
+      ],
+      "facet": "panic-detail-1",
+      "priority": 4,
+      "reason": "An optional support question, not a diagnostic item.",
+      "when": [
+        {
+          "questionId": "panic",
+          "answers": [
+            "During a sudden episode"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "panic-detail-2",
+      "text": "How is anticipating another episode affecting your plans?",
+      "options": [
+        "I cancel plans",
+        "I seek reassurance",
+        "I stay close to familiar places",
+        "It varies"
+      ],
+      "topics": [
+        "panic"
+      ],
+      "facet": "panic-detail-2",
+      "priority": 4,
+      "reason": "An optional support question, not a diagnostic item.",
+      "when": [
+        {
+          "questionId": "panic",
+          "answers": [
+            "Worry about another episode"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "panic-detail-3",
+      "text": "Which situations have become harder to approach?",
+      "options": [
+        "Busy places",
+        "Travel",
+        "Being away from home",
+        "I prefer not to specify"
+      ],
+      "topics": [
+        "panic"
+      ],
+      "facet": "panic-detail-3",
+      "priority": 4,
+      "reason": "An optional support question, not a diagnostic item.",
+      "when": [
+        {
+          "questionId": "panic",
+          "answers": [
+            "Avoiding situations"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "panic-detail-4",
+      "text": "What would help you arrange professional advice?",
+      "options": [
+        "Choosing someone",
+        "Preparing questions",
+        "Understanding confidentiality",
+        "Practical booking help"
+      ],
+      "topics": [
+        "panic"
+      ],
+      "facet": "panic-detail-4",
+      "priority": 4,
+      "reason": "An optional support question, not a diagnostic item.",
+      "when": [
+        {
+          "questionId": "panic",
+          "answers": [
+            "Finding professional advice"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "panic-detail-5",
+      "text": "When discussing sudden fear, what feels most important to explain?",
+      "options": [
+        "What it feels like",
+        "Its effect on my routine",
+        "My concerns about it returning",
+        "The support I want"
+      ],
+      "topics": [
+        "panic"
+      ],
+      "facet": "panic-detail-5",
+      "priority": 0,
+      "reason": "An optional support question, not a diagnostic item."
+    },
+    {
+      "id": "panic-detail-6",
+      "text": "What would make a first support conversation feel more comfortable?",
+      "options": [
+        "Online contact",
+        "Someone accompanying me",
+        "Knowing what to expect",
+        "A private appointment"
+      ],
+      "topics": [
+        "panic"
+      ],
+      "facet": "panic-detail-6",
+      "priority": 0,
+      "reason": "An optional support question, not a diagnostic item."
+    },
+    {
+      "id": "panic-detail-7",
+      "text": "Who could you choose to contact when you want reassurance or support?",
+      "options": [
+        "A trusted person",
+        "A professional",
+        "University support",
+        "I need help finding someone"
+      ],
+      "topics": [
+        "panic"
+      ],
+      "facet": "panic-detail-7",
+      "priority": 0,
+      "reason": "An optional support question, not a diagnostic item."
+    },
+    {
+      "id": "panic-detail-8",
+      "text": "How have these episodes changed your daily routine?",
+      "options": [
+        "Less independent activity",
+        "More time planning",
+        "Less social contact",
+        "Little change so far"
+      ],
+      "topics": [
+        "panic"
+      ],
+      "facet": "panic-detail-8",
+      "priority": 0,
+      "reason": "An optional support question, not a diagnostic item."
+    },
+    {
+      "id": "panic-detail-9",
+      "text": "Which part of preparing for support feels hardest?",
+      "options": [
+        "Explaining my experience",
+        "Finding time",
+        "Choosing a service",
+        "I am unsure"
+      ],
+      "topics": [
+        "panic"
+      ],
+      "facet": "panic-detail-9",
+      "priority": 0,
+      "reason": "An optional support question, not a diagnostic item."
+    },
+    {
+      "id": "panic-detail-10",
+      "text": "What would you like to understand better about these experiences?",
+      "options": [
+        "Possible explanations",
+        "Ways to respond",
+        "Available assessment",
+        "How to talk about them"
+      ],
+      "topics": [
+        "panic"
+      ],
+      "facet": "panic-detail-10",
+      "priority": 0,
+      "reason": "An optional support question, not a diagnostic item."
+    },
+    {
+      "id": "panic-detail-11",
+      "text": "Which practical adjustment would help you attend an appointment?",
+      "options": [
+        "A suitable time",
+        "Online access",
+        "Travel support",
+        "Help with the first contact"
+      ],
+      "topics": [
+        "panic"
+      ],
+      "facet": "panic-detail-11",
+      "priority": 0,
+      "reason": "An optional support question, not a diagnostic item."
+    },
+    {
+      "id": "panic-detail-12",
+      "text": "How would you like someone close to you to help?",
+      "options": [
+        "Listen",
+        "Stay nearby when asked",
+        "Help arrange advice",
+        "Respect my space"
+      ],
+      "topics": [
+        "panic"
+      ],
+      "facet": "panic-detail-12",
+      "priority": 0,
+      "reason": "An optional support question, not a diagnostic item."
+    },
+    {
+      "id": "panic-detail-13",
+      "text": "What makes support feel accessible to you?",
+      "options": [
+        "Clear information",
+        "A preferred language",
+        "A familiar setting",
+        "Being able to choose the professional"
+      ],
+      "topics": [
+        "panic"
+      ],
+      "facet": "panic-detail-13",
+      "priority": 0,
+      "reason": "An optional support question, not a diagnostic item."
+    },
+    {
+      "id": "panic-detail-14",
+      "text": "What would you want a professional to know before a meeting?",
+      "options": [
+        "How my routine is affected",
+        "What I am worried about",
+        "What support I prefer",
+        "I would rather explain in person"
+      ],
+      "topics": [
+        "panic"
+      ],
+      "facet": "panic-detail-14",
+      "priority": 0,
+      "reason": "An optional support question, not a diagnostic item."
+    },
+    {
+      "id": "panic-detail-15",
+      "text": "What kind of next step feels possible without pushing yourself?",
+      "options": [
+        "Prepare a question",
+        "Talk to someone trusted",
+        "Browse professionals",
+        "Take time to choose"
+      ],
+      "topics": [
+        "panic"
+      ],
+      "facet": "panic-detail-15",
+      "priority": 0,
+      "reason": "An optional support question, not a diagnostic item."
+    },
+    {
+      "id": "panic-detail-16",
+      "text": "Which goal matters most in seeking help for sudden fear?",
+      "options": [
+        "Understanding what is happening",
+        "Feeling supported",
+        "Discussing daily-life changes",
+        "Choosing suitable care"
+      ],
+      "topics": [
+        "panic"
+      ],
+      "facet": "panic-detail-16",
+      "priority": 0,
+      "reason": "An optional support question, not a diagnostic item."
+    },
+    {
+      "id": "relationships",
+      "text": "Which relationship concern would you like to explore first?",
+      "options": [
+        "Family expectations",
+        "Conflict or communication",
+        "Setting boundaries",
+        "A breakup or separation",
+        "No current relationships concern"
+      ],
+      "topics": [
+        "relationships"
+      ],
+      "facet": "relationships-entry",
+      "priority": 5,
+      "reason": "An optional support question, not a diagnostic item.",
+      "signals": [
+        {
+          "answer": "No current relationships concern",
+          "dismissTopics": [
+            "relationships"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "relationships-detail-1",
+      "text": "Which family expectation feels hardest to discuss?",
+      "options": [
+        "Study or career choices",
+        "Time or responsibilities",
+        "Personal choices",
+        "I prefer not to specify"
+      ],
+      "topics": [
+        "relationships"
+      ],
+      "facet": "relationships-detail-1",
+      "priority": 4,
+      "reason": "An optional support question, not a diagnostic item.",
+      "when": [
+        {
+          "questionId": "relationships",
+          "answers": [
+            "Family expectations"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "relationships-detail-2",
+      "text": "What would you like to make easier in a difficult conversation?",
+      "options": [
+        "Explaining my needs",
+        "Listening without escalation",
+        "Choosing a time",
+        "Knowing whether to have it"
+      ],
+      "topics": [
+        "relationships"
+      ],
+      "facet": "relationships-detail-2",
+      "priority": 4,
+      "reason": "An optional support question, not a diagnostic item.",
+      "when": [
+        {
+          "questionId": "relationships",
+          "answers": [
+            "Conflict or communication"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "relationships-detail-3",
+      "text": "Which boundary would you like help putting into words?",
+      "options": [
+        "Time and availability",
+        "Privacy",
+        "Responsibilities",
+        "How I want to be treated"
+      ],
+      "topics": [
+        "relationships"
+      ],
+      "facet": "relationships-detail-3",
+      "priority": 4,
+      "reason": "An optional support question, not a diagnostic item.",
+      "when": [
+        {
+          "questionId": "relationships",
+          "answers": [
+            "Setting boundaries"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "relationships-detail-4",
+      "text": "What would feel most supportive after the separation?",
+      "options": [
+        "Someone listening",
+        "Help with routines",
+        "Space from reminders",
+        "Professional support"
+      ],
+      "topics": [
+        "relationships"
+      ],
+      "facet": "relationships-detail-4",
+      "priority": 4,
+      "reason": "An optional support question, not a diagnostic item.",
+      "when": [
+        {
+          "questionId": "relationships",
+          "answers": [
+            "A breakup or separation"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "relationships-detail-5",
+      "text": "What would make a relationship conversation feel safer and more comfortable?",
+      "options": [
+        "A neutral setting",
+        "A trusted supporter",
+        "Written preparation",
+        "Choosing not to have it now"
+      ],
+      "topics": [
+        "relationships"
+      ],
+      "facet": "relationships-detail-5",
+      "priority": 0,
+      "reason": "An optional support question, not a diagnostic item."
+    },
+    {
+      "id": "relationships-detail-6",
+      "text": "How do relationship difficulties affect your usual day?",
+      "options": [
+        "Distracting thoughts",
+        "Less energy",
+        "Withdrawing from others",
+        "Changes to routines"
+      ],
+      "topics": [
+        "relationships"
+      ],
+      "facet": "relationships-detail-6",
+      "priority": 0,
+      "reason": "An optional support question, not a diagnostic item."
+    },
+    {
+      "id": "relationships-detail-7",
+      "text": "What support would you like without sharing private details?",
+      "options": [
+        "Communication ideas",
+        "Boundary planning",
+        "Someone to listen",
+        "Finding a professional"
+      ],
+      "topics": [
+        "relationships"
+      ],
+      "facet": "relationships-detail-7",
+      "priority": 0,
+      "reason": "An optional support question, not a diagnostic item."
+    },
+    {
+      "id": "relationships-detail-8",
+      "text": "What tends to make it hard to express a need?",
+      "options": [
+        "Fear of upsetting someone",
+        "Not finding the words",
+        "Feeling guilty",
+        "Not knowing what I need"
+      ],
+      "topics": [
+        "relationships"
+      ],
+      "facet": "relationships-detail-8",
+      "priority": 0,
+      "reason": "An optional support question, not a diagnostic item."
+    },
+    {
+      "id": "relationships-detail-9",
+      "text": "What kind of connection would feel useful outside this difficulty?",
+      "options": [
+        "A trusted friend",
+        "A student group",
+        "A professional",
+        "Time by myself first"
+      ],
+      "topics": [
+        "relationships"
+      ],
+      "facet": "relationships-detail-9",
+      "priority": 0,
+      "reason": "An optional support question, not a diagnostic item."
+    },
+    {
+      "id": "relationships-detail-10",
+      "text": "Which personal need would you like to keep in view?",
+      "options": [
+        "Respect",
+        "Privacy",
+        "Time to recover",
+        "Being heard"
+      ],
+      "topics": [
+        "relationships"
+      ],
+      "facet": "relationships-detail-10",
+      "priority": 0,
+      "reason": "An optional support question, not a diagnostic item."
+    },
+    {
+      "id": "relationships-detail-11",
+      "text": "What would help you decide on a manageable next step in this relationship?",
+      "options": [
+        "Clarifying my needs",
+        "Talking to a neutral person",
+        "Exploring options",
+        "More time"
+      ],
+      "topics": [
+        "relationships"
+      ],
+      "facet": "relationships-detail-11",
+      "priority": 0,
+      "reason": "An optional support question, not a diagnostic item."
+    },
+    {
+      "id": "relationships-detail-12",
+      "text": "How would you prefer to prepare for professional support about relationships?",
+      "options": [
+        "Write a few points",
+        "Prepare questions",
+        "Explain in conversation",
+        "Bring someone trusted"
+      ],
+      "topics": [
+        "relationships"
+      ],
+      "facet": "relationships-detail-12",
+      "priority": 0,
+      "reason": "An optional support question, not a diagnostic item."
+    },
+    {
+      "id": "relationships-detail-13",
+      "text": "What would you want someone supporting you to avoid?",
+      "options": [
+        "Pressuring me to decide",
+        "Taking sides",
+        "Sharing my information",
+        "Minimising the concern"
+      ],
+      "topics": [
+        "relationships"
+      ],
+      "facet": "relationships-detail-13",
+      "priority": 0,
+      "reason": "An optional support question, not a diagnostic item."
+    },
+    {
+      "id": "relationships-detail-14",
+      "text": "What kind of boundary support feels useful today?",
+      "options": [
+        "Practising a sentence",
+        "Choosing a limit",
+        "Planning how to get support",
+        "I am unsure"
+      ],
+      "topics": [
+        "relationships"
+      ],
+      "facet": "relationships-detail-14",
+      "priority": 0,
+      "reason": "An optional support question, not a diagnostic item."
+    },
+    {
+      "id": "relationships-detail-15",
+      "text": "What would make reaching out about relationship concerns easier?",
+      "options": [
+        "Privacy information",
+        "A preferred language",
+        "A suitable appointment mode",
+        "Help choosing a professional"
+      ],
+      "topics": [
+        "relationships"
+      ],
+      "facet": "relationships-detail-15",
+      "priority": 0,
+      "reason": "An optional support question, not a diagnostic item."
+    },
+    {
+      "id": "relationships-detail-16",
+      "text": "Which outcome would you like from a relationship-support conversation?",
+      "options": [
+        "Feeling heard",
+        "Clearer choices",
+        "A communication plan",
+        "Support with coping"
+      ],
+      "topics": [
+        "relationships"
+      ],
+      "facet": "relationships-detail-16",
+      "priority": 0,
+      "reason": "An optional support question, not a diagnostic item."
+    },
+    {
+      "id": "grief",
+      "text": "Which part of grief or loss would you like support with?",
+      "options": [
+        "Missing someone",
+        "Changes to daily routines",
+        "Talking about the loss",
+        "Anniversaries or reminders",
+        "No current grief concern"
+      ],
+      "topics": [
+        "grief"
+      ],
+      "facet": "grief-entry",
+      "priority": 5,
+      "reason": "An optional support question, not a diagnostic item.",
+      "signals": [
+        {
+          "answer": "No current grief concern",
+          "dismissTopics": [
+            "grief"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "grief-detail-1",
+      "text": "What kind of company would feel welcome when missing someone?",
+      "options": [
+        "Quiet company",
+        "Someone listening",
+        "A shared activity",
+        "Space with support available"
+      ],
+      "topics": [
+        "grief"
+      ],
+      "facet": "grief-detail-1",
+      "priority": 4,
+      "reason": "An optional support question, not a diagnostic item.",
+      "when": [
+        {
+          "questionId": "grief",
+          "answers": [
+            "Missing someone"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "grief-detail-2",
+      "text": "Which everyday routine feels hardest after the loss?",
+      "options": [
+        "Meals or rest",
+        "Study or work",
+        "Keeping in touch",
+        "Managing practical tasks"
+      ],
+      "topics": [
+        "grief"
+      ],
+      "facet": "grief-detail-2",
+      "priority": 4,
+      "reason": "An optional support question, not a diagnostic item.",
+      "when": [
+        {
+          "questionId": "grief",
+          "answers": [
+            "Changes to daily routines"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "grief-detail-3",
+      "text": "What would make talking about the loss more comfortable?",
+      "options": [
+        "Choosing what to share",
+        "A trusted listener",
+        "A private professional",
+        "I do not want to talk about it yet"
+      ],
+      "topics": [
+        "grief"
+      ],
+      "facet": "grief-detail-3",
+      "priority": 4,
+      "reason": "An optional support question, not a diagnostic item.",
+      "when": [
+        {
+          "questionId": "grief",
+          "answers": [
+            "Talking about the loss"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "grief-detail-4",
+      "text": "How would you prefer to prepare for a difficult reminder?",
+      "options": [
+        "Plan gentle company",
+        "Keep demands light",
+        "Choose a meaningful activity",
+        "Leave the plan flexible"
+      ],
+      "topics": [
+        "grief"
+      ],
+      "facet": "grief-detail-4",
+      "priority": 4,
+      "reason": "An optional support question, not a diagnostic item.",
+      "when": [
+        {
+          "questionId": "grief",
+          "answers": [
+            "Anniversaries or reminders"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "grief-detail-5",
+      "text": "What would feel supportive without expecting grief to follow a timetable?",
+      "options": [
+        "Patience",
+        "Practical help",
+        "Someone checking in",
+        "A professional conversation"
+      ],
+      "topics": [
+        "grief"
+      ],
+      "facet": "grief-detail-5",
+      "priority": 0,
+      "reason": "An optional support question, not a diagnostic item."
+    },
+    {
+      "id": "grief-detail-6",
+      "text": "Which kind of help would lighten one everyday demand while grieving?",
+      "options": [
+        "Help with a task",
+        "A flexible deadline",
+        "Meals or errands",
+        "Help asking for support"
+      ],
+      "topics": [
+        "grief"
+      ],
+      "facet": "grief-detail-6",
+      "priority": 0,
+      "reason": "An optional support question, not a diagnostic item."
+    },
+    {
+      "id": "grief-detail-7",
+      "text": "How would you like people around you to respond to your loss?",
+      "options": [
+        "Listen without fixing",
+        "Ask before offering advice",
+        "Include me gently",
+        "Give me space when requested"
+      ],
+      "topics": [
+        "grief"
+      ],
+      "facet": "grief-detail-7",
+      "priority": 0,
+      "reason": "An optional support question, not a diagnostic item."
+    },
+    {
+      "id": "grief-detail-8",
+      "text": "What makes reaching out during grief difficult?",
+      "options": [
+        "Finding the words",
+        "Worrying about burdening others",
+        "Not knowing whom to ask",
+        "Wanting privacy"
+      ],
+      "topics": [
+        "grief"
+      ],
+      "facet": "grief-detail-8",
+      "priority": 0,
+      "reason": "An optional support question, not a diagnostic item."
+    },
+    {
+      "id": "grief-detail-9",
+      "text": "What kind of gentle activity might fit your energy while grieving?",
+      "options": [
+        "A familiar routine",
+        "Quiet time outside",
+        "Contact with someone trusted",
+        "I am not sure"
+      ],
+      "topics": [
+        "grief"
+      ],
+      "facet": "grief-detail-9",
+      "priority": 0,
+      "reason": "An optional support question, not a diagnostic item."
+    },
+    {
+      "id": "grief-detail-10",
+      "text": "What would you like a professional to understand about this loss?",
+      "options": [
+        "Its effect on my day",
+        "The support I have",
+        "What feels difficult now",
+        "I would rather explain later"
+      ],
+      "topics": [
+        "grief"
+      ],
+      "facet": "grief-detail-10",
+      "priority": 0,
+      "reason": "An optional support question, not a diagnostic item."
+    },
+    {
+      "id": "grief-detail-11",
+      "text": "Which support format would suit a conversation about grief?",
+      "options": [
+        "Individual online",
+        "Individual in person",
+        "A suitable group",
+        "I need information first"
+      ],
+      "topics": [
+        "grief"
+      ],
+      "facet": "grief-detail-11",
+      "priority": 0,
+      "reason": "An optional support question, not a diagnostic item."
+    },
+    {
+      "id": "grief-detail-12",
+      "text": "What would make the next few days a little more manageable?",
+      "options": [
+        "Fewer demands",
+        "One supportive contact",
+        "Practical assistance",
+        "A flexible routine"
+      ],
+      "topics": [
+        "grief"
+      ],
+      "facet": "grief-detail-12",
+      "priority": 0,
+      "reason": "An optional support question, not a diagnostic item."
+    },
+    {
+      "id": "grief-detail-13",
+      "text": "What would you prefer when people check in about grief?",
+      "options": [
+        "A brief message",
+        "An invitation with no pressure",
+        "A planned conversation",
+        "Letting me start contact"
+      ],
+      "topics": [
+        "grief"
+      ],
+      "facet": "grief-detail-13",
+      "priority": 0,
+      "reason": "An optional support question, not a diagnostic item."
+    },
+    {
+      "id": "grief-detail-14",
+      "text": "How much would you want to share about the loss in an initial appointment?",
+      "options": [
+        "Only its impact",
+        "A brief outline",
+        "More detail if comfortable",
+        "I want to decide at the time"
+      ],
+      "topics": [
+        "grief"
+      ],
+      "facet": "grief-detail-14",
+      "priority": 0,
+      "reason": "An optional support question, not a diagnostic item."
+    },
+    {
+      "id": "grief-detail-15",
+      "text": "Which part of finding grief support would you like help with?",
+      "options": [
+        "Choosing a listener",
+        "Understanding available services",
+        "Preparing questions",
+        "Making first contact"
+      ],
+      "topics": [
+        "grief"
+      ],
+      "facet": "grief-detail-15",
+      "priority": 0,
+      "reason": "An optional support question, not a diagnostic item."
+    },
+    {
+      "id": "grief-detail-16",
+      "text": "What would count as a useful first step with grief support?",
+      "options": [
+        "Feeling less alone",
+        "Having space to speak",
+        "Practical help",
+        "Knowing my options"
+      ],
+      "topics": [
+        "grief"
+      ],
+      "facet": "grief-detail-16",
+      "priority": 0,
+      "reason": "An optional support question, not a diagnostic item."
+    },
+    {
+      "id": "self-esteem",
+      "text": "Which confidence or self-esteem concern feels most relevant?",
+      "options": [
+        "Harsh self-criticism",
+        "Comparing myself with others",
+        "Doubting my abilities",
+        "Difficulty recognising strengths",
+        "No current self esteem concern"
+      ],
+      "topics": [
+        "self-esteem"
+      ],
+      "facet": "self-esteem-entry",
+      "priority": 5,
+      "reason": "An optional support question, not a diagnostic item.",
+      "signals": [
+        {
+          "answer": "No current self esteem concern",
+          "dismissTopics": [
+            "self-esteem"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "self-esteem-detail-1",
+      "text": "When self-criticism starts, what would you like help noticing?",
+      "options": [
+        "The words I use",
+        "The situation that triggered it",
+        "What I would say to a friend",
+        "A balanced alternative"
+      ],
+      "topics": [
+        "self-esteem"
+      ],
+      "facet": "self-esteem-detail-1",
+      "priority": 4,
+      "reason": "An optional support question, not a diagnostic item.",
+      "when": [
+        {
+          "questionId": "self-esteem",
+          "answers": [
+            "Harsh self-criticism"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "self-esteem-detail-2",
+      "text": "Where do comparisons feel most difficult?",
+      "options": [
+        "Studies or work",
+        "Social media",
+        "Relationships",
+        "Several settings"
+      ],
+      "topics": [
+        "self-esteem"
+      ],
+      "facet": "self-esteem-detail-2",
+      "priority": 4,
+      "reason": "An optional support question, not a diagnostic item.",
+      "when": [
+        {
+          "questionId": "self-esteem",
+          "answers": [
+            "Comparing myself with others"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "self-esteem-detail-3",
+      "text": "Which situation brings up the most doubt in your abilities?",
+      "options": [
+        "Starting something new",
+        "Being evaluated",
+        "Speaking up",
+        "Making a decision"
+      ],
+      "topics": [
+        "self-esteem"
+      ],
+      "facet": "self-esteem-detail-3",
+      "priority": 4,
+      "reason": "An optional support question, not a diagnostic item.",
+      "when": [
+        {
+          "questionId": "self-esteem",
+          "answers": [
+            "Doubting my abilities"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "self-esteem-detail-4",
+      "text": "What would make recognising a strength feel more believable?",
+      "options": [
+        "A specific example",
+        "Feedback from someone trusted",
+        "Noticing effort",
+        "Taking a smaller step"
+      ],
+      "topics": [
+        "self-esteem"
+      ],
+      "facet": "self-esteem-detail-4",
+      "priority": 4,
+      "reason": "An optional support question, not a diagnostic item.",
+      "when": [
+        {
+          "questionId": "self-esteem",
+          "answers": [
+            "Difficulty recognising strengths"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "self-esteem-detail-5",
+      "text": "What would a kinder response to a small mistake sound like for you?",
+      "options": [
+        "Allowing myself to learn",
+        "Recognising effort",
+        "Keeping the mistake in perspective",
+        "I need help finding words"
+      ],
+      "topics": [
+        "self-esteem"
+      ],
+      "facet": "self-esteem-detail-5",
+      "priority": 0,
+      "reason": "An optional support question, not a diagnostic item."
+    },
+    {
+      "id": "self-esteem-detail-6",
+      "text": "Which personal value would you like to keep visible when confidence is low?",
+      "options": [
+        "Learning",
+        "Kindness",
+        "Reliability",
+        "Something I choose myself"
+      ],
+      "topics": [
+        "self-esteem"
+      ],
+      "facet": "self-esteem-detail-6",
+      "priority": 0,
+      "reason": "An optional support question, not a diagnostic item."
+    },
+    {
+      "id": "self-esteem-detail-7",
+      "text": "What makes accepting positive feedback uncomfortable?",
+      "options": [
+        "Doubting it is sincere",
+        "Focusing on flaws",
+        "Feeling undeserving",
+        "I am not sure"
+      ],
+      "topics": [
+        "self-esteem"
+      ],
+      "facet": "self-esteem-detail-7",
+      "priority": 0,
+      "reason": "An optional support question, not a diagnostic item."
+    },
+    {
+      "id": "self-esteem-detail-8",
+      "text": "What kind of small confidence-building step feels manageable?",
+      "options": [
+        "Asking a question",
+        "Trying a familiar task",
+        "Expressing a preference",
+        "Noticing an achievement"
+      ],
+      "topics": [
+        "self-esteem"
+      ],
+      "facet": "self-esteem-detail-8",
+      "priority": 0,
+      "reason": "An optional support question, not a diagnostic item."
+    },
+    {
+      "id": "self-esteem-detail-9",
+      "text": "How would you like someone to support you with self-doubt?",
+      "options": [
+        "Listen",
+        "Offer balanced feedback",
+        "Help plan a small step",
+        "Discuss it professionally"
+      ],
+      "topics": [
+        "self-esteem"
+      ],
+      "facet": "self-esteem-detail-9",
+      "priority": 0,
+      "reason": "An optional support question, not a diagnostic item."
+    },
+    {
+      "id": "self-esteem-detail-10",
+      "text": "Which situation would you like to approach with less pressure to be perfect?",
+      "options": [
+        "Study or work",
+        "Meeting people",
+        "Trying a hobby",
+        "Everyday decisions"
+      ],
+      "topics": [
+        "self-esteem"
+      ],
+      "facet": "self-esteem-detail-10",
+      "priority": 0,
+      "reason": "An optional support question, not a diagnostic item."
+    },
+    {
+      "id": "self-esteem-detail-11",
+      "text": "What would help you notice effort rather than only the result?",
+      "options": [
+        "A brief reflection",
+        "A realistic goal",
+        "Supportive feedback",
+        "Permission to learn"
+      ],
+      "topics": [
+        "self-esteem"
+      ],
+      "facet": "self-esteem-detail-11",
+      "priority": 0,
+      "reason": "An optional support question, not a diagnostic item."
+    },
+    {
+      "id": "self-esteem-detail-12",
+      "text": "What would you like to explore in a professional conversation about confidence?",
+      "options": [
+        "Negative self-talk",
+        "Comparison",
+        "Boundaries",
+        "My strengths and values"
+      ],
+      "topics": [
+        "self-esteem"
+      ],
+      "facet": "self-esteem-detail-12",
+      "priority": 0,
+      "reason": "An optional support question, not a diagnostic item."
+    },
+    {
+      "id": "self-esteem-detail-13",
+      "text": "Which source of comparison would you like more distance from?",
+      "options": [
+        "Online posts",
+        "Other people's achievements",
+        "Family expectations",
+        "My own ideal standards"
+      ],
+      "topics": [
+        "self-esteem"
+      ],
+      "facet": "self-esteem-detail-13",
+      "priority": 0,
+      "reason": "An optional support question, not a diagnostic item."
+    },
+    {
+      "id": "self-esteem-detail-14",
+      "text": "What gets in the way of treating yourself as kindly as someone else?",
+      "options": [
+        "Habit",
+        "High expectations",
+        "Past criticism",
+        "I am unsure"
+      ],
+      "topics": [
+        "self-esteem"
+      ],
+      "facet": "self-esteem-detail-14",
+      "priority": 0,
+      "reason": "An optional support question, not a diagnostic item."
+    },
+    {
+      "id": "self-esteem-detail-15",
+      "text": "Which kind of reminder would feel supportive when doubting yourself?",
+      "options": [
+        "A balanced sentence",
+        "A past example of effort",
+        "A trusted person's perspective",
+        "No written reminder"
+      ],
+      "topics": [
+        "self-esteem"
+      ],
+      "facet": "self-esteem-detail-15",
+      "priority": 0,
+      "reason": "An optional support question, not a diagnostic item."
+    },
+    {
+      "id": "self-esteem-detail-16",
+      "text": "What would a small improvement in self-confidence make easier?",
+      "options": [
+        "Taking part",
+        "Starting a task",
+        "Expressing a need",
+        "Being kinder to myself"
+      ],
+      "topics": [
+        "self-esteem"
+      ],
+      "facet": "self-esteem-detail-16",
+      "priority": 0,
+      "reason": "An optional support question, not a diagnostic item."
+    },
+    {
+      "id": "anger",
+      "text": "What would you like help with around anger or frustration?",
+      "options": [
+        "Noticing early signs",
+        "Pausing before reacting",
+        "Expressing frustration",
+        "Recovering after conflict",
+        "No current anger concern"
+      ],
+      "topics": [
+        "anger"
+      ],
+      "facet": "anger-entry",
+      "priority": 5,
+      "reason": "An optional support question, not a diagnostic item.",
+      "signals": [
+        {
+          "answer": "No current anger concern",
+          "dismissTopics": [
+            "anger"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "anger-detail-1",
+      "text": "Which early sign would you like to notice sooner when frustrated?",
+      "options": [
+        "Tension",
+        "Faster thoughts",
+        "A raised voice",
+        "Wanting to leave"
+      ],
+      "topics": [
+        "anger"
+      ],
+      "facet": "anger-detail-1",
+      "priority": 4,
+      "reason": "An optional support question, not a diagnostic item.",
+      "when": [
+        {
+          "questionId": "anger",
+          "answers": [
+            "Noticing early signs"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "anger-detail-2",
+      "text": "What would make taking a pause before reacting more possible?",
+      "options": [
+        "A prepared sentence",
+        "Space to step away safely",
+        "A reminder",
+        "Professional guidance"
+      ],
+      "topics": [
+        "anger"
+      ],
+      "facet": "anger-detail-2",
+      "priority": 4,
+      "reason": "An optional support question, not a diagnostic item.",
+      "when": [
+        {
+          "questionId": "anger",
+          "answers": [
+            "Pausing before reacting"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "anger-detail-3",
+      "text": "What would you like to communicate more clearly when frustrated?",
+      "options": [
+        "A need",
+        "A boundary",
+        "A disagreement",
+        "A request for help"
+      ],
+      "topics": [
+        "anger"
+      ],
+      "facet": "anger-detail-3",
+      "priority": 4,
+      "reason": "An optional support question, not a diagnostic item.",
+      "when": [
+        {
+          "questionId": "anger",
+          "answers": [
+            "Expressing frustration"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "anger-detail-4",
+      "text": "What would help you reflect after a difficult interaction?",
+      "options": [
+        "Time to settle",
+        "Writing privately",
+        "Talking to a neutral person",
+        "A professional conversation"
+      ],
+      "topics": [
+        "anger"
+      ],
+      "facet": "anger-detail-4",
+      "priority": 4,
+      "reason": "An optional support question, not a diagnostic item.",
+      "when": [
+        {
+          "questionId": "anger",
+          "answers": [
+            "Recovering after conflict"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "anger-detail-5",
+      "text": "Which situations most often build frustration for you?",
+      "options": [
+        "Feeling unheard",
+        "Unexpected changes",
+        "Too many demands",
+        "It varies"
+      ],
+      "topics": [
+        "anger"
+      ],
+      "facet": "anger-detail-5",
+      "priority": 0,
+      "reason": "An optional support question, not a diagnostic item."
+    },
+    {
+      "id": "anger-detail-6",
+      "text": "What kind of support feels useful when irritation is building?",
+      "options": [
+        "Quiet space",
+        "Someone listening",
+        "Help with a practical demand",
+        "A planned professional conversation"
+      ],
+      "topics": [
+        "anger"
+      ],
+      "facet": "anger-detail-6",
+      "priority": 0,
+      "reason": "An optional support question, not a diagnostic item."
+    },
+    {
+      "id": "anger-detail-7",
+      "text": "What would a respectful pause in a disagreement look like for you?",
+      "options": [
+        "Agreeing to return later",
+        "Explaining I need a break",
+        "Choosing a calmer setting",
+        "I need help planning it"
+      ],
+      "topics": [
+        "anger"
+      ],
+      "facet": "anger-detail-7",
+      "priority": 0,
+      "reason": "An optional support question, not a diagnostic item."
+    },
+    {
+      "id": "anger-detail-8",
+      "text": "What need might be hard to express before frustration grows?",
+      "options": [
+        "Rest",
+        "Respect",
+        "Clarity",
+        "Help with responsibilities"
+      ],
+      "topics": [
+        "anger"
+      ],
+      "facet": "anger-detail-8",
+      "priority": 0,
+      "reason": "An optional support question, not a diagnostic item."
+    },
+    {
+      "id": "anger-detail-9",
+      "text": "Which part of managing emotions would you like to practise?",
+      "options": [
+        "Recognising feelings",
+        "Choosing words",
+        "Taking a pause",
+        "Finding support"
+      ],
+      "topics": [
+        "anger"
+      ],
+      "facet": "anger-detail-9",
+      "priority": 0,
+      "reason": "An optional support question, not a diagnostic item."
+    },
+    {
+      "id": "anger-detail-10",
+      "text": "What would you want someone supporting you to understand about frustration?",
+      "options": [
+        "Its effect on my day",
+        "What makes it worse",
+        "What helps me settle",
+        "I want to discuss privately"
+      ],
+      "topics": [
+        "anger"
+      ],
+      "facet": "anger-detail-10",
+      "priority": 0,
+      "reason": "An optional support question, not a diagnostic item."
+    },
+    {
+      "id": "anger-detail-11",
+      "text": "What makes it difficult to seek help with anger?",
+      "options": [
+        "Fear of judgment",
+        "Not knowing where to start",
+        "Privacy concerns",
+        "Thinking I should manage alone"
+      ],
+      "topics": [
+        "anger"
+      ],
+      "facet": "anger-detail-11",
+      "priority": 0,
+      "reason": "An optional support question, not a diagnostic item."
+    },
+    {
+      "id": "anger-detail-12",
+      "text": "Which setting would suit a conversation about emotional reactions?",
+      "options": [
+        "Private online",
+        "Private in person",
+        "A familiar support setting",
+        "I need information first"
+      ],
+      "topics": [
+        "anger"
+      ],
+      "facet": "anger-detail-12",
+      "priority": 0,
+      "reason": "An optional support question, not a diagnostic item."
+    },
+    {
+      "id": "anger-detail-13",
+      "text": "What helps you notice when a conversation is no longer constructive?",
+      "options": [
+        "Repeated arguments",
+        "Rising tension",
+        "Not listening to each other",
+        "I need help recognising this"
+      ],
+      "topics": [
+        "anger"
+      ],
+      "facet": "anger-detail-13",
+      "priority": 0,
+      "reason": "An optional support question, not a diagnostic item."
+    },
+    {
+      "id": "anger-detail-14",
+      "text": "What would you like a professional to help you work on first?",
+      "options": [
+        "Understanding patterns",
+        "Communication",
+        "Coping with frustration",
+        "Choosing a support plan"
+      ],
+      "topics": [
+        "anger"
+      ],
+      "facet": "anger-detail-14",
+      "priority": 0,
+      "reason": "An optional support question, not a diagnostic item."
+    },
+    {
+      "id": "anger-detail-15",
+      "text": "Which practical demand could you ask for help with before it builds frustration?",
+      "options": [
+        "Workload",
+        "Time pressure",
+        "Unclear expectations",
+        "I am not sure"
+      ],
+      "topics": [
+        "anger"
+      ],
+      "facet": "anger-detail-15",
+      "priority": 0,
+      "reason": "An optional support question, not a diagnostic item."
+    },
+    {
+      "id": "anger-detail-16",
+      "text": "What would a useful first change in handling frustration look like?",
+      "options": [
+        "Noticing it sooner",
+        "Pausing once",
+        "Expressing one need",
+        "Asking for support"
+      ],
+      "topics": [
+        "anger"
+      ],
+      "facet": "anger-detail-16",
+      "priority": 0,
+      "reason": "An optional support question, not a diagnostic item."
+    },
+    {
+      "id": "eating",
+      "text": "Which food or body-image concern would you like support with?",
+      "options": [
+        "Distressing body thoughts",
+        "Difficult feelings around meals",
+        "Eating with other people",
+        "Finding qualified support",
+        "No current eating concern"
+      ],
+      "topics": [
+        "eating"
+      ],
+      "facet": "eating-entry",
+      "priority": 5,
+      "reason": "An optional support question, not a diagnostic item.",
+      "signals": [
+        {
+          "answer": "No current eating concern",
+          "dismissTopics": [
+            "eating"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "eating-detail-1",
+      "text": "What support would feel useful when body-related thoughts are distressing?",
+      "options": [
+        "Someone listening without judgment",
+        "Less pressure around appearance",
+        "Professional advice",
+        "I am unsure"
+      ],
+      "topics": [
+        "eating"
+      ],
+      "facet": "eating-detail-1",
+      "priority": 4,
+      "reason": "An optional support question, not a diagnostic item.",
+      "when": [
+        {
+          "questionId": "eating",
+          "answers": [
+            "Distressing body thoughts"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "eating-detail-2",
+      "text": "What would you want someone to understand about difficult feelings around meals?",
+      "options": [
+        "How they affect my day",
+        "The emotions involved",
+        "The support I prefer",
+        "I would rather explain privately"
+      ],
+      "topics": [
+        "eating"
+      ],
+      "facet": "eating-detail-2",
+      "priority": 4,
+      "reason": "An optional support question, not a diagnostic item.",
+      "when": [
+        {
+          "questionId": "eating",
+          "answers": [
+            "Difficult feelings around meals"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "eating-detail-3",
+      "text": "What could make talking about social eating concerns more comfortable?",
+      "options": [
+        "No comments about appearance",
+        "Choosing whom to tell",
+        "A private conversation",
+        "Professional support"
+      ],
+      "topics": [
+        "eating"
+      ],
+      "facet": "eating-detail-3",
+      "priority": 4,
+      "reason": "An optional support question, not a diagnostic item.",
+      "when": [
+        {
+          "questionId": "eating",
+          "answers": [
+            "Eating with other people"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "eating-detail-4",
+      "text": "What would make finding qualified eating-related support easier?",
+      "options": [
+        "Knowing available services",
+        "Confidentiality information",
+        "A preferred language",
+        "Help preparing questions"
+      ],
+      "topics": [
+        "eating"
+      ],
+      "facet": "eating-detail-4",
+      "priority": 4,
+      "reason": "An optional support question, not a diagnostic item.",
+      "when": [
+        {
+          "questionId": "eating",
+          "answers": [
+            "Finding qualified support"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "eating-detail-5",
+      "text": "What would you prefer to avoid in a conversation about eating concerns?",
+      "options": [
+        "Weight or appearance comments",
+        "Comparisons",
+        "Unasked-for diet advice",
+        "Pressure to share details"
+      ],
+      "topics": [
+        "eating"
+      ],
+      "facet": "eating-detail-5",
+      "priority": 0,
+      "reason": "An optional support question, not a diagnostic item."
+    },
+    {
+      "id": "eating-detail-6",
+      "text": "How are food or body-image worries affecting everyday life?",
+      "options": [
+        "Concentration",
+        "Social plans",
+        "Emotional energy",
+        "Several areas"
+      ],
+      "topics": [
+        "eating"
+      ],
+      "facet": "eating-detail-6",
+      "priority": 0,
+      "reason": "An optional support question, not a diagnostic item."
+    },
+    {
+      "id": "eating-detail-7",
+      "text": "What kind of first support conversation would you prefer about eating?",
+      "options": [
+        "Online with a professional",
+        "In person with a professional",
+        "With someone trusted first",
+        "Information before deciding"
+      ],
+      "topics": [
+        "eating"
+      ],
+      "facet": "eating-detail-7",
+      "priority": 0,
+      "reason": "An optional support question, not a diagnostic item."
+    },
+    {
+      "id": "eating-detail-8",
+      "text": "Who could help you find appropriate eating-related support?",
+      "options": [
+        "University health services",
+        "A qualified professional",
+        "Someone I trust",
+        "I need help choosing"
+      ],
+      "topics": [
+        "eating"
+      ],
+      "facet": "eating-detail-8",
+      "priority": 0,
+      "reason": "An optional support question, not a diagnostic item."
+    },
+    {
+      "id": "eating-detail-9",
+      "text": "What would you like to prepare before discussing body-image concerns?",
+      "options": [
+        "A short description of impact",
+        "Questions about care",
+        "My privacy preferences",
+        "I prefer to talk without notes"
+      ],
+      "topics": [
+        "eating"
+      ],
+      "facet": "eating-detail-9",
+      "priority": 0,
+      "reason": "An optional support question, not a diagnostic item."
+    },
+    {
+      "id": "eating-detail-10",
+      "text": "Which part of seeking support for eating concerns feels most difficult?",
+      "options": [
+        "Fear of judgment",
+        "Not feeling understood",
+        "Finding suitable care",
+        "Explaining what I need"
+      ],
+      "topics": [
+        "eating"
+      ],
+      "facet": "eating-detail-10",
+      "priority": 0,
+      "reason": "An optional support question, not a diagnostic item."
+    },
+    {
+      "id": "eating-detail-11",
+      "text": "What would feel respectful when someone offers support about food?",
+      "options": [
+        "Asking what helps",
+        "Listening",
+        "Avoiding assumptions",
+        "Respecting my choices"
+      ],
+      "topics": [
+        "eating"
+      ],
+      "facet": "eating-detail-11",
+      "priority": 0,
+      "reason": "An optional support question, not a diagnostic item."
+    },
+    {
+      "id": "eating-detail-12",
+      "text": "What would you like a professional to know about your preferred support?",
+      "options": [
+        "Language",
+        "Appointment format",
+        "Who may be involved",
+        "Confidentiality questions"
+      ],
+      "topics": [
+        "eating"
+      ],
+      "facet": "eating-detail-12",
+      "priority": 0,
+      "reason": "An optional support question, not a diagnostic item."
+    },
+    {
+      "id": "eating-detail-13",
+      "text": "What makes it harder to step back from appearance-related pressure?",
+      "options": [
+        "Social media",
+        "Comments from others",
+        "Comparison",
+        "Several sources"
+      ],
+      "topics": [
+        "eating"
+      ],
+      "facet": "eating-detail-13",
+      "priority": 0,
+      "reason": "An optional support question, not a diagnostic item."
+    },
+    {
+      "id": "eating-detail-14",
+      "text": "Which small support step feels possible for eating-related distress?",
+      "options": [
+        "Prepare a question",
+        "Choose a trusted contact",
+        "Browse qualified support",
+        "Take time to decide"
+      ],
+      "topics": [
+        "eating"
+      ],
+      "facet": "eating-detail-14",
+      "priority": 0,
+      "reason": "An optional support question, not a diagnostic item."
+    },
+    {
+      "id": "eating-detail-15",
+      "text": "How much detail would you want to share about eating in a first appointment?",
+      "options": [
+        "Only daily-life impact",
+        "A brief outline",
+        "More if comfortable",
+        "Decide during the appointment"
+      ],
+      "topics": [
+        "eating"
+      ],
+      "facet": "eating-detail-15",
+      "priority": 0,
+      "reason": "An optional support question, not a diagnostic item."
+    },
+    {
+      "id": "eating-detail-16",
+      "text": "What would make an initial eating-support conversation useful?",
+      "options": [
+        "Feeling heard",
+        "Knowing care options",
+        "Planning a follow-up",
+        "Understanding confidentiality"
+      ],
+      "topics": [
+        "eating"
+      ],
+      "facet": "eating-detail-16",
+      "priority": 0,
+      "reason": "An optional support question, not a diagnostic item."
+    },
+    {
+      "id": "substance-use",
+      "text": "What would you like to discuss about alcohol or substance use?",
+      "options": [
+        "Using it to cope",
+        "Effects on daily life",
+        "Pressure from others",
+        "Finding confidential advice",
+        "No current substance use concern"
+      ],
+      "topics": [
+        "substance-use"
+      ],
+      "facet": "substance-use-entry",
+      "priority": 5,
+      "reason": "An optional support question, not a diagnostic item.",
+      "signals": [
+        {
+          "answer": "No current substance use concern",
+          "dismissTopics": [
+            "substance-use"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "substance-use-detail-1",
+      "text": "What kind of support would you like when substances have become a way to cope?",
+      "options": [
+        "Talking through feelings",
+        "Discussing other support options",
+        "Professional advice",
+        "I am not sure"
+      ],
+      "topics": [
+        "substance-use"
+      ],
+      "facet": "substance-use-detail-1",
+      "priority": 4,
+      "reason": "An optional support question, not a diagnostic item.",
+      "when": [
+        {
+          "questionId": "substance-use",
+          "answers": [
+            "Using it to cope"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "substance-use-detail-2",
+      "text": "Which part of everyday life is most affected by substance use?",
+      "options": [
+        "Responsibilities",
+        "Relationships",
+        "Finances",
+        "Several areas"
+      ],
+      "topics": [
+        "substance-use"
+      ],
+      "facet": "substance-use-detail-2",
+      "priority": 4,
+      "reason": "An optional support question, not a diagnostic item.",
+      "when": [
+        {
+          "questionId": "substance-use",
+          "answers": [
+            "Effects on daily life"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "substance-use-detail-3",
+      "text": "What would help you respond to pressure around alcohol or substances?",
+      "options": [
+        "A boundary sentence",
+        "A trusted supporter",
+        "An alternative social plan",
+        "Professional guidance"
+      ],
+      "topics": [
+        "substance-use"
+      ],
+      "facet": "substance-use-detail-3",
+      "priority": 4,
+      "reason": "An optional support question, not a diagnostic item.",
+      "when": [
+        {
+          "questionId": "substance-use",
+          "answers": [
+            "Pressure from others"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "substance-use-detail-4",
+      "text": "What would help you ask for confidential substance-use advice?",
+      "options": [
+        "Clear privacy information",
+        "A suitable service",
+        "Prepared questions",
+        "Help making contact"
+      ],
+      "topics": [
+        "substance-use"
+      ],
+      "facet": "substance-use-detail-4",
+      "priority": 4,
+      "reason": "An optional support question, not a diagnostic item.",
+      "when": [
+        {
+          "questionId": "substance-use",
+          "answers": [
+            "Finding confidential advice"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "substance-use-detail-5",
+      "text": "What would you want a substance-support conversation to avoid?",
+      "options": [
+        "Judgment",
+        "Assumptions",
+        "Pressure to share details",
+        "Advice without understanding my circumstances"
+      ],
+      "topics": [
+        "substance-use"
+      ],
+      "facet": "substance-use-detail-5",
+      "priority": 0,
+      "reason": "An optional support question, not a diagnostic item."
+    },
+    {
+      "id": "substance-use-detail-6",
+      "text": "Who would you feel comfortable approaching about substance-related concerns?",
+      "options": [
+        "A qualified professional",
+        "University health support",
+        "Someone trusted",
+        "I need to explore options"
+      ],
+      "topics": [
+        "substance-use"
+      ],
+      "facet": "substance-use-detail-6",
+      "priority": 0,
+      "reason": "An optional support question, not a diagnostic item."
+    },
+    {
+      "id": "substance-use-detail-7",
+      "text": "What kind of professional conversation about substance use would suit you?",
+      "options": [
+        "Online",
+        "In person",
+        "Information first",
+        "I am unsure"
+      ],
+      "topics": [
+        "substance-use"
+      ],
+      "facet": "substance-use-detail-7",
+      "priority": 0,
+      "reason": "An optional support question, not a diagnostic item."
+    },
+    {
+      "id": "substance-use-detail-8",
+      "text": "What would you like to understand before choosing substance-use support?",
+      "options": [
+        "Confidentiality",
+        "Available care",
+        "What an appointment involves",
+        "Follow-up options"
+      ],
+      "topics": [
+        "substance-use"
+      ],
+      "facet": "substance-use-detail-8",
+      "priority": 0,
+      "reason": "An optional support question, not a diagnostic item."
+    },
+    {
+      "id": "substance-use-detail-9",
+      "text": "Which part of asking for substance-related help feels hardest?",
+      "options": [
+        "Embarrassment",
+        "Not knowing where to go",
+        "Time or access",
+        "Fear of being judged"
+      ],
+      "topics": [
+        "substance-use"
+      ],
+      "facet": "substance-use-detail-9",
+      "priority": 0,
+      "reason": "An optional support question, not a diagnostic item."
+    },
+    {
+      "id": "substance-use-detail-10",
+      "text": "What could make a first contact about substance use more manageable?",
+      "options": [
+        "A short prepared message",
+        "Support from someone trusted",
+        "Choosing a time",
+        "A preferred language"
+      ],
+      "topics": [
+        "substance-use"
+      ],
+      "facet": "substance-use-detail-10",
+      "priority": 0,
+      "reason": "An optional support question, not a diagnostic item."
+    },
+    {
+      "id": "substance-use-detail-11",
+      "text": "What would you like a qualified professional to help you consider?",
+      "options": [
+        "My pattern of use",
+        "Its impact",
+        "Suitable care options",
+        "Support with coping"
+      ],
+      "topics": [
+        "substance-use"
+      ],
+      "facet": "substance-use-detail-11",
+      "priority": 0,
+      "reason": "An optional support question, not a diagnostic item."
+    },
+    {
+      "id": "substance-use-detail-12",
+      "text": "How would you prefer someone close to you to offer substance-related support?",
+      "options": [
+        "Listen without judgment",
+        "Help find qualified advice",
+        "Respect my privacy",
+        "Ask what I need"
+      ],
+      "topics": [
+        "substance-use"
+      ],
+      "facet": "substance-use-detail-12",
+      "priority": 0,
+      "reason": "An optional support question, not a diagnostic item."
+    },
+    {
+      "id": "substance-use-detail-13",
+      "text": "What other kind of support might be useful alongside substance-use advice?",
+      "options": [
+        "Emotional support",
+        "Practical assistance",
+        "Social connection",
+        "I am not sure"
+      ],
+      "topics": [
+        "substance-use"
+      ],
+      "facet": "substance-use-detail-13",
+      "priority": 0,
+      "reason": "An optional support question, not a diagnostic item.",
+      "signals": [
+        {
+          "answer": "Social connection",
+          "topics": [
+            "connection"
+          ]
+        },
+        {
+          "answer": "Practical assistance",
+          "topics": [
+            "practical"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "substance-use-detail-14",
+      "text": "What would you like to ask about a substance-support service?",
+      "options": [
+        "Who sees my information",
+        "How care is planned",
+        "What follow-up is available",
+        "How to arrange a meeting"
+      ],
+      "topics": [
+        "substance-use"
+      ],
+      "facet": "substance-use-detail-14",
+      "priority": 0,
+      "reason": "An optional support question, not a diagnostic item."
+    },
+    {
+      "id": "substance-use-detail-15",
+      "text": "Which next step feels possible for substance-related concerns?",
+      "options": [
+        "Prepare questions",
+        "Browse professionals",
+        "Ask someone trusted for help",
+        "Seek health-service advice"
+      ],
+      "topics": [
+        "substance-use"
+      ],
+      "facet": "substance-use-detail-15",
+      "priority": 0,
+      "reason": "An optional support question, not a diagnostic item."
+    },
+    {
+      "id": "substance-use-detail-16",
+      "text": "What would make substance-related support feel useful to you?",
+      "options": [
+        "Being listened to",
+        "A clear care discussion",
+        "Help accessing services",
+        "Respect for my preferences"
+      ],
+      "topics": [
+        "substance-use"
+      ],
+      "facet": "substance-use-detail-16",
+      "priority": 0,
+      "reason": "An optional support question, not a diagnostic item."
+    },
+    {
+      "id": "trauma",
+      "text": "Without describing any event, what support would feel most useful?",
+      "options": [
+        "Feeling more settled",
+        "Dealing with reminders",
+        "Managing daily routines",
+        "Finding someone safe to talk to",
+        "No current trauma concern"
+      ],
+      "topics": [
+        "trauma"
+      ],
+      "facet": "trauma-entry",
+      "priority": 5,
+      "reason": "An optional support question, not a diagnostic item.",
+      "signals": [
+        {
+          "answer": "No current trauma concern",
+          "dismissTopics": [
+            "trauma"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "trauma-detail-1",
+      "text": "What kind of present-day support could help you feel more settled?",
+      "options": [
+        "A familiar environment",
+        "Someone trusted nearby",
+        "Fewer demands",
+        "Professional support"
+      ],
+      "topics": [
+        "trauma"
+      ],
+      "facet": "trauma-detail-1",
+      "priority": 4,
+      "reason": "An optional support question, not a diagnostic item.",
+      "when": [
+        {
+          "questionId": "trauma",
+          "answers": [
+            "Feeling more settled"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "trauma-detail-2",
+      "text": "When reminders feel upsetting, what support would you prefer?",
+      "options": [
+        "A trusted contact",
+        "Space without questions",
+        "Help finding a professional",
+        "I am unsure"
+      ],
+      "topics": [
+        "trauma"
+      ],
+      "facet": "trauma-detail-2",
+      "priority": 4,
+      "reason": "An optional support question, not a diagnostic item.",
+      "when": [
+        {
+          "questionId": "trauma",
+          "answers": [
+            "Dealing with reminders"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "trauma-detail-3",
+      "text": "Which everyday routine would you like support making manageable?",
+      "options": [
+        "Rest",
+        "Study or work",
+        "Keeping in touch",
+        "Practical responsibilities"
+      ],
+      "topics": [
+        "trauma"
+      ],
+      "facet": "trauma-detail-3",
+      "priority": 4,
+      "reason": "An optional support question, not a diagnostic item.",
+      "when": [
+        {
+          "questionId": "trauma",
+          "answers": [
+            "Managing daily routines"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "trauma-detail-4",
+      "text": "What would help you choose someone to speak with about difficult experiences?",
+      "options": [
+        "Privacy information",
+        "Relevant professional support",
+        "A preferred language",
+        "Control over what I share"
+      ],
+      "topics": [
+        "trauma"
+      ],
+      "facet": "trauma-detail-4",
+      "priority": 4,
+      "reason": "An optional support question, not a diagnostic item.",
+      "when": [
+        {
+          "questionId": "trauma",
+          "answers": [
+            "Finding someone safe to talk to"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "trauma-detail-5",
+      "text": "What would you want a first conversation about difficult experiences to respect?",
+      "options": [
+        "No pressure for event details",
+        "My pace",
+        "My privacy",
+        "All of these"
+      ],
+      "topics": [
+        "trauma"
+      ],
+      "facet": "trauma-detail-5",
+      "priority": 0,
+      "reason": "An optional support question, not a diagnostic item."
+    },
+    {
+      "id": "trauma-detail-6",
+      "text": "How would you prefer to arrange support after a distressing experience?",
+      "options": [
+        "Online",
+        "In person",
+        "With a trusted person helping",
+        "Information before deciding"
+      ],
+      "topics": [
+        "trauma"
+      ],
+      "facet": "trauma-detail-6",
+      "priority": 0,
+      "reason": "An optional support question, not a diagnostic item."
+    },
+    {
+      "id": "trauma-detail-7",
+      "text": "What would make the current environment feel more comfortable?",
+      "options": [
+        "A familiar place",
+        "A quieter space",
+        "Company I choose",
+        "I am not sure"
+      ],
+      "topics": [
+        "trauma"
+      ],
+      "facet": "trauma-detail-7",
+      "priority": 0,
+      "reason": "An optional support question, not a diagnostic item."
+    },
+    {
+      "id": "trauma-detail-8",
+      "text": "Which present-day impact would you want a professional to understand?",
+      "options": [
+        "Concentration",
+        "Rest or routines",
+        "Relationships",
+        "Several areas"
+      ],
+      "topics": [
+        "trauma"
+      ],
+      "facet": "trauma-detail-8",
+      "priority": 0,
+      "reason": "An optional support question, not a diagnostic item."
+    },
+    {
+      "id": "trauma-detail-9",
+      "text": "What would help you keep control during a support conversation?",
+      "options": [
+        "Being able to pause",
+        "Choosing what to share",
+        "Knowing what happens next",
+        "Having questions answered first"
+      ],
+      "topics": [
+        "trauma"
+      ],
+      "facet": "trauma-detail-9",
+      "priority": 0,
+      "reason": "An optional support question, not a diagnostic item."
+    },
+    {
+      "id": "trauma-detail-10",
+      "text": "Who could help you access support after a difficult experience?",
+      "options": [
+        "A trusted person",
+        "University support",
+        "A qualified professional",
+        "I need help finding someone"
+      ],
+      "topics": [
+        "trauma"
+      ],
+      "facet": "trauma-detail-10",
+      "priority": 0,
+      "reason": "An optional support question, not a diagnostic item."
+    },
+    {
+      "id": "trauma-detail-11",
+      "text": "Which practical barrier to support would you like help with?",
+      "options": [
+        "Finding a service",
+        "Arranging a suitable time",
+        "Travel or online access",
+        "Understanding confidentiality"
+      ],
+      "topics": [
+        "trauma"
+      ],
+      "facet": "trauma-detail-11",
+      "priority": 0,
+      "reason": "An optional support question, not a diagnostic item."
+    },
+    {
+      "id": "trauma-detail-12",
+      "text": "What would you prefer when someone checks in after a distressing experience?",
+      "options": [
+        "A brief message",
+        "An invitation without pressure",
+        "A planned conversation",
+        "Letting me initiate contact"
+      ],
+      "topics": [
+        "trauma"
+      ],
+      "facet": "trauma-detail-12",
+      "priority": 0,
+      "reason": "An optional support question, not a diagnostic item."
+    },
+    {
+      "id": "trauma-detail-13",
+      "text": "What kind of routine adjustment might make today more manageable?",
+      "options": [
+        "Reducing one demand",
+        "Keeping a familiar activity",
+        "Asking for practical help",
+        "I want professional advice first"
+      ],
+      "topics": [
+        "trauma"
+      ],
+      "facet": "trauma-detail-13",
+      "priority": 0,
+      "reason": "An optional support question, not a diagnostic item."
+    },
+    {
+      "id": "trauma-detail-14",
+      "text": "What would you want to ask a professional before sharing more about difficult experiences?",
+      "options": [
+        "Their approach",
+        "Privacy limits",
+        "My choices during sessions",
+        "Available follow-up"
+      ],
+      "topics": [
+        "trauma"
+      ],
+      "facet": "trauma-detail-14",
+      "priority": 0,
+      "reason": "An optional support question, not a diagnostic item."
+    },
+    {
+      "id": "trauma-detail-15",
+      "text": "Which support step feels comfortable without discussing the event?",
+      "options": [
+        "Prepare a privacy question",
+        "Browse relevant professionals",
+        "Ask someone trusted to help",
+        "Choose more time"
+      ],
+      "topics": [
+        "trauma"
+      ],
+      "facet": "trauma-detail-15",
+      "priority": 0,
+      "reason": "An optional support question, not a diagnostic item."
+    },
+    {
+      "id": "trauma-detail-16",
+      "text": "What would count as a useful first conversation after a difficult experience?",
+      "options": [
+        "Feeling respected",
+        "Knowing my options",
+        "A manageable next step",
+        "Being able to stop when I choose"
+      ],
+      "topics": [
+        "trauma"
+      ],
+      "facet": "trauma-detail-16",
+      "priority": 0,
+      "reason": "An optional support question, not a diagnostic item."
+    },
+    {
+      "id": "practical",
+      "text": "Which practical pressure would you most like help with?",
+      "options": [
+        "Money or essential expenses",
+        "Housing or accommodation",
+        "Food or transport access",
+        "Finding university assistance",
+        "No current practical concern"
+      ],
+      "topics": [
+        "practical"
+      ],
+      "facet": "practical-entry",
+      "priority": 5,
+      "reason": "An optional support question, not a diagnostic item.",
+      "signals": [
+        {
+          "answer": "No current practical concern",
+          "dismissTopics": [
+            "practical"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "practical-detail-1",
+      "text": "What kind of information would help with money-related pressure?",
+      "options": [
+        "Available assistance",
+        "How to apply",
+        "Whom to contact",
+        "Help understanding options"
+      ],
+      "topics": [
+        "practical"
+      ],
+      "facet": "practical-detail-1",
+      "priority": 4,
+      "reason": "An optional support question, not a diagnostic item.",
+      "when": [
+        {
+          "questionId": "practical",
+          "answers": [
+            "Money or essential expenses"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "practical-detail-2",
+      "text": "What would you like help finding around accommodation?",
+      "options": [
+        "A support contact",
+        "Information about options",
+        "Help explaining the situation",
+        "Practical university guidance"
+      ],
+      "topics": [
+        "practical"
+      ],
+      "facet": "practical-detail-2",
+      "priority": 4,
+      "reason": "An optional support question, not a diagnostic item.",
+      "when": [
+        {
+          "questionId": "practical",
+          "answers": [
+            "Housing or accommodation"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "practical-detail-3",
+      "text": "Which access issue would you like a support service to understand?",
+      "options": [
+        "Food costs",
+        "Travel costs",
+        "Availability",
+        "Several essentials"
+      ],
+      "topics": [
+        "practical"
+      ],
+      "facet": "practical-detail-3",
+      "priority": 4,
+      "reason": "An optional support question, not a diagnostic item.",
+      "when": [
+        {
+          "questionId": "practical",
+          "answers": [
+            "Food or transport access"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "practical-detail-4",
+      "text": "What would make contacting university assistance easier?",
+      "options": [
+        "Knowing the right team",
+        "A short prepared message",
+        "Application information",
+        "A trusted person helping"
+      ],
+      "topics": [
+        "practical"
+      ],
+      "facet": "practical-detail-4",
+      "priority": 4,
+      "reason": "An optional support question, not a diagnostic item.",
+      "when": [
+        {
+          "questionId": "practical",
+          "answers": [
+            "Finding university assistance"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "practical-detail-5",
+      "text": "Which practical demand feels most pressing to discuss today?",
+      "options": [
+        "Essential bills",
+        "Accommodation",
+        "Getting to university",
+        "Finding support information"
+      ],
+      "topics": [
+        "practical"
+      ],
+      "facet": "practical-detail-5",
+      "priority": 0,
+      "reason": "An optional support question, not a diagnostic item."
+    },
+    {
+      "id": "practical-detail-6",
+      "text": "What gets in the way of applying for practical support?",
+      "options": [
+        "Unclear eligibility",
+        "Forms or documents",
+        "Not knowing where to start",
+        "Privacy concerns"
+      ],
+      "topics": [
+        "practical"
+      ],
+      "facet": "practical-detail-6",
+      "priority": 0,
+      "reason": "An optional support question, not a diagnostic item."
+    },
+    {
+      "id": "practical-detail-7",
+      "text": "How are practical pressures affecting your day at university?",
+      "options": [
+        "Concentration",
+        "Attendance",
+        "Time available",
+        "Emotional energy"
+      ],
+      "topics": [
+        "practical"
+      ],
+      "facet": "practical-detail-7",
+      "priority": 0,
+      "reason": "An optional support question, not a diagnostic item."
+    },
+    {
+      "id": "practical-detail-8",
+      "text": "Who could help you navigate practical assistance?",
+      "options": [
+        "A university support officer",
+        "A trusted person",
+        "A student organisation",
+        "I need help finding a contact"
+      ],
+      "topics": [
+        "practical"
+      ],
+      "facet": "practical-detail-8",
+      "priority": 0,
+      "reason": "An optional support question, not a diagnostic item."
+    },
+    {
+      "id": "practical-detail-9",
+      "text": "How would you prefer to explain a practical-support need?",
+      "options": [
+        "A short written outline",
+        "An online conversation",
+        "An in-person meeting",
+        "With someone supporting me"
+      ],
+      "topics": [
+        "practical"
+      ],
+      "facet": "practical-detail-9",
+      "priority": 0,
+      "reason": "An optional support question, not a diagnostic item."
+    },
+    {
+      "id": "practical-detail-10",
+      "text": "What would you like to understand before applying for assistance?",
+      "options": [
+        "Eligibility",
+        "What information is needed",
+        "Confidentiality",
+        "Next steps after applying"
+      ],
+      "topics": [
+        "practical"
+      ],
+      "facet": "practical-detail-10",
+      "priority": 0,
+      "reason": "An optional support question, not a diagnostic item."
+    },
+    {
+      "id": "practical-detail-11",
+      "text": "Which small preparation step for practical assistance feels possible?",
+      "options": [
+        "Find the correct contact",
+        "Write down the issue",
+        "List questions",
+        "Ask someone to help"
+      ],
+      "topics": [
+        "practical"
+      ],
+      "facet": "practical-detail-11",
+      "priority": 0,
+      "reason": "An optional support question, not a diagnostic item."
+    },
+    {
+      "id": "practical-detail-12",
+      "text": "What kind of practical information is hardest to find?",
+      "options": [
+        "Available services",
+        "Application steps",
+        "Where to get advice",
+        "How long responses may take"
+      ],
+      "topics": [
+        "practical"
+      ],
+      "facet": "practical-detail-12",
+      "priority": 0,
+      "reason": "An optional support question, not a diagnostic item."
+    },
+    {
+      "id": "practical-detail-13",
+      "text": "What would make practical-support information easier to use?",
+      "options": [
+        "Plain language",
+        "My preferred language",
+        "A clear checklist",
+        "A person to ask"
+      ],
+      "topics": [
+        "practical"
+      ],
+      "facet": "practical-detail-13",
+      "priority": 0,
+      "reason": "An optional support question, not a diagnostic item."
+    },
+    {
+      "id": "practical-detail-14",
+      "text": "Which responsibility could you seek flexibility with while finding assistance?",
+      "options": [
+        "A deadline",
+        "A work schedule",
+        "A meeting",
+        "I need advice on options"
+      ],
+      "topics": [
+        "practical"
+      ],
+      "facet": "practical-detail-14",
+      "priority": 0,
+      "reason": "An optional support question, not a diagnostic item."
+    },
+    {
+      "id": "practical-detail-15",
+      "text": "What would you like a support contact to focus on first about practical needs?",
+      "options": [
+        "Understanding the need",
+        "Explaining services",
+        "Helping with the first step",
+        "Connecting me with the right team"
+      ],
+      "topics": [
+        "practical"
+      ],
+      "facet": "practical-detail-15",
+      "priority": 0,
+      "reason": "An optional support question, not a diagnostic item."
+    },
+    {
+      "id": "practical-detail-16",
+      "text": "What would make a first practical-support conversation useful?",
+      "options": [
+        "A clear contact",
+        "Information I can act on",
+        "Help with an application",
+        "A follow-up plan"
+      ],
+      "topics": [
+        "practical"
+      ],
+      "facet": "practical-detail-16",
+      "priority": 0,
+      "reason": "An optional support question, not a diagnostic item."
     }
   ]
 }

@@ -2,6 +2,8 @@
 
 Review date: 20 October 2026. Member 02: D. G. A. Indeepa, IT23273412. This is a review and implementation recommendation; it does not claim these additions are already built.
 
+Current rubric-based review: [PP1 readiness review, 20 October](PP1_READINESS_REVIEW_2026-10-20.md). The historical review below predates the 15-topic v2 model, 270-question bank and completed plan/progress/appointment increments; use the current review for PP1 status.
+
 Implementation update later on 20 October: the personal plan, seven guided activities, optional device history and appointment preview/download have now been implemented. See [the implementation and verification walkthrough](PP1_NEXT_STEPS_INCREMENT.md). The original review below records the prioritization basis; facial fusion, professional review, confidential assigned-counselor sharing and participant evaluation remain outstanding.
 
 ## Main finding
