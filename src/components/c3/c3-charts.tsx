@@ -10,6 +10,8 @@
  * focus tooltip and an accessible label; values are always printed as text too, so no
  * meaning depends on colour alone.
  */
+
+import type { LucideIcon } from "lucide-react";
 import type { ReactNode } from "react";
 
 export const SEQ = "bg-[#2a78d6] dark:bg-[#3987e5]";
@@ -52,8 +54,9 @@ const ACCENTS: Record<Accent, { ring: string; chip: string }> = {
 };
 
 /** A headline number. Colour is decoration only; the label says what it is. */
-export function StatTile({ icon, label, value, sub, accent = "blue", testId }: {
-  icon: string;
+export function StatTile({ icon: Icon, label, value, sub, accent = "blue", testId }: {
+  /** A lucide icon, or a short text such as a year number. */
+  icon: LucideIcon | string;
   label: string;
   value: ReactNode;
   sub?: ReactNode;
@@ -65,7 +68,7 @@ export function StatTile({ icon, label, value, sub, accent = "blue", testId }: {
     <div className={`rounded-2xl border border-t-4 border-slate-200 bg-white p-4 shadow-sm dark:border-slate-700 dark:bg-slate-900 ${a.ring}`}>
       <div className="flex items-center gap-2">
         <span aria-hidden="true" className={`flex h-8 w-8 items-center justify-center rounded-full text-base ${a.chip}`}>
-          {icon}
+          {typeof Icon === "string" ? Icon : <Icon className="h-4 w-4" />}
         </span>
         <p className="text-sm text-slate-600 dark:text-slate-300">{label}</p>
       </div>
