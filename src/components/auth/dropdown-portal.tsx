@@ -65,7 +65,7 @@ export function DropdownPortal({
     <div
       ref={contentRef}
       role="presentation"
-      className={`z-[9999] overflow-hidden rounded-xl border border-slate-200 bg-white shadow-lg dark:border-slate-700 dark:bg-slate-900 ${className}`}
+      className={`z-[9999] overflow-hidden rounded-xl border border-white/15 bg-neutral-950 text-white shadow-2xl ${className}`}
       style={
         position
           ? {

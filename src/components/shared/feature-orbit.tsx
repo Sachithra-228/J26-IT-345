@@ -1,4 +1,4 @@
-﻿"use client";
+"use client";
 
 import type { CSSProperties } from "react";
 import { twMerge } from "tailwind-merge";
@@ -183,11 +183,11 @@ export function FeatureOrbit({ features = orbitFeatures, activeKey, onSelect, cl
       {features.map((feature) => (
         <div
           key={`${feature.key}-ring`}
-          className="absolute rounded-full border border-primary/15"
+          className="absolute rounded-full border border-white/15"
           style={{ width: feature.radius * 2, height: feature.radius * 2 }}
         />
       ))}
-      <div className="absolute grid h-24 w-24 place-items-center rounded-full bg-primary text-sm font-semibold text-white shadow-lg">
+      <div className="absolute grid h-24 w-24 place-items-center rounded-full border border-white/25 bg-white text-sm font-bold tracking-wider text-black shadow-[0_0_40px_rgba(255,255,255,0.2)]">
         UNICARE
       </div>
       <div className="orbit absolute inset-0">
@@ -210,8 +210,8 @@ export function FeatureOrbit({ features = orbitFeatures, activeKey, onSelect, cl
                 type="button"
                 aria-label={feature.title}
                 onClick={() => onSelect?.(feature.key)}
-                className={`grid h-10 w-10 place-items-center rounded-full border bg-primary/5 text-lg text-primary shadow-sm transition-transform duration-300 hover:-translate-y-1 dark:bg-primary/10 ${
-                  isActive ? "border-primary/80 ring-2 ring-primary/30" : "border-primary/30"
+                className={`grid h-11 w-11 place-items-center rounded-full border bg-neutral-950 text-base font-semibold text-white shadow-lg transition-transform duration-300 hover:-translate-y-1 ${
+                  isActive ? "border-white ring-2 ring-white/40 bg-white text-black" : "border-white/25"
                 }`}
               >
                 {feature.icon}

@@ -103,55 +103,51 @@ export function DashboardHeader() {
         : "Upload profile photo";
 
   return (
-    <div className="relative overflow-hidden rounded-2xl border border-primary/20 bg-gradient-to-br from-primary/10 via-white to-primary/5 shadow-sm transition-shadow hover:shadow-md dark:from-primary/15 dark:via-slate-900/90 dark:to-primary/10">
-      <div className="absolute right-0 top-0 h-32 w-48 rounded-bl-full bg-primary/10 dark:bg-primary/15" aria-hidden />
-      <div className="absolute bottom-0 left-0 h-24 w-40 rounded-tr-full bg-primary/5 dark:bg-primary/10" aria-hidden />
-      <div className="relative flex flex-col gap-6 px-6 py-6 sm:flex-row sm:items-center sm:justify-between">
-        <div className="flex items-center gap-4">
-          <button
-            type="button"
-            onClick={() => fileInputRef.current?.click()}
-            disabled={uploading}
-            className="group relative flex shrink-0 items-center justify-center overflow-hidden rounded-full border-2 border-primary/20 bg-slate-100 ring-2 ring-white transition-all hover:border-primary/50 hover:ring-primary/10 dark:bg-slate-800 dark:ring-slate-900 dark:hover:border-primary/40"
-            aria-label={uploadProfilePhotoAria}
-          >
-            <input
-              ref={fileInputRef}
-              type="file"
-              accept="image/*"
-              onChange={handlePhotoChange}
-              className="sr-only"
-              aria-hidden
+    <div className="flex h-full items-center py-2">
+      <div className="flex items-center gap-5">
+        <button
+          type="button"
+          onClick={() => fileInputRef.current?.click()}
+          disabled={uploading}
+          className="group relative flex shrink-0 items-center justify-center overflow-hidden rounded-full border-2 border-slate-200 bg-white shadow-md ring-4 ring-slate-100 transition-all hover:scale-[1.03] hover:border-slate-400 dark:border-white/20 dark:bg-neutral-950 dark:ring-white/10"
+          aria-label={uploadProfilePhotoAria}
+        >
+          <input
+            ref={fileInputRef}
+            type="file"
+            accept="image/*"
+            onChange={handlePhotoChange}
+            className="sr-only"
+            aria-hidden
+          />
+          {user?.profilePic ? (
+            <img
+              src={user.profilePic}
+              alt=""
+              className="h-20 w-20 object-cover sm:h-24 sm:w-24"
             />
-            {user?.profilePic ? (
-              <img
-                src={user.profilePic}
-                alt=""
-                className="h-20 w-20 object-cover"
-              />
-            ) : (
-              <span className="flex h-20 w-20 items-center justify-center text-slate-400 group-hover:text-primary dark:text-slate-500">
-                <User className="h-10 w-10" />
-              </span>
-            )}
-            {uploading && (
-              <span className="absolute inset-0 flex items-center justify-center rounded-full bg-black/40 text-xs font-medium text-white">
-                ...
-              </span>
-            )}
-          </button>
-          <div className="min-w-0">
-            <p className="truncate text-lg font-semibold tracking-tight text-slate-900 dark:text-white">
-              {fullNameDisplay}
-            </p>
-            <p className="truncate text-sm text-slate-600 dark:text-slate-400">
-              {user?.email ?? ""}
-            </p>
+          ) : (
+            <span className="flex h-20 w-20 items-center justify-center text-slate-400 transition-colors group-hover:text-slate-700 sm:h-24 sm:w-24 dark:text-neutral-500 dark:group-hover:text-neutral-200">
+              <User className="h-10 w-10 sm:h-12 sm:w-12" />
+            </span>
+          )}
+          {uploading && (
+            <span className="absolute inset-0 flex items-center justify-center rounded-full bg-black/40 text-xs font-medium text-white">
+              ...
+            </span>
+          )}
+        </button>
+
+        <div className="min-w-0">
+          <div className="inline-flex items-center gap-2 text-xs font-semibold uppercase tracking-widest text-slate-500 dark:text-neutral-400">
+            <span className="h-2 w-2 rounded-full bg-emerald-500" />
+            <span>{greeting}</span>
           </div>
-        </div>
-        <div className="flex items-center sm:justify-end">
-          <p className="text-right text-lg font-medium italic tracking-wide text-primary transition-opacity sm:text-xl dark:text-primary">
-            {greeting}
+          <h1 className="mt-1 truncate text-2xl font-bold tracking-tight text-slate-900 sm:text-3xl dark:text-white">
+            {fullNameDisplay}
+          </h1>
+          <p className="mt-0.5 truncate text-sm text-slate-500 dark:text-neutral-400">
+            {user?.email ?? ""}
           </p>
         </div>
       </div>

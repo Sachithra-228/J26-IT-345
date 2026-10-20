@@ -5,6 +5,7 @@ import { Card } from "@/components/shared/Card";
 import { useLanguage } from "@/context/language-context";
 import type { AdminQueueItem } from "@/lib/c1/assessment-store";
 import { getC1Text } from "@/lib/c1/i18n";
+import { shortHash } from "@/lib/c1/ledger";
 
 const bandStyle: Record<AdminQueueItem["band"], string> = {
   high: "bg-red-100 text-red-700 dark:bg-red-950 dark:text-red-300",
@@ -17,6 +18,7 @@ export function AdminAidPrioritisation() {
   const t = getC1Text(language);
   const [items, setItems] = useState<AdminQueueItem[] | null>(null);
   const [error, setError] = useState(false);
+  const [selectedItem, setSelectedItem] = useState<AdminQueueItem | null>(null);
 
   const load = useCallback(async () => {
     setError(false);
@@ -78,6 +80,11 @@ export function AdminAidPrioritisation() {
                     <td className="py-3 pr-3">
                       <div className="font-medium">{item.studentName}</div>
                       {item.university ? <div className="text-xs text-slate-500">{item.university}</div> : null}
+                      {item.assessmentHash ? (
+                        <div className="mt-1 font-mono text-[11px] text-slate-400" title={item.assessmentHash}>
+                          {shortHash(item.assessmentHash)}
+                        </div>
+                      ) : null}
                     </td>
                     <td className="py-3 pr-3">
                       <div className="flex items-center gap-2">
@@ -99,7 +106,18 @@ export function AdminAidPrioritisation() {
                         ))}
                       </ul>
                     </td>
-                    <td className="py-3 text-xs text-slate-500">{new Date(item.assessedAt).toLocaleDateString()}</td>
+                    <td className="py-3 text-xs text-slate-500">
+                      <div>{new Date(item.assessedAt).toLocaleDateString()}</div>
+                      {item.assessmentHash || item.studentRef ? (
+                        <button
+                          type="button"
+                          onClick={() => setSelectedItem(item)}
+                          className="mt-1 text-xs font-medium text-primary underline"
+                        >
+                          {t.prepareAwardBtn}
+                        </button>
+                      ) : null}
+                    </td>
                   </tr>
                 ))}
               </tbody>
@@ -107,6 +125,30 @@ export function AdminAidPrioritisation() {
           </div>
         )}
       </Card>
+
+      {selectedItem ? (
+        <Card className="bg-slate-50 dark:bg-slate-900">
+          <div data-testid="queue-award-commitments">
+            <h3 className="text-sm font-semibold">
+              {t.awardOnChainTitle} — {selectedItem.studentName}
+            </h3>
+            <dl className="mt-2 space-y-1 text-xs">
+              {selectedItem.studentRef ? (
+                <div>
+                  <dt className="font-semibold text-slate-600 dark:text-slate-300">{t.studentRefLabel}:</dt>
+                  <dd className="break-all font-mono">{selectedItem.studentRef}</dd>
+                </div>
+              ) : null}
+              {selectedItem.assessmentHash ? (
+                <div>
+                  <dt className="font-semibold text-slate-600 dark:text-slate-300">{t.assessmentHashLabel}:</dt>
+                  <dd className="break-all font-mono">{selectedItem.assessmentHash}</dd>
+                </div>
+              ) : null}
+            </dl>
+          </div>
+        </Card>
+      ) : null}
     </div>
   );
 }
