@@ -6,7 +6,9 @@ Member 02: D. G. A. Indeepa (IT23273412). Expanded model bundle v2, 20 October 2
 
 The expanded local checkout uses `c2-distilbert-concerns-v2`, a 15-output support-topic classifier. Its matching archive is **`c2-browser-models-v2.zip`**. The separate 28-label `distilbert-pilot-v1` research export is also included, with tokenizers, licensing and browser WASM files. Neither model diagnoses illnesses or predicts emergency risk.
 
-The owner must approve a GitHub push before teammates can pull these latest source changes. Until then, the remote branch still has the earlier implementation. **Do not mix a v1 source checkout with the v2 archive, or the v2 checkout with a v1 archive.** The installer and runtime verify exact model identities.
+The matching v2 source is available on `research/c2-wellness` at commit `3e64425` (including the team’s dev merge). **Do not mix a v1 source checkout with the v2 archive, or the v2 checkout with a v1 archive.** The installer and runtime verify exact model identities.
+
+This source also includes the verified ONNX production-build fix in `next.config.mjs`. The development setup below uses `npm run dev`. For `npm run build` / Vercel, model assets must also be provisioned separately; the build fix does not install them. See [PRODUCTION_BUILD_FIX.md](PRODUCTION_BUILD_FIX.md).
 
 Trained weights are ignored by normal Git. The previous v1 ZIP and training artifacts remain preserved, but use the new v2 ZIP for the expanded checkout. No public model Release has been approved or published. `c2:models:download` therefore reports that a private ZIP is required; do not expect a public download link to work.
 
