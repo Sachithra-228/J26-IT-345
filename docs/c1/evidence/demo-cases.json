@@ -1,0 +1,851 @@
+{
+  "warning": "FICTIONAL sample students scored by a SYNTHETIC-trained model - shows behaviour case by case, not real-world accuracy.",
+  "generatedAt": "2026-10-19T08:59:00.430Z",
+  "model": {
+    "version": "xgb-v1-synthetic",
+    "trainedOn": "SYNTHETIC data - pipeline validation only (see ml/synthetic_data.py)",
+    "featureCount": 22,
+    "treeCount": 160,
+    "decisionThreshold": 0.34566938877105713
+  },
+  "casesEvaluated": 12,
+  "bandCounts": {
+    "high": 6,
+    "moderate": 2,
+    "low": 4
+  },
+  "flaggedVulnerable": 8,
+  "methodDisagreements": {
+    "rule": "model flag (probability >= 0.346) differs from AHP-TOPSIS score >= 0.5",
+    "cases": [
+      {
+        "id": "S09",
+        "label": "Borderline: formal job, rural, boarding",
+        "vulnerabilityIndex": 3,
+        "flaggedVulnerable": false,
+        "topsisScore": 0.561
+      }
+    ]
+  },
+  "cases": [
+    {
+      "id": "S01",
+      "label": "Rural single-parent family, recent job loss",
+      "situation": "Mother works informally; household lost income last year; student boards near campus.",
+      "profile": {
+        "monthlyHouseholdIncomeLkr": 28000,
+        "householdSize": 4,
+        "dependents": 2,
+        "siblingsInEducation": 1,
+        "guardianEmployment": "informal",
+        "singleParent": true,
+        "hasEducationLoan": false,
+        "loanAmountLkr": 0,
+        "monthlyExpensesLkr": 30000,
+        "accommodation": "boarding",
+        "ruralDistrict": true,
+        "financialShockLastYear": true,
+        "currentScholarship": false,
+        "gpa": 3.1,
+        "yearOfStudy": 3
+      },
+      "vulnerabilityIndex": 99,
+      "band": "high",
+      "flaggedVulnerable": true,
+      "topsisScore": 0.736,
+      "topFactors": [
+        {
+          "feature": "income_per_capita",
+          "label": "Low income per household member",
+          "sharePercent": 40
+        },
+        {
+          "feature": "expense_ratio",
+          "label": "Expenses high relative to income",
+          "sharePercent": 16
+        },
+        {
+          "feature": "financial_shock_last_year",
+          "label": "Recent financial shock",
+          "sharePercent": 13
+        }
+      ],
+      "eligibleScholarships": 6,
+      "topScholarships": [
+        {
+          "id": "ILL-02",
+          "title": "Rural Students Opportunity Grant (illustrative)",
+          "fitPercent": 81,
+          "reasons": [
+            "Targets students with high financial need",
+            "Large award (LKR 240,000)"
+          ]
+        },
+        {
+          "id": "ILL-01",
+          "title": "Need-Based Bursary (illustrative)",
+          "fitPercent": 74,
+          "reasons": [
+            "Targets students with high financial need",
+            "Deadline in 21 days"
+          ]
+        },
+        {
+          "id": "ILL-07",
+          "title": "Emergency Study Continuity Fund (illustrative)",
+          "fitPercent": 69,
+          "reasons": [
+            "Targets students with high financial need",
+            "Deadline in 7 days"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "S02",
+      "label": "Guardian deceased, education loan",
+      "situation": "Father deceased; three dependants; final-year student repaying an education loan.",
+      "profile": {
+        "monthlyHouseholdIncomeLkr": 22000,
+        "householdSize": 5,
+        "dependents": 3,
+        "siblingsInEducation": 2,
+        "guardianEmployment": "deceased",
+        "singleParent": true,
+        "hasEducationLoan": true,
+        "loanAmountLkr": 600000,
+        "monthlyExpensesLkr": 26000,
+        "accommodation": "boarding",
+        "ruralDistrict": true,
+        "financialShockLastYear": false,
+        "currentScholarship": false,
+        "gpa": 2.8,
+        "yearOfStudy": 4
+      },
+      "vulnerabilityIndex": 100,
+      "band": "high",
+      "flaggedVulnerable": true,
+      "topsisScore": 0.768,
+      "topFactors": [
+        {
+          "feature": "income_per_capita",
+          "label": "Low income per household member",
+          "sharePercent": 38
+        },
+        {
+          "feature": "expense_ratio",
+          "label": "Expenses high relative to income",
+          "sharePercent": 17
+        },
+        {
+          "feature": "loan_to_income",
+          "label": "Education-loan burden",
+          "sharePercent": 12
+        }
+      ],
+      "eligibleScholarships": 6,
+      "topScholarships": [
+        {
+          "id": "ILL-02",
+          "title": "Rural Students Opportunity Grant (illustrative)",
+          "fitPercent": 78,
+          "reasons": [
+            "Targets students with high financial need",
+            "Large award (LKR 240,000)"
+          ]
+        },
+        {
+          "id": "ILL-05",
+          "title": "Final-Year Completion Support (illustrative)",
+          "fitPercent": 77,
+          "reasons": [
+            "Targets students with high financial need",
+            "Large award (LKR 180,000)",
+            "Deadline in 14 days"
+          ]
+        },
+        {
+          "id": "ILL-01",
+          "title": "Need-Based Bursary (illustrative)",
+          "fitPercent": 72,
+          "reasons": [
+            "Targets students with high financial need",
+            "Deadline in 21 days"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "S03",
+      "label": "High GPA, low income",
+      "situation": "Strong academic record from a low-income urban family; lives at home.",
+      "profile": {
+        "monthlyHouseholdIncomeLkr": 40000,
+        "householdSize": 5,
+        "dependents": 2,
+        "siblingsInEducation": 1,
+        "guardianEmployment": "informal",
+        "singleParent": false,
+        "hasEducationLoan": false,
+        "loanAmountLkr": 0,
+        "monthlyExpensesLkr": 35000,
+        "accommodation": "home",
+        "ruralDistrict": false,
+        "financialShockLastYear": false,
+        "currentScholarship": false,
+        "gpa": 3.8,
+        "yearOfStudy": 3
+      },
+      "vulnerabilityIndex": 43,
+      "band": "moderate",
+      "flaggedVulnerable": true,
+      "topsisScore": 0.601,
+      "topFactors": [
+        {
+          "feature": "income_per_capita",
+          "label": "Low income per household member",
+          "sharePercent": 63
+        },
+        {
+          "feature": "expense_ratio",
+          "label": "Expenses high relative to income",
+          "sharePercent": 20
+        },
+        {
+          "feature": "dependency_ratio",
+          "label": "High share of dependents",
+          "sharePercent": 13
+        }
+      ],
+      "eligibleScholarships": 6,
+      "topScholarships": [
+        {
+          "id": "ILL-04",
+          "title": "Merit-cum-Means Award (illustrative)",
+          "fitPercent": 57,
+          "reasons": [
+            "Your GPA (3.80) exceeds the minimum (2.8)"
+          ]
+        },
+        {
+          "id": "ILL-03",
+          "title": "Tech Merit Scholarship (illustrative)",
+          "fitPercent": 52,
+          "reasons": [
+            "Your GPA (3.80) exceeds the minimum (3.3)"
+          ]
+        },
+        {
+          "id": "ILL-08",
+          "title": "Community Leaders Scholarship (illustrative)",
+          "fitPercent": 51,
+          "reasons": [
+            "Your GPA (3.80) exceeds the minimum (2.5)"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "S04",
+      "label": "Unemployed guardian, hostel student",
+      "situation": "No regular household earner; student lives in a hostel far from a rural home.",
+      "profile": {
+        "monthlyHouseholdIncomeLkr": 18000,
+        "householdSize": 4,
+        "dependents": 2,
+        "siblingsInEducation": 1,
+        "guardianEmployment": "unemployed",
+        "singleParent": false,
+        "hasEducationLoan": false,
+        "loanAmountLkr": 0,
+        "monthlyExpensesLkr": 20000,
+        "accommodation": "hostel",
+        "ruralDistrict": true,
+        "financialShockLastYear": true,
+        "currentScholarship": false,
+        "gpa": 2.6,
+        "yearOfStudy": 4
+      },
+      "vulnerabilityIndex": 100,
+      "band": "high",
+      "flaggedVulnerable": true,
+      "topsisScore": 0.7,
+      "topFactors": [
+        {
+          "feature": "income_per_capita",
+          "label": "Low income per household member",
+          "sharePercent": 46
+        },
+        {
+          "feature": "expense_ratio",
+          "label": "Expenses high relative to income",
+          "sharePercent": 19
+        },
+        {
+          "feature": "financial_shock_last_year",
+          "label": "Recent financial shock",
+          "sharePercent": 15
+        }
+      ],
+      "eligibleScholarships": 5,
+      "topScholarships": [
+        {
+          "id": "ILL-02",
+          "title": "Rural Students Opportunity Grant (illustrative)",
+          "fitPercent": 76,
+          "reasons": [
+            "Targets students with high financial need",
+            "Large award (LKR 240,000)"
+          ]
+        },
+        {
+          "id": "ILL-05",
+          "title": "Final-Year Completion Support (illustrative)",
+          "fitPercent": 75,
+          "reasons": [
+            "Targets students with high financial need",
+            "Large award (LKR 180,000)",
+            "Deadline in 14 days"
+          ]
+        },
+        {
+          "id": "ILL-01",
+          "title": "Need-Based Bursary (illustrative)",
+          "fitPercent": 70,
+          "reasons": [
+            "Targets students with high financial need",
+            "Deadline in 21 days"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "S05",
+      "label": "Urban family hit by a financial shock",
+      "situation": "Six-member household, informal work, expenses close to income, loan taken last year.",
+      "profile": {
+        "monthlyHouseholdIncomeLkr": 55000,
+        "householdSize": 6,
+        "dependents": 3,
+        "siblingsInEducation": 2,
+        "guardianEmployment": "informal",
+        "singleParent": false,
+        "hasEducationLoan": true,
+        "loanAmountLkr": 300000,
+        "monthlyExpensesLkr": 52000,
+        "accommodation": "home",
+        "ruralDistrict": false,
+        "financialShockLastYear": true,
+        "currentScholarship": false,
+        "gpa": 2.9,
+        "yearOfStudy": 3
+      },
+      "vulnerabilityIndex": 99,
+      "band": "high",
+      "flaggedVulnerable": true,
+      "topsisScore": 0.689,
+      "topFactors": [
+        {
+          "feature": "income_per_capita",
+          "label": "Low income per household member",
+          "sharePercent": 45
+        },
+        {
+          "feature": "expense_ratio",
+          "label": "Expenses high relative to income",
+          "sharePercent": 16
+        },
+        {
+          "feature": "financial_shock_last_year",
+          "label": "Recent financial shock",
+          "sharePercent": 16
+        }
+      ],
+      "eligibleScholarships": 4,
+      "topScholarships": [
+        {
+          "id": "ILL-01",
+          "title": "Need-Based Bursary (illustrative)",
+          "fitPercent": 73,
+          "reasons": [
+            "Targets students with high financial need",
+            "Deadline in 21 days"
+          ]
+        },
+        {
+          "id": "ILL-07",
+          "title": "Emergency Study Continuity Fund (illustrative)",
+          "fitPercent": 69,
+          "reasons": [
+            "Targets students with high financial need",
+            "Deadline in 7 days"
+          ]
+        },
+        {
+          "id": "ILL-08",
+          "title": "Community Leaders Scholarship (illustrative)",
+          "fitPercent": 54,
+          "reasons": [
+            "Targets students with high financial need"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "S06",
+      "label": "Large family, retired guardian",
+      "situation": "Eight members living on a pension; three siblings also studying.",
+      "profile": {
+        "monthlyHouseholdIncomeLkr": 60000,
+        "householdSize": 8,
+        "dependents": 5,
+        "siblingsInEducation": 3,
+        "guardianEmployment": "retired",
+        "singleParent": false,
+        "hasEducationLoan": false,
+        "loanAmountLkr": 0,
+        "monthlyExpensesLkr": 55000,
+        "accommodation": "home",
+        "ruralDistrict": true,
+        "financialShockLastYear": false,
+        "currentScholarship": false,
+        "gpa": 3,
+        "yearOfStudy": 3
+      },
+      "vulnerabilityIndex": 95,
+      "band": "high",
+      "flaggedVulnerable": true,
+      "topsisScore": 0.639,
+      "topFactors": [
+        {
+          "feature": "income_per_capita",
+          "label": "Low income per household member",
+          "sharePercent": 50
+        },
+        {
+          "feature": "expense_ratio",
+          "label": "Expenses high relative to income",
+          "sharePercent": 17
+        },
+        {
+          "feature": "dependency_ratio",
+          "label": "High share of dependents",
+          "sharePercent": 16
+        }
+      ],
+      "eligibleScholarships": 6,
+      "topScholarships": [
+        {
+          "id": "ILL-02",
+          "title": "Rural Students Opportunity Grant (illustrative)",
+          "fitPercent": 77,
+          "reasons": [
+            "Targets students with high financial need",
+            "Large award (LKR 240,000)"
+          ]
+        },
+        {
+          "id": "ILL-01",
+          "title": "Need-Based Bursary (illustrative)",
+          "fitPercent": 71,
+          "reasons": [
+            "Targets students with high financial need",
+            "Deadline in 21 days"
+          ]
+        },
+        {
+          "id": "ILL-07",
+          "title": "Emergency Study Continuity Fund (illustrative)",
+          "fitPercent": 67,
+          "reasons": [
+            "Targets students with high financial need",
+            "Deadline in 7 days"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "S07",
+      "label": "Low GPA, high need",
+      "situation": "Very low income and a recent shock, but a GPA below several scholarships' minimum.",
+      "profile": {
+        "monthlyHouseholdIncomeLkr": 25000,
+        "householdSize": 5,
+        "dependents": 3,
+        "siblingsInEducation": 2,
+        "guardianEmployment": "informal",
+        "singleParent": true,
+        "hasEducationLoan": false,
+        "loanAmountLkr": 0,
+        "monthlyExpensesLkr": 27000,
+        "accommodation": "boarding",
+        "ruralDistrict": true,
+        "financialShockLastYear": true,
+        "currentScholarship": false,
+        "gpa": 2.1,
+        "yearOfStudy": 3
+      },
+      "vulnerabilityIndex": 100,
+      "band": "high",
+      "flaggedVulnerable": true,
+      "topsisScore": 0.756,
+      "topFactors": [
+        {
+          "feature": "income_per_capita",
+          "label": "Low income per household member",
+          "sharePercent": 39
+        },
+        {
+          "feature": "expense_ratio",
+          "label": "Expenses high relative to income",
+          "sharePercent": 15
+        },
+        {
+          "feature": "financial_shock_last_year",
+          "label": "Recent financial shock",
+          "sharePercent": 13
+        }
+      ],
+      "eligibleScholarships": 2,
+      "topScholarships": [
+        {
+          "id": "ILL-07",
+          "title": "Emergency Study Continuity Fund (illustrative)",
+          "fitPercent": 70,
+          "reasons": [
+            "Targets students with high financial need",
+            "Deadline in 7 days"
+          ]
+        },
+        {
+          "id": "ILL-01",
+          "title": "Need-Based Bursary (illustrative)",
+          "fitPercent": 65,
+          "reasons": [
+            "Targets students with high financial need",
+            "Deadline in 21 days"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "S08",
+      "label": "Already receiving a scholarship",
+      "situation": "Low-income rural student who already holds one scholarship.",
+      "profile": {
+        "monthlyHouseholdIncomeLkr": 35000,
+        "householdSize": 4,
+        "dependents": 2,
+        "siblingsInEducation": 1,
+        "guardianEmployment": "informal",
+        "singleParent": false,
+        "hasEducationLoan": false,
+        "loanAmountLkr": 0,
+        "monthlyExpensesLkr": 30000,
+        "accommodation": "boarding",
+        "ruralDistrict": true,
+        "financialShockLastYear": false,
+        "currentScholarship": true,
+        "gpa": 3.4,
+        "yearOfStudy": 4
+      },
+      "vulnerabilityIndex": 52,
+      "band": "moderate",
+      "flaggedVulnerable": true,
+      "topsisScore": 0.614,
+      "topFactors": [
+        {
+          "feature": "income_per_capita",
+          "label": "Low income per household member",
+          "sharePercent": 55
+        },
+        {
+          "feature": "expense_ratio",
+          "label": "Expenses high relative to income",
+          "sharePercent": 17
+        },
+        {
+          "feature": "dependency_ratio",
+          "label": "High share of dependents",
+          "sharePercent": 14
+        }
+      ],
+      "eligibleScholarships": 8,
+      "topScholarships": [
+        {
+          "id": "ILL-02",
+          "title": "Rural Students Opportunity Grant (illustrative)",
+          "fitPercent": 53,
+          "reasons": [
+            "Meets all eligibility criteria"
+          ]
+        },
+        {
+          "id": "ILL-08",
+          "title": "Community Leaders Scholarship (illustrative)",
+          "fitPercent": 52,
+          "reasons": [
+            "Your GPA (3.40) exceeds the minimum (2.5)"
+          ]
+        },
+        {
+          "id": "ILL-05",
+          "title": "Final-Year Completion Support (illustrative)",
+          "fitPercent": 51,
+          "reasons": [
+            "Deadline in 14 days"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "S09",
+      "label": "Borderline: formal job, rural, boarding",
+      "situation": "Middle income with a formal job, but boarding costs and a small loan.",
+      "profile": {
+        "monthlyHouseholdIncomeLkr": 75000,
+        "householdSize": 4,
+        "dependents": 2,
+        "siblingsInEducation": 1,
+        "guardianEmployment": "formal",
+        "singleParent": false,
+        "hasEducationLoan": true,
+        "loanAmountLkr": 200000,
+        "monthlyExpensesLkr": 60000,
+        "accommodation": "boarding",
+        "ruralDistrict": true,
+        "financialShockLastYear": false,
+        "currentScholarship": false,
+        "gpa": 3.2,
+        "yearOfStudy": 3
+      },
+      "vulnerabilityIndex": 3,
+      "band": "low",
+      "flaggedVulnerable": false,
+      "topsisScore": 0.561,
+      "topFactors": [
+        {
+          "feature": "income_per_capita",
+          "label": "Low income per household member",
+          "sharePercent": 48
+        },
+        {
+          "feature": "expense_ratio",
+          "label": "Expenses high relative to income",
+          "sharePercent": 17
+        },
+        {
+          "feature": "dependency_ratio",
+          "label": "High share of dependents",
+          "sharePercent": 15
+        }
+      ],
+      "eligibleScholarships": 4,
+      "topScholarships": [
+        {
+          "id": "ILL-08",
+          "title": "Community Leaders Scholarship (illustrative)",
+          "fitPercent": 28,
+          "reasons": [
+            "Your GPA (3.20) exceeds the minimum (2.5)"
+          ]
+        },
+        {
+          "id": "ILL-04",
+          "title": "Merit-cum-Means Award (illustrative)",
+          "fitPercent": 23,
+          "reasons": [
+            "Meets all eligibility criteria"
+          ]
+        },
+        {
+          "id": "ILL-01",
+          "title": "Need-Based Bursary (illustrative)",
+          "fitPercent": 20,
+          "reasons": [
+            "Deadline in 21 days"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "S10",
+      "label": "Middle income, large education loan",
+      "situation": "Comfortable salary, but a large loan taken for university fees.",
+      "profile": {
+        "monthlyHouseholdIncomeLkr": 120000,
+        "householdSize": 4,
+        "dependents": 1,
+        "siblingsInEducation": 1,
+        "guardianEmployment": "formal",
+        "singleParent": false,
+        "hasEducationLoan": true,
+        "loanAmountLkr": 1500000,
+        "monthlyExpensesLkr": 85000,
+        "accommodation": "boarding",
+        "ruralDistrict": false,
+        "financialShockLastYear": false,
+        "currentScholarship": false,
+        "gpa": 3.3,
+        "yearOfStudy": 4
+      },
+      "vulnerabilityIndex": 3,
+      "band": "low",
+      "flaggedVulnerable": false,
+      "topsisScore": 0.464,
+      "topFactors": [
+        {
+          "feature": "income_per_capita",
+          "label": "Low income per household member",
+          "sharePercent": 43
+        },
+        {
+          "feature": "loan_to_income",
+          "label": "Education-loan burden",
+          "sharePercent": 25
+        },
+        {
+          "feature": "expense_ratio",
+          "label": "Expenses high relative to income",
+          "sharePercent": 18
+        }
+      ],
+      "eligibleScholarships": 5,
+      "topScholarships": [
+        {
+          "id": "ILL-08",
+          "title": "Community Leaders Scholarship (illustrative)",
+          "fitPercent": 31,
+          "reasons": [
+            "Your GPA (3.30) exceeds the minimum (2.5)"
+          ]
+        },
+        {
+          "id": "ILL-04",
+          "title": "Merit-cum-Means Award (illustrative)",
+          "fitPercent": 26,
+          "reasons": [
+            "Your GPA (3.30) exceeds the minimum (2.8)"
+          ]
+        },
+        {
+          "id": "ILL-05",
+          "title": "Final-Year Completion Support (illustrative)",
+          "fitPercent": 22,
+          "reasons": [
+            "Deadline in 14 days"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "S11",
+      "label": "Comfortable household, high GPA",
+      "situation": "Small family with a high formal income; excellent academic record.",
+      "profile": {
+        "monthlyHouseholdIncomeLkr": 220000,
+        "householdSize": 3,
+        "dependents": 0,
+        "siblingsInEducation": 0,
+        "guardianEmployment": "formal",
+        "singleParent": false,
+        "hasEducationLoan": false,
+        "loanAmountLkr": 0,
+        "monthlyExpensesLkr": 90000,
+        "accommodation": "home",
+        "ruralDistrict": false,
+        "financialShockLastYear": false,
+        "currentScholarship": false,
+        "gpa": 3.9,
+        "yearOfStudy": 4
+      },
+      "vulnerabilityIndex": 0,
+      "band": "low",
+      "flaggedVulnerable": false,
+      "topsisScore": 0.067,
+      "topFactors": [
+        {
+          "feature": "expense_ratio",
+          "label": "Expenses high relative to income",
+          "sharePercent": 100
+        }
+      ],
+      "eligibleScholarships": 2,
+      "topScholarships": [
+        {
+          "id": "ILL-06",
+          "title": "Faculty Excellence Endowment (illustrative)",
+          "fitPercent": 49,
+          "reasons": [
+            "Your GPA (3.90) exceeds the minimum (3.0)"
+          ]
+        },
+        {
+          "id": "ILL-03",
+          "title": "Tech Merit Scholarship (illustrative)",
+          "fitPercent": 45,
+          "reasons": [
+            "Your GPA (3.90) exceeds the minimum (3.3)"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "S12",
+      "label": "Comfortable urban household",
+      "situation": "High household income, lives at home in Colombo, no loans.",
+      "profile": {
+        "monthlyHouseholdIncomeLkr": 350000,
+        "householdSize": 4,
+        "dependents": 1,
+        "siblingsInEducation": 0,
+        "guardianEmployment": "formal",
+        "singleParent": false,
+        "hasEducationLoan": false,
+        "loanAmountLkr": 0,
+        "monthlyExpensesLkr": 120000,
+        "accommodation": "home",
+        "ruralDistrict": false,
+        "financialShockLastYear": false,
+        "currentScholarship": false,
+        "gpa": 3.5,
+        "yearOfStudy": 3
+      },
+      "vulnerabilityIndex": 0,
+      "band": "low",
+      "flaggedVulnerable": false,
+      "topsisScore": 0.094,
+      "topFactors": [
+        {
+          "feature": "dependency_ratio",
+          "label": "High share of dependents",
+          "sharePercent": 65
+        },
+        {
+          "feature": "expense_ratio",
+          "label": "Expenses high relative to income",
+          "sharePercent": 35
+        }
+      ],
+      "eligibleScholarships": 2,
+      "topScholarships": [
+        {
+          "id": "ILL-06",
+          "title": "Faculty Excellence Endowment (illustrative)",
+          "fitPercent": 29,
+          "reasons": [
+            "Your GPA (3.50) exceeds the minimum (3.0)"
+          ]
+        },
+        {
+          "id": "ILL-03",
+          "title": "Tech Merit Scholarship (illustrative)",
+          "fitPercent": 25,
+          "reasons": [
+            "Meets all eligibility criteria"
+          ]
+        }
+      ]
+    }
+  ]
+}

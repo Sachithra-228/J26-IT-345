@@ -12,6 +12,7 @@
     "test:watch": "jest --watch",
     "test:e2e": "playwright test",
     "c1:eval-matching": "tsx scripts/c1/evaluate-matching.ts",
+    "c1:demo-cases": "tsx scripts/c1/demo-cases-report.ts",
     "c1:ml": "python ml/synthetic_data.py && python ml/train_vulnerability.py",
     "c1:chain:test": "npm --prefix blockchain test",
     "c3:ml": "python ml/c3/run_pipeline.py",
