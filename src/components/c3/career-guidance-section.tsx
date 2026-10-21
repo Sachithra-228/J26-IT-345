@@ -1,5 +1,6 @@
 "use client";
 
+import { CheckCircle2, Compass, Lock, Save } from "lucide-react";
 import { useCallback, useEffect, useState } from "react";
 import { Button } from "@/components/shared/Button";
 import { Card } from "@/components/shared/Card";
@@ -98,14 +99,22 @@ export function CareerGuidanceSection() {
 
   return (
     <div className="space-y-6">
-      <header className="relative overflow-hidden rounded-3xl bg-gradient-to-br from-indigo-600 via-blue-600 to-sky-500 px-5 py-6 text-white shadow-md sm:px-7">
-        <div aria-hidden="true" className="pointer-events-none absolute -right-10 -top-10 h-40 w-40 rounded-full bg-white/10" />
-        <div aria-hidden="true" className="pointer-events-none absolute -bottom-12 right-16 h-32 w-32 rounded-full bg-white/10" />
-        <p className="text-sm font-medium text-white/80" aria-hidden="true">
-          🧭 UniCare Connect
+      <header className="relative overflow-hidden rounded-3xl bg-gradient-to-br from-indigo-700 via-blue-600 to-sky-500 px-6 py-7 text-white shadow-sm sm:px-8 sm:py-9">
+        <div aria-hidden="true" className="pointer-events-none absolute -right-10 -top-14 h-64 w-64 rounded-full border-[30px] border-white/10" />
+        <p className="relative flex items-center gap-2 text-xs font-semibold uppercase tracking-[0.18em] text-blue-100">
+          <Compass aria-hidden="true" className="h-4 w-4" />
+          UniCare Career
         </p>
-        <h2 className="mt-1 text-2xl font-semibold sm:text-3xl">{t.toolTitle}</h2>
-        <p className="mt-2 max-w-3xl text-sm text-white/90">{t.toolSubtitle}</p>
+        <h2 className="relative mt-3 max-w-2xl text-3xl font-semibold tracking-tight sm:text-4xl">{t.toolTitle}</h2>
+        <p className="relative mt-3 max-w-xl text-sm leading-6 text-blue-50">{t.toolSubtitle}</p>
+        <div className="relative mt-6 flex flex-wrap gap-x-6 gap-y-2 text-xs text-blue-50">
+          <span className="flex items-center gap-1.5">
+            <Lock aria-hidden="true" className="h-3.5 w-3.5" />
+            {t.heroChipDevice}
+          </span>
+          <span>{t.heroChipReason}</span>
+          <span>{t.heroChipPlan}</span>
+        </div>
       </header>
 
       <div role="tablist" aria-label={t.toolTitle} className="flex gap-1 overflow-x-auto rounded-2xl bg-slate-100 p-1 dark:bg-slate-800">
@@ -126,7 +135,7 @@ export function CareerGuidanceSection() {
             onClick={() => setTab(id)}
             className={`whitespace-nowrap rounded-xl px-4 py-2.5 text-sm font-medium transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary ${
               tab === id
-                ? "bg-white text-indigo-700 shadow-sm dark:bg-slate-900 dark:text-indigo-300"
+                ? "bg-white text-primary shadow-sm dark:bg-slate-900 dark:text-blue-300"
                 : "text-slate-600 hover:text-slate-900 dark:text-slate-400 dark:hover:text-slate-200"
             }`}
           >
@@ -148,8 +157,9 @@ export function CareerGuidanceSection() {
         {/* Saved answers can always be erased, even before a new analysis is run this session. */}
         {savedAt && !last ? (
           <div className="flex flex-wrap items-center justify-between gap-3 rounded-2xl border border-emerald-200 bg-emerald-50 px-4 py-3 text-sm text-emerald-900 dark:border-emerald-900 dark:bg-emerald-950/40 dark:text-emerald-100">
-            <p role="status">
-              ✅ {saveState === "saved" ? `${t.savedAt} ${new Date(savedAt).toLocaleString()}` : null}
+            <p role="status" className="flex items-center gap-1.5">
+              <CheckCircle2 aria-hidden="true" className="h-4 w-4 shrink-0" />
+              {saveState === "saved" ? `${t.savedAt} ${new Date(savedAt).toLocaleString()}` : null}
               {saveState === "error" ? t.saveError : null}
             </p>
             <Button type="button" variant="secondary" onClick={() => void remove()} disabled={saveState === "saving"}>
@@ -170,7 +180,7 @@ export function CareerGuidanceSection() {
           resultsFooter={
             <Card>
               <h3 className="flex items-center gap-2 text-base font-semibold">
-                <span aria-hidden="true">💾</span>
+                <Save aria-hidden="true" className="h-4 w-4 text-primary" />
                 {t.shareTitle}
               </h3>
               <p className="mt-1 text-sm text-slate-600 dark:text-slate-300">{t.shareBody}</p>

@@ -1,0 +1,1574 @@
+{
+ "schemaVersion": "1.0.0",
+ "version": "c3-readiness-v2-real-preliminary",
+ "trainedOn": "Public Sri Lankan IT job advertisements collected manually (intern and associate ads), researcher's labels",
+ "warning": "PRELIMINARY: descriptive comparison only, no accuracy claim; one annotator",
+ "generatedAt": "2026-10-19",
+ "params": {
+  "lambdaGapPenalty": 0.5,
+  "minSupport": 0.15,
+  "preferredMentionWeight": 0.5,
+  "levelRule": "parser level when it came from a cue, else seniority default (intern 1, associate 2)"
+ },
+ "adCorpus": {
+  "total": 255,
+  "usedForProfiles": 223,
+  "sourceType": "public_web (manual sheet)",
+  "seniority": [
+   "intern",
+   "associate"
+  ],
+  "collected": "2026-10-08 to 2026-10-18",
+  "skipped": {
+   "seniority_senior": 32
+  },
+  "levelSources": {
+   "seniorityDefault": 796,
+   "cue": 520
+  }
+ },
+ "taxonomy": {
+  "version": "1.1.0"
+ },
+ "roles": [
+  {
+   "id": "software_engineer",
+   "label": {
+    "en": "Software Engineer",
+    "si": "මෘදුකාංග ඉංජිනේරු",
+    "ta": "மென்பொருள் பொறியாளர்"
+   },
+   "adCount": 25,
+   "skills": [
+    {
+     "skillId": "frontend",
+     "weight": 0.14041270328282027,
+     "tf": 0.64,
+     "idf": 2.1786549963416464,
+     "requiredLevel": 2,
+     "levelCounts": [
+      8,
+      8,
+      0
+     ],
+     "adsMentioning": 16
+    },
+    {
+     "skillId": "prog_oop",
+     "weight": 0.11408532141729147,
+     "tf": 0.52,
+     "idf": 2.1786549963416464,
+     "requiredLevel": 2,
+     "levelCounts": [
+      5,
+      8,
+      0
+     ],
+     "adsMentioning": 13
+    },
+    {
+     "skillId": "backend_api",
+     "weight": 0.11086749709206482,
+     "tf": 0.68,
+     "idf": 1.6190392084062235,
+     "requiredLevel": 1,
+     "levelCounts": [
+      10,
+      7,
+      0
+     ],
+     "adsMentioning": 17
+    },
+    {
+     "skillId": "communication",
+     "weight": 0.0926458118921928,
+     "tf": 0.92,
+     "idf": 1.0,
+     "requiredLevel": 2,
+     "levelCounts": [
+      11,
+      12,
+      0
+     ],
+     "adsMentioning": 23
+    },
+    {
+     "skillId": "problem_solving",
+     "weight": 0.08861773311427137,
+     "tf": 0.88,
+     "idf": 1.0,
+     "requiredLevel": 1,
+     "levelCounts": [
+      13,
+      9,
+      0
+     ],
+     "adsMentioning": 22
+    },
+    {
+     "skillId": "javascript_ts",
+     "weight": 0.08571058269621783,
+     "tf": 0.48,
+     "idf": 1.7731898882334818,
+     "requiredLevel": 2,
+     "levelCounts": [
+      6,
+      6,
+      0
+     ],
+     "adsMentioning": 12
+    },
+    {
+     "skillId": "version_control",
+     "weight": 0.08571058269621783,
+     "tf": 0.48,
+     "idf": 1.7731898882334818,
+     "requiredLevel": 1,
+     "levelCounts": [
+      7,
+      5,
+      0
+     ],
+     "adsMentioning": 12
+    },
+    {
+     "skillId": "databases_sql",
+     "weight": 0.0747967813398335,
+     "tf": 0.5,
+     "idf": 1.4855078157817008,
+     "requiredLevel": 1,
+     "levelCounts": [
+      8,
+      5,
+      0
+     ],
+     "adsMentioning": 13
+    },
+    {
+     "skillId": "python",
+     "weight": 0.06071166274315431,
+     "tf": 0.34,
+     "idf": 1.7731898882334818,
+     "requiredLevel": 2,
+     "levelCounts": [
+      5,
+      4,
+      0
+     ],
+     "adsMentioning": 9
+    },
+    {
+     "skillId": "testing_manual",
+     "weight": 0.05513867906188235,
+     "tf": 0.28,
+     "idf": 1.9555114450274362,
+     "requiredLevel": 2,
+     "levelCounts": [
+      2,
+      5,
+      0
+     ],
+     "adsMentioning": 7
+    },
+    {
+     "skillId": "agile",
+     "weight": 0.052172939808030505,
+     "tf": 0.32,
+     "idf": 1.6190392084062235,
+     "requiredLevel": 1,
+     "levelCounts": [
+      7,
+      2,
+      0
+     ],
+     "adsMentioning": 9
+    },
+    {
+     "skillId": "cloud",
+     "weight": 0.03912970485602288,
+     "tf": 0.24,
+     "idf": 1.6190392084062235,
+     "requiredLevel": 1,
+     "levelCounts": [
+      4,
+      2,
+      0
+     ],
+     "adsMentioning": 6
+    }
+   ]
+  },
+  {
+   "id": "frontend_engineer",
+   "label": {
+    "en": "Front-end Engineer",
+    "si": "ඉදිරි-අන්ත ඉංජිනේරු",
+    "ta": "முன்-முனை பொறியாளர்"
+   },
+   "adCount": 13,
+   "skills": [
+    {
+     "skillId": "frontend",
+     "weight": 0.21311640670903353,
+     "tf": 1.0,
+     "idf": 2.1786549963416464,
+     "requiredLevel": 2,
+     "levelCounts": [
+      3,
+      10,
+      0
+     ],
+     "adsMentioning": 13
+    },
+    {
+     "skillId": "javascript_ts",
+     "weight": 0.16011114466112952,
+     "tf": 0.9230769230769231,
+     "idf": 1.7731898882334818,
+     "requiredLevel": 2,
+     "levelCounts": [
+      3,
+      9,
+      0
+     ],
+     "adsMentioning": 12
+    },
+    {
+     "skillId": "backend_api",
+     "weight": 0.14619202524745975,
+     "tf": 0.9230769230769231,
+     "idf": 1.6190392084062235,
+     "requiredLevel": 2,
+     "levelCounts": [
+      4,
+      8,
+      0
+     ],
+     "adsMentioning": 12
+    },
+    {
+     "skillId": "communication",
+     "weight": 0.09782017210934926,
+     "tf": 1.0,
+     "idf": 1.0,
+     "requiredLevel": 2,
+     "levelCounts": [
+      5,
+      8,
+      0
+     ],
+     "adsMentioning": 13
+    },
+    {
+     "skillId": "version_control",
+     "weight": 0.0933981677189922,
+     "tf": 0.5384615384615384,
+     "idf": 1.7731898882334818,
+     "requiredLevel": 1,
+     "levelCounts": [
+      6,
+      1,
+      0
+     ],
+     "adsMentioning": 7
+    },
+    {
+     "skillId": "problem_solving",
+     "weight": 0.08277091486175707,
+     "tf": 0.8461538461538461,
+     "idf": 1.0,
+     "requiredLevel": 2,
+     "levelCounts": [
+      4,
+      7,
+      0
+     ],
+     "adsMentioning": 11
+    },
+    {
+     "skillId": "prog_oop",
+     "weight": 0.05737749411397056,
+     "tf": 0.2692307692307692,
+     "idf": 2.1786549963416464,
+     "requiredLevel": 1,
+     "levelCounts": [
+      2,
+      2,
+      0
+     ],
+     "adsMentioning": 4
+    },
+    {
+     "skillId": "databases_sql",
+     "weight": 0.05588947315751902,
+     "tf": 0.38461538461538464,
+     "idf": 1.4855078157817008,
+     "requiredLevel": 2,
+     "levelCounts": [
+      2,
+      3,
+      0
+     ],
+     "adsMentioning": 5
+    },
+    {
+     "skillId": "ui_ux",
+     "weight": 0.049180709240546204,
+     "tf": 0.23076923076923078,
+     "idf": 2.1786549963416464,
+     "requiredLevel": 1,
+     "levelCounts": [
+      2,
+      1,
+      0
+     ],
+     "adsMentioning": 3
+    },
+    {
+     "skillId": "security",
+     "weight": 0.044143492180242945,
+     "tf": 0.23076923076923078,
+     "idf": 1.9555114450274362,
+     "requiredLevel": 1,
+     "levelCounts": [
+      2,
+      1,
+      0
+     ],
+     "adsMentioning": 3
+    }
+   ]
+  },
+  {
+   "id": "mobile_developer",
+   "label": {
+    "en": "Mobile App Developer",
+    "si": "ජංගම යෙදුම් සංවර්ධක",
+    "ta": "மொபைல் செயலி உருவாக்குநர்"
+   },
+   "adCount": 15,
+   "skills": [
+    {
+     "skillId": "mobile",
+     "weight": 0.24721586124317793,
+     "tf": 1.0,
+     "idf": 2.466337068793427,
+     "requiredLevel": 2,
+     "levelCounts": [
+      7,
+      7,
+      1
+     ],
+     "adsMentioning": 15
+    },
+    {
+     "skillId": "version_control",
+     "weight": 0.14219002614489767,
+     "tf": 0.8,
+     "idf": 1.7731898882334818,
+     "requiredLevel": 1,
+     "levelCounts": [
+      8,
+      4,
+      0
+     ],
+     "adsMentioning": 12
+    },
+    {
+     "skillId": "ui_ux",
+     "weight": 0.11646919973477782,
+     "tf": 0.5333333333333333,
+     "idf": 2.1786549963416464,
+     "requiredLevel": 1,
+     "levelCounts": [
+      6,
+      2,
+      0
+     ],
+     "adsMentioning": 8
+    },
+    {
+     "skillId": "backend_api",
+     "weight": 0.10819071930786478,
+     "tf": 0.6666666666666666,
+     "idf": 1.6190392084062235,
+     "requiredLevel": 1,
+     "levelCounts": [
+      8,
+      2,
+      0
+     ],
+     "adsMentioning": 10
+    },
+    {
+     "skillId": "problem_solving",
+     "weight": 0.10023604006573197,
+     "tf": 1.0,
+     "idf": 1.0,
+     "requiredLevel": 1,
+     "levelCounts": [
+      10,
+      5,
+      0
+     ],
+     "adsMentioning": 15
+    },
+    {
+     "skillId": "communication",
+     "weight": 0.10023604006573197,
+     "tf": 1.0,
+     "idf": 1.0,
+     "requiredLevel": 1,
+     "levelCounts": [
+      10,
+      5,
+      0
+     ],
+     "adsMentioning": 15
+    },
+    {
+     "skillId": "testing_manual",
+     "weight": 0.09147260432462484,
+     "tf": 0.4666666666666667,
+     "idf": 1.9555114450274362,
+     "requiredLevel": 1,
+     "levelCounts": [
+      4,
+      3,
+      0
+     ],
+     "adsMentioning": 7
+    },
+    {
+     "skillId": "javascript_ts",
+     "weight": 0.0592458442270407,
+     "tf": 0.3333333333333333,
+     "idf": 1.7731898882334818,
+     "requiredLevel": 1,
+     "levelCounts": [
+      3,
+      2,
+      0
+     ],
+     "adsMentioning": 5
+    },
+    {
+     "skillId": "databases_sql",
+     "weight": 0.03474366488615226,
+     "tf": 0.23333333333333334,
+     "idf": 1.4855078157817008,
+     "requiredLevel": 2,
+     "levelCounts": [
+      2,
+      2,
+      0
+     ],
+     "adsMentioning": 4
+    }
+   ]
+  },
+  {
+   "id": "qa_engineer",
+   "label": {
+    "en": "QA Engineer",
+    "si": "QA ඉංජිනේරු",
+    "ta": "QA பொறியாளர்"
+   },
+   "adCount": 21,
+   "skills": [
+    {
+     "skillId": "test_automation",
+     "weight": 0.21052160512156776,
+     "tf": 0.7619047619047619,
+     "idf": 2.8718021769015913,
+     "requiredLevel": 2,
+     "levelCounts": [
+      8,
+      8,
+      0
+     ],
+     "adsMentioning": 16
+    },
+    {
+     "skillId": "testing_manual",
+     "weight": 0.18814896188252633,
+     "tf": 1.0,
+     "idf": 1.9555114450274362,
+     "requiredLevel": 2,
+     "levelCounts": [
+      9,
+      11,
+      1
+     ],
+     "adsMentioning": 21
+    },
+    {
+     "skillId": "backend_api",
+     "weight": 0.11126813144434895,
+     "tf": 0.7142857142857143,
+     "idf": 1.6190392084062235,
+     "requiredLevel": 2,
+     "levelCounts": [
+      6,
+      9,
+      0
+     ],
+     "adsMentioning": 15
+    },
+    {
+     "skillId": "problem_solving",
+     "weight": 0.09621470759527391,
+     "tf": 1.0,
+     "idf": 1.0,
+     "requiredLevel": 1,
+     "levelCounts": [
+      11,
+      10,
+      0
+     ],
+     "adsMentioning": 21
+    },
+    {
+     "skillId": "communication",
+     "weight": 0.09621470759527391,
+     "tf": 1.0,
+     "idf": 1.0,
+     "requiredLevel": 1,
+     "levelCounts": [
+      11,
+      10,
+      0
+     ],
+     "adsMentioning": 21
+    },
+    {
+     "skillId": "agile",
+     "weight": 0.07417875429623264,
+     "tf": 0.47619047619047616,
+     "idf": 1.6190392084062235,
+     "requiredLevel": 1,
+     "levelCounts": [
+      7,
+      3,
+      0
+     ],
+     "adsMentioning": 10
+    },
+    {
+     "skillId": "python",
+     "weight": 0.04874484188779453,
+     "tf": 0.2857142857142857,
+     "idf": 1.7731898882334818,
+     "requiredLevel": 1,
+     "levelCounts": [
+      4,
+      2,
+      0
+     ],
+     "adsMentioning": 6
+    },
+    {
+     "skillId": "javascript_ts",
+     "weight": 0.04874484188779453,
+     "tf": 0.2857142857142857,
+     "idf": 1.7731898882334818,
+     "requiredLevel": 1,
+     "levelCounts": [
+      4,
+      2,
+      0
+     ],
+     "adsMentioning": 6
+    },
+    {
+     "skillId": "mobile",
+     "weight": 0.04519959998197039,
+     "tf": 0.19047619047619047,
+     "idf": 2.466337068793427,
+     "requiredLevel": 2,
+     "levelCounts": [
+      1,
+      3,
+      0
+     ],
+     "adsMentioning": 4
+    },
+    {
+     "skillId": "databases_sql",
+     "weight": 0.040836485750265814,
+     "tf": 0.2857142857142857,
+     "idf": 1.4855078157817008,
+     "requiredLevel": 1,
+     "levelCounts": [
+      5,
+      1,
+      0
+     ],
+     "adsMentioning": 6
+    },
+    {
+     "skillId": "prog_oop",
+     "weight": 0.03992736255695124,
+     "tf": 0.19047619047619047,
+     "idf": 2.1786549963416464,
+     "requiredLevel": 2,
+     "levelCounts": [
+      2,
+      2,
+      0
+     ],
+     "adsMentioning": 4
+    }
+   ]
+  },
+  {
+   "id": "devops_engineer",
+   "label": {
+    "en": "DevOps / Cloud Engineer",
+    "si": "DevOps / ක්ලවුඩ් ඉංජිනේරු",
+    "ta": "DevOps / கிளவுட் பொறியாளர்"
+   },
+   "adCount": 20,
+   "skills": [
+    {
+     "skillId": "devops_cicd",
+     "weight": 0.13241640396082358,
+     "tf": 0.8,
+     "idf": 2.1786549963416464,
+     "requiredLevel": 2,
+     "levelCounts": [
+      7,
+      9,
+      0
+     ],
+     "adsMentioning": 16
+    },
+    {
+     "skillId": "networking",
+     "weight": 0.13241640396082358,
+     "tf": 0.8,
+     "idf": 2.1786549963416464,
+     "requiredLevel": 1,
+     "levelCounts": [
+      10,
+      6,
+      0
+     ],
+     "adsMentioning": 16
+    },
+    {
+     "skillId": "linux",
+     "weight": 0.11885396902656761,
+     "tf": 0.8,
+     "idf": 1.9555114450274362,
+     "requiredLevel": 1,
+     "levelCounts": [
+      9,
+      7,
+      0
+     ],
+     "adsMentioning": 16
+    },
+    {
+     "skillId": "cloud",
+     "weight": 0.10455375431023763,
+     "tf": 0.85,
+     "idf": 1.6190392084062235,
+     "requiredLevel": 2,
+     "levelCounts": [
+      7,
+      10,
+      0
+     ],
+     "adsMentioning": 17
+    },
+    {
+     "skillId": "containers",
+     "weight": 0.1030572287628795,
+     "tf": 0.55,
+     "idf": 2.466337068793427,
+     "requiredLevel": 1,
+     "levelCounts": [
+      9,
+      2,
+      0
+     ],
+     "adsMentioning": 11
+    },
+    {
+     "skillId": "security",
+     "weight": 0.08171210370576523,
+     "tf": 0.55,
+     "idf": 1.9555114450274362,
+     "requiredLevel": 2,
+     "levelCounts": [
+      5,
+      6,
+      0
+     ],
+     "adsMentioning": 11
+    },
+    {
+     "skillId": "problem_solving",
+     "weight": 0.07217502540214937,
+     "tf": 0.95,
+     "idf": 1.0,
+     "requiredLevel": 2,
+     "levelCounts": [
+      9,
+      10,
+      0
+     ],
+     "adsMentioning": 19
+    },
+    {
+     "skillId": "communication",
+     "weight": 0.06837633985466783,
+     "tf": 0.9,
+     "idf": 1.0,
+     "requiredLevel": 2,
+     "levelCounts": [
+      6,
+      12,
+      0
+     ],
+     "adsMentioning": 18
+    },
+    {
+     "skillId": "python",
+     "weight": 0.06735790801372946,
+     "tf": 0.5,
+     "idf": 1.7731898882334818,
+     "requiredLevel": 1,
+     "levelCounts": [
+      6,
+      4,
+      0
+     ],
+     "adsMentioning": 10
+    },
+    {
+     "skillId": "version_control",
+     "weight": 0.060622117212356504,
+     "tf": 0.45,
+     "idf": 1.7731898882334818,
+     "requiredLevel": 1,
+     "levelCounts": [
+      6,
+      3,
+      0
+     ],
+     "adsMentioning": 9
+    },
+    {
+     "skillId": "databases_sql",
+     "weight": 0.03385786242288495,
+     "tf": 0.3,
+     "idf": 1.4855078157817008,
+     "requiredLevel": 2,
+     "levelCounts": [
+      3,
+      3,
+      0
+     ],
+     "adsMentioning": 6
+    },
+    {
+     "skillId": "agile",
+     "weight": 0.024600883367114735,
+     "tf": 0.2,
+     "idf": 1.6190392084062235,
+     "requiredLevel": 1,
+     "levelCounts": [
+      3,
+      1,
+      0
+     ],
+     "adsMentioning": 4
+    }
+   ]
+  },
+  {
+   "id": "data_analyst",
+   "label": {
+    "en": "Data Analyst",
+    "si": "දත්ත විශ්ලේෂක",
+    "ta": "தரவு பகுப்பாய்வாளர்"
+   },
+   "adCount": 15,
+   "skills": [
+    {
+     "skillId": "data_analysis",
+     "weight": 0.16910121908560122,
+     "tf": 0.7333333333333333,
+     "idf": 2.1786549963416464,
+     "requiredLevel": 2,
+     "levelCounts": [
+      3,
+      4,
+      4
+     ],
+     "adsMentioning": 11
+    },
+    {
+     "skillId": "databases_sql",
+     "weight": 0.12578295058941646,
+     "tf": 0.8,
+     "idf": 1.4855078157817008,
+     "requiredLevel": 2,
+     "levelCounts": [
+      5,
+      7,
+      0
+     ],
+     "adsMentioning": 12
+    },
+    {
+     "skillId": "business_analysis",
+     "weight": 0.1103864940342485,
+     "tf": 0.5333333333333333,
+     "idf": 1.9555114450274362,
+     "requiredLevel": 2,
+     "levelCounts": [
+      1,
+      7,
+      0
+     ],
+     "adsMentioning": 8
+    },
+    {
+     "skillId": "communication",
+     "weight": 0.10584171053589106,
+     "tf": 1.0,
+     "idf": 1.0,
+     "requiredLevel": 2,
+     "levelCounts": [
+      5,
+      10,
+      0
+     ],
+     "adsMentioning": 15
+    },
+    {
+     "skillId": "problem_solving",
+     "weight": 0.09172948246443892,
+     "tf": 0.8666666666666667,
+     "idf": 1.0,
+     "requiredLevel": 2,
+     "levelCounts": [
+      3,
+      10,
+      0
+     ],
+     "adsMentioning": 13
+    },
+    {
+     "skillId": "python",
+     "weight": 0.08758281040860269,
+     "tf": 0.4666666666666667,
+     "idf": 1.7731898882334818,
+     "requiredLevel": 2,
+     "levelCounts": [
+      3,
+      5,
+      0
+     ],
+     "adsMentioning": 8
+    },
+    {
+     "skillId": "machine_learning",
+     "weight": 0.08701377803972397,
+     "tf": 0.3333333333333333,
+     "idf": 2.466337068793427,
+     "requiredLevel": 2,
+     "levelCounts": [
+      1,
+      4,
+      0
+     ],
+     "adsMentioning": 5
+    },
+    {
+     "skillId": "nosql",
+     "weight": 0.06079129094479201,
+     "tf": 0.2,
+     "idf": 2.8718021769015913,
+     "requiredLevel": 2,
+     "levelCounts": [
+      0,
+      3,
+      0
+     ],
+     "adsMentioning": 3
+    },
+    {
+     "skillId": "devops_cicd",
+     "weight": 0.04611851429607307,
+     "tf": 0.2,
+     "idf": 2.1786549963416464,
+     "requiredLevel": 2,
+     "levelCounts": [
+      0,
+      3,
+      0
+     ],
+     "adsMentioning": 3
+    },
+    {
+     "skillId": "cloud",
+     "weight": 0.04569650113130392,
+     "tf": 0.26666666666666666,
+     "idf": 1.6190392084062235,
+     "requiredLevel": 2,
+     "levelCounts": [
+      0,
+      3,
+      1
+     ],
+     "adsMentioning": 4
+    },
+    {
+     "skillId": "linux",
+     "weight": 0.04139493526284319,
+     "tf": 0.2,
+     "idf": 1.9555114450274362,
+     "requiredLevel": 2,
+     "levelCounts": [
+      0,
+      3,
+      0
+     ],
+     "adsMentioning": 3
+    },
+    {
+     "skillId": "backend_api",
+     "weight": 0.02856031320706495,
+     "tf": 0.16666666666666666,
+     "idf": 1.6190392084062235,
+     "requiredLevel": 2,
+     "levelCounts": [
+      1,
+      2,
+      0
+     ],
+     "adsMentioning": 3
+    }
+   ]
+  },
+  {
+   "id": "data_scientist",
+   "label": {
+    "en": "Data Scientist / ML Engineer",
+    "si": "දත්ත විද්‍යාඥ / ML ඉංජිනේරු",
+    "ta": "தரவு விஞ்ஞானி / ML பொறியாளர்"
+   },
+   "adCount": 8,
+   "skills": [
+    {
+     "skillId": "machine_learning",
+     "weight": 0.2307270811514075,
+     "tf": 1.0,
+     "idf": 2.466337068793427,
+     "requiredLevel": 2,
+     "levelCounts": [
+      2,
+      6,
+      0
+     ],
+     "adsMentioning": 8
+    },
+    {
+     "skillId": "python",
+     "weight": 0.16588281156535162,
+     "tf": 1.0,
+     "idf": 1.7731898882334818,
+     "requiredLevel": 2,
+     "levelCounts": [
+      4,
+      4,
+      0
+     ],
+     "adsMentioning": 8
+    },
+    {
+     "skillId": "cloud",
+     "weight": 0.09466371090144705,
+     "tf": 0.625,
+     "idf": 1.6190392084062235,
+     "requiredLevel": 2,
+     "levelCounts": [
+      1,
+      4,
+      0
+     ],
+     "adsMentioning": 5
+    },
+    {
+     "skillId": "problem_solving",
+     "weight": 0.09355050616186984,
+     "tf": 1.0,
+     "idf": 1.0,
+     "requiredLevel": 2,
+     "levelCounts": [
+      4,
+      4,
+      0
+     ],
+     "adsMentioning": 8
+    },
+    {
+     "skillId": "communication",
+     "weight": 0.09355050616186984,
+     "tf": 1.0,
+     "idf": 1.0,
+     "requiredLevel": 2,
+     "levelCounts": [
+      4,
+      4,
+      0
+     ],
+     "adsMentioning": 8
+    },
+    {
+     "skillId": "containers",
+     "weight": 0.08652265543177781,
+     "tf": 0.375,
+     "idf": 2.466337068793427,
+     "requiredLevel": 2,
+     "levelCounts": [
+      0,
+      3,
+      0
+     ],
+     "adsMentioning": 3
+    },
+    {
+     "skillId": "version_control",
+     "weight": 0.08294140578267581,
+     "tf": 0.5,
+     "idf": 1.7731898882334818,
+     "requiredLevel": 1,
+     "levelCounts": [
+      3,
+      1,
+      0
+     ],
+     "adsMentioning": 4
+    },
+    {
+     "skillId": "devops_cicd",
+     "weight": 0.0764303541224429,
+     "tf": 0.375,
+     "idf": 2.1786549963416464,
+     "requiredLevel": 2,
+     "levelCounts": [
+      1,
+      2,
+      0
+     ],
+     "adsMentioning": 3
+    },
+    {
+     "skillId": "backend_api",
+     "weight": 0.03786548436057882,
+     "tf": 0.25,
+     "idf": 1.6190392084062235,
+     "requiredLevel": 2,
+     "levelCounts": [
+      1,
+      1,
+      0
+     ],
+     "adsMentioning": 2
+    },
+    {
+     "skillId": "agile",
+     "weight": 0.03786548436057882,
+     "tf": 0.25,
+     "idf": 1.6190392084062235,
+     "requiredLevel": 2,
+     "levelCounts": [
+      1,
+      1,
+      0
+     ],
+     "adsMentioning": 2
+    }
+   ]
+  },
+  {
+   "id": "business_analyst",
+   "label": {
+    "en": "Business Analyst",
+    "si": "ව්‍යාපාර විශ්ලේෂක",
+    "ta": "வணிக பகுப்பாய்வாளர்"
+   },
+   "adCount": 24,
+   "skills": [
+    {
+     "skillId": "business_analysis",
+     "weight": 0.26399033242431696,
+     "tf": 0.9166666666666666,
+     "idf": 1.9555114450274362,
+     "requiredLevel": 1,
+     "levelCounts": [
+      12,
+      10,
+      0
+     ],
+     "adsMentioning": 22
+    },
+    {
+     "skillId": "communication",
+     "weight": 0.147270656117157,
+     "tf": 1.0,
+     "idf": 1.0,
+     "requiredLevel": 2,
+     "levelCounts": [
+      11,
+      13,
+      0
+     ],
+     "adsMentioning": 24
+    },
+    {
+     "skillId": "data_analysis",
+     "weight": 0.14705714410023843,
+     "tf": 0.4583333333333333,
+     "idf": 2.1786549963416464,
+     "requiredLevel": 2,
+     "levelCounts": [
+      4,
+      7,
+      0
+     ],
+     "adsMentioning": 11
+    },
+    {
+     "skillId": "agile",
+     "weight": 0.12915335685491797,
+     "tf": 0.5416666666666666,
+     "idf": 1.6190392084062235,
+     "requiredLevel": 1,
+     "levelCounts": [
+      10,
+      3,
+      0
+     ],
+     "adsMentioning": 13
+    },
+    {
+     "skillId": "problem_solving",
+     "weight": 0.12886182410251237,
+     "tf": 0.875,
+     "idf": 1.0,
+     "requiredLevel": 1,
+     "levelCounts": [
+      11,
+      10,
+      0
+     ],
+     "adsMentioning": 21
+    },
+    {
+     "skillId": "testing_manual",
+     "weight": 0.10799604508267513,
+     "tf": 0.375,
+     "idf": 1.9555114450274362,
+     "requiredLevel": 1,
+     "levelCounts": [
+      6,
+      3,
+      0
+     ],
+     "adsMentioning": 9
+    },
+    {
+     "skillId": "project_management",
+     "weight": 0.07567064131818206,
+     "tf": 0.20833333333333334,
+     "idf": 2.466337068793427,
+     "requiredLevel": 2,
+     "levelCounts": [
+      0,
+      5,
+      0
+     ],
+     "adsMentioning": 5
+    }
+   ]
+  },
+  {
+   "id": "ui_ux_designer",
+   "label": {
+    "en": "UI/UX Designer",
+    "si": "UI/UX නිර්මාණකරු",
+    "ta": "UI/UX வடிவமைப்பாளர்"
+   },
+   "adCount": 25,
+   "skills": [
+    {
+     "skillId": "ui_ux",
+     "weight": 0.3819621308326808,
+     "tf": 1.0,
+     "idf": 2.1786549963416464,
+     "requiredLevel": 2,
+     "levelCounts": [
+      12,
+      12,
+      1
+     ],
+     "adsMentioning": 25
+    },
+    {
+     "skillId": "frontend",
+     "weight": 0.259734248966223,
+     "tf": 0.68,
+     "idf": 2.1786549963416464,
+     "requiredLevel": 1,
+     "levelCounts": [
+      13,
+      4,
+      0
+     ],
+     "adsMentioning": 17
+    },
+    {
+     "skillId": "communication",
+     "weight": 0.17532015462478637,
+     "tf": 1.0,
+     "idf": 1.0,
+     "requiredLevel": 1,
+     "levelCounts": [
+      16,
+      9,
+      0
+     ],
+     "adsMentioning": 25
+    },
+    {
+     "skillId": "problem_solving",
+     "weight": 0.13324331751483764,
+     "tf": 0.76,
+     "idf": 1.0,
+     "requiredLevel": 1,
+     "levelCounts": [
+      13,
+      6,
+      0
+     ],
+     "adsMentioning": 19
+    },
+    {
+     "skillId": "javascript_ts",
+     "weight": 0.04974014806147227,
+     "tf": 0.16,
+     "idf": 1.7731898882334818,
+     "requiredLevel": 2,
+     "levelCounts": [
+      2,
+      2,
+      0
+     ],
+     "adsMentioning": 4
+    }
+   ]
+  },
+  {
+   "id": "network_engineer",
+   "label": {
+    "en": "Network Engineer",
+    "si": "ජාල ඉංජිනේරු",
+    "ta": "வலையமைப்பு பொறியாளர்"
+   },
+   "adCount": 28,
+   "skills": [
+    {
+     "skillId": "networking",
+     "weight": 0.25999892939941716,
+     "tf": 0.9107142857142857,
+     "idf": 2.1786549963416464,
+     "requiredLevel": 1,
+     "levelCounts": [
+      14,
+      11,
+      1
+     ],
+     "adsMentioning": 26
+    },
+    {
+     "skillId": "security",
+     "weight": 0.20133809712445136,
+     "tf": 0.7857142857142857,
+     "idf": 1.9555114450274362,
+     "requiredLevel": 2,
+     "levelCounts": [
+      10,
+      12,
+      0
+     ],
+     "adsMentioning": 22
+    },
+    {
+     "skillId": "linux",
+     "weight": 0.15557943868707605,
+     "tf": 0.6071428571428571,
+     "idf": 1.9555114450274362,
+     "requiredLevel": 1,
+     "levelCounts": [
+      9,
+      7,
+      1
+     ],
+     "adsMentioning": 17
+    },
+    {
+     "skillId": "communication",
+     "weight": 0.13103911403888843,
+     "tf": 1.0,
+     "idf": 1.0,
+     "requiredLevel": 2,
+     "levelCounts": [
+      11,
+      17,
+      0
+     ],
+     "adsMentioning": 28
+    },
+    {
+     "skillId": "problem_solving",
+     "weight": 0.12635914568035672,
+     "tf": 0.9642857142857143,
+     "idf": 1.0,
+     "requiredLevel": 2,
+     "levelCounts": [
+      11,
+      16,
+      0
+     ],
+     "adsMentioning": 27
+    },
+    {
+     "skillId": "cloud",
+     "weight": 0.09092462719876061,
+     "tf": 0.42857142857142855,
+     "idf": 1.6190392084062235,
+     "requiredLevel": 2,
+     "levelCounts": [
+      6,
+      6,
+      0
+     ],
+     "adsMentioning": 12
+    },
+    {
+     "skillId": "databases_sql",
+     "weight": 0.03476064787104971,
+     "tf": 0.17857142857142858,
+     "idf": 1.4855078157817008,
+     "requiredLevel": 1,
+     "levelCounts": [
+      3,
+      2,
+      0
+     ],
+     "adsMentioning": 5
+    }
+   ]
+  },
+  {
+   "id": "cybersecurity_analyst",
+   "label": {
+    "en": "Cybersecurity Analyst",
+    "si": "සයිබර් ආරක්ෂණ විශ්ලේෂක",
+    "ta": "இணையப் பாதுகாப்பு பகுப்பாய்வாளர்"
+   },
+   "adCount": 10,
+   "skills": [
+    {
+     "skillId": "security",
+     "weight": 0.26760573158859674,
+     "tf": 1.0,
+     "idf": 1.9555114450274362,
+     "requiredLevel": 2,
+     "levelCounts": [
+      5,
+      4,
+      1
+     ],
+     "adsMentioning": 10
+    },
+    {
+     "skillId": "networking",
+     "weight": 0.17888534449369423,
+     "tf": 0.6,
+     "idf": 2.1786549963416464,
+     "requiredLevel": 2,
+     "levelCounts": [
+      3,
+      3,
+      0
+     ],
+     "adsMentioning": 6
+    },
+    {
+     "skillId": "communication",
+     "weight": 0.1368469268073459,
+     "tf": 1.0,
+     "idf": 1.0,
+     "requiredLevel": 2,
+     "levelCounts": [
+      5,
+      5,
+      0
+     ],
+     "adsMentioning": 10
+    },
+    {
+     "skillId": "cloud",
+     "weight": 0.1329363240305938,
+     "tf": 0.6,
+     "idf": 1.6190392084062235,
+     "requiredLevel": 1,
+     "levelCounts": [
+      5,
+      1,
+      0
+     ],
+     "adsMentioning": 6
+    },
+    {
+     "skillId": "problem_solving",
+     "weight": 0.1231622341266113,
+     "tf": 0.9,
+     "idf": 1.0,
+     "requiredLevel": 2,
+     "levelCounts": [
+      4,
+      5,
+      0
+     ],
+     "adsMentioning": 9
+    },
+    {
+     "skillId": "linux",
+     "weight": 0.08028171947657903,
+     "tf": 0.3,
+     "idf": 1.9555114450274362,
+     "requiredLevel": 1,
+     "levelCounts": [
+      2,
+      1,
+      0
+     ],
+     "adsMentioning": 3
+    },
+    {
+     "skillId": "business_analysis",
+     "weight": 0.08028171947657903,
+     "tf": 0.3,
+     "idf": 1.9555114450274362,
+     "requiredLevel": 2,
+     "levelCounts": [
+      1,
+      2,
+      0
+     ],
+     "adsMentioning": 3
+    }
+   ]
+  },
+  {
+   "id": "project_coordinator",
+   "label": {
+    "en": "IT Project Coordinator / Associate PM",
+    "si": "IT ව්‍යාපෘති සම්බන්ධීකාරක",
+    "ta": "IT திட்ட ஒருங்கிணைப்பாளர்"
+   },
+   "adCount": 19,
+   "skills": [
+    {
+     "skillId": "project_management",
+     "weight": 0.337813406731274,
+     "tf": 0.8947368421052632,
+     "idf": 2.466337068793427,
+     "requiredLevel": 2,
+     "levelCounts": [
+      8,
+      9,
+      0
+     ],
+     "adsMentioning": 17
+    },
+    {
+     "skillId": "business_analysis",
+     "weight": 0.25209014863483226,
+     "tf": 0.8421052631578947,
+     "idf": 1.9555114450274362,
+     "requiredLevel": 1,
+     "levelCounts": [
+      9,
+      7,
+      0
+     ],
+     "adsMentioning": 16
+    },
+    {
+     "skillId": "communication",
+     "weight": 0.15308376346509353,
+     "tf": 1.0,
+     "idf": 1.0,
+     "requiredLevel": 1,
+     "levelCounts": [
+      10,
+      9,
+      0
+     ],
+     "adsMentioning": 19
+    },
+    {
+     "skillId": "problem_solving",
+     "weight": 0.1127985625532268,
+     "tf": 0.7368421052631579,
+     "idf": 1.0,
+     "requiredLevel": 2,
+     "levelCounts": [
+      6,
+      8,
+      0
+     ],
+     "adsMentioning": 14
+    },
+    {
+     "skillId": "data_analysis",
+     "weight": 0.07899079882073892,
+     "tf": 0.23684210526315788,
+     "idf": 2.1786549963416464,
+     "requiredLevel": 2,
+     "levelCounts": [
+      3,
+      2,
+      0
+     ],
+     "adsMentioning": 5
+    },
+    {
+     "skillId": "agile",
+     "weight": 0.06522331979483437,
+     "tf": 0.2631578947368421,
+     "idf": 1.6190392084062235,
+     "requiredLevel": 2,
+     "levelCounts": [
+      2,
+      3,
+      0
+     ],
+     "adsMentioning": 5
+    }
+   ]
+  }
+ ],
+ "notes": [
+  "network_engineer includes IT-support ads (IT support / helpdesk titles) labelled as Network Engineer until IT Support has its own role; this can add support skills to the v2 network profile."
+ ]
+}
