@@ -141,6 +141,10 @@ export function listDemoMentorCareerInsights(input: MentorIdentity) {
     .map((item) => ({ ...item }));
 }
 
+export function listAllDemoMentorCareerInsights() {
+  return demoCareerInsights.map((item) => ({ ...item }));
+}
+
 export function addDemoMentorCareerInsight(
   input: Omit<DemoMentorCareerInsight, "_id" | "createdAt" | "updatedAt">
 ) {
@@ -181,6 +185,10 @@ export function listDemoMentorWebinars(input: MentorIdentity) {
     .filter((item) => belongsToMentor(item, input))
     .sort((a, b) => (a.scheduledAt < b.scheduledAt ? 1 : -1))
     .map((item) => ({ ...item }));
+}
+
+export function listAllDemoMentorWebinars() {
+  return demoWebinars.map((item) => ({ ...item }));
 }
 
 export function addDemoMentorWebinar(

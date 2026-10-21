@@ -164,7 +164,7 @@
     ]
   },
   "results": {
-    "ndcgBaseline": 0.435681,
+    "ndcgBaselineCapacityFiltered": 0.536407,
     "ndcgProposed": 0.859171,
     "overloadBaseline": 79,
     "overloadProposed": 0,

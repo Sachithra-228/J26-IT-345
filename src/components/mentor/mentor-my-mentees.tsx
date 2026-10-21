@@ -1,24 +1,14 @@
 ﻿"use client";
 
-import { useCallback, useEffect, useMemo, useState } from "react";
+import { useCallback, useEffect, useState } from "react";
 import { NotebookPen, Pencil, Trash2, Users } from "lucide-react";
 import { Card } from "@/components/shared/Card";
 import { Button } from "@/components/shared/Button";
 import { Input } from "@/components/shared/Input";
 import { TextArea } from "@/components/shared/text-area";
-import type { MentorshipSession } from "@/types";
-
-type EnrichedSession = MentorshipSession & {
-  menteeName?: string;
-  studentFirebaseUid?: string;
-};
-
-type MenteeSummary = {
-  studentId: string;
-  name: string;
-  activeSessions: number;
-  lastTopic?: string;
-};
+import { useAuth } from "@/context/auth-context";
+import { demoIdentityHeaders } from "@/lib/mentorship-session";
+import type { MenteeSummary } from "@/lib/mentor-mentees";
 
 type MenteeNote = {
   _id: string;
@@ -55,7 +45,10 @@ function formatDate(value?: string) {
 }
 
 export function MentorMyMenteesCrudSection() {
-  const [sessions, setSessions] = useState<EnrichedSession[]>([]);
+  const { user } = useAuth();
+  const demoHeaders = demoIdentityHeaders(user?._id);
+  const [mentees, setMentees] = useState<MenteeSummary[]>([]);
+  const [noteMentees, setNoteMentees] = useState<MenteeSummary[]>([]);
   const [notes, setNotes] = useState<MenteeNote[]>([]);
   const [loading, setLoading] = useState(true);
   const [loadingNotes, setLoadingNotes] = useState(true);
@@ -65,32 +58,25 @@ export function MentorMyMenteesCrudSection() {
   const [form, setForm] = useState<NoteFormState>(initialForm);
   const [feedback, setFeedback] = useState<{ type: "ok" | "err"; text: string } | null>(null);
 
-  const loadSessions = useCallback(async () => {
+  const loadMentees = useCallback(async () => {
     setLoading(true);
     try {
-      const response = await fetch("/api/mentorship-sessions", { cache: "no-store" });
-      const payload = (await response.json().catch(() => [])) as MentorshipSession[];
-      if (Array.isArray(payload)) {
-        setSessions(
-          payload.map((session) => ({
-            ...session,
-            menteeName: session.studentName
-          }))
-        );
-      } else {
-        setSessions([]);
-      }
+      const response = await fetch("/api/mentor/mentees?includeHistory=true", { cache: "no-store", headers: demoHeaders });
+      const payload = (await response.json().catch(() => ({}))) as { items?: MenteeSummary[]; activeItems?: MenteeSummary[] };
+      setMentees(response.ok && Array.isArray(payload.activeItems) ? payload.activeItems : []);
+      setNoteMentees(response.ok && Array.isArray(payload.items) ? payload.items : []);
     } catch {
-      setSessions([]);
+      setMentees([]);
+      setNoteMentees([]);
     } finally {
       setLoading(false);
     }
-  }, []);
+  }, [user?._id]);
 
   const loadNotes = useCallback(async () => {
     setLoadingNotes(true);
     try {
-      const response = await fetch("/api/mentor/mentee-notes", { cache: "no-store" });
+      const response = await fetch("/api/mentor/mentee-notes", { cache: "no-store", headers: demoHeaders });
       const payload = (await response.json().catch(() => ({}))) as { items?: MenteeNote[]; message?: string };
       if (!response.ok) {
         setFeedback({ type: "err", text: payload.message ?? "Unable to load mentee notes." });
@@ -104,36 +90,12 @@ export function MentorMyMenteesCrudSection() {
     } finally {
       setLoadingNotes(false);
     }
-  }, []);
+  }, [user?._id]);
 
   useEffect(() => {
-    loadSessions();
+    loadMentees();
     loadNotes();
-  }, [loadSessions, loadNotes]);
-
-  const mentees = useMemo<MenteeSummary[]>(() => {
-    const menteeMap = new Map<string, MenteeSummary>();
-    sessions.forEach((session) => {
-      const key = session.studentId || session.studentFirebaseUid || session.studentName || "";
-      if (!key) return;
-      const existing = menteeMap.get(key) ?? {
-        studentId: key,
-        name: session.studentName || "Student",
-        activeSessions: 0,
-        lastTopic: session.topic
-      };
-      const activeSessions =
-        existing.activeSessions +
-        (["scheduled", "confirmed", "completed"].includes(String(session.status).toLowerCase()) ? 1 : 0);
-      menteeMap.set(key, {
-        studentId: key,
-        name: session.studentName || existing.name,
-        activeSessions,
-        lastTopic: session.topic || existing.lastTopic
-      });
-    });
-    return [...menteeMap.values()];
-  }, [sessions]);
+  }, [loadMentees, loadNotes]);
 
   const resetForm = () => {
     setForm(initialForm);
@@ -150,7 +112,7 @@ export function MentorMyMenteesCrudSection() {
     try {
       const response = await fetch(editingId ? `/api/mentor/mentee-notes/${editingId}` : "/api/mentor/mentee-notes", {
         method: editingId ? "PATCH" : "POST",
-        headers: { "Content-Type": "application/json" },
+        headers: { "Content-Type": "application/json", ...demoHeaders },
         body: JSON.stringify(form)
       });
       const payload = (await response.json().catch(() => ({}))) as { message?: string };
@@ -172,7 +134,7 @@ export function MentorMyMenteesCrudSection() {
     setDeletingId(id);
     setFeedback(null);
     try {
-      const response = await fetch(`/api/mentor/mentee-notes/${id}`, { method: "DELETE" });
+      const response = await fetch(`/api/mentor/mentee-notes/${id}`, { method: "DELETE", headers: demoHeaders });
       const payload = (await response.json().catch(() => ({}))) as { message?: string };
       if (!response.ok) {
         setFeedback({ type: "err", text: payload.message ?? "Unable to delete note." });
@@ -200,7 +162,7 @@ export function MentorMyMenteesCrudSection() {
   };
 
   const onSelectMentee = (studentId: string) => {
-    const selected = mentees.find((mentee) => mentee.studentId === studentId);
+    const selected = noteMentees.find((mentee) => mentee.studentId === studentId);
     setForm((prev) => ({
       ...prev,
       studentId,
@@ -266,7 +228,7 @@ export function MentorMyMenteesCrudSection() {
             className="w-full rounded-xl border border-slate-200 bg-white px-3 py-2 text-sm text-slate-700 outline-none focus:border-primary dark:border-slate-700 dark:bg-slate-900 dark:text-slate-100"
           >
             <option value="">Select mentee</option>
-            {mentees.map((mentee) => (
+            {noteMentees.map((mentee) => (
               <option key={mentee.studentId} value={mentee.studentId}>
                 {mentee.name}
               </option>

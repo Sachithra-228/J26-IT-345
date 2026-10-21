@@ -21,6 +21,7 @@ import { MentorCareerInsightsCrudSection } from "./mentor-career-insights";
 import { MentorWebinarsCrudSection } from "./mentor-webinars";
 import { MentorImpactTrackerCrudSection } from "./mentor-impact-tracker";
 import type { MentorshipSession } from "@/types";
+import { demoIdentityHeaders, normalizeMentorshipStatus } from "@/lib/mentorship-session";
 
 type Notification = {
   id?: string;
@@ -38,6 +39,8 @@ type MentorSectionContentProps = {
 type EnrichedSession = MentorshipSession & {
   menteeName?: string;
 };
+
+type CurrentMenteeOption = { studentId: string; name: string };
 
 type MentorshipChatMessage = {
   _id?: string;
@@ -72,6 +75,13 @@ function formatMentorshipDate(value?: string | Date) {
   return date.toLocaleString();
 }
 
+function toDateTimeLocal(value?: string | Date) {
+  if (!value) return "";
+  const date = new Date(value);
+  if (!Number.isFinite(date.getTime())) return "";
+  return new Date(date.getTime() - date.getTimezoneOffset() * 60_000).toISOString().slice(0, 16);
+}
+
 export function MentorSectionContent({ sectionId }: MentorSectionContentProps) {
   const Section = useMemo(() => {
     switch (sectionId) {
@@ -100,19 +110,22 @@ export function MentorSectionContent({ sectionId }: MentorSectionContentProps) {
 }
 
 function useMentorSessions() {
+  const { user } = useAuth();
+  const demoHeaders = demoIdentityHeaders(user?._id);
   const [sessions, setSessions] = useState<EnrichedSession[]>([]);
   const [loading, setLoading] = useState(true);
 
   const refreshSessions = useCallback(() => {
     setLoading(true);
-    fetch("/api/mentorship-sessions")
+    fetch("/api/mentorship-sessions", { cache: "no-store", headers: demoHeaders })
       .then((r) => (r.ok ? r.json() : []))
       .then((data) => {
         if (Array.isArray(data)) {
           setSessions(
             data.map((s: MentorshipSession) => ({
               ...s,
-              menteeName: s.studentName
+              menteeName: s.studentName,
+              status: normalizeMentorshipStatus(s.status) as MentorshipSession["status"]
             }))
           );
         } else {
@@ -123,7 +136,7 @@ function useMentorSessions() {
         setSessions([]);
       })
       .finally(() => setLoading(false));
-  }, []);
+  }, [user?._id]);
 
   useEffect(() => {
     refreshSessions();
@@ -133,11 +146,13 @@ function useMentorSessions() {
 }
 
 function useMentorNotifications() {
+  const { user } = useAuth();
+  const demoHeaders = demoIdentityHeaders(user?._id);
   const [notifications, setNotifications] = useState<Notification[]>([]);
 
   useEffect(() => {
     let cancelled = false;
-    fetch("/api/notifications")
+    fetch("/api/notifications", { headers: demoHeaders })
       .then((r) => (r.ok ? r.json() : {}))
       .then((data) => {
         if (cancelled) return;
@@ -157,7 +172,7 @@ function useMentorNotifications() {
     return () => {
       cancelled = true;
     };
-  }, []);
+  }, [user?._id]);
 
   return notifications;
 }
@@ -307,29 +322,32 @@ function MentorMyMenteesSection() {
 }
 
 function MentorSessionsSection() {
+  const { user } = useAuth();
+  const demoHeaders = demoIdentityHeaders(user?._id);
   const { sessions, loading, refreshSessions } = useMentorSessions();
   const [updatingId, setUpdatingId] = useState<string | null>(null);
   const [actionError, setActionError] = useState<string | null>(null);
   const [creatingSession, setCreatingSession] = useState(false);
   const [newSessionStudentId, setNewSessionStudentId] = useState("");
+  const [currentMentees, setCurrentMentees] = useState<CurrentMenteeOption[]>([]);
   const [newSessionTopic, setNewSessionTopic] = useState("");
   const [newSessionTime, setNewSessionTime] = useState("");
+  const [schedulingSessionId, setSchedulingSessionId] = useState<string | null>(null);
+  const [scheduledDateTime, setScheduledDateTime] = useState("");
 
-  const upcoming = sessions.filter(
-    (s) => s.status === "scheduled" || s.status === "confirmed" || s.status === "pending"
-  );
-  const history = sessions.filter((s) => s.status === "completed" || s.status === "cancelled");
-  const menteeOptions = useMemo(() => {
-    const map = new Map<string, string>();
-    sessions.forEach((session) => {
-      const key = session.studentId || session.studentName;
-      if (!key) return;
-      if (!map.has(key)) {
-        map.set(key, session.studentName || "Student");
-      }
-    });
-    return [...map.entries()].map(([id, name]) => ({ id, name }));
-  }, [sessions]);
+  const upcoming = sessions.filter((s) => ["scheduled", "confirmed", "pending"].includes(normalizeMentorshipStatus(s.status)));
+  const history = sessions.filter((s) => ["completed", "cancelled"].includes(normalizeMentorshipStatus(s.status)));
+
+  const refreshCurrentMentees = useCallback(() => {
+    fetch("/api/mentor/mentees?includeHistory=true", { cache: "no-store", headers: demoHeaders })
+      .then((response) => (response.ok ? response.json() : { items: [] }))
+      .then((payload) => setCurrentMentees(Array.isArray(payload.items) ? payload.items : []))
+      .catch(() => setCurrentMentees([]));
+  }, [user?._id]);
+
+  useEffect(() => {
+    refreshCurrentMentees();
+  }, [refreshCurrentMentees]);
 
   const updateSessionStatus = async (sessionId: string, status: "confirmed" | "completed" | "cancelled") => {
     setUpdatingId(`${sessionId}:${status}`);
@@ -337,7 +355,7 @@ function MentorSessionsSection() {
     try {
       const response = await fetch(`/api/mentorship-sessions/${sessionId}`, {
         method: "PATCH",
-        headers: { "Content-Type": "application/json" },
+        headers: { "Content-Type": "application/json", ...demoHeaders },
         body: JSON.stringify({ status })
       });
       const body = await response.json().catch(() => ({} as { message?: string }));
@@ -346,8 +364,43 @@ function MentorSessionsSection() {
         return;
       }
       refreshSessions();
+      refreshCurrentMentees();
     } catch {
       setActionError("Unable to update session status.");
+    } finally {
+      setUpdatingId(null);
+    }
+  };
+
+  const scheduleExistingSession = async () => {
+    if (!schedulingSessionId || !scheduledDateTime) {
+      setActionError("Select a date and time before saving the session.");
+      return;
+    }
+    const parsedDate = new Date(scheduledDateTime);
+    if (!Number.isFinite(parsedDate.getTime()) || parsedDate.getTime() <= Date.now()) {
+      setActionError("Choose a valid future date and time.");
+      return;
+    }
+
+    setUpdatingId(`${schedulingSessionId}:scheduled`);
+    setActionError(null);
+    try {
+      const response = await fetch(`/api/mentorship-sessions/${schedulingSessionId}`, {
+        method: "PATCH",
+        headers: { "Content-Type": "application/json", ...demoHeaders },
+        body: JSON.stringify({ status: "scheduled", scheduledTime: parsedDate.toISOString() })
+      });
+      const body = await response.json().catch(() => ({} as { message?: string }));
+      if (!response.ok) {
+        setActionError(body.message ?? "Unable to schedule session.");
+        return;
+      }
+      setSchedulingSessionId(null);
+      setScheduledDateTime("");
+      refreshSessions();
+    } catch {
+      setActionError("Unable to schedule session.");
     } finally {
       setUpdatingId(null);
     }
@@ -364,7 +417,7 @@ function MentorSessionsSection() {
     try {
       const response = await fetch("/api/mentorship-sessions", {
         method: "POST",
-        headers: { "Content-Type": "application/json" },
+        headers: { "Content-Type": "application/json", ...demoHeaders },
         body: JSON.stringify({
           studentId: newSessionStudentId,
           topic: newSessionTopic.trim(),
@@ -402,8 +455,8 @@ function MentorSessionsSection() {
             className="w-full rounded-xl border border-slate-200 bg-white px-3 py-2 text-sm text-slate-700 outline-none focus:border-primary dark:border-slate-700 dark:bg-slate-900 dark:text-slate-100"
           >
             <option value="">Select mentee</option>
-            {menteeOptions.map((mentee) => (
-              <option key={mentee.id} value={mentee.id}>
+            {currentMentees.map((mentee) => (
+              <option key={mentee.studentId} value={mentee.studentId}>
                 {mentee.name}
               </option>
             ))}
@@ -427,7 +480,7 @@ function MentorSessionsSection() {
       </Card>
       <div className="grid gap-4 md:grid-cols-2">
         <Card className="space-y-3 p-4">
-          <h3 className="text-sm font-semibold">Upcoming & pending</h3>
+          <h3 className="text-sm font-semibold">Active & pending</h3>
           {actionError ? <p className="text-xs text-rose-600 dark:text-rose-400">{actionError}</p> : null}
           <div className="space-y-2 text-sm">
             {loading ? (
@@ -448,6 +501,42 @@ function MentorSessionsSection() {
                   </p>
                   <p className="text-xs text-slate-500">Status: {s.status}</p>
                   {s.scheduledTime && <p className="text-xs text-slate-500">Time: {new Date(s.scheduledTime).toLocaleString()}</p>}
+                  {(s.status === "confirmed" || s.status === "scheduled") && (
+                    <div className="mt-2">
+                      {schedulingSessionId === s._id ? (
+                        <div className="flex flex-wrap items-center gap-2">
+                          <Input
+                            type="datetime-local"
+                            value={scheduledDateTime}
+                            onChange={(event) => setScheduledDateTime(event.target.value)}
+                            aria-label={`Schedule ${s.topic}`}
+                          />
+                          <Button
+                            variant="primary"
+                            disabled={updatingId !== null}
+                            onClick={scheduleExistingSession}
+                          >
+                            {updatingId === `${s._id}:scheduled` ? "Saving..." : "Save date & time"}
+                          </Button>
+                          <Button
+                            variant="ghost"
+                            disabled={updatingId !== null}
+                            onClick={() => { setSchedulingSessionId(null); setScheduledDateTime(""); }}
+                          >
+                            Cancel
+                          </Button>
+                        </div>
+                      ) : (
+                        <Button
+                          variant="secondary"
+                          disabled={updatingId !== null}
+                          onClick={() => { setSchedulingSessionId(s._id); setScheduledDateTime(toDateTimeLocal(s.scheduledTime)); }}
+                        >
+                          {s.scheduledTime ? "Change date & time" : "Set date & time"}
+                        </Button>
+                      )}
+                    </div>
+                  )}
                   <div className="mt-2 flex flex-wrap gap-2">
                     {s.status === "pending" && (
                       <>
@@ -468,16 +557,6 @@ function MentorSessionsSection() {
                           {updatingId === `${s._id}:cancelled` ? "Updating..." : "Reject request"}
                         </button>
                       </>
-                    )}
-                    {(s.status === "confirmed" || s.status === "scheduled") && (
-                      <button
-                        type="button"
-                        className="rounded-full bg-primary px-3 py-1 text-xs font-medium text-white hover:bg-primary/90 disabled:cursor-not-allowed disabled:opacity-60"
-                        disabled={updatingId !== null}
-                        onClick={() => updateSessionStatus(s._id, "completed")}
-                      >
-                        {updatingId === `${s._id}:completed` ? "Updating..." : "Mark completed"}
-                      </button>
                     )}
                   </div>
                 </div>
@@ -510,6 +589,8 @@ function MentorSessionsSection() {
                 {s.feedback && (
                   <p className="text-xs text-slate-500">Feedback: {s.feedback}</p>
                 )}
+                <p className="text-xs text-slate-500">Status: {normalizeMentorshipStatus(s.status)}</p>
+                {s.scheduledTime && <p className="text-xs text-slate-500">Time: {formatMentorshipDate(s.scheduledTime)}</p>}
                 {typeof s.rating === "number" && (
                   <p className="text-xs text-slate-500">Student rating: {s.rating}/5</p>
                 )}
@@ -532,6 +613,8 @@ function MentorSessionsSection() {
 }
 
 function MentorMessagesSection() {
+  const { user } = useAuth();
+  const demoHeaders = demoIdentityHeaders(user?._id);
   const { sessions, loading, refreshSessions } = useMentorSessions();
   const [selectedSessionId, setSelectedSessionId] = useState<string | null>(null);
   const [updatingId, setUpdatingId] = useState<string | null>(null);
@@ -539,13 +622,14 @@ function MentorMessagesSection() {
   const [loadingMessages, setLoadingMessages] = useState(false);
   const [messageDraft, setMessageDraft] = useState("");
   const [sendingMessage, setSendingMessage] = useState(false);
+  const [deletingMessageId, setDeletingMessageId] = useState<string | null>(null);
   const [actionError, setActionError] = useState<string | null>(null);
 
   const sortedSessions = useMemo(
     () =>
       [...sessions].sort((a, b) => {
-        const left = new Date(String(a.updatedAt ?? a.createdAt ?? "")).getTime();
-        const right = new Date(String(b.updatedAt ?? b.createdAt ?? "")).getTime();
+        const left = new Date(String(a.lastMessageAt ?? a.updatedAt ?? a.createdAt ?? "")).getTime();
+        const right = new Date(String(b.lastMessageAt ?? b.updatedAt ?? b.createdAt ?? "")).getTime();
         return right - left;
       }),
     [sessions]
@@ -569,7 +653,7 @@ function MentorMessagesSection() {
   const fetchMessages = useCallback(async (sessionId: string) => {
     setLoadingMessages(true);
     try {
-      const response = await fetch(`/api/mentorship-messages?sessionId=${encodeURIComponent(sessionId)}`);
+      const response = await fetch(`/api/mentorship-messages?sessionId=${encodeURIComponent(sessionId)}`, { headers: demoHeaders });
       const data = await response.json().catch(() => [] as MentorshipChatMessage[]);
       setMessages(Array.isArray(data) ? data : []);
     } catch {
@@ -577,7 +661,7 @@ function MentorMessagesSection() {
     } finally {
       setLoadingMessages(false);
     }
-  }, []);
+  }, [user?._id]);
 
   useEffect(() => {
     if (!selectedSessionId && sortedSessions.length) {
@@ -629,7 +713,7 @@ function MentorMessagesSection() {
     try {
       const response = await fetch(`/api/mentorship-sessions/${sessionId}`, {
         method: "PATCH",
-        headers: { "Content-Type": "application/json" },
+        headers: { "Content-Type": "application/json", ...demoHeaders },
         body: JSON.stringify({ status })
       });
       const body = await response.json().catch(() => ({} as { message?: string }));
@@ -657,7 +741,7 @@ function MentorMessagesSection() {
     try {
       const response = await fetch("/api/mentorship-messages", {
         method: "POST",
-        headers: { "Content-Type": "application/json" },
+        headers: { "Content-Type": "application/json", ...demoHeaders },
         body: JSON.stringify({
           sessionId: selectedSession._id,
           text: messageDraft.trim()
@@ -675,6 +759,29 @@ function MentorMessagesSection() {
       setActionError("Unable to send message.");
     } finally {
       setSendingMessage(false);
+    }
+  };
+
+  const deleteMessage = async (messageId?: string) => {
+    if (!selectedSession?._id || !messageId) return;
+    setDeletingMessageId(messageId);
+    setActionError(null);
+    try {
+      const response = await fetch("/api/mentorship-messages", {
+        method: "DELETE",
+        headers: { "Content-Type": "application/json", ...demoHeaders },
+        body: JSON.stringify({ sessionId: selectedSession._id, messageId })
+      });
+      const body = await response.json().catch(() => ({} as { message?: string }));
+      if (!response.ok) {
+        setActionError(body.message ?? "Unable to delete message.");
+        return;
+      }
+      setMessages((current) => current.filter((message) => message._id !== messageId));
+    } catch {
+      setActionError("Unable to delete message.");
+    } finally {
+      setDeletingMessageId(null);
     }
   };
 
@@ -760,6 +867,11 @@ function MentorMessagesSection() {
                       <Badge variant={mentorshipStatusVariant(session.status)}>{session.status || "pending"}</Badge>
                     </div>
                     <p className="mt-1 line-clamp-1 text-xs text-slate-500">{session.topic}</p>
+                    {session.lastMessageAt ? (
+                      <p className="mt-1 text-[11px] text-slate-400">
+                        Last message: {formatMentorshipDate(session.lastMessageAt)}
+                      </p>
+                    ) : null}
                   </button>
                 ))
               ) : (
@@ -845,6 +957,16 @@ function MentorMessagesSection() {
                               <p className={`mt-1 text-[11px] ${mine ? "text-white/80" : "text-slate-400"}`}>
                                 {formatMentorshipDate(message.createdAt)}
                               </p>
+                              {mine && message._id ? (
+                                <button
+                                  type="button"
+                                  className="mt-1 text-[11px] text-white/80 underline"
+                                  disabled={deletingMessageId === message._id}
+                                  onClick={() => deleteMessage(message._id)}
+                                >
+                                  {deletingMessageId === message._id ? "Deleting..." : "Delete"}
+                                </button>
+                              ) : null}
                             </div>
                           </div>
                         );

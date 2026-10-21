@@ -195,6 +195,15 @@ def main() -> None:
                 "lambda_max": r6(matcher.LAMBDA_MAX), "consistency_ratio": r6(matcher.CONSISTENCY_RATIO),
                 "note": "Provisional pairwise judgements drafted by the research team; validate with SLIIT mentors."},
         "ranking": ranking,
+        "ranking_comparison": {
+            "baseline": "baseline_skill_cosine_capacity_filter",
+            "proposed": "proposed_ahp_multi_criteria",
+            "students": len(students),
+            "mentors": len(mentors),
+            "seed": SEED,
+            "relevance_labels": "same simulated expert relevance labels for both methods",
+            "eligible_mentors": "load < capacity for both methods",
+        },
         "assignment": assignment,
         "labels": "Simulated expert relevance (hidden world with its own weights, non-linear skill term, language penalty and noise).",
     }
@@ -217,7 +226,7 @@ def main() -> None:
             "slots": [{"id": i, "label": l} for i, l in SLOTS],
         },
         "results": {
-            "ndcgBaseline": ranking["baseline_skill_cosine"][f"ndcg_at_{K_NDCG}"],
+            "ndcgBaselineCapacityFiltered": ranking["baseline_skill_cosine_capacity_filter"][f"ndcg_at_{K_NDCG}"],
             "ndcgProposed": ranking["proposed_ahp_multi_criteria"][f"ndcg_at_{K_NDCG}"],
             "overloadBaseline": assignment["baseline_top_skill_mentor"]["students_beyond_capacity"],
             "overloadProposed": assignment["optimal_capacity_aware_hungarian"]["students_beyond_capacity"],

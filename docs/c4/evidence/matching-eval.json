@@ -132,6 +132,15 @@
       ]
     }
   },
+  "ranking_comparison": {
+    "baseline": "baseline_skill_cosine_capacity_filter",
+    "proposed": "proposed_ahp_multi_criteria",
+    "students": 480,
+    "mentors": 60,
+    "seed": 42,
+    "relevance_labels": "same simulated expert relevance labels for both methods",
+    "eligible_mentors": "load < capacity for both methods"
+  },
   "assignment": {
     "baseline_top_skill_mentor": {
       "students_assigned": 150,
