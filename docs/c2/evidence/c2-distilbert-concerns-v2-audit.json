@@ -1,0 +1,36 @@
+{
+  "runId": "c2-distilbert-concerns-v2",
+  "allPassed": true,
+  "auditOnlyNoTraining": true,
+  "checkpointSha256": "45192ec0b5f3b46aac991d5db619e3984333ec313bc9d5a8c3a2967a292f4025",
+  "weightAudit": {
+    "frozenBackboneTensorsUnchanged": 68,
+    "trainableBackboneTensorsChanged": 32,
+    "trainableBackboneTensorCount": 32,
+    "newHeadTensors": 4,
+    "baseSha256": "5e3f1108e3cb34ee048634875d8482665b65ac713291a7e32396fb18f6ff0063"
+  },
+  "checks": [
+    "Training/generator/shared-script hashes match",
+    "Dataset hashes/counts match",
+    "Exact texts and declared wording families disjoint",
+    "Confusion denominators and F1 reconcile",
+    "Selected checkpoint matches development choice",
+    "All frozen tensors unchanged; all trainable backbone tensors changed"
+  ],
+  "lengthAudit": {
+    "train": {
+      "maximum": 80,
+      "rowsOverLimit": 0
+    },
+    "dev": {
+      "maximum": 83,
+      "rowsOverLimit": 0
+    },
+    "test": {
+      "maximum": 81,
+      "rowsOverLimit": 0
+    }
+  },
+  "limitation": "Software/data audit only; artificial wording families are not independent participant data."
+}

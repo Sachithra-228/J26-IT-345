@@ -1,0 +1,40 @@
+{
+  "date": "2026-10-20",
+  "planningVersion": "c2-topic-plan-v2",
+  "modelRunId": "c2-distilbert-concerns-v2",
+  "newTrainingPerformed": false,
+  "modelWeightsChanged": false,
+  "tests": {
+    "suites": 18,
+    "passed": 289
+  },
+  "typeScript": "passed",
+  "targetedEslint": "passed",
+  "browser": {
+    "freshModelInference": true,
+    "suggestedTopics": [
+      "study",
+      "worry"
+    ],
+    "phq9": 13,
+    "gad7": 13,
+    "followupCount": 6,
+    "suggestedActivities": [
+      "workload",
+      "worry-step",
+      "pause"
+    ],
+    "sourceLabels": "DistilBERT-informed suggestion on workload/worry; general third option",
+    "startSuggestedActivity": "passed",
+    "replaceWithWindDown": "passed; Chosen by you",
+    "restoreSuggestions": "passed"
+  },
+  "sourceHashes": {
+    "src/lib/c2/assessment.ts": "51dbbd4c3d1d6d4d7e529ebe2130891733e1c27daf50fdf973df0cf4a4ecca54",
+    "src/lib/c2/concern-routing.ts": "48a5127af802e5f19452a4febf6dcf238f3fa7b75c727aaae24da3ce90c221cb",
+    "src/lib/c2/support.ts": "c1080de86e443a7ce477a3a591082b9af02e3ad9561c9cf791af45e50aa83d28",
+    "src/lib/c2/wellness-plan.ts": "d683c0bc0c420fa4df7d6ecd35ebe848bcff49bee03b6706a2a2c2eb6f98f8a3"
+  },
+  "clinicalEffectivenessEvaluated": false,
+  "gitPushed": false
+}

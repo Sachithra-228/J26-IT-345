@@ -1,0 +1,80 @@
+{
+  "date": "2026-10-19",
+  "timezone": "Asia/Colombo",
+  "baseCommit": "59672f1c129043ddd8d87fa3c685b027c5afe86f",
+  "branch": "research/c2-wellness",
+  "workingTreeChanges": true,
+  "modelVersion": "c2-support-synthetic-v1",
+  "modelSha256": "6e4897ff10a313d671e3c4624deca98153e6352ef09b1248afac322ec21c50bf",
+  "software": {
+    "jestSuites": 34,
+    "jestTests": 730,
+    "c2Suites": 10,
+    "c2Tests": 180,
+    "pythonAuditTests": 5,
+    "typecheck": "passed",
+    "changedApplicationFilesLint": "passed without warnings",
+    "pythonBrowserReferenceProbes": 48,
+    "adaptiveReplayReferenceCases": 24,
+    "referenceScoreTolerance": 1e-07,
+    "identicalArtifactOnRepeatedFrozenTraining": true
+  },
+  "browser": {
+    "researchRoute": "/wellness/research",
+    "frozenTestCasesSelectable": 300,
+    "databaseDemoProfilesLoaded": 8,
+    "combinedPreferenceFilter": {
+      "gender": "female",
+      "language": "si",
+      "profession": "psychologist",
+      "matches": 1,
+      "selectedDemoId": "c2-research-03"
+    },
+    "realBookingFormInResearchCatalog": false,
+    "mainCheckIn": {
+      "optIn": "model-assisted",
+      "phq9SoftwareFixtureTotal": 11,
+      "gad7SoftwareFixtureTotal": 7,
+      "contextPath": [
+        "impact",
+        "duration",
+        "goal",
+        "sleep",
+        "connection",
+        "study"
+      ],
+      "resultCategory": "routine-follow-up",
+      "source": "Invented software fixture, not participant evidence"
+    },
+    "sourceCodeVisible": true
+  },
+  "database": {
+    "sourceType": "synthetic",
+    "collection": "c2_research_professionals",
+    "verifiedRecords": 8,
+    "professions": {
+      "counselor": 3,
+      "psychologist": 3,
+      "psychiatrist": 2
+    },
+    "languageCoverage": {
+      "en": 8,
+      "si": 4,
+      "ta": 5
+    },
+    "realCounselorCollectionChanged": false,
+    "bookingsCreated": 0,
+    "notificationsSent": 0
+  },
+  "evidenceImages": [
+    "synthetic-support-result.png",
+    "synthetic-professional-match.png"
+  ],
+  "boundaries": [
+    "Simulation-label performance only; no clinical accuracy or diagnosis claim.",
+    "No new real appointments, messages or staff notifications.",
+    "Existing university counselor records unchanged by scoped research seed.",
+    "No deployment or Git push of this increment.",
+    "No trained facial model, generative chatbot or independently validated clinical referral model."
+  ]
+}

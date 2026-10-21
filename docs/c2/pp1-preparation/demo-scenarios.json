@@ -1,0 +1,638 @@
+{
+  "sourceType": "synthetic-rehearsal-inputs",
+  "date": "2026-10-20",
+  "execution": "Local exported ONNX via Python CPU; not a new browser run or new training",
+  "onnxSha256": "dcc8e5a5f0938db61d07d709f725b8878a724c18b7752c313a6d84c4f0bf69c7",
+  "scenarios": [
+    {
+      "id": "study-worry",
+      "text": "I keep worrying about my exams and deadlines. I struggle to plan my study workload and I feel overwhelmed by assignments.",
+      "confirmedTopics": [
+        "study",
+        "worry"
+      ],
+      "phq9": [
+        2,
+        2,
+        2,
+        2,
+        1,
+        2,
+        2,
+        0,
+        0
+      ],
+      "gad7": [
+        2,
+        2,
+        2,
+        2,
+        1,
+        2,
+        2
+      ],
+      "prediction": {
+        "runId": "c2-distilbert-concerns-v2",
+        "checkpointSha256": "45192ec0b5f3b46aac991d5db619e3984333ec313bc9d5a8c3a2967a292f4025",
+        "threshold": 0.25,
+        "tokenCount": 27,
+        "inputIds": [
+          101,
+          1045,
+          2562,
+          15366,
+          2055,
+          2026,
+          13869,
+          1998,
+          15117,
+          2015,
+          1012,
+          1045,
+          5998,
+          2000,
+          2933,
+          2026,
+          2817,
+          2147,
+          11066,
+          1998,
+          1045,
+          2514,
+          13394,
+          2011,
+          14799,
+          1012,
+          102
+        ],
+        "scores": [
+          {
+            "topic": "study",
+            "score": 0.9999997615814209,
+            "selected": true
+          },
+          {
+            "topic": "worry",
+            "score": 0.6014976501464844,
+            "selected": true
+          },
+          {
+            "topic": "stress",
+            "score": 0.08221608400344849,
+            "selected": false
+          },
+          {
+            "topic": "sleep",
+            "score": 0.008727775886654854,
+            "selected": false
+          },
+          {
+            "topic": "panic",
+            "score": 0.007749100215733051,
+            "selected": false
+          },
+          {
+            "topic": "low-mood",
+            "score": 0.006242862902581692,
+            "selected": false
+          },
+          {
+            "topic": "anger",
+            "score": 0.002682893769815564,
+            "selected": false
+          },
+          {
+            "topic": "eating",
+            "score": 0.002481674775481224,
+            "selected": false
+          },
+          {
+            "topic": "practical",
+            "score": 0.0019119131611660123,
+            "selected": false
+          },
+          {
+            "topic": "relationships",
+            "score": 0.0012563258642330766,
+            "selected": false
+          },
+          {
+            "topic": "connection",
+            "score": 0.00111925951205194,
+            "selected": false
+          },
+          {
+            "topic": "trauma",
+            "score": 0.0006037261337041855,
+            "selected": false
+          },
+          {
+            "topic": "substance-use",
+            "score": 0.000587115588132292,
+            "selected": false
+          },
+          {
+            "topic": "grief",
+            "score": 0.000546923081856221,
+            "selected": false
+          },
+          {
+            "topic": "self-esteem",
+            "score": 0.0003393412916921079,
+            "selected": false
+          }
+        ]
+      },
+      "questionPath": [
+        {
+          "id": "study",
+          "text": "How are your current concerns affecting your study routine?",
+          "options": [
+            "My routine feels manageable",
+            "Starting tasks is difficult",
+            "I am missing study commitments",
+            "I would like help planning my workload",
+            "No current study concern"
+          ],
+          "reason": "Study & exam pressure was a topic you chose. The text model helped rank this topic.",
+          "answer": "I would like help planning my workload"
+        },
+        {
+          "id": "study-workload",
+          "text": "Which part of planning your workload needs the most support?",
+          "options": [
+            "Choosing priorities",
+            "Breaking down assignments",
+            "Estimating time",
+            "Making space for rest"
+          ],
+          "reason": "Your earlier answer “I would like help planning my workload” led to this more specific question.",
+          "answer": "Choosing priorities"
+        },
+        {
+          "id": "worry",
+          "text": "Which area is most connected to your worry right now?",
+          "options": [
+            "Study or exams",
+            "Money or practical problems",
+            "Relationships",
+            "Several things",
+            "No current worry concern"
+          ],
+          "reason": "Worry & anxiety was a topic you chose. The text model helped rank this topic.",
+          "answer": "Study or exams"
+        },
+        {
+          "id": "worry-study",
+          "text": "Which university situation brings the most worry?",
+          "options": [
+            "An approaching exam",
+            "Assignment deadlines",
+            "Presenting or speaking",
+            "Uncertainty about performance"
+          ],
+          "reason": "Your earlier answer “Study or exams” led to this more specific question.",
+          "answer": "An approaching exam"
+        },
+        {
+          "id": "impact",
+          "text": "How much are these concerns getting in the way of your day?",
+          "options": [
+            "Not difficult at all",
+            "Somewhat difficult",
+            "Very difficult",
+            "Extremely difficult"
+          ],
+          "reason": "This asks how your concerns affect day-to-day life; it does not change your screening scores.",
+          "answer": "Somewhat difficult"
+        },
+        {
+          "id": "goal",
+          "text": "What would feel most useful to you today?",
+          "options": [
+            "Practical coping ideas",
+            "Talk to a professional",
+            "Connect with other students",
+            "Understand my answers"
+          ],
+          "reason": "Your preferred next step helps shape support suggestions.",
+          "answer": "Practical coping ideas"
+        }
+      ],
+      "screening": {
+        "phq9": {
+          "answered": 9,
+          "total": 13,
+          "maximum": 27,
+          "band": "Moderate",
+          "missing": []
+        },
+        "gad7": {
+          "answered": 7,
+          "total": 13,
+          "maximum": 21,
+          "band": "Moderate",
+          "missing": []
+        }
+      },
+      "plan": [
+        {
+          "activityId": "workload",
+          "reason": "You chose study & exam pressure as a support topic. DistilBERT helped prioritise this confirmed topic. You mentioned “I would like help planning my workload”. You also chose “Choosing priorities”.",
+          "basis": "model-topics",
+          "title": "Make room in your workload"
+        },
+        {
+          "activityId": "worry-step",
+          "reason": "You chose worry & anxiety as a support topic. DistilBERT helped prioritise this confirmed topic. You mentioned “Study or exams”. You also chose “An approaching exam”.",
+          "basis": "model-topics",
+          "title": "Find a next step for a worry"
+        },
+        {
+          "activityId": "pause",
+          "basis": "general",
+          "reason": "Another option you can keep, replace or leave for later.",
+          "title": "Pause and notice"
+        }
+      ],
+      "rankedSampleProfiles": [
+        {
+          "name": "Nethmi Perera",
+          "rank": 3.2029948234558105,
+          "reasons": [
+            "Listed support area: Study & exam pressure",
+            "Listed support area: Worry & anxiety"
+          ]
+        },
+        {
+          "name": "Anjali Sivakumar",
+          "rank": 1.9999995231628418,
+          "reasons": [
+            "Listed support area: Study & exam pressure"
+          ]
+        },
+        {
+          "name": "Kasun Jayasinghe",
+          "rank": 1.9999995231628418,
+          "reasons": [
+            "Listed support area: Study & exam pressure"
+          ]
+        },
+        {
+          "name": "Kiran Fernando",
+          "rank": 1.9999995231628418,
+          "reasons": [
+            "Listed support area: Study & exam pressure"
+          ]
+        },
+        {
+          "name": "Aravind Sivarajan",
+          "rank": 1.2029953002929688,
+          "reasons": [
+            "Listed support area: Worry & anxiety"
+          ]
+        },
+        {
+          "name": "Ishani Wijesekara",
+          "rank": 1.2029953002929688,
+          "reasons": [
+            "Listed support area: Worry & anxiety"
+          ]
+        },
+        {
+          "name": "Tharushi Senanayake",
+          "rank": 1.2029953002929688,
+          "reasons": [
+            "Listed support area: Worry & anxiety"
+          ]
+        },
+        {
+          "name": "Dinesh Karunaratne",
+          "rank": 0,
+          "reasons": [
+            "No listed support-area overlap with your current topics."
+          ]
+        }
+      ],
+      "branchComparison": {
+        "from": "study-workload",
+        "to": "study-starting"
+      }
+    },
+    {
+      "id": "grief-confidence",
+      "text": "I am grieving the death of someone close to me and I keep criticising myself.",
+      "confirmedTopics": [
+        "self-esteem",
+        "grief"
+      ],
+      "phq9": [
+        1,
+        2,
+        1,
+        1,
+        0,
+        2,
+        1,
+        0,
+        0
+      ],
+      "gad7": [
+        1,
+        1,
+        0,
+        1,
+        0,
+        1,
+        0
+      ],
+      "prediction": {
+        "runId": "c2-distilbert-concerns-v2",
+        "checkpointSha256": "45192ec0b5f3b46aac991d5db619e3984333ec313bc9d5a8c3a2967a292f4025",
+        "threshold": 0.25,
+        "tokenCount": 20,
+        "inputIds": [
+          101,
+          1045,
+          2572,
+          24665,
+          25587,
+          1996,
+          2331,
+          1997,
+          2619,
+          2485,
+          2000,
+          2033,
+          1998,
+          1045,
+          2562,
+          6232,
+          9355,
+          2870,
+          1012,
+          102
+        ],
+        "scores": [
+          {
+            "topic": "self-esteem",
+            "score": 0.9753632545471191,
+            "selected": true
+          },
+          {
+            "topic": "grief",
+            "score": 0.973645031452179,
+            "selected": true
+          },
+          {
+            "topic": "anger",
+            "score": 0.18868781626224518,
+            "selected": false
+          },
+          {
+            "topic": "low-mood",
+            "score": 0.010915005579590797,
+            "selected": false
+          },
+          {
+            "topic": "study",
+            "score": 0.009133539162576199,
+            "selected": false
+          },
+          {
+            "topic": "substance-use",
+            "score": 0.007760294713079929,
+            "selected": false
+          },
+          {
+            "topic": "connection",
+            "score": 0.005121984053403139,
+            "selected": false
+          },
+          {
+            "topic": "relationships",
+            "score": 0.0023439887445420027,
+            "selected": false
+          },
+          {
+            "topic": "sleep",
+            "score": 0.0006997542222961783,
+            "selected": false
+          },
+          {
+            "topic": "practical",
+            "score": 0.0004470984567888081,
+            "selected": false
+          },
+          {
+            "topic": "eating",
+            "score": 0.00020466570276767015,
+            "selected": false
+          },
+          {
+            "topic": "trauma",
+            "score": 0.00020441880042199045,
+            "selected": false
+          },
+          {
+            "topic": "worry",
+            "score": 0.0001350272650597617,
+            "selected": false
+          },
+          {
+            "topic": "stress",
+            "score": 1.0220137482974678e-05,
+            "selected": false
+          },
+          {
+            "topic": "panic",
+            "score": 9.65142680797726e-06,
+            "selected": false
+          }
+        ]
+      },
+      "questionPath": [
+        {
+          "id": "self-esteem",
+          "text": "Which confidence or self-esteem concern feels most relevant?",
+          "options": [
+            "Harsh self-criticism",
+            "Comparing myself with others",
+            "Doubting my abilities",
+            "Difficulty recognising strengths",
+            "No current self esteem concern"
+          ],
+          "reason": "Self-esteem & confidence was a topic you chose. The text model helped rank this topic.",
+          "answer": "Harsh self-criticism"
+        },
+        {
+          "id": "grief",
+          "text": "Which part of grief or loss would you like support with?",
+          "options": [
+            "Missing someone",
+            "Changes to daily routines",
+            "Talking about the loss",
+            "Anniversaries or reminders",
+            "No current grief concern"
+          ],
+          "reason": "Grief & loss was a topic you chose. The text model helped rank this topic.",
+          "answer": "Missing someone"
+        },
+        {
+          "id": "self-esteem-detail-1",
+          "text": "When self-criticism starts, what would you like help noticing?",
+          "options": [
+            "The words I use",
+            "The situation that triggered it",
+            "What I would say to a friend",
+            "A balanced alternative"
+          ],
+          "reason": "Your earlier answer “Harsh self-criticism” led to this more specific question.",
+          "answer": "A balanced alternative"
+        },
+        {
+          "id": "grief-detail-1",
+          "text": "What kind of company would feel welcome when missing someone?",
+          "options": [
+            "Quiet company",
+            "Someone listening",
+            "A shared activity",
+            "Space with support available"
+          ],
+          "reason": "Your earlier answer “Missing someone” led to this more specific question.",
+          "answer": "Someone listening"
+        },
+        {
+          "id": "impact",
+          "text": "How much are these concerns getting in the way of your day?",
+          "options": [
+            "Not difficult at all",
+            "Somewhat difficult",
+            "Very difficult",
+            "Extremely difficult"
+          ],
+          "reason": "This asks how your concerns affect day-to-day life; it does not change your screening scores.",
+          "answer": "Somewhat difficult"
+        },
+        {
+          "id": "goal",
+          "text": "What would feel most useful to you today?",
+          "options": [
+            "Practical coping ideas",
+            "Talk to a professional",
+            "Connect with other students",
+            "Understand my answers"
+          ],
+          "reason": "Your preferred next step helps shape support suggestions.",
+          "answer": "Practical coping ideas"
+        }
+      ],
+      "screening": {
+        "phq9": {
+          "answered": 9,
+          "total": 8,
+          "maximum": 27,
+          "band": "Mild",
+          "missing": []
+        },
+        "gad7": {
+          "answered": 7,
+          "total": 4,
+          "maximum": 21,
+          "band": "Minimal",
+          "missing": []
+        }
+      },
+      "plan": [
+        {
+          "activityId": "balanced-self-talk",
+          "reason": "You chose self-esteem & confidence as a support topic. DistilBERT helped prioritise this confirmed topic. You mentioned “Harsh self-criticism”. You also chose “A balanced alternative”.",
+          "basis": "model-topics",
+          "title": "Try a more balanced perspective"
+        },
+        {
+          "activityId": "grief-gentle-step",
+          "reason": "You chose grief & loss as a support topic. DistilBERT helped prioritise this confirmed topic. You mentioned “Missing someone”. You also chose “Someone listening”.",
+          "basis": "model-topics",
+          "title": "Choose a gentle step while grieving"
+        },
+        {
+          "activityId": "pause",
+          "basis": "general",
+          "reason": "Another option you can keep, replace or leave for later.",
+          "title": "Pause and notice"
+        }
+      ],
+      "rankedSampleProfiles": [
+        {
+          "name": "Tharushi Senanayake",
+          "rank": 3.898016571998596,
+          "reasons": [
+            "Listed support area: Self-esteem & confidence",
+            "Listed support area: Grief & loss"
+          ]
+        },
+        {
+          "name": "Kiran Fernando",
+          "rank": 1.9507265090942383,
+          "reasons": [
+            "Listed support area: Self-esteem & confidence"
+          ]
+        },
+        {
+          "name": "Anjali Sivakumar",
+          "rank": 1.947290062904358,
+          "reasons": [
+            "Listed support area: Grief & loss"
+          ]
+        },
+        {
+          "name": "Aravind Sivarajan",
+          "rank": 0,
+          "reasons": [
+            "No listed support-area overlap with your current topics."
+          ]
+        },
+        {
+          "name": "Dinesh Karunaratne",
+          "rank": 0,
+          "reasons": [
+            "No listed support-area overlap with your current topics."
+          ]
+        },
+        {
+          "name": "Ishani Wijesekara",
+          "rank": 0,
+          "reasons": [
+            "No listed support-area overlap with your current topics."
+          ]
+        },
+        {
+          "name": "Kasun Jayasinghe",
+          "rank": 0,
+          "reasons": [
+            "No listed support-area overlap with your current topics."
+          ]
+        },
+        {
+          "name": "Nethmi Perera",
+          "rank": 0,
+          "reasons": [
+            "No listed support-area overlap with your current topics."
+          ]
+        }
+      ]
+    }
+  ],
+  "routingVerification": "Executed actual TypeScript scoring, question selection, plan and profile matcher; not a fresh browser walkthrough",
+  "questionBankVersion": "c2-adaptive-followups-v2",
+  "questionnaireVersion": "c2-phq9-gad7-en-v1",
+  "sourceHashes": {
+    "src/lib/c2/assessment.ts": "51dbbd4c3d1d6d4d7e529ebe2130891733e1c27daf50fdf973df0cf4a4ecca54",
+    "src/lib/c2/concern-routing.ts": "48a5127af802e5f19452a4febf6dcf238f3fa7b75c727aaae24da3ce90c221cb",
+    "src/lib/c2/support.ts": "c1080de86e443a7ce477a3a591082b9af02e3ad9561c9cf791af45e50aa83d28",
+    "src/lib/c2/wellness-plan.ts": "d683c0bc0c420fa4df7d6ecd35ebe848bcff49bee03b6706a2a2c2eb6f98f8a3"
+  },
+  "allScenarioChecksPassed": true,
+  "planningVersion": "c2-topic-plan-v2"
+}

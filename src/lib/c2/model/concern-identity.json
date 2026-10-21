@@ -1,0 +1,21 @@
+{
+  "runId": "c2-distilbert-concerns-v2",
+  "checkpointSha256": "45192ec0b5f3b46aac991d5db619e3984333ec313bc9d5a8c3a2967a292f4025",
+  "labels": [
+    "low-mood",
+    "worry",
+    "sleep",
+    "study",
+    "connection",
+    "stress",
+    "panic",
+    "relationships",
+    "grief",
+    "self-esteem",
+    "anger",
+    "eating",
+    "substance-use",
+    "trauma",
+    "practical"
+  ]
+}

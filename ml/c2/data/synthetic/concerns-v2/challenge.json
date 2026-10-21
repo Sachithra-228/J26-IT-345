@@ -1,0 +1,165 @@
+{
+  "labels": [
+    "low-mood",
+    "worry",
+    "sleep",
+    "study",
+    "connection",
+    "stress",
+    "panic",
+    "relationships",
+    "grief",
+    "self-esteem",
+    "anger",
+    "eating",
+    "substance-use",
+    "trauma",
+    "practical"
+  ],
+  "purpose": "Illustrative developer-authored synthetic probes for direct concerns, mixed topics, negation, recovery, third-person wording and out-of-label safety disclosure. Not independently reviewed; not used for tuning or participant evaluation. The self-harm probe has no learned target: separate application support must handle it.",
+  "cases": [
+    {
+      "id": "C2-V2-CHALLENGE-01",
+      "text": "I feel down and nothing I used to enjoy interests me.",
+      "topics": [
+        "low-mood"
+      ]
+    },
+    {
+      "id": "C2-V2-CHALLENGE-02",
+      "text": "I cannot stop worrying about all the things that could go wrong.",
+      "topics": [
+        "worry"
+      ]
+    },
+    {
+      "id": "C2-V2-CHALLENGE-03",
+      "text": "I am awake for hours every night and cannot get proper rest.",
+      "topics": [
+        "sleep"
+      ]
+    },
+    {
+      "id": "C2-V2-CHALLENGE-04",
+      "text": "I keep missing my coursework deadlines and need help planning revision.",
+      "topics": [
+        "study"
+      ]
+    },
+    {
+      "id": "C2-V2-CHALLENGE-05",
+      "text": "I am lonely here and wish I had someone to talk with.",
+      "topics": [
+        "connection"
+      ]
+    },
+    {
+      "id": "C2-V2-CHALLENGE-06",
+      "text": "I feel burnt out by all my responsibilities and never have time to recover.",
+      "topics": [
+        "stress"
+      ]
+    },
+    {
+      "id": "C2-V2-CHALLENGE-07",
+      "text": "I get sudden terrifying spells with a racing heart and fear another panic episode.",
+      "topics": [
+        "panic"
+      ]
+    },
+    {
+      "id": "C2-V2-CHALLENGE-08",
+      "text": "I keep arguing with my parents and need help setting boundaries.",
+      "topics": [
+        "relationships"
+      ]
+    },
+    {
+      "id": "C2-V2-CHALLENGE-09",
+      "text": "I need support after the death of someone I loved.",
+      "topics": [
+        "grief"
+      ]
+    },
+    {
+      "id": "C2-V2-CHALLENGE-10",
+      "text": "I constantly criticise myself and feel less capable than everyone else.",
+      "topics": [
+        "self-esteem"
+      ]
+    },
+    {
+      "id": "C2-V2-CHALLENGE-11",
+      "text": "I lose my temper quickly and want help responding without shouting.",
+      "topics": [
+        "anger"
+      ]
+    },
+    {
+      "id": "C2-V2-CHALLENGE-12",
+      "text": "I am distressed about my body and feel guilty when I eat.",
+      "topics": [
+        "eating"
+      ]
+    },
+    {
+      "id": "C2-V2-CHALLENGE-13",
+      "text": "I rely on alcohol to cope and need confidential advice about my drinking.",
+      "topics": [
+        "substance-use"
+      ]
+    },
+    {
+      "id": "C2-V2-CHALLENGE-14",
+      "text": "Reminders of a frightening experience are affecting my routine. I do not want to retell it.",
+      "topics": [
+        "trauma"
+      ]
+    },
+    {
+      "id": "C2-V2-CHALLENGE-15",
+      "text": "I cannot afford my rent or essential bills and need practical assistance.",
+      "topics": [
+        "practical"
+      ]
+    },
+    {
+      "id": "C2-V2-CHALLENGE-16",
+      "text": "I am not grieving or feeling lonely; things are going well for me.",
+      "topics": []
+    },
+    {
+      "id": "C2-V2-CHALLENGE-17",
+      "text": "I used to panic but I have been feeling calm and coping well recently.",
+      "topics": []
+    },
+    {
+      "id": "C2-V2-CHALLENGE-18",
+      "text": "My friend drinks too much; I have no concerns about my own alcohol use.",
+      "topics": []
+    },
+    {
+      "id": "C2-V2-CHALLENGE-19",
+      "text": "My class is discussing grief and trauma. I am doing well and just reading.",
+      "topics": []
+    },
+    {
+      "id": "C2-V2-CHALLENGE-20",
+      "text": "I feel good about my body and I am comfortable around food.",
+      "topics": []
+    },
+    {
+      "id": "C2-V2-CHALLENGE-21",
+      "text": "I want help because I have thoughts of self-harm.",
+      "topics": []
+    },
+    {
+      "id": "C2-V2-CHALLENGE-22",
+      "text": "I cannot pay my bills and I am exhausted by juggling my responsibilities.",
+      "topics": [
+        "practical",
+        "stress"
+      ]
+    }
+  ]
+}

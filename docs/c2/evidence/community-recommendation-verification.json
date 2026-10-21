@@ -1,0 +1,95 @@
+{
+  "date": "2026-10-20",
+  "version": "c2-community-circles-v1",
+  "catalogSize": 13,
+  "sourceType": "synthetic",
+  "replay": "Actual matcher using stored genuine model outputs; not new training",
+  "scenarios": [
+    {
+      "scenario": "study-worry",
+      "runId": "c2-distilbert-concerns-v2",
+      "confirmedTopics": [
+        "study",
+        "worry"
+      ],
+      "matches": [
+        {
+          "name": "Study Balance LK",
+          "score": 3.349999761581421,
+          "modelInformed": true,
+          "reasons": [
+            "Your support topic: Study & exam pressure.",
+            "Your answer: “I would like help planning my workload”.",
+            "Your answer: “Study or exams”."
+          ]
+        },
+        {
+          "name": "Campus Calm Circle",
+          "score": 2.4514976501464845,
+          "modelInformed": true,
+          "reasons": [
+            "Your support topic: Worry & anxiety.",
+            "Your answer: “Study or exams”."
+          ]
+        }
+      ]
+    },
+    {
+      "scenario": "grief-confidence",
+      "runId": "c2-distilbert-concerns-v2",
+      "confirmedTopics": [
+        "self-esteem",
+        "grief"
+      ],
+      "matches": [
+        {
+          "name": "Confidence & Kindness",
+          "score": 2.8253632545471192,
+          "modelInformed": true,
+          "reasons": [
+            "Your support topic: Self-esteem & confidence.",
+            "Your answer: “Harsh self-criticism”."
+          ]
+        },
+        {
+          "name": "Space for Grief",
+          "score": 2.823645031452179,
+          "modelInformed": true,
+          "reasons": [
+            "Your support topic: Grief & loss.",
+            "Your answer: “Missing someone”."
+          ]
+        }
+      ]
+    }
+  ],
+  "tests": {
+    "suites": 20,
+    "passed": 299
+  },
+  "typeScript": "passed",
+  "targetedEslint": "passed",
+  "http": {
+    "catalogStatus": 200,
+    "count": 13,
+    "onlySynthetic": true,
+    "noUserFields": true
+  },
+  "browser": {
+    "freshDistilBertRun": true,
+    "studyWorrySuggestions": [
+      "Study Balance LK",
+      "Campus Calm Circle"
+    ],
+    "automaticAfterQuestionnaire": true,
+    "openCircleFromSummary": "passed",
+    "authoredStartersVisible": "passed",
+    "topicAndLanguageNoMatch": "passed",
+    "browseAll": 13
+  },
+  "privateAnswersUploaded": false,
+  "forumPostsCreated": 0,
+  "membershipsCreated": 0,
+  "notificationsSent": 0,
+  "gitPushed": false
+}

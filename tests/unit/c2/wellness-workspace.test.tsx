@@ -40,7 +40,11 @@ function click(name: string) {
 }
 function answer(name: string) {
   fireEvent.click(screen.getByRole("radio", { name, exact: true }));
-  click("Continue");
+  click(
+    screen.queryByRole("button", { name: "See my summary", exact: true })
+      ? "See my summary"
+      : "Continue",
+  );
 }
 function coreResponses(skipFirst = false, safety = false) {
   PHQ9.forEach((_, index) => {
@@ -48,6 +52,13 @@ function coreResponses(skipFirst = false, safety = false) {
     else answer(index === 8 && safety ? "Several days" : "Not at all");
   });
   GAD7.forEach(() => answer("Not at all"));
+  if (
+    screen.queryByRole("button", {
+      name: "Continue without text analysis",
+      exact: true,
+    })
+  )
+    click("Continue without text analysis");
 }
 function skipContext() {
   while (
@@ -79,7 +90,9 @@ it("completes both questionnaires and keeps all assessment data on-device", () =
     screen.getByRole("button", { name: "Continue", exact: true }),
   ).toBeDisabled();
   coreResponses();
-  expect(screen.getByRole("heading", { name: /How long/ })).toBeInTheDocument();
+  expect(
+    screen.getByRole("heading", { name: /How much are these concerns/ }),
+  ).toBeInTheDocument();
   skipContext();
   expect(screen.getAllByText("Minimal symptom range")).toHaveLength(2);
   expect(complete.mock.calls[0][0]).toMatchObject({
@@ -87,7 +100,9 @@ it("completes both questionnaires and keeps all assessment data on-device", () =
     gad7: Array(7).fill(0),
     context: {},
   });
-  expect(global.fetch).not.toHaveBeenCalled();
+  expect(global.fetch).toHaveBeenCalledWith("/api/c2/follow-up-questions", {
+    cache: "no-store",
+  });
 });
 it("shows incomplete results rather than treating skipped answers as zero", () => {
   render(
@@ -106,6 +121,58 @@ it("shows incomplete results rather than treating skipped answers as zero", () =
   expect(
     screen.getByRole("heading", { name: PHQ9[0], exact: true }),
   ).toBeInTheDocument();
+});
+it("shows both moderate levels at 13 points and connects result actions without a diagnostic probability", () => {
+  const onSupport = jest.fn(),
+    onPlan = jest.fn(),
+    onPrepare = jest.fn(),
+    onChat = jest.fn();
+  render(
+    <WellnessAssessment
+      onComplete={jest.fn()}
+      onSupport={onSupport}
+      onPlan={onPlan}
+      onPrepare={onPrepare}
+      onChat={onChat}
+    />,
+  );
+  click("Begin my check-in");
+  [...PHQ9, ...GAD7].forEach((_, index) => {
+    const i = index < 9 ? index : index - 9;
+    answer(
+      i < 4 ? "Nearly every day" : i === 4 ? "Several days" : "Not at all",
+    );
+  });
+  click("Continue without text analysis");
+  skipContext();
+  expect(screen.getAllByText("Moderate symptom range")).toHaveLength(2);
+  expect(
+    screen.getByRole("meter", { name: "PHQ-9 symptom score" }),
+  ).toHaveAttribute("aria-valuenow", "13");
+  expect(
+    screen.getByRole("meter", { name: "GAD-7 symptom score" }),
+  ).toHaveAttribute("aria-valuenow", "13");
+  expect(
+    screen.getAllByRole("heading", {
+      name: "Consider a professional assessment",
+    }),
+  ).toHaveLength(2);
+  expect(
+    screen.getByText(/DistilBERT suggests support topics/),
+  ).toBeInTheDocument();
+  expect(screen.queryByText(/\d+%/)).not.toBeInTheDocument();
+  click("Find support");
+  click("Build my wellness plan");
+  click("Prepare appointment notes");
+  click("Talk it through");
+  [onSupport, onPlan, onPrepare, onChat].forEach((callback) =>
+    expect(callback).toHaveBeenCalledTimes(1),
+  );
+  click("Review GAD-7 answers");
+  expect(
+    screen.getByRole("heading", { name: GAD7[0], exact: true }),
+  ).toBeInTheDocument();
+  expect(screen.getByRole("radio", { name: "Nearly every day" })).toBeChecked();
 });
 it("shows item-9 support before any final total and retains it in the summary", () => {
   render(
@@ -137,6 +204,40 @@ it("shows item-9 support before any final total and retains it in the summary", 
   ).toBeInTheDocument();
   expect(screen.getByText(/regardless of your totals/)).toBeInTheDocument();
 });
+it("keeps directly requested safety support independent of low scores and subsequent incomplete edits", () => {
+  const complete = jest.fn();
+  render(
+    <WellnessAssessment
+      onComplete={complete}
+      onSupport={jest.fn()}
+      onChat={jest.fn()}
+    />,
+  );
+  click("Begin my check-in");
+  [...PHQ9, ...GAD7].forEach(() => answer("Not at all"));
+  fireEvent.click(
+    screen.getByRole("checkbox", {
+      name: "I would like support with self-harm or staying safe",
+    }),
+  );
+  click("Use these topics");
+  expect(
+    screen.getByRole("region", { name: "Immediate support" }),
+  ).toBeInTheDocument();
+  skipContext();
+  expect(complete.mock.calls[0][0].safetySupportRequested).toBe(true);
+  expect(screen.getAllByText("Minimal symptom range")).toHaveLength(2);
+  expect(screen.getByText(/regardless of your totals/)).toBeInTheDocument();
+  click("Review GAD-7 answers");
+  click("Skip this question");
+  for (let i = 1; i < 7; i++) click("Continue");
+  skipContext();
+  expect(screen.getByText("Incomplete questionnaire")).toBeInTheDocument();
+  expect(
+    screen.getByRole("region", { name: "Immediate support" }),
+  ).toBeInTheDocument();
+  expect(complete.mock.calls.at(-1)[0].safetySupportRequested).toBe(true);
+});
 it("keeps core answers when navigating back and selects context without adding a score", () => {
   const complete = jest.fn();
   render(
@@ -155,18 +256,25 @@ it("keeps core answers when navigating back and selects context without adding a
   click("Continue");
   for (let i = 1; i < 9; i++) answer("Not at all");
   GAD7.forEach(() => answer("Not at all"));
-  answer("Very difficult");
-  answer("Getting started");
-  answer("More than a month");
   fireEvent.click(
-    screen.getByRole("radio", { name: "Talk to a professional" }),
+    screen.getByRole("checkbox", { name: "Low mood & motivation" }),
   );
-  click("See my summary");
+  click("Use these topics");
+  answer("Getting started");
+  while (
+    screen.queryByRole("button", { name: "Skip this question", exact: true })
+  ) {
+    const heading = screen.getByRole("heading", { level: 3 }).textContent ?? "";
+    if (heading.startsWith("How much are these concerns"))
+      answer("Very difficult");
+    else if (heading.startsWith("What would feel most useful"))
+      answer("Talk to a professional");
+    else click("Skip this question");
+  }
   const result: Assessment = complete.mock.calls[0][0];
   expect(result.context).toMatchObject({
     impact: "Very difficult",
     mood: "Getting started",
-    duration: "More than a month",
     goal: "Talk to a professional",
   });
   expect(result.phq9.reduce<number>((sum, x) => sum + (x ?? 0), 0)).toBe(1);
@@ -185,12 +293,13 @@ it("skipping a previously answered final context item removes its old value", ()
   );
   click("Begin my check-in");
   coreResponses();
-  answer("No current concern");
+  for (let i = 0; i < 3; i++) click("Skip this question");
   fireEvent.click(
     screen.getByRole("radio", { name: "Talk to a professional" }),
   );
-  click("Back");
   click("Continue");
+  click("Back");
+  click("Skip this question");
   click("Skip this question");
   expect(complete.mock.calls[0][0].context.goal).toBeUndefined();
 });
@@ -280,6 +389,7 @@ it("provides free-text guided chat without uploading the conversation and clears
 it("separates the community service and exposes immediate help without an assessment", () => {
   render(<WellnessWorkspace />);
   click("Explore community");
+  click("Student forum");
   expect(screen.getByText("Account community service")).toBeInTheDocument();
   expect(
     screen.getByRole("button", { name: "All conversations" }),
@@ -288,4 +398,51 @@ it("separates the community service and exposes immediate help without an assess
   expect(
     screen.getByRole("region", { name: "Immediate support" }),
   ).toBeInTheDocument();
+});
+
+it("connects activities to optional progress and clears session drafts without deleting saved history", () => {
+  localStorage.clear();
+  render(<WellnessWorkspace />);
+  click("My plan");
+  fireEvent.click(
+    within(screen.getByRole("article", { name: "Plan action 1" })).getByRole(
+      "button",
+      { name: "Explore activity" },
+    ),
+  );
+  click("Start activity");
+  click("Next step");
+  click("Next step");
+  click("Next step");
+  click("Finish activity");
+  click("Open my progress");
+  fireEvent.click(screen.getByRole("checkbox"));
+  click("Open my device history");
+  click("Save activity completion");
+  click("My plan");
+  click("Prepare my appointment");
+  fireEvent.change(screen.getByLabelText("What would you like help with?"), {
+    target: { value: "A private appointment draft" },
+  });
+  click("Overview");
+  click("My plan");
+  click("Prepare my appointment");
+  expect(screen.getByLabelText("What would you like help with?")).toHaveValue(
+    "A private appointment draft",
+  );
+  click("Clear my session");
+  click("My plan");
+  click("Prepare my appointment");
+  expect(screen.getByLabelText("What would you like help with?")).toHaveValue(
+    "",
+  );
+  click("Progress");
+  expect(
+    screen.getByRole("button", { name: "Open my device history" }),
+  ).toBeDisabled();
+  fireEvent.click(screen.getByRole("checkbox"));
+  click("Open my device history");
+  expect(screen.getByText("Activity: Pause and notice")).toBeInTheDocument();
+  expect(global.fetch).not.toHaveBeenCalled();
+  localStorage.clear();
 });

@@ -1,5 +1,5 @@
 import { z } from "zod";
-import { CONCERNS, type Concern } from "./assessment";
+import { CONCERNS, CONCERN_TOPICS, type Concern } from "./assessment";
 
 export const providerMetadataSchema = z
   .object({
@@ -12,8 +12,8 @@ export const providerMetadataSchema = z
       .max(3)
       .optional(),
     supportAreas: z
-      .array(z.enum(["low-mood", "worry", "sleep", "study", "connection"]))
-      .max(5)
+      .array(z.enum(CONCERN_TOPICS))
+      .max(CONCERN_TOPICS.length)
       .optional(),
   })
   .strict();
@@ -25,6 +25,10 @@ export type Provider = ProviderMetadata & {
   availability: string;
   mode: "online" | "in-person" | "hybrid";
   contactEmail?: string;
+  isResearchProfile?: boolean;
+  profileSummary?: string;
+  location?: string;
+  sampleHours?: string;
 };
 export type SupportPreferences = {
   gender: string;
@@ -42,6 +46,7 @@ export function matchProviders(
   providers: Provider[],
   topics: Concern[],
   preferences: SupportPreferences,
+  topicWeights?: Partial<Record<Concern, number>>,
 ) {
   return providers
     .filter(
@@ -62,13 +67,15 @@ export function matchProviders(
       const matches = topics.filter((topic) =>
         provider.supportAreas?.includes(topic),
       );
-      const listedMatches = topics.filter(
-        (topic) =>
-          !matches.includes(topic) &&
-          CONCERNS[topic].keywords.some((word) =>
-            provider.specialization.toLowerCase().includes(word),
-          ),
-      );
+      const listedMatches = Array.isArray(provider.supportAreas)
+        ? []
+        : topics.filter(
+            (topic) =>
+              !matches.includes(topic) &&
+              CONCERNS[topic].keywords.some((word) =>
+                provider.specialization.toLowerCase().includes(word),
+              ),
+          );
       const reasons = [
         ...matches.map(
           (topic) => `Listed support area: ${CONCERNS[topic].label}`,
@@ -78,14 +85,26 @@ export function matchProviders(
             `Specialization mentions ${CONCERNS[topic].label.toLowerCase()}`,
         ),
       ];
+      const weight = (topic: Concern) => {
+        const value = topicWeights?.[topic];
+        return typeof value === "number" && Number.isFinite(value)
+          ? Math.max(0, Math.min(1, value))
+          : 1;
+      };
+      // Ranking weights can include student-confirmation policy. Explain the
+      // actual profile overlap, rather than label a policy weight as ML confidence.
       return {
         provider,
         reasons: reasons.length
           ? reasons
           : [
-              "Available in the university directory; no specific topic match is recorded.",
+              provider.isResearchProfile
+                ? "No listed support-area overlap with your current topics."
+                : "Available in the university directory; no specific topic match is recorded.",
             ],
-        rank: matches.length * 2 + listedMatches.length,
+        rank:
+          matches.reduce((sum, topic) => sum + 2 * weight(topic), 0) +
+          listedMatches.reduce((sum, topic) => sum + weight(topic), 0),
       };
     })
     .sort(

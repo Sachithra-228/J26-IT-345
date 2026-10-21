@@ -40,6 +40,10 @@ __pycache__/
 *.pyc
 .pytest_cache/
 
+# C2 neural checkpoints and downloaded backbone cache (large, local only).
+ml/c2/artifacts/
+public/c2/transformer/
+
 # Real or sensitive datasets must NEVER be committed (C1-C4). Folders stay via .gitkeep.
 ml/data/raw/*
 ml/data/private/*

@@ -1,0 +1,16 @@
+{
+  "runId": "c2-distilbert-concerns-v2",
+  "allPassed": true,
+  "checkpointSha256": "45192ec0b5f3b46aac991d5db619e3984333ec313bc9d5a8c3a2967a292f4025",
+  "onnxSha256": "dcc8e5a5f0938db61d07d709f725b8878a724c18b7752c313a6d84c4f0bf69c7",
+  "rows": 600,
+  "labels": 15,
+  "comparedScores": 9000,
+  "differentDecisions": 0,
+  "maximumScoreDifference": 5.602836608886719e-06,
+  "nativeBatchSize": 16,
+  "onnxBatchSize": 1,
+  "threshold": 0.25,
+  "scriptSha256": "bf59565777423842ffc9131e2bd7db8bb5d1f9a052aa2913f5cdd5820976a481",
+  "limitation": "Numerical conversion and decision parity only; not independent clinical validation."
+}

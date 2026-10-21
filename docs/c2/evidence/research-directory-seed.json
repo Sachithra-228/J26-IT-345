@@ -1,0 +1,18 @@
+{
+  "sourceType": "synthetic",
+  "collection": "c2_research_professionals",
+  "verifiedRecords": 8,
+  "professions": {
+    "counselor": 3,
+    "psychologist": 3,
+    "psychiatrist": 2
+  },
+  "languageCoverage": {
+    "en": 8,
+    "si": 4,
+    "ta": 5
+  },
+  "realCounselorCollectionChanged": false,
+  "bookingsCreated": 0,
+  "notificationsSent": 0
+}

@@ -63,6 +63,6 @@ The guided support chat uses a limited local response library and is clearly ide
 
 ## Remaining research
 
-Complete PHQ-9/GAD-7 software scoring and context follow-ups are now implemented and tested; local clinical validation and professional content review remain pending. Synthetic fusion demonstrations, optional authorized facial features, confidential assigned-counselor access, multilingual validation and the approved local study remain separate work. Synthetic experiments may test implementation but cannot supply independent clinical reference labels. No GoEmotions prediction is automatically treated as a referral label.
+Complete PHQ-9/GAD-7 software scoring and context follow-ups are now implemented and tested; local clinical validation and professional content review remain pending. The new structured synthetic experiment is documented in [its separate model card](support-model-card.md). Proposed text/camera fusion, optional authorized facial features, confidential assigned-counselor access, multilingual validation and the approved local study remain separate work. Synthetic experiments may test implementation but cannot supply independent clinical reference labels. No GoEmotions prediction is automatically treated as a referral label.
 
 The student must review the source, model choices, limitations and actual outputs, record personal contributions, and disclose AI assistance. AI assisted the pipeline, runtime, interface, tests and documentation; it did not supply local participant evidence or professional validation.

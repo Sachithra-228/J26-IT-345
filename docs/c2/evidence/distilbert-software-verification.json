@@ -1,0 +1,52 @@
+{
+  "schemaVersion": 1,
+  "runId": "distilbert-pilot-v1",
+  "verificationDate": "2026-10-19",
+  "scope": "Local development website and offline training/export; no production build, deployment or push performed.",
+  "regression": {
+    "passedSuites": 36,
+    "passedTests": 739,
+    "failedTests": 0,
+    "note": "Full regression passed during implementation. The two new transformer suites (9 tests) and TypeScript check also passed after switching the browser export to FP32."
+  },
+  "typescript": "Passed: npx tsc --noEmit",
+  "lint": "Passed for all five transformer page/component/library files; reran the final provenance-copy component with no warnings or errors.",
+  "trainingAudit": {
+    "path": "distilbert-pilot-v1-audit.json",
+    "passed": true,
+    "summary": "Dataset/checkpoint hashes, split overlap audit, metric arithmetic and frozen/updated tensor verification passed."
+  },
+  "nativeExport": {
+    "path": "distilbert-pilot-v1-browser-export.json",
+    "precision": "FP32",
+    "onnxBytes": 268027729,
+    "testRows": 5313,
+    "microF1": 0.5361715749039693,
+    "note": "Deployed FP32 graph test metrics match the Python checkpoint."
+  },
+  "actualWebsite": {
+    "path": "distilbert-browser-verification.json",
+    "cases": 10,
+    "allPassed": true,
+    "tokenMismatches": 0,
+    "maximumAbsoluteScoreError": 7.485321045219706e-07,
+    "scoreTolerance": 1e-05,
+    "evidence": [
+      "distilbert-live-prediction.png",
+      "distilbert-learning-curves.png"
+    ]
+  },
+  "secretPatternCheck": {
+    "newTextFilesScanned": 49,
+    "potentialSecretFiles": 0,
+    "note": "Pattern scan of newly added text files only; not a comprehensive security audit."
+  },
+  "limitations": [
+    "English public-comment emotion pilot; no depression/anxiety diagnosis or clinical validation.",
+    "Only 3000 training and 1000 development comments were used; complete cleaned test split has 5313 comments.",
+    "Some rare emotions have zero test recall; see per-label evaluation.",
+    "Large local model assets are ignored by Git and require explicit artifact provisioning on another host.",
+    "Desktop browser verified; mobile and production deployment not verified.",
+    "Existing repository dependency audit findings remain; no claim of production security."
+  ]
+}

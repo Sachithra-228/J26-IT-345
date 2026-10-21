@@ -1,0 +1,56 @@
+{
+  "schemaVersion": 1,
+  "verificationDate": "2026-10-20",
+  "scope": "C2 personal plan, guided activities, opt-in device progress and student-selected appointment notes",
+  "environment": "Local Next.js development website at http://127.0.0.1:3000/wellness; Windows browser",
+  "modelRetrained": false,
+  "mainModelRun": "c2-distilbert-concerns-v1",
+  "automatedChecks": {
+    "typeScript": "passed: tsc --noEmit --incremental false",
+    "eslintChangedCode": "passed",
+    "jestSuitesPassed": 42,
+    "jestTestsPassed": 774,
+    "jestFailures": 0,
+    "coverageExamples": [
+      "Confirmed topics and explicit workload answers change the suggested activity",
+      "Activity back navigation preserves writing; completion records omit writing",
+      "Concerning activity text shows the existing human-support panel",
+      "Device storage is untouched before explicit acknowledgement/opening",
+      "Progress schema rejects invalid or duplicate entries and strips arbitrary fields",
+      "Incomplete screening totals stay null",
+      "History is capped at 100 records without modifying unrelated storage keys",
+      "Storage failures do not claim a confirmed save",
+      "Session clearing removes drafts and preserves explicitly saved records",
+      "Appointment fields are excluded by default; downloaded text equals the selected preview"
+    ]
+  },
+  "browserChecks": {
+    "actualDistilBertTopicInference": "passed: study/worry example and study-only example",
+    "workloadAnswerToWorkloadPlan": "passed",
+    "replacePlanAction": "passed",
+    "threeStepActivityAndOptionalRatings": "passed",
+    "historyGateBeforeStorage": "passed",
+    "explicitSaveMoodScreeningCompletion": "passed",
+    "reloadClearsSessionAndKeepsHistoryClosed": "passed",
+    "reopenRetainsOnlySelectedRecords": "passed",
+    "individualDeletion": "passed",
+    "deleteAllOwnSoftwareTestRecords": "passed; four invented records created during verification, all removed",
+    "appointmentEmptyInitialPreview": "passed",
+    "appointmentSelectionAndDownloadRequest": "passed; no booking or message sent",
+    "viewNavigationFocusAndScroll": "verified and corrected during walkthrough"
+  },
+  "screenshots": [
+    "personalised-wellness-plan.png",
+    "device-progress-history.png",
+    "appointment-notes-preview.png"
+  ],
+  "limits": [
+    "All browser inputs and saved entries used for verification were invented software-test examples, not student health records.",
+    "Original activity prompts await professional review and have no clinical validation.",
+    "No new clinical, participant, treatment-outcome or usability measurements were collected.",
+    "Device history is readable by anyone using the browser profile, is not cross-device account storage, and requires a deliberate acknowledgement before opening.",
+    "Appointment notes download as plain text; no automatic professional sharing or new counselor access control is implemented.",
+    "No production build, Vercel deployment, real-device mobile test or cloud model availability is established by these local checks.",
+    "Existing model limitations, optional facial fusion and independent local evaluation remain unresolved research work."
+  ]
+}

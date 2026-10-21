@@ -108,6 +108,9 @@ export async function POST(request: NextRequest) {
   if (authResult.error) return authResult.error;
 
   const studentName = authResult.session.user?.name ?? authResult.session.firebase.displayName ?? "Student";
+  if (counselorId.startsWith("c2-research-")) {
+    return jsonResponse({ message: "Demonstration profiles cannot receive real appointment requests. Choose the university directory for a real booking." }, 400);
+  }
   const userId = authResult.session.user?._id;
   const firebaseUid = authResult.session.firebase.uid;
   const now = new Date();
