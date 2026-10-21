@@ -1,0 +1,18 @@
+{
+  "version": "c2-support-schema-v1",
+  "topics": ["low-mood", "worry", "sleep", "study", "connection"],
+  "classes": ["optional-support", "routine-follow-up", "prompt-review"],
+  "foundation": ["impact", "duration", "goal"],
+  "topicQuestions": {"low-mood": "mood", "worry": "worry", "sleep": "sleep", "study": "study", "connection": "connection"},
+  "maximumQuestions": 6,
+  "questions": [
+    {"id":"impact","text":"If you checked off any problems, how difficult have these problems made it for you to do your work, take care of things at home, or get along with other people?","reason":"Daily-life context is separate from your questionnaire scores.","options":["Not difficult at all","Somewhat difficult","Very difficult","Extremely difficult"]},
+    {"id":"duration","text":"How long have the concerns you want to discuss been affecting you?","reason":"Optional context helps you describe your experience.","options":["Less than two weeks","Two weeks to a month","More than a month","On and off","No current concern"]},
+    {"id":"goal","text":"What would feel most useful to you today?","reason":"You choose the kind of support you want.","options":["Practical coping ideas","Talk to a professional","Connect with other students","Understand my answers"]},
+    {"id":"mood","text":"What feels hardest when your mood is low?","reason":"An optional question about mood and motivation.","options":["Getting started","Enjoying things","Feeling connected","Getting through daily tasks","I am not sure"]},
+    {"id":"worry","text":"Which area is most connected to your worry right now?","reason":"An optional question about the context of worry.","options":["Study or exams","Money or practical problems","Relationships","Several things","I am not sure"]},
+    {"id":"sleep","text":"What would you most like help with around sleep?","reason":"An optional question about rest and routines.","options":["Getting to sleep","Staying asleep","Sleeping too much","Building a routine"]},
+    {"id":"study","text":"How are your current concerns affecting your study routine?","reason":"An optional question about university demands.","options":["My routine feels manageable","Starting tasks is difficult","I am missing study commitments","I would like help planning my workload"]},
+    {"id":"connection","text":"How available does support from other people feel right now?","reason":"An optional question about connection and support.","options":["I have someone I can talk to","I would like more contact","I feel isolated","I prefer not to discuss this"]}
+  ]
+}

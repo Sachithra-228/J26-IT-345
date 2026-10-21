@@ -18,7 +18,7 @@ const LIBRARY = [
   {
     topic: "privacy",
     pattern: /privac|confiden|share|save|data|who can see/i,
-    text: "Your assessment, writing and this chat stay in this page session. They are not sent to staff, a chat provider or the shared database, and they clear when you refresh or leave. Booking requests and forum posts are separate: review what you enter before submitting them.",
+    text: "Your individual assessment answers, activity writing, reflections and this chat stay in this page session and clear when you refresh or leave. They are not sent to staff, a chat provider or the shared database. In Progress, you can choose to save selected mood ratings, screening summaries and activity completions on this browser. Anyone using this browser profile could open those entries; delete them in Progress. Downloaded appointment notes remain as a file until you delete it. Booking requests and forum posts are separate actions.",
     suggestions: ["What do my scores mean?", "Find a professional"],
   },
   {

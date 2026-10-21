@@ -17,9 +17,11 @@ import {
   FREQUENCY,
   RECALL_PROMPT,
   QUESTIONNAIRE_VERSION,
+  type FollowUp,
   followUps,
   scoreScale,
   selfHarmResponse,
+  assessmentSafetySupport,
   supportSuggestion,
 } from "@/lib/c2/assessment";
 import {
@@ -28,16 +30,39 @@ import {
   secondaryText,
   choiceClass,
 } from "./wellness-ui";
+import { SUPPORT_QUESTIONS } from "@/lib/c2/support-runtime";
+import {
+  concernExplanation,
+  followupTarget,
+  nextConcernQuestion,
+  resolvedConcernTopics,
+  type ConcernAnalysis,
+} from "@/lib/c2/concern-routing";
+import {
+  BUNDLED_FOLLOWUP_BANK,
+  loadFollowupBank,
+} from "@/lib/c2/followup-bank";
+import { WellnessConcernInput } from "./wellness-concern-input";
+import { ScreeningResultCard } from "./screening-result-card";
+import { WellnessCommunities } from "./wellness-communities";
 
-type Phase = "intro" | "phq9" | "gad7" | "context" | "results";
+type Phase = "intro" | "phq9" | "gad7" | "narrative" | "context" | "results";
 export function WellnessAssessment({
   onComplete,
   onSupport,
   onChat,
+  onEdit,
+  onPlan,
+  onPrepare,
+  onCommunity,
 }: {
   onComplete: (result: Assessment) => void;
   onSupport: () => void;
   onChat: () => void;
+  onEdit?: () => void;
+  onPlan?: () => void;
+  onPrepare?: () => void;
+  onCommunity?: (id?: string) => void;
 }) {
   const [phase, setPhase] = useState<Phase>("intro");
   const [index, setIndex] = useState(0);
@@ -46,9 +71,22 @@ export function WellnessAssessment({
   const [context, setContext] = useState<Record<string, string>>({});
   const [result, setResult] = useState<Assessment | null>(null);
   const [safetyChoice, setSafetyChoice] = useState("");
+  const [disclosedSafety, setDisclosedSafety] = useState(false);
   const title = useRef<HTMLHeadingElement>(null);
   const [announcement, setAnnouncement] = useState("");
-  const questions = followUps(phq9, gad7);
+  const [description, setDescription] = useState("");
+  const [analysis, setAnalysis] = useState<ConcernAnalysis | null>(null);
+  const [queue, setQueue] = useState<FollowUp[]>([]);
+  const [questionBank, setQuestionBank] = useState<{
+    bank: typeof BUNDLED_FOLLOWUP_BANK;
+    source: "database" | "bundled";
+  }>({ bank: BUNDLED_FOLLOWUP_BANK, source: "bundled" });
+  const loadedQuestionBank = useRef<{
+    bank: typeof BUNDLED_FOLLOWUP_BANK;
+    source: "database" | "bundled";
+  }>({ bank: BUNDLED_FOLLOWUP_BANK, source: "bundled" });
+  const modelRouting = analysis !== null;
+  const questions = modelRouting ? queue : followUps(phq9, gad7);
   const concernReported = selfHarmResponse(phq9) === "reported";
   useEffect(() => {
     if (phase !== "intro") title.current?.focus();
@@ -61,27 +99,70 @@ export function WellnessAssessment({
         .map((q) => [q.id, contextValues[q.id]]),
     );
     const completed = {
+      safetySupportRequested: disclosedSafety,
       phq9: [...phq9],
       gad7: [...gad7],
       context: activeContext,
       completedAt: new Date().toISOString(),
       version: QUESTIONNAIRE_VERSION,
+      ...(analysis ? { concernAnalysis: analysis } : {}),
+      questionPath: questions.map(({ id, text, reason }) => ({
+        id,
+        text,
+        reason,
+      })),
+      contextRouting: analysis?.prediction
+        ? ("distilbert" as const)
+        : analysis
+          ? ("student-topics" as const)
+          : ("rules" as const),
+      ...(analysis
+        ? {
+            questionBankVersion: questionBank.bank.version,
+            questionBankSource: questionBank.source,
+            supportTopics: resolvedConcernTopics(
+              analysis,
+              activeContext,
+              questionBank.bank,
+            ),
+          }
+        : {}),
     };
     setResult(completed);
     onComplete(completed);
     setPhase("results");
     setAnnouncement("Your screening summary is ready.");
   }
-  function next(contextValues = context) {
+  function next(contextValues = context, skippedCore = false) {
     if (phase === "phq9" && index === 8) {
       setPhase("gad7");
       setIndex(0);
     } else if (phase === "gad7" && index === 6) {
-      setPhase("context");
+      setContext({});
+      setQueue([]);
+      const canAnalyse =
+        !skippedCore &&
+        [...phq9, ...gad7].every((v) => v !== null) &&
+        !concernReported;
+      if (!canAnalyse) setAnalysis(null);
+      setPhase(canAnalyse ? "narrative" : "context");
       setIndex(0);
-    } else if (phase === "context" && index === questions.length - 1)
-      finish(contextValues);
-    else setIndex((previous) => previous + 1);
+    } else if (phase === "context" && index === questions.length - 1) {
+      const question = analysis
+        ? nextConcernQuestion(
+            analysis,
+            contextValues,
+            queue.map((q) => q.id),
+            questionBank.bank,
+            phq9,
+            gad7,
+          )
+        : null;
+      if (question) {
+        setQueue((previous) => [...previous, question]);
+        setIndex((previous) => previous + 1);
+      } else finish(contextValues);
+    } else setIndex((previous) => previous + 1);
   }
   function back() {
     if (index > 0) setIndex((previous) => previous - 1);
@@ -89,8 +170,8 @@ export function WellnessAssessment({
       setPhase("phq9");
       setIndex(8);
     } else if (phase === "context") {
-      setPhase("gad7");
-      setIndex(6);
+      setPhase(analysis ? "narrative" : "gad7");
+      setIndex(analysis ? 0 : 6);
     } else setPhase("intro");
   }
   const scale = phase === "phq9" ? phq9 : gad7;
@@ -111,7 +192,12 @@ export function WellnessAssessment({
           ? (index / 16) * 75
           : phase === "gad7"
             ? ((index + 9) / 16) * 75
-            : 75 + (index / questions.length) * 25;
+            : 75 +
+              (index /
+                (modelRouting
+                  ? followupTarget(analysis!, context, questionBank.bank)
+                  : questions.length)) *
+                25;
   const summary = result ? supportSuggestion(result) : null;
 
   return (
@@ -132,8 +218,8 @@ export function WellnessAssessment({
           </h3>
           <p className={`mt-3 max-w-2xl ${secondaryText}`}>
             Answer nine questions about depressive symptoms and seven about
-            anxiety symptoms, then a few optional questions chosen from your
-            answers. Take your time; you can go back or skip an item.
+            anxiety symptoms, then five to nine additional questions chosen from
+            your answers. Take your time; you can go back or skip an item.
           </p>
           <div className="my-6 grid gap-3 sm:grid-cols-3">
             {[
@@ -163,8 +249,15 @@ export function WellnessAssessment({
               diagnosis. The service is not monitored.
             </p>
           </div>
+          <p className={`mb-5 ${secondaryText}`}>
+            You can also tell us what’s on your mind. Review your suggested
+            topics to personalise the next questions, or choose topics yourself.
+          </p>
           <Button
             onClick={() => {
+              void loadFollowupBank().then((loaded) => {
+                loadedQuestionBank.current = loaded;
+              });
               setPhase("phq9");
               setIndex(0);
             }}
@@ -178,9 +271,47 @@ export function WellnessAssessment({
           </p>
         </section>
       ) : null}
+      {phase === "narrative" ? (
+        <WellnessConcernInput
+          onSupport={onSupport}
+          description={description}
+          analysis={analysis}
+          onBack={() => {
+            setPhase("gad7");
+            setIndex(6);
+          }}
+          onContinue={(confirmed, text) => {
+            setDisclosedSafety(confirmed.safetySupportRequested === true);
+            const selectedBank = loadedQuestionBank.current;
+            onEdit?.();
+            setResult(null);
+            setAnalysis(confirmed);
+            setDescription(text);
+            setContext({});
+            setQuestionBank(selectedBank);
+            setQueue([
+              nextConcernQuestion(
+                confirmed,
+                {},
+                [],
+                selectedBank.bank,
+                phq9,
+                gad7,
+              )!,
+            ]);
+            setIndex(0);
+            setPhase("context");
+          }}
+        />
+      ) : null}
 
       {core || phase === "context" ? (
         <section className={panel}>
+          {disclosedSafety && !concernReported ? (
+            <div className="mb-5">
+              <SafetySupport />
+            </div>
+          ) : null}
           <div className="flex flex-wrap items-center justify-between gap-2 text-xs font-medium text-slate-500 dark:text-slate-400">
             <span>
               {phase === "phq9"
@@ -191,7 +322,11 @@ export function WellnessAssessment({
             </span>
             <span>
               Question {index + 1} of{" "}
-              {core ? coreItems.length : questions.length}
+              {core
+                ? coreItems.length
+                : modelRouting
+                  ? "up to 9"
+                  : questions.length}
             </span>
           </div>
           <div
@@ -239,16 +374,31 @@ export function WellnessAssessment({
                       checked={selected}
                       onChange={() => {
                         if (core) {
+                          onEdit?.();
+                          setResult(null);
                           const change = (previous: Answer[]) =>
                             previous.map((value, i) =>
                               i === index ? (optionIndex as Answer) : value,
                             );
                           (phase === "phq9" ? setPhq9 : setGad7)(change);
-                        } else if (current)
-                          setContext((previous) => ({
-                            ...previous,
-                            [current.id]: option,
-                          }));
+                        } else if (current) {
+                          if (modelRouting) {
+                            const retained = queue.slice(0, index + 1);
+                            setQueue(retained);
+                            setContext((previous) => ({
+                              ...Object.fromEntries(
+                                Object.entries(previous).filter(([key]) =>
+                                  retained.some((q) => q.id === key),
+                                ),
+                              ),
+                              [current.id]: option,
+                            }));
+                          } else
+                            setContext((previous) => ({
+                              ...previous,
+                              [current.id]: option,
+                            }));
+                        }
                       }}
                       className="h-4 w-4 shrink-0 accent-blue-600"
                     />
@@ -307,16 +457,43 @@ export function WellnessAssessment({
               <Button
                 variant="ghost"
                 onClick={() => {
+                  onEdit?.();
+                  setResult(null);
                   if (core)
                     (phase === "phq9" ? setPhq9 : setGad7)((previous) =>
                       previous.map((value, i) => (i === index ? null : value)),
                     );
                   if (!core && current) {
-                    const updated = { ...context };
+                    const retained = modelRouting
+                      ? queue.slice(0, index + 1)
+                      : questions;
+                    const updated = Object.fromEntries(
+                      Object.entries(context).filter(([key]) =>
+                        retained.some((q) => q.id === key),
+                      ),
+                    );
                     delete updated[current.id];
+                    if (modelRouting && index < queue.length - 1) {
+                      setQueue(retained);
+                      setContext(updated);
+                      setIndex(index + 1);
+                      const question = analysis
+                        ? nextConcernQuestion(
+                            analysis,
+                            updated,
+                            retained.map((q) => q.id),
+                            questionBank.bank,
+                            phq9,
+                            gad7,
+                          )
+                        : null;
+                      if (question) setQueue([...retained, question]);
+                      else finish(updated);
+                      return;
+                    }
                     setContext(updated);
                     next(updated);
-                  } else next();
+                  } else next(context, true);
                 }}
               >
                 Skip this question
@@ -326,7 +503,17 @@ export function WellnessAssessment({
                 className="disabled:cursor-not-allowed disabled:opacity-40"
                 onClick={() => next()}
               >
-                {phase === "context" && index === questions.length - 1
+                {phase === "context" &&
+                (analysis
+                  ? !nextConcernQuestion(
+                      analysis,
+                      context,
+                      queue.map((q) => q.id),
+                      questionBank.bank,
+                      phq9,
+                      gad7,
+                    ) && index === queue.length - 1
+                  : index === questions.length - 1)
                   ? "See my summary"
                   : "Continue"}
                 <ArrowRight
@@ -337,19 +524,37 @@ export function WellnessAssessment({
             </div>
           </div>
           {phase === "context" ? (
-            <p className="mt-4 text-xs text-slate-500 dark:text-slate-400">
-              These optional follow-ups are selected from a fixed question bank.
-              They add context and do not change your questionnaire scores.
-              Professional review of this additional bank is pending.
-            </p>
+            <div className="mt-4">
+              <p className="text-xs text-slate-500 dark:text-slate-400">
+                These optional questions help us understand your situation and
+                what support you want. Your topics and answers guide what comes
+                next; they do not change your questionnaire scores.
+              </p>
+              {analysis ? (
+                <Button
+                  variant="ghost"
+                  className="mt-3"
+                  onClick={() => {
+                    onEdit?.();
+                    setResult(null);
+                    setPhase("narrative");
+                    setIndex(0);
+                  }}
+                >
+                  Review description and topics
+                </Button>
+              ) : null}
+            </div>
           ) : null}
         </section>
       ) : null}
 
       {phase === "results" && result && summary ? (
         <div className="space-y-5">
-          {selfHarmResponse(result.phq9) === "reported" ? (
-            <SafetySupport reported />
+          {assessmentSafetySupport(result) ? (
+            <SafetySupport
+              reported={selfHarmResponse(result.phq9) === "reported"}
+            />
           ) : null}
           <section className={panel}>
             <p className="text-xs font-semibold uppercase tracking-widest text-blue-600 dark:text-blue-300">
@@ -360,7 +565,7 @@ export function WellnessAssessment({
               tabIndex={-1}
               className="mt-3 scroll-mt-32 text-2xl font-semibold outline-none"
             >
-              A starting point for your next step.
+              Your symptom levels and next steps.
             </h3>
             <p className={`mt-3 ${secondaryText}`}>
               These results describe your answers over the last two weeks. They
@@ -369,48 +574,19 @@ export function WellnessAssessment({
             </p>
             <div className="mt-6 grid gap-4 sm:grid-cols-2">
               {(["phq9", "gad7"] as const).map((kind) => {
-                const value = scoreScale(kind, result[kind]);
                 return (
-                  <article
+                  <ScreeningResultCard
                     key={kind}
-                    className="rounded-2xl border border-slate-200 p-5 dark:border-slate-700"
-                  >
-                    <p className="text-xs font-medium text-slate-500 dark:text-slate-400">
-                      {kind === "phq9"
-                        ? "PHQ-9 · depressive symptoms"
-                        : "GAD-7 · anxiety symptoms"}
-                    </p>
-                    <p className="mt-4 text-4xl font-semibold tabular-nums">
-                      {value.total ?? "—"}
-                      <span className="ml-1 text-base font-normal text-slate-500">
-                        / {value.maximum}
-                      </span>
-                    </p>
-                    <p className="mt-3 font-medium text-blue-700 dark:text-blue-300">
-                      {value.band
-                        ? `${value.band} symptom range`
-                        : "Incomplete questionnaire"}
-                    </p>
-                    {value.total === null ? (
-                      <p className={`mt-2 ${secondaryText}`}>
-                        Answered {value.answered} of {kind === "phq9" ? 9 : 7}.
-                        Missing: {value.missing.join(", ")}. No total or band is
-                        calculated.
-                      </p>
-                    ) : null}
-                    <Button
-                      variant="ghost"
-                      className="mt-3 px-0"
-                      onClick={() => {
-                        setPhase(kind);
-                        setIndex(
-                          value.missing.length ? value.missing[0] - 1 : 0,
-                        );
-                      }}
-                    >
-                      Review {kind === "phq9" ? "PHQ-9" : "GAD-7"} answers
-                    </Button>
-                  </article>
+                    kind={kind}
+                    answers={result[kind]}
+                    onReview={() => {
+                      const value = scoreScale(kind, result[kind]);
+                      onEdit?.();
+                      setResult(null);
+                      setPhase(kind);
+                      setIndex(value.missing.length ? value.missing[0] - 1 : 0);
+                    }}
+                  />
                 );
               })}
             </div>
@@ -420,15 +596,87 @@ export function WellnessAssessment({
                 can be drawn from this assessment.
               </p>
             ) : null}
-            <div className="mt-5 rounded-2xl bg-blue-50 p-5 dark:bg-blue-950">
+            <div className="mt-5 rounded-2xl border border-blue-100 bg-blue-50 p-5 dark:border-blue-900 dark:bg-blue-950">
               <h4 className="font-semibold">{summary.title}</h4>
               <p className={`mt-2 ${secondaryText}`}>{summary.body}</p>
+              <div className="mt-5 flex flex-wrap gap-3">
+                <Button onClick={onSupport}>
+                  Find support{" "}
+                  <ArrowRight
+                    aria-hidden="true"
+                    className="ml-2 inline h-4 w-4"
+                  />
+                </Button>
+                {onPlan ? (
+                  <Button variant="secondary" onClick={onPlan}>
+                    Build my wellness plan
+                  </Button>
+                ) : null}
+                {onPrepare ? (
+                  <Button variant="secondary" onClick={onPrepare}>
+                    Prepare appointment notes
+                  </Button>
+                ) : null}
+                <Button variant="ghost" onClick={onChat}>
+                  Talk it through
+                </Button>
+              </div>
+              <p className="mt-4 text-xs leading-5 text-slate-500 dark:text-slate-400">
+                Symptom levels come from PHQ-9 and GAD-7 answers. DistilBERT
+                suggests support topics to help personalise follow-up questions
+                and activities; it does not diagnose an illness.
+              </p>
+            </div>
+            {onCommunity ? (
+              <div className="mt-5">
+                <WellnessCommunities
+                  assessment={result}
+                  compact
+                  onBrowse={onCommunity}
+                  onSupport={onSupport}
+                />
+              </div>
+            ) : null}
+            <div
+              className="mt-5 rounded-2xl border border-slate-200 p-5 dark:border-slate-700"
+              aria-label="Personalised explanation"
+            >
+              <h4 className="font-semibold">
+                How your answers led to this summary
+              </h4>
+              <ul className="mt-3 list-disc space-y-2 pl-5">
+                {concernExplanation(result).map((line) => (
+                  <li key={line} className={secondaryText}>
+                    {line}
+                  </li>
+                ))}
+              </ul>
+              {result.questionPath?.length ? (
+                <details className="mt-4">
+                  <summary className="cursor-pointer text-sm font-medium text-blue-700 dark:text-blue-300">
+                    Why these follow-up questions?
+                  </summary>
+                  <ul className="mt-3 space-y-3">
+                    {result.questionPath.map((item) => (
+                      <li key={item.id} className={secondaryText}>
+                        <strong>
+                          {item.text ??
+                            SUPPORT_QUESTIONS.find((q) => q.id === item.id)
+                              ?.text}
+                        </strong>
+                        <br />
+                        {item.reason}
+                      </li>
+                    ))}
+                  </ul>
+                </details>
+              ) : null}
             </div>
             {Object.keys(result.context).length ? (
               <div className="mt-5">
                 <h4 className="font-semibold">The context you added</h4>
                 <dl className="mt-2 divide-y divide-slate-100 dark:divide-slate-800">
-                  {followUps(result.phq9, result.gad7)
+                  {(result.questionPath ?? [])
                     .filter((q) => result.context[q.id])
                     .map((q) => (
                       <div key={q.id} className="py-3 text-sm">
@@ -443,18 +691,6 @@ export function WellnessAssessment({
                 </dl>
               </div>
             ) : null}
-            <div className="mt-6 flex flex-wrap gap-3">
-              <Button onClick={onSupport}>
-                Find support{" "}
-                <ArrowRight
-                  aria-hidden="true"
-                  className="ml-2 inline h-4 w-4"
-                />
-              </Button>
-              <Button variant="secondary" onClick={onChat}>
-                Talk it through
-              </Button>
-            </div>
             <p className="mt-4 flex items-center gap-2 text-xs text-slate-500 dark:text-slate-400">
               <Check aria-hidden="true" className="h-4 w-4" />
               Available in this session. Not shared or saved to your account.

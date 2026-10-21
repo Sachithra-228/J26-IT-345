@@ -1,0 +1,148 @@
+{
+  "date": "2026-10-20",
+  "sourceCommit": "3e64425",
+  "fixUncommitted": true,
+  "testedOrigin": "http://127.0.0.1:3001",
+  "productionBuild": true,
+  "testedConfigMatchesProductionBuild": true,
+  "configSha256": "44f24fcf2aeefea3b564e13984ee3ada794f62bb43306472afbd86ff1614e6e0",
+  "automatedTests": {
+    "passed": 299,
+    "suites": 20,
+    "usesMocks": true
+  },
+  "liveDatabaseVerified": {
+    "followupQuestions": 270,
+    "sampleCommunities": 13,
+    "sampleProfessionalProfiles": 8,
+    "writesPerformed": false
+  },
+  "modelAssetsVerified": 22,
+  "browserScenarios": [
+    {
+      "id": "study-worry",
+      "synthetic": true,
+      "actualMainFlowInference": true,
+      "phq9": 13,
+      "gad7": 13,
+      "topics": [
+        "study",
+        "worry"
+      ],
+      "contextQuestions": 6,
+      "branchChangesWithEarlierAnswer": true,
+      "plan": [
+        "workload",
+        "worry-step",
+        "pause"
+      ],
+      "communities": [
+        "Study Balance LK",
+        "Campus Calm Circle"
+      ],
+      "topProfessional": "Nethmi Perera"
+    },
+    {
+      "id": "grief-self-esteem",
+      "synthetic": true,
+      "actualMainFlowInference": true,
+      "phq9": 8,
+      "gad7": 4,
+      "topics": [
+        "self-esteem",
+        "grief"
+      ],
+      "contextQuestions": 6,
+      "plan": [
+        "balanced-self-talk",
+        "grief-gentle-step",
+        "pause"
+      ],
+      "communities": [
+        "Confidence & Kindness",
+        "Space for Grief"
+      ],
+      "topProfessional": "Tharushi Senanayake"
+    },
+    {
+      "id": "incomplete",
+      "synthetic": true,
+      "screeningItemsSkipped": 16,
+      "standardContextItems": 2,
+      "totalsWithheld": true,
+      "symptomRangesWithheld": true
+    },
+    {
+      "id": "manual-practical-safety",
+      "synthetic": true,
+      "actualMainFlowInference": false,
+      "phq9": 0,
+      "gad7": 0,
+      "topics": [
+        "practical"
+      ],
+      "entryAnswer": "Housing or accommodation",
+      "nextQuestion": "What would you like help finding around accommodation?",
+      "contextQuestions": 5,
+      "community": "Everyday Support LK",
+      "mlAttributionShown": false,
+      "directSafetyRetained": true
+    }
+  ],
+  "interactiveChecksPassed": [
+    "activity-completion",
+    "activity-replacement",
+    "restore-suggested-plan",
+    "community-preview",
+    "community-empty-state",
+    "all-13-community-browse",
+    "professional-gender-language-type-filters",
+    "sample-profile-selection-blocks-real-booking",
+    "university-directory-read",
+    "authenticated-forum-read",
+    "guided-chat-context",
+    "synthetic-chat-safety-phrase",
+    "reflection-analysis",
+    "keep-reflection",
+    "appointment-notes-preview",
+    "download-request-control",
+    "progress-explicit-opt-in",
+    "save-mood-screening-completion",
+    "fresh-page-progress-persistence",
+    "clear-session-private-drafts"
+  ],
+  "savedSyntheticProgressRecords": {
+    "count": 3,
+    "origin": "http://127.0.0.1:3001",
+    "preexistingEntries": 0,
+    "deleted": false
+  },
+  "unsignedApiStatus": {
+    "/api/c2/research-professionals": 401,
+    "/api/wellness-counselors": 401,
+    "/api/counselor-bookings": 401,
+    "/api/peer-support-posts": 401,
+    "/api/c2/research-communities": 200
+  },
+  "capturedBrowserWarningsOrErrors": {
+    "main": 0,
+    "secondScenario": 0,
+    "edgeCaseAtInspection": 0
+  },
+  "externalWrites": {
+    "realBookingsCreated": 0,
+    "bookingsCancelled": 0,
+    "forumPostsOrRepliesPublished": 0,
+    "membershipsCreated": 0,
+    "notificationsDeliberatelySent": 0
+  },
+  "limitations": [
+    "Vercel deployment and model provisioning not verified",
+    "Booking server date/time validation and duplicate guard incomplete",
+    "Real notification/booking/forum write cycle not tested",
+    "Downloaded appointment file bytes not independently inspected",
+    "Not exhaustive cross-device, load or clinical validation"
+  ],
+  "committed": false,
+  "pushed": false
+}

@@ -1,0 +1,7 @@
+# Separate environment; does not replace the existing classical-model environment.
+torch==2.14.1
+transformers==5.20.1
+numpy==2.3.4
+scikit-learn==1.7.2
+onnx==1.23.2
+onnxruntime==1.31.0

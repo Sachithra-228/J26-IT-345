@@ -1,0 +1,72 @@
+{
+  "runId": "c2-distilbert-concerns-v1",
+  "surface": "Actual student dashboard main check-in, browser WASM inference",
+  "cases": 10,
+  "tolerance": 1e-05,
+  "maximumAbsoluteScoreError": 9.953964233422319e-07,
+  "tokenMismatches": 0,
+  "allPassed": true,
+  "results": [
+    {
+      "text": "I cannot sleep properly and I am worried about finishing my university project.",
+      "allFiveScoresRead": true,
+      "tokenIdsMatch": true,
+      "maximumAbsoluteScoreError": 1.2073593136374683e-07
+    },
+    {
+      "text": "I feel lonely at university and have nobody I can talk to.",
+      "allFiveScoresRead": true,
+      "tokenIdsMatch": true,
+      "maximumAbsoluteScoreError": 4.6048450469404756e-07
+    },
+    {
+      "text": "I am not anxious. My sleep is good and I am enjoying time with friends.",
+      "allFiveScoresRead": true,
+      "tokenIdsMatch": true,
+      "maximumAbsoluteScoreError": 1.1582435369486554e-07
+    },
+    {
+      "text": "My coursework is piling up and I cannot organize my revision.",
+      "allFiveScoresRead": true,
+      "tokenIdsMatch": true,
+      "maximumAbsoluteScoreError": 3.6155104823405336e-08
+    },
+    {
+      "text": "I feel down and have lost interest in my hobbies.",
+      "allFiveScoresRead": true,
+      "tokenIdsMatch": true,
+      "maximumAbsoluteScoreError": 4.7061151592058393e-08
+    },
+    {
+      "text": "I wake up at night and cannot get back to sleep.",
+      "allFiveScoresRead": true,
+      "tokenIdsMatch": true,
+      "maximumAbsoluteScoreError": 7.230792045676004e-08
+    },
+    {
+      "text": "I am doing well and I feel supported by my friends.",
+      "allFiveScoresRead": true,
+      "tokenIdsMatch": true,
+      "maximumAbsoluteScoreError": 3.716831309721056e-08
+    },
+    {
+      "text": "My friend is anxious about exams; I feel calm and my work is manageable.",
+      "allFiveScoresRead": true,
+      "tokenIdsMatch": true,
+      "maximumAbsoluteScoreError": 5.0280761665355556e-08
+    },
+    {
+      "text": "I’m tense about deadlines and I don’t know how to manage my assignments.",
+      "allFiveScoresRead": true,
+      "tokenIdsMatch": true,
+      "maximumAbsoluteScoreError": 9.953964233422319e-07
+    },
+    {
+      "text": "I enjoyed chatting with my classmates at the café today.",
+      "allFiveScoresRead": true,
+      "tokenIdsMatch": true,
+      "maximumAbsoluteScoreError": 2.3598937992641567e-07
+    }
+  ],
+  "limitation": "Invented probes verify software parity; they do not establish concern-label accuracy or clinical validity."
+}

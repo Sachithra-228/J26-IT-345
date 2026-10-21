@@ -66,6 +66,21 @@ it("ranks matching topics with explicit reasons while retaining other choices", 
   expect(matches[0].reasons).toContain("Listed support area: Worry & anxiety");
   expect(matches).toHaveLength(3);
 });
+it("combines learned topic priorities with hard preference filters without changing profile facts", () => {
+  const matches = matchProviders(providers, ["worry", "sleep"], EMPTY_PREFERENCES, { worry: 0.8, sleep: 0.2 });
+  expect(matches[0].provider._id).toBe("a");
+  expect(matches[0].rank).toBeCloseTo(1.6);
+  expect(matches[0].reasons).toContain("Listed support area: Worry & anxiety");
+  expect(matches[0].reasons.join(" ")).not.toContain("model topic priority");
+  expect(matchProviders(providers, ["worry"], { ...EMPTY_PREFERENCES, gender: "male" }, { worry: 1 }).map((m) => m.provider._id)).toEqual(["b"]);
+  expect(matchProviders(providers, ["worry"], { ...EMPTY_PREFERENCES, profession: "psychiatrist" }, { worry: 1 })).toEqual([]);
+});
+it("uses explicit support areas instead of inventing an extra sleep match from study routines", () => {
+  const explicit = { ...providers[1], specialization: "Study routines", supportAreas: ["study" as const] };
+  const result = matchProviders([explicit], ["sleep"], EMPTY_PREFERENCES, { sleep: 0.9 })[0];
+  expect(result.rank).toBe(0);
+  expect(result.reasons.join(" ")).not.toContain("Sleep");
+});
 it("accepts legacy profiles and validates explicit new details", () => {
   expect(providerMetadataSchema.safeParse({}).success).toBe(true);
   expect(

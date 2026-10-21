@@ -1,0 +1,34 @@
+{
+  "date": "2026-10-20",
+  "scope": "C2 sample-professional cards and local wellness readiness",
+  "tests": {
+    "suites": 17,
+    "passed": 277
+  },
+  "typeScript": "passed",
+  "targetedEslint": "passed",
+  "database": {
+    "syntheticProfiles": 8,
+    "followupQuestions": 270,
+    "realProfessionalRecordsChanged": false
+  },
+  "model": {
+    "verifiedFiles": 22,
+    "runId": "c2-distilbert-concerns-v2",
+    "labels": 15
+  },
+  "http": {
+    "wellness": 200,
+    "research": 200,
+    "followupQuestions": 200,
+    "modelManifest": 200,
+    "unauthenticatedProfessionalDirectory": 401
+  },
+  "browser": {
+    "authenticatedProfilesAndFiltering": "passed before interruption",
+    "sampleSelection": "passed; no appointment created",
+    "afterRestart": "blocked on stale browser error page"
+  },
+  "server": "restarted http://127.0.0.1:3000",
+  "gitPushed": false
+}

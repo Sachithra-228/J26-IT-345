@@ -1,0 +1,49 @@
+{
+  "date": "2026-10-20",
+  "sourceCommit": "3e64425",
+  "productionBuild": {
+    "command": "npm run build",
+    "next": "14.2.35",
+    "exitCode": 0,
+    "compiledSuccessfully": true,
+    "buildIdPresent": true,
+    "existingLintWarningsRemain": true
+  },
+  "fix": "Preserve only pre-minified ONNX ESM static assets before production minification",
+  "vendorAsset": {
+    "name": "ort.webgpu.bundle.min.7af4de83.mjs",
+    "byteIdenticalToDependency": true,
+    "sha256": "7c93a51e9906b246af505bbfbfa4e5806ebe70a081ab0ca0d34e1180293f4f8d"
+  },
+  "modelAssets": {
+    "verifiedFiles": 22,
+    "verifier": "node scripts/c2/model-assets.cjs verify"
+  },
+  "productionHttp": {
+    "origin": "http://127.0.0.1:3001",
+    "status200": [
+      "/wellness",
+      "/wellness/research",
+      "/c2/transformer/c2-concerns/manifest.json",
+      "/c2/transformer/wasm/ort-wasm-simd-threaded.asyncify.mjs",
+      "/api/c2/research-communities"
+    ]
+  },
+  "browserInference": {
+    "surface": "/wellness/research inspector; same predictConcerns function as main check-in",
+    "syntheticScenario": "PP1 exam/workload case",
+    "runId": "c2-distilbert-concerns-v2",
+    "tokens": 27,
+    "threshold": 0.25,
+    "selectedScores": {
+      "study": 0.9999997,
+      "worry": 0.601498
+    },
+    "checkpointSha256": "45192ec0b5f3b46aac991d5db619e3984333ec313bc9d5a8c3a2967a292f4025",
+    "capturedConsoleWarningOrErrors": 0
+  },
+  "screenshot": "production-ml-build-fix.png",
+  "pushed": false,
+  "vercelDeploymentPerformed": false,
+  "hostedModelProvisioningStillRequired": true
+}

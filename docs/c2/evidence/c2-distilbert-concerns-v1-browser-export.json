@@ -1,0 +1,30 @@
+{
+  "runId": "c2-distilbert-concerns-v1",
+  "precision": "FP32",
+  "checkpointSha256": "c178e5a2a2ea576b15d9135663173abe87dd6746af2b5cdce906611916430144",
+  "onnxSha256": "39684832a364ff26193083e0da4342fd5ffedf738c83bb688ef051da989d00e1",
+  "onnxBytes": 267942207,
+  "maximumProbeScoreError": 2.7120113372802734e-06,
+  "testRows": 300,
+  "browserTest": {
+    "micro": {
+      "precision": 0.7212543554006968,
+      "recall": 0.8941684665226782,
+      "f1": 0.7984570877531341
+    },
+    "macro": {
+      "precision": 0.7613384553921841,
+      "recall": 0.896801699356969,
+      "f1": 0.8081674668329641
+    },
+    "weighted": {
+      "precision": 0.7616297634141578,
+      "recall": 0.8941684665226782,
+      "f1": 0.8071732035033817
+    },
+    "exactMatchAccuracy": 0.4766666666666667,
+    "labelAccuracy": 0.8606666666666667
+  },
+  "threshold": 0.25,
+  "seconds": 10.0881434000039
+}

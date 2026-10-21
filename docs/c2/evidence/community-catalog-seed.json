@@ -1,0 +1,25 @@
+{
+  "collection": "c2_research_communities",
+  "catalogVersion": "c2-community-circles-v1",
+  "verifiedCommunities": 13,
+  "coveredTopics": [
+    "anger",
+    "connection",
+    "eating",
+    "grief",
+    "low-mood",
+    "panic",
+    "practical",
+    "relationships",
+    "self-esteem",
+    "sleep",
+    "stress",
+    "study",
+    "substance-use",
+    "trauma",
+    "worry"
+  ],
+  "realForumCollectionsChanged": false,
+  "membershipsCreated": 0,
+  "notificationsSent": 0
+}

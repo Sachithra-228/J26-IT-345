@@ -1,0 +1,57 @@
+{
+  "runId": "distilbert-pilot-v1",
+  "allPassed": true,
+  "auditOnlyNoTraining": true,
+  "checks": [
+    "Dataset/source hashes match",
+    "Training source hashes unchanged",
+    "Checkpoint hash matches completed evaluation",
+    "Seeded split IDs and label counts reproduce",
+    "Saved frozen tensors match the base exactly and fine-tuned backbone tensors changed",
+    "No normalized-token duplicate overlap across selected splits",
+    "Confusion denominators and per-label/micro/macro F1 reconcile",
+    "Selected checkpoint/threshold matches the best development result"
+  ],
+  "tokenLengthAudit": {
+    "train": {
+      "rows": 3000,
+      "minimumTokens": 3,
+      "medianTokens": 19.0,
+      "p95Tokens": 34.0,
+      "maximumTokens": 51,
+      "rowsExceedingMaximumLength": 0,
+      "tokenCountsIncludeSpecialTokens": true
+    },
+    "dev": {
+      "rows": 1000,
+      "minimumTokens": 5,
+      "medianTokens": 19.0,
+      "p95Tokens": 34.0,
+      "maximumTokens": 44,
+      "rowsExceedingMaximumLength": 0,
+      "tokenCountsIncludeSpecialTokens": true
+    },
+    "test": {
+      "rows": 5313,
+      "minimumTokens": 4,
+      "medianTokens": 19.0,
+      "p95Tokens": 34.0,
+      "maximumTokens": 55,
+      "rowsExceedingMaximumLength": 0,
+      "tokenCountsIncludeSpecialTokens": true
+    }
+  },
+  "maxLength": 96,
+  "weightAudit": {
+    "baseSha256": "5e3f1108e3cb34ee048634875d8482665b65ac713291a7e32396fb18f6ff0063",
+    "checkpointSha256": "8fbdfb15003660a07f439eb3b418d044a973fb2413c5fb8a66981f564848dd62",
+    "frozenBackboneTensorsUnchanged": 68,
+    "trainableBackboneTensorCount": 32,
+    "trainableBackboneTensorsChanged": 32,
+    "newClassificationHeadTensors": 4
+  },
+  "limitations": [
+    "Normalized-token deduplication is not author separation or a semantic leakage audit.",
+    "This software audit does not establish local student or clinical validity."
+  ]
+}

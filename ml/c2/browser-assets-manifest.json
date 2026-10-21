@@ -1,0 +1,138 @@
+{
+  "schemaVersion": 1,
+  "releaseTag": "c2-models-pp1-v2",
+  "runs": [
+    {
+      "directory": "c2-concerns",
+      "runId": "c2-distilbert-concerns-v2",
+      "checkpointSha256": "45192ec0b5f3b46aac991d5db619e3984333ec313bc9d5a8c3a2967a292f4025"
+    },
+    {
+      "directory": "c2-distilbert",
+      "runId": "distilbert-pilot-v1",
+      "checkpointSha256": "8fbdfb15003660a07f439eb3b418d044a973fb2413c5fb8a66981f564848dd62"
+    }
+  ],
+  "distribution": {
+    "mode": "private-offline",
+    "publicReleasePublished": false
+  },
+  "archive": {
+    "name": "c2-browser-models-v2.zip",
+    "bytes": 515821517,
+    "sha256": "ab4a8495f847361977dd1e2bf1002da6085e1b6573bd2b4d37dc2473664dc0c5",
+    "url": "https://github.com/Sachithra-228/J26-IT-345/releases/download/c2-models-pp1-v2/c2-browser-models-v2.zip"
+  },
+  "files": [
+    {
+      "path": "public/c2/transformer/c2-concerns/ATTRIBUTION.txt",
+      "bytes": 197,
+      "sha256": "221015377f3eb230273bfb0c7c332a5cbae18148c8a8efa8526349ea657bb657"
+    },
+    {
+      "path": "public/c2/transformer/c2-concerns/config.json",
+      "bytes": 1474,
+      "sha256": "5fcdedab0451b596fcbe729ec6028cd62f30880b67afcd74eafdbce03e7f5e3e"
+    },
+    {
+      "path": "public/c2/transformer/c2-concerns/LICENSE.txt",
+      "bytes": 11358,
+      "sha256": "cfc7749b96f63bd31c3c42b5c471bf756814053e847c10f3eb003417bc523d30"
+    },
+    {
+      "path": "public/c2/transformer/c2-concerns/manifest.json",
+      "bytes": 1272,
+      "sha256": "802072e0fed211441aa6a88a2c14fae522f467e4461db2372aaa4b190baa1a5c"
+    },
+    {
+      "path": "public/c2/transformer/c2-concerns/onnx/model.onnx",
+      "bytes": 267972969,
+      "sha256": "dcc8e5a5f0938db61d07d709f725b8878a724c18b7752c313a6d84c4f0bf69c7"
+    },
+    {
+      "path": "public/c2/transformer/c2-concerns/tokenizer.json",
+      "bytes": 711396,
+      "sha256": "d241a60d5e8f04cc1b2b3e9ef7a4921b27bf526d9f6050ab90f9267a1f9e5c66"
+    },
+    {
+      "path": "public/c2/transformer/c2-concerns/tokenizer_config.json",
+      "bytes": 364,
+      "sha256": "1677901b0243cd63e328732e6bcbf956a83dc6690a97eeed214eea7655fc3286"
+    },
+    {
+      "path": "public/c2/transformer/c2-distilbert/ATTRIBUTION.txt",
+      "bytes": 340,
+      "sha256": "87f747a0ac8ca909f3caa0f4c83e8a07931be1058d3b8b1f1ee8785ef9e37938"
+    },
+    {
+      "path": "public/c2/transformer/c2-distilbert/config.json",
+      "bytes": 2050,
+      "sha256": "5e941b01752d97ef7e1dc274fa2768fbae50fb6c05d27da9469d03344c576667"
+    },
+    {
+      "path": "public/c2/transformer/c2-distilbert/LICENSE.txt",
+      "bytes": 11358,
+      "sha256": "cfc7749b96f63bd31c3c42b5c471bf756814053e847c10f3eb003417bc523d30"
+    },
+    {
+      "path": "public/c2/transformer/c2-distilbert/manifest.json",
+      "bytes": 1702,
+      "sha256": "0f790807f420679e5dbf14d0e08ff25cd1bd381dda0828525858f3595f3a6390"
+    },
+    {
+      "path": "public/c2/transformer/c2-distilbert/onnx/model.onnx",
+      "bytes": 268027729,
+      "sha256": "f529baf29017ff4a94c4289d7f352bf5e69f0ec62ffdccba7735bf0235796853"
+    },
+    {
+      "path": "public/c2/transformer/c2-distilbert/tokenizer.json",
+      "bytes": 711396,
+      "sha256": "d241a60d5e8f04cc1b2b3e9ef7a4921b27bf526d9f6050ab90f9267a1f9e5c66"
+    },
+    {
+      "path": "public/c2/transformer/c2-distilbert/tokenizer_config.json",
+      "bytes": 435,
+      "sha256": "1563bb0934143a099f38c184add914de025a0fa412b640725287c25897e77e09"
+    },
+    {
+      "path": "public/c2/transformer/wasm/ort-wasm-simd-threaded.asyncify.mjs",
+      "bytes": 53057,
+      "sha256": "0966b6105cd936744498aa60df7a22cbd47af3374dbc64a9ab561c08a71e3611"
+    },
+    {
+      "path": "public/c2/transformer/wasm/ort-wasm-simd-threaded.asyncify.wasm",
+      "bytes": 26861777,
+      "sha256": "49871f5a4409519797e127440868a6d1923339d9185907f301a5b2a1d90af082"
+    },
+    {
+      "path": "public/c2/transformer/wasm/ort-wasm-simd-threaded.jsep.mjs",
+      "bytes": 46851,
+      "sha256": "c2f80e915e9df63289788a99d434d8c4e00e64e9c1f030f4b80b022458dd2c99"
+    },
+    {
+      "path": "public/c2/transformer/wasm/ort-wasm-simd-threaded.jsep.wasm",
+      "bytes": 28352885,
+      "sha256": "62ff86b2f2fa3a79eb87a7e4720e8ea9051942bf975f314181bf7dcef2feac06"
+    },
+    {
+      "path": "public/c2/transformer/wasm/ort-wasm-simd-threaded.jspi.mjs",
+      "bytes": 50918,
+      "sha256": "6b37a3974dbd96a752fdc1805e1bdc2dca3ead7e380703c092240c2352c71dbf"
+    },
+    {
+      "path": "public/c2/transformer/wasm/ort-wasm-simd-threaded.jspi.wasm",
+      "bytes": 16811691,
+      "sha256": "173146c55eb8c7e01f8be3f7b7376fbde14118d91607583ab7caf4feac98e59c"
+    },
+    {
+      "path": "public/c2/transformer/wasm/ort-wasm-simd-threaded.mjs",
+      "bytes": 24381,
+      "sha256": "c57ca56328877353a575e51bbca6f18450027d6c9bf2307a2cb2c41363b4de9f"
+    },
+    {
+      "path": "public/c2/transformer/wasm/ort-wasm-simd-threaded.wasm",
+      "bytes": 14264838,
+      "sha256": "06ba057753da3847e4c24f02d91ab133455b0817c69a44993a9a53a2146df9e3"
+    }
+  ]
+}

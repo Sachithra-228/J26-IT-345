@@ -1,0 +1,107 @@
+{
+  "schemaVersion": 1,
+  "runId": "c2-distilbert-concerns-v1",
+  "verificationDate": "2026-10-20",
+  "story": "Main student dashboard: questionnaires -> explicit browser DistilBERT -> student-confirmed concerns -> adaptive question bank -> explained symptom ranges -> authenticated demo directory and community filters.",
+  "allRequiredLocalFlowChecksPassed": true,
+  "regression": {
+    "suites": 38,
+    "passedTests": 746,
+    "failedTests": 0,
+    "note": "Full 746-test regression passed. Final removal of misleading model-priority wording was followed by 24 passing support/matching tests."
+  },
+  "staticChecks": {
+    "typescript": "passed after final source changes",
+    "eslint": "passed for all changed concern/main-flow files",
+    "pythonCompile": "four new pipeline scripts passed"
+  },
+  "browserParity": {
+    "cases": 10,
+    "tokenMismatches": 0,
+    "maximumAbsoluteScoreError": 9.953964233422319e-07,
+    "tolerance": 1e-05,
+    "allPassed": true
+  },
+  "mainFlow": {
+    "phq9": [
+      2,
+      2,
+      2,
+      2,
+      1,
+      1,
+      1,
+      1,
+      0
+    ],
+    "gad7": [
+      2,
+      2,
+      2,
+      2,
+      1,
+      1,
+      1
+    ],
+    "questionPath": [
+      "If you checked off any problems, how difficult have these problems made it for you to do your work, take care of things at home, or get along with other people?",
+      "How long have the concerns you want to discuss been affecting you?",
+      "What would feel most useful to you today?",
+      "How are your current concerns affecting your study routine?",
+      "What would you most like help with around sleep?",
+      "Which area is most connected to your worry right now?"
+    ],
+    "explanation": "How your answers led to this summary\nPHQ-9: 12/27, in the moderate symptom range. This comes from your questionnaire answers.\nGAD-7: 11/21, in the moderate symptom range. This comes from your questionnaire answers.\nYou confirmed these support topics: study & exam pressure, sleep & routines, worry & anxiety. DistilBERT supplied tentative topic scores; your choices determined which topics were used.\nDaily-life impact you reported: very difficult.\nDuration you reported: more than a month.\nYour preferred next step: talk to a professional.\nFor worry & anxiety, you selected: study or exams.\nFor sleep & routines, you selected: getting to sleep.\nFor study & exam pressure, you selected: starting tasks is difficult.\n\nText model: c2-distilbert-concerns-v1. Questionnaire ranges come from standard calculations; support suggestions also use your reported impact and preferences.\n\nWhy these follow-up questions?",
+    "modelSuggested": [
+      "study",
+      "sleep"
+    ],
+    "studentAdded": [
+      "worry"
+    ],
+    "professional": {
+      "selected": "Selected: Demo Psychologist 03. This demonstrates a preference/topic match; no appointment or referral has been created.",
+      "gender": "Female",
+      "language": "Sinhala",
+      "profession": "Psychologist",
+      "noBooking": true
+    },
+    "community": {
+      "suggestedTopic": "Study & exam pressure",
+      "selected": "true",
+      "postPublished": false
+    }
+  },
+  "researchPage": {
+    "allTrialEpochRowsVisible": 12,
+    "backpropagationVisible": true,
+    "optimizerStepVisible": true,
+    "checkpointSavingVisible": true
+  },
+  "dataBoundary": {
+    "demoProfessionals": "Authenticated GET /api/c2/research-professionals returned 200 and rendered the stored synthetic profiles",
+    "community": "Authenticated GET /api/peer-support-posts returned 200; selected study filter truthfully showed no matching discussions",
+    "bookingRequestCreated": false,
+    "communityPostPublished": false,
+    "assessmentTextSentToPredictionApi": false
+  },
+  "screenshots": [
+    "main-distilbert-topics.png",
+    "main-distilbert-summary.png",
+    "main-distilbert-professional-match.png",
+    "main-distilbert-research.png"
+  ],
+  "newTextSecretPatternScan": {
+    "files": 74,
+    "potentialSecretFiles": [],
+    "scope": "New text files only; not a comprehensive security audit"
+  },
+  "limits": [
+    "Local development verification only; no production build, deployment, commit or push performed.",
+    "English synthetic-data concern pilot; no clinical, cultural or real student validation.",
+    "Substantial training/validation overfitting and known negation/third-person failures are recorded in the guide and challenge report.",
+    "Browser inference requires local ignored FP32 assets, about 268 MB; another host must provision the verified artifacts.",
+    "Professional ranking includes application policy and preference filters; it is not a learned prediction of treatment outcomes.",
+    "Desktop dashboard was verified; no mobile-device or production compatibility claim."
+  ]
+}

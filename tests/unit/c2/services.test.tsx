@@ -1,6 +1,13 @@
-import { fireEvent, render, screen, waitFor } from "@testing-library/react";
+import {
+  fireEvent,
+  render,
+  screen,
+  waitFor,
+  within,
+} from "@testing-library/react";
 import { CounselorBooking } from "@/components/wellness/counselor-booking";
 import { PeerSupport } from "@/components/wellness/peer-support";
+import researchProfiles from "@/lib/c2/research-professionals.json";
 const originalFetch = global.fetch;
 const request = jest.fn();
 beforeEach(() => {
@@ -53,6 +60,118 @@ it("shows a sign-in and retry state instead of inventing available providers", a
   expect(
     screen.getByRole("button", { name: "Retry directory" }),
   ).toBeInTheDocument();
+});
+it("loads the separate eight-profile database catalog, applies preferences, and never offers a real booking", async () => {
+  request.mockImplementation((url: string) =>
+    response(
+      url === "/api/c2/research-professionals"
+        ? researchProfiles.map((p) => ({
+            ...p,
+            isResearchProfile: true,
+            availability: "Demonstration only",
+          }))
+        : [],
+    ),
+  );
+  render(
+    <CounselorBooking
+      researchOnly
+      topics={["worry", "sleep"]}
+      topicWeights={{ worry: 0.8, sleep: 0.7 }}
+    />,
+  );
+  await waitFor(() =>
+    expect(
+      screen.getAllByRole("button", { name: "Select sample profile" }),
+    ).toHaveLength(8),
+  );
+  const topMatches = screen
+    .getAllByRole("article")
+    .filter((card) => within(card).queryByText("Top topic match"));
+  expect(topMatches.map((card) => card.getAttribute("aria-label"))).toEqual([
+    "Aravind Sivarajan",
+    "Tharushi Senanayake",
+  ]);
+  expect(
+    screen.queryByRole("button", { name: "Submit booking request" }),
+  ).not.toBeInTheDocument();
+  expect(request).toHaveBeenCalledTimes(1);
+  expect(request).toHaveBeenCalledWith("/api/c2/research-professionals");
+  fireEvent.change(screen.getByLabelText("Gender preference"), {
+    target: { value: "female" },
+  });
+  fireEvent.change(screen.getByLabelText("Preferred language"), {
+    target: { value: "si" },
+  });
+  fireEvent.change(screen.getByLabelText("Professional type"), {
+    target: { value: "psychologist" },
+  });
+  expect(
+    screen.getAllByRole("button", { name: "Select sample profile" }),
+  ).toHaveLength(1);
+  expect(screen.getAllByText("Top topic match")).toHaveLength(1);
+  fireEvent.click(
+    screen.getByRole("button", { name: "Select sample profile" }),
+  );
+  expect(screen.getByText(/Selected: Tharushi Senanayake/)).toBeInTheDocument();
+  expect(
+    request.mock.calls.every(
+      ([, options]) => !options?.method || options.method === "GET",
+    ),
+  ).toBe(true);
+});
+it.each([{ topics: [] }, { topics: ["practical"] }] as const)(
+  "does not call a sample with no topic overlap a top match (%j)",
+  async ({ topics }) => {
+    request.mockImplementation(() =>
+      response(
+        researchProfiles
+          .filter((p) => p._id === "c2-research-03")
+          .map((p) => ({ ...p, isResearchProfile: true })),
+      ),
+    );
+    render(<CounselorBooking researchOnly topics={[...topics]} />);
+    await screen.findByRole("button", { name: "Select sample profile" });
+    expect(screen.queryByText("Top topic match")).not.toBeInTheDocument();
+    expect(
+      screen.getByText(
+        "No listed support-area overlap with your current topics.",
+      ),
+    ).toBeInTheDocument();
+    expect(
+      screen.queryByText(/Available in the university directory/),
+    ).not.toBeInTheDocument();
+  },
+);
+it("ignores a stale university response after switching to the research directory", async () => {
+  let resolveUniversity!: (value: unknown) => void;
+  request.mockImplementation((url: string) =>
+    url === "/api/wellness-counselors"
+      ? new Promise((resolve) => {
+          resolveUniversity = resolve;
+        })
+      : response(
+          url === "/api/c2/research-professionals"
+            ? researchProfiles.map((p) => ({ ...p, isResearchProfile: true }))
+            : [],
+        ),
+  );
+  render(<CounselorBooking />);
+  fireEvent.change(screen.getByLabelText("Directory source"), {
+    target: { value: "research" },
+  });
+  await waitFor(() =>
+    expect(
+      screen.getAllByRole("button", { name: "Select sample profile" }),
+    ).toHaveLength(8),
+  );
+  resolveUniversity({ ok: true, status: 200, json: async () => [profile] });
+  await waitFor(() =>
+    expect(screen.queryByText("Directory Person")).not.toBeInTheDocument(),
+  );
+  expect(
+    screen.getAllByRole("button", { name: "Select sample profile" }),
+  ).toHaveLength(8);
 });
 it("submits only the chosen appointment details and explicit note", async () => {
   request.mockImplementation((url: string, options?: RequestInit) =>

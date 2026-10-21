@@ -144,3 +144,22 @@ it("supports professional choice at any score", () => {
   a.context.goal = "Talk to a professional";
   expect(supportSuggestion(a).title).toContain("professional");
 });
+it.each([
+  [15, 0],
+  [20, 0],
+  [0, 15],
+  [0, 21],
+])("makes professional support prominent for PHQ %i / GAD %i", (p, g) => {
+  expect(supportSuggestion(caseOf(p, g)).title).toBe(
+    "Make professional support your next step",
+  );
+});
+it("keeps the completed high result actionable when the other scale is incomplete", () => {
+  const a = caseOf(0, 15);
+  a.phq9[0] = null;
+  expect(supportSuggestion(a).title).toBe(
+    "Make professional support your next step",
+  );
+  a.phq9[8] = 1;
+  expect(supportSuggestion(a).body).toContain("regardless of your totals");
+});

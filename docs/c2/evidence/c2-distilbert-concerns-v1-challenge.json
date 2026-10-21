@@ -1,0 +1,226 @@
+{
+  "runId": "c2-distilbert-concerns-v1",
+  "sourceType": "synthetic",
+  "challengeSha256": "7bba262162723fb0d6dd450155f815c4b64e371513e23e2f72dfc86fe946806b",
+  "checkpointSha256": "c178e5a2a2ea576b15d9135663173abe87dd6746af2b5cdce906611916430144",
+  "selectionUse": false,
+  "rows": 20,
+  "purpose": "Separately composed illustrative challenge cases; not professionally reviewed, not used for fitting or model selection.",
+  "metrics": {
+    "micro": {
+      "precision": 0.75,
+      "recall": 0.9,
+      "f1": 0.8181818181818182
+    },
+    "macro": {
+      "precision": 0.7466666666666667,
+      "recall": 0.8833333333333332,
+      "f1": 0.8072150072150073
+    },
+    "weighted": {
+      "precision": 0.7633333333333333,
+      "recall": 0.9,
+      "f1": 0.824098124098124
+    },
+    "exactMatchAccuracy": 0.6,
+    "labelAccuracy": 0.92
+  },
+  "cases": [
+    {
+      "id": "CH01",
+      "text": "Everything I used to look forward to feels pointless and I have little enthusiasm lately.",
+      "expected": [
+        "low-mood"
+      ],
+      "predicted": [
+        "low-mood"
+      ]
+    },
+    {
+      "id": "CH02",
+      "text": "I cannot stop imagining that something terrible will happen even when nothing is wrong.",
+      "expected": [
+        "worry"
+      ],
+      "predicted": [
+        "worry"
+      ]
+    },
+    {
+      "id": "CH03",
+      "text": "Most nights I am still awake at three in the morning and then I struggle to get up.",
+      "expected": [
+        "sleep"
+      ],
+      "predicted": [
+        "sleep"
+      ]
+    },
+    {
+      "id": "CH04",
+      "text": "There are four assignments due this week and I cannot figure out where to begin.",
+      "expected": [
+        "study"
+      ],
+      "predicted": [
+        "study"
+      ]
+    },
+    {
+      "id": "CH05",
+      "text": "Everyone else seems to have a group of friends. I have nobody to spend time with.",
+      "expected": [
+        "connection"
+      ],
+      "predicted": [
+        "connection"
+      ]
+    },
+    {
+      "id": "CH06",
+      "text": "I am content, well rested and keeping up with university. I just want to see what resources exist.",
+      "expected": [],
+      "predicted": []
+    },
+    {
+      "id": "CH07",
+      "text": "I feel anxious about my unfinished dissertation and keep waking through the night.",
+      "expected": [
+        "worry",
+        "study",
+        "sleep"
+      ],
+      "predicted": [
+        "worry",
+        "sleep",
+        "study"
+      ]
+    },
+    {
+      "id": "CH08",
+      "text": "I miss my family and feel alone here. My mood has been low as well.",
+      "expected": [
+        "connection",
+        "low-mood"
+      ],
+      "predicted": [
+        "low-mood",
+        "connection"
+      ]
+    },
+    {
+      "id": "CH09",
+      "text": "I used to worry constantly but lately I feel calm. I am sleeping and studying comfortably.",
+      "expected": [],
+      "predicted": [
+        "worry"
+      ]
+    },
+    {
+      "id": "CH10",
+      "text": "My roommate has trouble sleeping, but I sleep well and feel fine. I am asking for general information.",
+      "expected": [],
+      "predicted": [
+        "sleep"
+      ]
+    },
+    {
+      "id": "CH11",
+      "text": "I have friends and am not lonely. I need help breaking down the work for my research submission.",
+      "expected": [
+        "study"
+      ],
+      "predicted": [
+        "study"
+      ]
+    },
+    {
+      "id": "CH12",
+      "text": "I am not feeling sad and I enjoy my activities, but I find it hard to get to sleep.",
+      "expected": [
+        "sleep"
+      ],
+      "predicted": [
+        "low-mood",
+        "sleep"
+      ]
+    },
+    {
+      "id": "CH13",
+      "text": "The timetable for tomorrow has been updated and the library closes at six.",
+      "expected": [],
+      "predicted": [
+        "study"
+      ]
+    },
+    {
+      "id": "CH14",
+      "text": "I honestly cannot put what I am feeling into words right now.",
+      "expected": [],
+      "predicted": [
+        "worry"
+      ]
+    },
+    {
+      "id": "CH15",
+      "text": "I have people around me but do not feel I can confide in anyone, and it leaves me feeling isolated.",
+      "expected": [
+        "connection"
+      ],
+      "predicted": [
+        "connection"
+      ]
+    },
+    {
+      "id": "CH16",
+      "text": "I feel dread throughout the day and my thoughts keep returning to unlikely disasters.",
+      "expected": [
+        "worry"
+      ],
+      "predicted": [
+        "low-mood",
+        "worry"
+      ]
+    },
+    {
+      "id": "CH17",
+      "text": "I spend ages in bed without feeling rested and I have stopped enjoying my hobbies.",
+      "expected": [
+        "sleep",
+        "low-mood"
+      ],
+      "predicted": [
+        "sleep"
+      ]
+    },
+    {
+      "id": "CH18",
+      "text": "Revision feels impossible to start. I also wish I had classmates I could talk to.",
+      "expected": [
+        "study",
+        "connection"
+      ],
+      "predicted": [
+        "study",
+        "connection"
+      ]
+    },
+    {
+      "id": "CH19",
+      "text": "I’m worried about failing my exams; I don’t have a workable study plan.",
+      "expected": [
+        "worry",
+        "study"
+      ],
+      "predicted": [
+        "study"
+      ]
+    },
+    {
+      "id": "CH20",
+      "text": "I enjoyed meeting friends at the café and I am doing alright with my daily routine.",
+      "expected": [],
+      "predicted": []
+    }
+  ]
+}

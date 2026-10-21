@@ -1,0 +1,2246 @@
+{
+  "version": "c2-adaptive-followups-v1",
+  "reviewStatus": "custom-support-questions-awaiting-professional-review",
+  "minimumQuestions": 5,
+  "maximumQuestions": 9,
+  "sources": [
+    "https://www.nimh.nih.gov/health/publications/my-mental-health-do-i-need-help",
+    "https://medlineplus.gov/lab-tests/mental-health-screening/"
+  ],
+  "questions": [
+    {
+      "id": "impact",
+      "text": "How much are these concerns getting in the way of your day?",
+      "options": [
+        "Not difficult at all",
+        "Somewhat difficult",
+        "Very difficult",
+        "Extremely difficult"
+      ],
+      "topics": [],
+      "facet": "daily-impact",
+      "priority": 0,
+      "reason": "An optional question to help personalise your support."
+    },
+    {
+      "id": "duration",
+      "text": "How long have the concerns you want to discuss been affecting you?",
+      "options": [
+        "Less than two weeks",
+        "Two weeks to a month",
+        "More than a month",
+        "On and off",
+        "No current concern"
+      ],
+      "topics": [],
+      "facet": "duration",
+      "priority": 0,
+      "reason": "An optional question to help personalise your support."
+    },
+    {
+      "id": "goal",
+      "text": "What would feel most useful to you today?",
+      "options": [
+        "Practical coping ideas",
+        "Talk to a professional",
+        "Connect with other students",
+        "Understand my answers"
+      ],
+      "topics": [],
+      "facet": "support-goal",
+      "priority": 0,
+      "reason": "An optional question to help personalise your support."
+    },
+    {
+      "id": "support-history",
+      "text": "Have you found any kind of support useful before?",
+      "options": [
+        "A professional conversation",
+        "Friends or family",
+        "A student group",
+        "Personal routines",
+        "I have not tried support"
+      ],
+      "topics": [],
+      "facet": "support-history",
+      "priority": 0,
+      "reason": "An optional question to help personalise your support."
+    },
+    {
+      "id": "support-format",
+      "text": "How would you feel most comfortable starting a support conversation?",
+      "options": [
+        "One-to-one online",
+        "One-to-one in person",
+        "A student group",
+        "Written messages",
+        "I am not sure yet"
+      ],
+      "topics": [],
+      "facet": "support-format",
+      "priority": 0,
+      "reason": "An optional question to help personalise your support."
+    },
+    {
+      "id": "support-barrier",
+      "text": "What might make it difficult to reach out for support?",
+      "options": [
+        "Finding time",
+        "Cost or travel",
+        "Privacy concerns",
+        "Not knowing who to contact",
+        "Nothing in particular"
+      ],
+      "topics": [],
+      "facet": "access-barrier",
+      "priority": 1,
+      "reason": "An optional question to help personalise your support."
+    },
+    {
+      "id": "first-step",
+      "text": "What size of next step feels manageable today?",
+      "options": [
+        "A very small action",
+        "A short conversation",
+        "Making a plan",
+        "Arranging professional support",
+        "I would like time to think"
+      ],
+      "topics": [],
+      "facet": "step-size",
+      "priority": 0,
+      "reason": "An optional question to help personalise your support."
+    },
+    {
+      "id": "practical-pressure",
+      "text": "Is a practical situation adding to the pressure you are feeling?",
+      "options": [
+        "Money or living costs",
+        "Housing or travel",
+        "Family responsibilities",
+        "Several practical things",
+        "No practical concern"
+      ],
+      "topics": [],
+      "facet": "practical-pressure",
+      "priority": 0,
+      "reason": "An optional question to help personalise your support."
+    },
+    {
+      "id": "campus-support",
+      "text": "Which university support option would you like to know more about?",
+      "options": [
+        "Counseling service",
+        "Academic adviser",
+        "Student wellbeing office",
+        "Peer groups",
+        "I am not sure"
+      ],
+      "topics": [],
+      "facet": "campus-support",
+      "priority": 0,
+      "reason": "An optional question to help personalise your support."
+    },
+    {
+      "id": "progress-marker",
+      "text": "What change would help you notice that support is useful?",
+      "options": [
+        "Daily tasks feel more manageable",
+        "Rest feels easier",
+        "Study feels more manageable",
+        "I feel more connected",
+        "I can describe what I need"
+      ],
+      "topics": [],
+      "facet": "progress-marker",
+      "priority": 0,
+      "reason": "An optional question to help personalise your support."
+    },
+    {
+      "id": "current-strength",
+      "text": "What is already helping you get through difficult days?",
+      "options": [
+        "A person I trust",
+        "A regular routine",
+        "An activity I enjoy",
+        "Time outside or movement",
+        "I have not found something yet"
+      ],
+      "topics": [],
+      "facet": "current-strength",
+      "priority": 0,
+      "reason": "An optional question to help personalise your support."
+    },
+    {
+      "id": "support-pace",
+      "text": "How would you like to approach support for now?",
+      "options": [
+        "Explore information first",
+        "Try one practical idea",
+        "Talk soon",
+        "Set up ongoing support",
+        "I am unsure"
+      ],
+      "topics": [],
+      "facet": "support-pace",
+      "priority": 0,
+      "reason": "An optional question to help personalise your support."
+    },
+    {
+      "id": "talk-comfort",
+      "text": "What would make talking about your concerns feel easier?",
+      "options": [
+        "Knowing what to expect",
+        "Choosing a preferred language",
+        "Choosing the professional",
+        "Starting with written notes",
+        "Having time to build trust"
+      ],
+      "topics": [],
+      "facet": "talk-comfort",
+      "priority": 0,
+      "reason": "An optional question to help personalise your support."
+    },
+    {
+      "id": "time-space",
+      "text": "When is it easiest for you to make time for yourself?",
+      "options": [
+        "Before classes",
+        "Between classes",
+        "In the evening",
+        "At weekends",
+        "My schedule changes a lot"
+      ],
+      "topics": [],
+      "facet": "time-space",
+      "priority": 0,
+      "reason": "An optional question to help personalise your support."
+    },
+    {
+      "id": "support-network",
+      "text": "Is there someone you would feel comfortable checking in with?",
+      "options": [
+        "A friend",
+        "A family member",
+        "A university staff member",
+        "A professional",
+        "I am not sure who"
+      ],
+      "topics": [],
+      "facet": "support-network",
+      "priority": 0,
+      "reason": "An optional question to help personalise your support."
+    },
+    {
+      "id": "mood",
+      "text": "What feels hardest when your mood is low?",
+      "options": [
+        "Getting started",
+        "Enjoying things",
+        "Feeling connected",
+        "Getting through daily tasks",
+        "No current low-mood concern"
+      ],
+      "topics": [
+        "low-mood"
+      ],
+      "facet": "mood-start",
+      "priority": 0,
+      "reason": "An optional question to help personalise your support.",
+      "signals": [
+        {
+          "answer": "Feeling connected",
+          "topics": [
+            "connection"
+          ]
+        },
+        {
+          "answer": "No current low-mood concern",
+          "dismissTopics": [
+            "low-mood"
+          ]
+        }
+      ],
+      "screening": [
+        {
+          "scale": "phq9",
+          "index": 0
+        },
+        {
+          "scale": "phq9",
+          "index": 1
+        }
+      ]
+    },
+    {
+      "id": "mood-starting",
+      "text": "When is getting started most difficult?",
+      "options": [
+        "Getting out of bed",
+        "Beginning study",
+        "Starting everyday chores",
+        "Starting something I usually enjoy"
+      ],
+      "topics": [
+        "low-mood"
+      ],
+      "facet": "mood-initiation",
+      "priority": 0,
+      "reason": "An optional question to help personalise your support.",
+      "when": [
+        {
+          "questionId": "mood",
+          "answers": [
+            "Getting started",
+            "Getting through daily tasks"
+          ]
+        }
+      ],
+      "signals": [
+        {
+          "answer": "Beginning study",
+          "topics": [
+            "study"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "mood-enjoyment",
+      "text": "What has changed about activities you usually enjoy?",
+      "options": [
+        "I rarely start them",
+        "I start but lose interest",
+        "They feel less rewarding",
+        "I still enjoy some activities"
+      ],
+      "topics": [
+        "low-mood"
+      ],
+      "facet": "mood-enjoyment",
+      "priority": 0,
+      "reason": "An optional question to help personalise your support.",
+      "when": [
+        {
+          "questionId": "mood",
+          "answers": [
+            "Enjoying things"
+          ]
+        }
+      ],
+      "screening": [
+        {
+          "scale": "phq9",
+          "index": 0
+        }
+      ]
+    },
+    {
+      "id": "mood-company",
+      "text": "What makes staying in touch with people harder on low days?",
+      "options": [
+        "Finding the energy",
+        "Knowing what to say",
+        "Not wanting to burden anyone",
+        "I would rather have quiet company"
+      ],
+      "topics": [
+        "low-mood"
+      ],
+      "facet": "mood-company",
+      "priority": 0,
+      "reason": "An optional question to help personalise your support.",
+      "when": [
+        {
+          "questionId": "mood",
+          "answers": [
+            "Feeling connected"
+          ]
+        }
+      ],
+      "signals": [
+        {
+          "answer": "Knowing what to say",
+          "topics": [
+            "connection"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "mood-tasks",
+      "text": "Which daily task would you most like support with?",
+      "options": [
+        "Keeping my space manageable",
+        "Preparing meals",
+        "Keeping up with appointments",
+        "Organising small daily tasks"
+      ],
+      "topics": [
+        "low-mood"
+      ],
+      "facet": "mood-tasks",
+      "priority": 0,
+      "reason": "An optional question to help personalise your support.",
+      "when": [
+        {
+          "questionId": "mood",
+          "answers": [
+            "Getting through daily tasks"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "mood-energy",
+      "text": "How does your energy affect the day you want to have?",
+      "options": [
+        "I run out early",
+        "My energy changes a lot",
+        "I need frequent pauses",
+        "My energy is mostly manageable"
+      ],
+      "topics": [
+        "low-mood"
+      ],
+      "facet": "energy",
+      "priority": 0,
+      "reason": "An optional question to help personalise your support.",
+      "screening": [
+        {
+          "scale": "phq9",
+          "index": 3
+        }
+      ]
+    },
+    {
+      "id": "mood-self-talk",
+      "text": "What is your inner conversation like when a task does not go well?",
+      "options": [
+        "I am very critical of myself",
+        "I compare myself with others",
+        "I can usually be fair to myself",
+        "I find it hard to describe"
+      ],
+      "topics": [
+        "low-mood"
+      ],
+      "facet": "self-talk",
+      "priority": 0,
+      "reason": "An optional question to help personalise your support.",
+      "screening": [
+        {
+          "scale": "phq9",
+          "index": 5
+        }
+      ]
+    },
+    {
+      "id": "mood-concentration",
+      "text": "Where do you notice difficulty concentrating most?",
+      "options": [
+        "Reading or listening",
+        "Following a conversation",
+        "Making decisions",
+        "Switching between tasks",
+        "Concentration is manageable"
+      ],
+      "topics": [
+        "low-mood"
+      ],
+      "facet": "concentration",
+      "priority": 0,
+      "reason": "An optional question to help personalise your support.",
+      "screening": [
+        {
+          "scale": "phq9",
+          "index": 6
+        }
+      ]
+    },
+    {
+      "id": "mood-pattern",
+      "text": "Does your mood feel different at different parts of the day?",
+      "options": [
+        "Mornings feel harder",
+        "Evenings feel harder",
+        "It changes without a clear pattern",
+        "It is fairly similar throughout"
+      ],
+      "topics": [
+        "low-mood"
+      ],
+      "facet": "mood-pattern",
+      "priority": 0,
+      "reason": "An optional question to help personalise your support."
+    },
+    {
+      "id": "mood-change",
+      "text": "Was there a change around the time your mood became harder to manage?",
+      "options": [
+        "A university change",
+        "A relationship or family change",
+        "A change in routine",
+        "No clear change",
+        "I would rather not say"
+      ],
+      "topics": [
+        "low-mood"
+      ],
+      "facet": "mood-change",
+      "priority": 0,
+      "reason": "An optional question to help personalise your support."
+    },
+    {
+      "id": "mood-small-step",
+      "text": "Which small action feels most achievable on a low day?",
+      "options": [
+        "One everyday task",
+        "A short enjoyable activity",
+        "A message to someone",
+        "Taking a planned break",
+        "I need help choosing"
+      ],
+      "topics": [
+        "low-mood"
+      ],
+      "facet": "mood-small-step",
+      "priority": 0,
+      "reason": "An optional question to help personalise your support."
+    },
+    {
+      "id": "mood-activity-support",
+      "text": "What would help you return to an activity you miss?",
+      "options": [
+        "Doing a smaller version",
+        "Doing it with someone",
+        "A regular time",
+        "Less pressure to enjoy it immediately"
+      ],
+      "topics": [
+        "low-mood"
+      ],
+      "facet": "mood-activity-support",
+      "priority": 0,
+      "reason": "An optional question to help personalise your support.",
+      "when": [
+        {
+          "questionId": "mood",
+          "answers": [
+            "Enjoying things"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "mood-food-routine",
+      "text": "Are changes in appetite making your daily routine harder?",
+      "options": [
+        "Remembering meals is difficult",
+        "Eating feels less appealing",
+        "My eating pattern varies",
+        "This is not a concern for me"
+      ],
+      "topics": [
+        "low-mood"
+      ],
+      "facet": "food-routine",
+      "priority": 0,
+      "reason": "An optional question to help personalise your support.",
+      "screening": [
+        {
+          "scale": "phq9",
+          "index": 4
+        }
+      ]
+    },
+    {
+      "id": "mood-rest-link",
+      "text": "How connected do low mood and disrupted rest feel for you?",
+      "options": [
+        "Poor sleep makes the next day harder",
+        "Low mood makes it difficult to settle",
+        "Both seem connected",
+        "I have not noticed a connection"
+      ],
+      "topics": [
+        "low-mood"
+      ],
+      "facet": "mood-rest-link",
+      "priority": 0,
+      "reason": "An optional question to help personalise your support.",
+      "signals": [
+        {
+          "answer": "Poor sleep makes the next day harder",
+          "topics": [
+            "sleep"
+          ]
+        },
+        {
+          "answer": "Low mood makes it difficult to settle",
+          "topics": [
+            "sleep"
+          ]
+        },
+        {
+          "answer": "Both seem connected",
+          "topics": [
+            "sleep"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "mood-support-request",
+      "text": "What would you want another person to understand about your low days?",
+      "options": [
+        "I need patient listening",
+        "Tasks can take more effort",
+        "I may need company without talking",
+        "I want help finding professional support"
+      ],
+      "topics": [
+        "low-mood"
+      ],
+      "facet": "mood-support-request",
+      "priority": 0,
+      "reason": "An optional question to help personalise your support."
+    },
+    {
+      "id": "mood-study-link",
+      "text": "Does low motivation affect your university work?",
+      "options": [
+        "Starting assignments is harder",
+        "Attending feels harder",
+        "Keeping up with reading is harder",
+        "My study routine is unaffected"
+      ],
+      "topics": [
+        "low-mood"
+      ],
+      "facet": "mood-study-link",
+      "priority": 0,
+      "reason": "An optional question to help personalise your support.",
+      "signals": [
+        {
+          "answer": "Starting assignments is harder",
+          "topics": [
+            "study"
+          ]
+        },
+        {
+          "answer": "Attending feels harder",
+          "topics": [
+            "study"
+          ]
+        },
+        {
+          "answer": "Keeping up with reading is harder",
+          "topics": [
+            "study"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "mood-recovery-space",
+      "text": "What tends to make a difficult day a little more manageable?",
+      "options": [
+        "A less demanding schedule",
+        "Someone checking in",
+        "A familiar activity",
+        "A quieter place",
+        "I am still working that out"
+      ],
+      "topics": [
+        "low-mood"
+      ],
+      "facet": "mood-recovery-space",
+      "priority": 0,
+      "reason": "An optional question to help personalise your support."
+    },
+    {
+      "id": "worry",
+      "text": "Which area is most connected to your worry right now?",
+      "options": [
+        "Study or exams",
+        "Money or practical problems",
+        "Relationships",
+        "Several things",
+        "No current worry concern"
+      ],
+      "topics": [
+        "worry"
+      ],
+      "facet": "worry-start",
+      "priority": 0,
+      "reason": "An optional question to help personalise your support.",
+      "signals": [
+        {
+          "answer": "Study or exams",
+          "topics": [
+            "study"
+          ]
+        },
+        {
+          "answer": "Relationships",
+          "topics": [
+            "connection"
+          ]
+        },
+        {
+          "answer": "No current worry concern",
+          "dismissTopics": [
+            "worry"
+          ]
+        }
+      ],
+      "screening": [
+        {
+          "scale": "gad7",
+          "index": 1
+        },
+        {
+          "scale": "gad7",
+          "index": 2
+        }
+      ]
+    },
+    {
+      "id": "worry-study",
+      "text": "Which university situation brings the most worry?",
+      "options": [
+        "An approaching exam",
+        "Assignment deadlines",
+        "Presenting or speaking",
+        "Uncertainty about performance"
+      ],
+      "topics": [
+        "worry"
+      ],
+      "facet": "worry-study",
+      "priority": 0,
+      "reason": "An optional question to help personalise your support.",
+      "when": [
+        {
+          "questionId": "worry",
+          "answers": [
+            "Study or exams"
+          ]
+        }
+      ],
+      "signals": [
+        {
+          "answer": "An approaching exam",
+          "topics": [
+            "study"
+          ]
+        },
+        {
+          "answer": "Assignment deadlines",
+          "topics": [
+            "study"
+          ]
+        },
+        {
+          "answer": "Presenting or speaking",
+          "topics": [
+            "study"
+          ]
+        },
+        {
+          "answer": "Uncertainty about performance",
+          "topics": [
+            "study"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "worry-practical",
+      "text": "What part of the practical pressure feels most uncertain?",
+      "options": [
+        "Meeting regular costs",
+        "A sudden expense",
+        "Living arrangements",
+        "Balancing work and study"
+      ],
+      "topics": [
+        "worry"
+      ],
+      "facet": "worry-practical",
+      "priority": 0,
+      "reason": "An optional question to help personalise your support.",
+      "when": [
+        {
+          "questionId": "worry",
+          "answers": [
+            "Money or practical problems"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "worry-relationships",
+      "text": "What part of relationships is bringing worry?",
+      "options": [
+        "A disagreement",
+        "Feeling misunderstood",
+        "Worry about being judged",
+        "Uncertainty about staying connected"
+      ],
+      "topics": [
+        "worry"
+      ],
+      "facet": "worry-relationships",
+      "priority": 0,
+      "reason": "An optional question to help personalise your support.",
+      "when": [
+        {
+          "questionId": "worry",
+          "answers": [
+            "Relationships"
+          ]
+        }
+      ],
+      "signals": [
+        {
+          "answer": "A disagreement",
+          "topics": [
+            "connection"
+          ]
+        },
+        {
+          "answer": "Feeling misunderstood",
+          "topics": [
+            "connection"
+          ]
+        },
+        {
+          "answer": "Worry about being judged",
+          "topics": [
+            "connection"
+          ]
+        },
+        {
+          "answer": "Uncertainty about staying connected",
+          "topics": [
+            "connection"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "worry-many",
+      "text": "When several worries arrive, which feels hardest?",
+      "options": [
+        "Choosing what to address first",
+        "My thoughts keep switching",
+        "Everything feels urgent",
+        "Explaining the worries to someone"
+      ],
+      "topics": [
+        "worry"
+      ],
+      "facet": "worry-many",
+      "priority": 0,
+      "reason": "An optional question to help personalise your support.",
+      "when": [
+        {
+          "questionId": "worry",
+          "answers": [
+            "Several things"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "worry-control",
+      "text": "When a worry starts, how easy is it to shift your attention?",
+      "options": [
+        "I can usually shift it",
+        "It takes effort",
+        "It returns repeatedly",
+        "It feels different on different days"
+      ],
+      "topics": [
+        "worry"
+      ],
+      "facet": "worry-control",
+      "priority": 0,
+      "reason": "An optional question to help personalise your support.",
+      "screening": [
+        {
+          "scale": "gad7",
+          "index": 1
+        }
+      ]
+    },
+    {
+      "id": "worry-timing",
+      "text": "When do worries tend to take up the most space?",
+      "options": [
+        "Before a task or event",
+        "During quiet moments",
+        "When trying to sleep",
+        "Throughout the day"
+      ],
+      "topics": [
+        "worry"
+      ],
+      "facet": "worry-timing",
+      "priority": 0,
+      "reason": "An optional question to help personalise your support.",
+      "signals": [
+        {
+          "answer": "When trying to sleep",
+          "topics": [
+            "sleep"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "worry-rest",
+      "text": "What makes relaxing difficult when you feel worried?",
+      "options": [
+        "My thoughts keep going",
+        "I feel physically tense",
+        "I feel I should keep working",
+        "I am unsure how to pause"
+      ],
+      "topics": [
+        "worry"
+      ],
+      "facet": "worry-rest",
+      "priority": 0,
+      "reason": "An optional question to help personalise your support.",
+      "screening": [
+        {
+          "scale": "gad7",
+          "index": 3
+        }
+      ]
+    },
+    {
+      "id": "worry-avoidance",
+      "text": "Has worry led you to put something off that matters to you?",
+      "options": [
+        "A study task",
+        "A conversation",
+        "Going somewhere",
+        "Making a decision",
+        "Not at the moment"
+      ],
+      "topics": [
+        "worry"
+      ],
+      "facet": "worry-avoidance",
+      "priority": 0,
+      "reason": "An optional question to help personalise your support.",
+      "signals": [
+        {
+          "answer": "A study task",
+          "topics": [
+            "study"
+          ]
+        },
+        {
+          "answer": "A conversation",
+          "topics": [
+            "connection"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "worry-physical",
+      "text": "What do you notice in your body when worry increases?",
+      "options": [
+        "Muscle tension",
+        "Restlessness",
+        "Feeling tired afterwards",
+        "I do not notice a clear pattern"
+      ],
+      "topics": [
+        "worry"
+      ],
+      "facet": "worry-physical",
+      "priority": 0,
+      "reason": "An optional question to help personalise your support.",
+      "screening": [
+        {
+          "scale": "gad7",
+          "index": 4
+        }
+      ]
+    },
+    {
+      "id": "worry-reassurance",
+      "text": "What do you tend to do when you want reassurance?",
+      "options": [
+        "Ask someone I trust",
+        "Check information repeatedly",
+        "Keep the worry to myself",
+        "Write down what I know"
+      ],
+      "topics": [
+        "worry"
+      ],
+      "facet": "worry-reassurance",
+      "priority": 0,
+      "reason": "An optional question to help personalise your support."
+    },
+    {
+      "id": "worry-uncertainty",
+      "text": "Which kind of uncertainty is hardest to sit with?",
+      "options": [
+        "Not knowing the outcome",
+        "Not knowing what others think",
+        "Not having a clear plan",
+        "Changes I cannot control"
+      ],
+      "topics": [
+        "worry"
+      ],
+      "facet": "worry-uncertainty",
+      "priority": 0,
+      "reason": "An optional question to help personalise your support."
+    },
+    {
+      "id": "worry-pause",
+      "text": "What kind of pause would you be willing to explore?",
+      "options": [
+        "A brief grounding activity",
+        "Writing the worry down",
+        "Talking to someone",
+        "A break from the current task",
+        "I am not sure yet"
+      ],
+      "topics": [
+        "worry"
+      ],
+      "facet": "worry-pause",
+      "priority": 0,
+      "reason": "An optional question to help personalise your support."
+    },
+    {
+      "id": "worry-interruption",
+      "text": "When worry interrupts a task, what usually happens next?",
+      "options": [
+        "I stop the task",
+        "I keep working but lose focus",
+        "I move to another task",
+        "I can often return after a pause"
+      ],
+      "topics": [
+        "worry"
+      ],
+      "facet": "worry-interruption",
+      "priority": 0,
+      "reason": "An optional question to help personalise your support."
+    },
+    {
+      "id": "worry-irritability",
+      "text": "Does feeling on edge affect how you interact with others?",
+      "options": [
+        "I become quieter",
+        "I get irritated more easily",
+        "I seek reassurance",
+        "I have not noticed a change"
+      ],
+      "topics": [
+        "worry"
+      ],
+      "facet": "worry-irritability",
+      "priority": 0,
+      "reason": "An optional question to help personalise your support.",
+      "screening": [
+        {
+          "scale": "gad7",
+          "index": 5
+        }
+      ]
+    },
+    {
+      "id": "worry-planning",
+      "text": "What would make a worry feel easier to discuss?",
+      "options": [
+        "Separating facts from guesses",
+        "Choosing one worry first",
+        "Writing a short description",
+        "Having someone ask gentle questions"
+      ],
+      "topics": [
+        "worry"
+      ],
+      "facet": "worry-planning",
+      "priority": 0,
+      "reason": "An optional question to help personalise your support."
+    },
+    {
+      "id": "worry-support-request",
+      "text": "What would you want from a conversation about worry?",
+      "options": [
+        "Help understanding the pattern",
+        "A practical coping discussion",
+        "Support with one situation",
+        "Help deciding whether to seek ongoing support"
+      ],
+      "topics": [
+        "worry"
+      ],
+      "facet": "worry-support-request",
+      "priority": 0,
+      "reason": "An optional question to help personalise your support."
+    },
+    {
+      "id": "sleep",
+      "text": "What would you most like help with around sleep?",
+      "options": [
+        "Getting to sleep",
+        "Staying asleep",
+        "Sleeping too much",
+        "Building a routine",
+        "No current sleep concern"
+      ],
+      "topics": [
+        "sleep"
+      ],
+      "facet": "sleep-start",
+      "priority": 0,
+      "reason": "An optional question to help personalise your support.",
+      "signals": [
+        {
+          "answer": "No current sleep concern",
+          "dismissTopics": [
+            "sleep"
+          ]
+        }
+      ],
+      "screening": [
+        {
+          "scale": "phq9",
+          "index": 2
+        }
+      ]
+    },
+    {
+      "id": "sleep-onset",
+      "text": "What tends to keep you awake when you want to fall asleep?",
+      "options": [
+        "Thoughts about the day",
+        "Worry about tomorrow",
+        "Noise or surroundings",
+        "I do not feel sleepy yet",
+        "I am not sure"
+      ],
+      "topics": [
+        "sleep"
+      ],
+      "facet": "sleep-onset",
+      "priority": 0,
+      "reason": "An optional question to help personalise your support.",
+      "when": [
+        {
+          "questionId": "sleep",
+          "answers": [
+            "Getting to sleep"
+          ]
+        }
+      ],
+      "signals": [
+        {
+          "answer": "Worry about tomorrow",
+          "topics": [
+            "worry"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "sleep-waking",
+      "text": "When you wake during the night, what feels most difficult?",
+      "options": [
+        "Getting comfortable again",
+        "My thoughts become busy",
+        "Noise or interruptions",
+        "Not knowing what woke me"
+      ],
+      "topics": [
+        "sleep"
+      ],
+      "facet": "sleep-waking",
+      "priority": 0,
+      "reason": "An optional question to help personalise your support.",
+      "when": [
+        {
+          "questionId": "sleep",
+          "answers": [
+            "Staying asleep"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "sleep-oversleep",
+      "text": "What feels hardest about sleeping more than you want?",
+      "options": [
+        "Getting up at the planned time",
+        "Missing morning commitments",
+        "Still feeling tired",
+        "Keeping a regular day"
+      ],
+      "topics": [
+        "sleep"
+      ],
+      "facet": "sleep-oversleep",
+      "priority": 0,
+      "reason": "An optional question to help personalise your support.",
+      "when": [
+        {
+          "questionId": "sleep",
+          "answers": [
+            "Sleeping too much"
+          ]
+        }
+      ],
+      "signals": [
+        {
+          "answer": "Missing morning commitments",
+          "topics": [
+            "study"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "sleep-routine",
+      "text": "What makes a regular sleep schedule hard to keep?",
+      "options": [
+        "Changing class or work times",
+        "Late study sessions",
+        "Different weekend times",
+        "My household routine"
+      ],
+      "topics": [
+        "sleep"
+      ],
+      "facet": "sleep-routine",
+      "priority": 0,
+      "reason": "An optional question to help personalise your support.",
+      "when": [
+        {
+          "questionId": "sleep",
+          "answers": [
+            "Building a routine"
+          ]
+        }
+      ],
+      "signals": [
+        {
+          "answer": "Late study sessions",
+          "topics": [
+            "study"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "sleep-daytime",
+      "text": "Where do you notice disrupted sleep affecting the next day?",
+      "options": [
+        "Energy for everyday tasks",
+        "Concentrating in class",
+        "Feeling on edge",
+        "Wanting to withdraw",
+        "I do not notice an effect"
+      ],
+      "topics": [
+        "sleep"
+      ],
+      "facet": "sleep-daytime",
+      "priority": 0,
+      "reason": "An optional question to help personalise your support.",
+      "signals": [
+        {
+          "answer": "Concentrating in class",
+          "topics": [
+            "study"
+          ]
+        },
+        {
+          "answer": "Feeling on edge",
+          "topics": [
+            "worry"
+          ]
+        },
+        {
+          "answer": "Wanting to withdraw",
+          "topics": [
+            "connection"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "sleep-setting",
+      "text": "Is your sleep space comfortable enough for you to rest?",
+      "options": [
+        "Noise is a problem",
+        "Light is a problem",
+        "Sharing the space is difficult",
+        "It is generally comfortable"
+      ],
+      "topics": [
+        "sleep"
+      ],
+      "facet": "sleep-setting",
+      "priority": 0,
+      "reason": "An optional question to help personalise your support."
+    },
+    {
+      "id": "sleep-schedule",
+      "text": "How similar are your sleep and wake times across the week?",
+      "options": [
+        "Fairly consistent",
+        "Different on class days",
+        "Different at weekends",
+        "Unpredictable most days"
+      ],
+      "topics": [
+        "sleep"
+      ],
+      "facet": "sleep-schedule",
+      "priority": 0,
+      "reason": "An optional question to help personalise your support."
+    },
+    {
+      "id": "sleep-wind-down",
+      "text": "What usually happens in the hour before you try to sleep?",
+      "options": [
+        "Study or work",
+        "Using a screen",
+        "Household responsibilities",
+        "A quiet activity",
+        "It changes each day"
+      ],
+      "topics": [
+        "sleep"
+      ],
+      "facet": "sleep-wind-down",
+      "priority": 0,
+      "reason": "An optional question to help personalise your support."
+    },
+    {
+      "id": "sleep-naps",
+      "text": "Do daytime naps affect the sleep routine you want?",
+      "options": [
+        "They shift my bedtime",
+        "They help me manage the day",
+        "I nap without planning to",
+        "I do not usually nap"
+      ],
+      "topics": [
+        "sleep"
+      ],
+      "facet": "sleep-naps",
+      "priority": 0,
+      "reason": "An optional question to help personalise your support."
+    },
+    {
+      "id": "sleep-caffeine",
+      "text": "Does the timing of caffeinated drinks feel relevant to your rest?",
+      "options": [
+        "I often have them late",
+        "I mainly have them earlier",
+        "I do not usually have them",
+        "I have not noticed a connection"
+      ],
+      "topics": [
+        "sleep"
+      ],
+      "facet": "sleep-caffeine",
+      "priority": 0,
+      "reason": "An optional question to help personalise your support."
+    },
+    {
+      "id": "sleep-deadlines",
+      "text": "How do deadlines affect your usual sleep routine?",
+      "options": [
+        "I stay up to finish work",
+        "I lie awake thinking about work",
+        "I wake earlier to study",
+        "Deadlines do not change it much"
+      ],
+      "topics": [
+        "sleep"
+      ],
+      "facet": "sleep-deadlines",
+      "priority": 0,
+      "reason": "An optional question to help personalise your support.",
+      "signals": [
+        {
+          "answer": "I stay up to finish work",
+          "topics": [
+            "study"
+          ]
+        },
+        {
+          "answer": "I lie awake thinking about work",
+          "topics": [
+            "study"
+          ]
+        },
+        {
+          "answer": "I wake earlier to study",
+          "topics": [
+            "study"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "sleep-reset",
+      "text": "Which part of your daily routine would you like to make steadier first?",
+      "options": [
+        "Wake-up time",
+        "Time to wind down",
+        "Meal or activity times",
+        "Planning evening responsibilities"
+      ],
+      "topics": [
+        "sleep"
+      ],
+      "facet": "sleep-reset",
+      "priority": 0,
+      "reason": "An optional question to help personalise your support."
+    },
+    {
+      "id": "sleep-worry-link",
+      "text": "Do worries continue when you are trying to rest?",
+      "options": [
+        "About university work",
+        "About personal situations",
+        "About sleep itself",
+        "Not usually"
+      ],
+      "topics": [
+        "sleep"
+      ],
+      "facet": "sleep-worry-link",
+      "priority": 0,
+      "reason": "An optional question to help personalise your support.",
+      "signals": [
+        {
+          "answer": "About university work",
+          "topics": [
+            "worry",
+            "study"
+          ]
+        },
+        {
+          "answer": "About personal situations",
+          "topics": [
+            "worry"
+          ]
+        },
+        {
+          "answer": "About sleep itself",
+          "topics": [
+            "worry"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "sleep-morning",
+      "text": "What would make mornings feel more manageable?",
+      "options": [
+        "A less rushed start",
+        "Support keeping a routine",
+        "Fewer early commitments",
+        "Time to plan the day"
+      ],
+      "topics": [
+        "sleep"
+      ],
+      "facet": "sleep-morning",
+      "priority": 0,
+      "reason": "An optional question to help personalise your support."
+    },
+    {
+      "id": "sleep-tried",
+      "text": "What have you already tried to make rest easier?",
+      "options": [
+        "Changing my evening routine",
+        "Adjusting my surroundings",
+        "Talking with someone",
+        "Keeping track of sleep",
+        "I have not tried anything yet"
+      ],
+      "topics": [
+        "sleep"
+      ],
+      "facet": "sleep-tried",
+      "priority": 0,
+      "reason": "An optional question to help personalise your support."
+    },
+    {
+      "id": "sleep-support-request",
+      "text": "What would you most like a professional to understand about your sleep?",
+      "options": [
+        "How long it has been difficult",
+        "How it affects my day",
+        "What I have already tried",
+        "My schedule and living situation"
+      ],
+      "topics": [
+        "sleep"
+      ],
+      "facet": "sleep-support-request",
+      "priority": 0,
+      "reason": "An optional question to help personalise your support."
+    },
+    {
+      "id": "study",
+      "text": "How are your current concerns affecting your study routine?",
+      "options": [
+        "My routine feels manageable",
+        "Starting tasks is difficult",
+        "I am missing study commitments",
+        "I would like help planning my workload",
+        "No current study concern"
+      ],
+      "topics": [
+        "study"
+      ],
+      "facet": "study-start",
+      "priority": 0,
+      "reason": "An optional question to help personalise your support.",
+      "signals": [
+        {
+          "answer": "No current study concern",
+          "dismissTopics": [
+            "study"
+          ]
+        }
+      ],
+      "screening": [
+        {
+          "scale": "phq9",
+          "index": 6
+        }
+      ]
+    },
+    {
+      "id": "study-starting",
+      "text": "What makes starting a study task most difficult?",
+      "options": [
+        "The task feels too big",
+        "I am unsure of the first step",
+        "I worry it will not be good enough",
+        "I do not have enough energy"
+      ],
+      "topics": [
+        "study"
+      ],
+      "facet": "study-starting",
+      "priority": 0,
+      "reason": "An optional question to help personalise your support.",
+      "when": [
+        {
+          "questionId": "study",
+          "answers": [
+            "Starting tasks is difficult"
+          ]
+        }
+      ],
+      "signals": [
+        {
+          "answer": "I worry it will not be good enough",
+          "topics": [
+            "worry"
+          ]
+        },
+        {
+          "answer": "I do not have enough energy",
+          "topics": [
+            "low-mood"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "study-missed",
+      "text": "What is getting in the way of study commitments?",
+      "options": [
+        "Feeling overwhelmed",
+        "Sleep or tiredness",
+        "Practical responsibilities",
+        "Difficulty asking for help"
+      ],
+      "topics": [
+        "study"
+      ],
+      "facet": "study-missed",
+      "priority": 0,
+      "reason": "An optional question to help personalise your support.",
+      "when": [
+        {
+          "questionId": "study",
+          "answers": [
+            "I am missing study commitments"
+          ]
+        }
+      ],
+      "signals": [
+        {
+          "answer": "Sleep or tiredness",
+          "topics": [
+            "sleep"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "study-workload",
+      "text": "Which part of planning your workload needs the most support?",
+      "options": [
+        "Choosing priorities",
+        "Breaking down assignments",
+        "Estimating time",
+        "Making space for rest"
+      ],
+      "topics": [
+        "study"
+      ],
+      "facet": "study-workload",
+      "priority": 0,
+      "reason": "An optional question to help personalise your support.",
+      "when": [
+        {
+          "questionId": "study",
+          "answers": [
+            "I would like help planning my workload"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "study-manageable",
+      "text": "What is helping your study routine stay manageable?",
+      "options": [
+        "A clear plan",
+        "Working with others",
+        "Flexible deadlines",
+        "Support from staff",
+        "A steady daily routine"
+      ],
+      "topics": [
+        "study"
+      ],
+      "facet": "study-manageable",
+      "priority": 0,
+      "reason": "An optional question to help personalise your support.",
+      "when": [
+        {
+          "questionId": "study",
+          "answers": [
+            "My routine feels manageable"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "study-deadline",
+      "text": "How close is the university task that feels most pressing?",
+      "options": [
+        "Within a few days",
+        "Within two weeks",
+        "Later in the term",
+        "Several deadlines overlap",
+        "There is no specific deadline"
+      ],
+      "topics": [
+        "study"
+      ],
+      "facet": "study-deadline",
+      "priority": 0,
+      "reason": "An optional question to help personalise your support."
+    },
+    {
+      "id": "study-assignment",
+      "text": "Which stage of an assignment tends to create the most pressure?",
+      "options": [
+        "Understanding the brief",
+        "Researching or preparing",
+        "Producing a first draft",
+        "Finishing and submitting"
+      ],
+      "topics": [
+        "study"
+      ],
+      "facet": "study-assignment",
+      "priority": 0,
+      "reason": "An optional question to help personalise your support."
+    },
+    {
+      "id": "study-exams",
+      "text": "What feels most difficult about exams or assessments?",
+      "options": [
+        "Planning revision",
+        "Remembering material",
+        "The exam setting",
+        "Waiting for results",
+        "Exams are not my main concern"
+      ],
+      "topics": [
+        "study"
+      ],
+      "facet": "study-exams",
+      "priority": 0,
+      "reason": "An optional question to help personalise your support."
+    },
+    {
+      "id": "study-concentration",
+      "text": "What most often breaks your concentration while studying?",
+      "options": [
+        "Worrying thoughts",
+        "Tiredness",
+        "Noise or interruptions",
+        "Switching between tasks",
+        "I am not sure"
+      ],
+      "topics": [
+        "study"
+      ],
+      "facet": "study-concentration",
+      "priority": 0,
+      "reason": "An optional question to help personalise your support.",
+      "signals": [
+        {
+          "answer": "Worrying thoughts",
+          "topics": [
+            "worry"
+          ]
+        },
+        {
+          "answer": "Tiredness",
+          "topics": [
+            "sleep"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "study-perfection",
+      "text": "How does the standard you expect of yourself affect your work?",
+      "options": [
+        "I keep redoing work",
+        "I delay starting",
+        "It helps me plan",
+        "It varies by task"
+      ],
+      "topics": [
+        "study"
+      ],
+      "facet": "study-perfection",
+      "priority": 0,
+      "reason": "An optional question to help personalise your support."
+    },
+    {
+      "id": "study-feedback",
+      "text": "What kind of feedback would help you move forward?",
+      "options": [
+        "Clarifying the task",
+        "Knowing what to improve first",
+        "Reassurance about progress",
+        "A realistic plan with an adviser"
+      ],
+      "topics": [
+        "study"
+      ],
+      "facet": "study-feedback",
+      "priority": 0,
+      "reason": "An optional question to help personalise your support."
+    },
+    {
+      "id": "study-group",
+      "text": "How comfortable do you feel asking classmates for study support?",
+      "options": [
+        "Comfortable asking",
+        "I am unsure who to ask",
+        "I worry about being judged",
+        "I prefer to study alone"
+      ],
+      "topics": [
+        "study"
+      ],
+      "facet": "study-group",
+      "priority": 0,
+      "reason": "An optional question to help personalise your support.",
+      "signals": [
+        {
+          "answer": "I am unsure who to ask",
+          "topics": [
+            "connection"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "study-balance",
+      "text": "What competes most with the study time you want?",
+      "options": [
+        "Paid work",
+        "Family or caring responsibilities",
+        "Travel or housing demands",
+        "Recovery and rest",
+        "Several things"
+      ],
+      "topics": [
+        "study"
+      ],
+      "facet": "study-balance",
+      "priority": 0,
+      "reason": "An optional question to help personalise your support."
+    },
+    {
+      "id": "study-breaks",
+      "text": "What makes taking breaks from study difficult?",
+      "options": [
+        "Feeling guilty about stopping",
+        "Losing track of time",
+        "A crowded schedule",
+        "Returning to work afterwards"
+      ],
+      "topics": [
+        "study"
+      ],
+      "facet": "study-breaks",
+      "priority": 0,
+      "reason": "An optional question to help personalise your support."
+    },
+    {
+      "id": "study-plan",
+      "text": "Which planning step would feel useful for the next day or two?",
+      "options": [
+        "Choose one priority",
+        "Split one task into smaller steps",
+        "Ask about a deadline",
+        "Arrange a study session",
+        "I need help deciding"
+      ],
+      "topics": [
+        "study"
+      ],
+      "facet": "study-plan",
+      "priority": 0,
+      "reason": "An optional question to help personalise your support."
+    },
+    {
+      "id": "study-sleep-link",
+      "text": "Has university work changed your rest lately?",
+      "options": [
+        "I stay up later",
+        "I wake up thinking about work",
+        "My sleep times vary",
+        "My rest is unaffected"
+      ],
+      "topics": [
+        "study"
+      ],
+      "facet": "study-sleep-link",
+      "priority": 0,
+      "reason": "An optional question to help personalise your support.",
+      "signals": [
+        {
+          "answer": "I stay up later",
+          "topics": [
+            "sleep"
+          ]
+        },
+        {
+          "answer": "I wake up thinking about work",
+          "topics": [
+            "sleep"
+          ]
+        },
+        {
+          "answer": "My sleep times vary",
+          "topics": [
+            "sleep"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "study-support-request",
+      "text": "Who would you feel comfortable approaching about university pressure?",
+      "options": [
+        "An academic adviser",
+        "A lecturer or tutor",
+        "A counselor",
+        "A classmate or peer mentor",
+        "I am not sure yet"
+      ],
+      "topics": [
+        "study"
+      ],
+      "facet": "study-support-request",
+      "priority": 0,
+      "reason": "An optional question to help personalise your support."
+    },
+    {
+      "id": "connection",
+      "text": "How available does support from other people feel right now?",
+      "options": [
+        "I have someone I can talk to",
+        "I would like more contact",
+        "I feel isolated",
+        "I prefer not to discuss this",
+        "No current connection concern"
+      ],
+      "topics": [
+        "connection"
+      ],
+      "facet": "connection-start",
+      "priority": 0,
+      "reason": "An optional question to help personalise your support.",
+      "signals": [
+        {
+          "answer": "I prefer not to discuss this",
+          "dismissTopics": [
+            "connection"
+          ]
+        },
+        {
+          "answer": "No current connection concern",
+          "dismissTopics": [
+            "connection"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "connection-trusted",
+      "text": "What kind of contact feels most useful with someone you trust?",
+      "options": [
+        "Someone listening",
+        "Doing an activity together",
+        "Help with a practical task",
+        "A regular brief check-in"
+      ],
+      "topics": [
+        "connection"
+      ],
+      "facet": "connection-trusted",
+      "priority": 0,
+      "reason": "An optional question to help personalise your support.",
+      "when": [
+        {
+          "questionId": "connection",
+          "answers": [
+            "I have someone I can talk to"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "connection-more",
+      "text": "What kind of contact would you like more of?",
+      "options": [
+        "Casual conversation",
+        "A close friendship",
+        "A study group",
+        "A shared-interest group"
+      ],
+      "topics": [
+        "connection"
+      ],
+      "facet": "connection-more",
+      "priority": 0,
+      "reason": "An optional question to help personalise your support.",
+      "when": [
+        {
+          "questionId": "connection",
+          "answers": [
+            "I would like more contact"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "connection-isolation",
+      "text": "When does feeling isolated tend to be most noticeable?",
+      "options": [
+        "Between classes",
+        "In the evenings",
+        "At weekends",
+        "Even when I am around others"
+      ],
+      "topics": [
+        "connection"
+      ],
+      "facet": "connection-isolation",
+      "priority": 0,
+      "reason": "An optional question to help personalise your support.",
+      "when": [
+        {
+          "questionId": "connection",
+          "answers": [
+            "I feel isolated"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "connection-first-contact",
+      "text": "What makes taking the first step toward someone difficult?",
+      "options": [
+        "Not knowing what to say",
+        "Not knowing who is available",
+        "Worry about rejection",
+        "Low energy",
+        "A busy schedule"
+      ],
+      "topics": [
+        "connection"
+      ],
+      "facet": "connection-first-contact",
+      "priority": 0,
+      "reason": "An optional question to help personalise your support.",
+      "signals": [
+        {
+          "answer": "Worry about rejection",
+          "topics": [
+            "worry"
+          ]
+        },
+        {
+          "answer": "Low energy",
+          "topics": [
+            "low-mood"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "connection-campus",
+      "text": "Where would meeting other students feel most comfortable?",
+      "options": [
+        "A class or study group",
+        "A club or society",
+        "An online community",
+        "A small organised event",
+        "I am not sure"
+      ],
+      "topics": [
+        "connection"
+      ],
+      "facet": "connection-campus",
+      "priority": 0,
+      "reason": "An optional question to help personalise your support."
+    },
+    {
+      "id": "connection-home",
+      "text": "Has a change in where you live affected feeling connected?",
+      "options": [
+        "I miss people from home",
+        "I am adjusting to shared housing",
+        "Travel makes contact difficult",
+        "This has not been a concern"
+      ],
+      "topics": [
+        "connection"
+      ],
+      "facet": "connection-home",
+      "priority": 0,
+      "reason": "An optional question to help personalise your support."
+    },
+    {
+      "id": "connection-language",
+      "text": "Would language or communication preferences affect a support conversation?",
+      "options": [
+        "I prefer Sinhala",
+        "I prefer Tamil",
+        "I prefer English",
+        "I am comfortable with several languages",
+        "I would rather decide later"
+      ],
+      "topics": [
+        "connection"
+      ],
+      "facet": "connection-language",
+      "priority": 0,
+      "reason": "An optional question to help personalise your support."
+    },
+    {
+      "id": "connection-belonging",
+      "text": "What would help you feel more included at university?",
+      "options": [
+        "Knowing a few familiar people",
+        "A group with shared interests",
+        "Feeling heard in class",
+        "Support navigating campus life"
+      ],
+      "topics": [
+        "connection"
+      ],
+      "facet": "connection-belonging",
+      "priority": 0,
+      "reason": "An optional question to help personalise your support."
+    },
+    {
+      "id": "connection-conflict",
+      "text": "Is a disagreement making connection harder at the moment?",
+      "options": [
+        "With a friend",
+        "With family",
+        "In a group or shared home",
+        "I would rather not discuss it",
+        "No current disagreement"
+      ],
+      "topics": [
+        "connection"
+      ],
+      "facet": "connection-conflict",
+      "priority": 0,
+      "reason": "An optional question to help personalise your support."
+    },
+    {
+      "id": "connection-boundaries",
+      "text": "What would make your social time feel more comfortable?",
+      "options": [
+        "More time alone between activities",
+        "Knowing I can say no",
+        "Smaller groups",
+        "Clearer expectations with others"
+      ],
+      "topics": [
+        "connection"
+      ],
+      "facet": "connection-boundaries",
+      "priority": 0,
+      "reason": "An optional question to help personalise your support."
+    },
+    {
+      "id": "connection-online",
+      "text": "How useful does online contact feel for you right now?",
+      "options": [
+        "It helps me stay connected",
+        "It feels less meaningful than in person",
+        "It can feel overwhelming",
+        "I do not use it much"
+      ],
+      "topics": [
+        "connection"
+      ],
+      "facet": "connection-online",
+      "priority": 0,
+      "reason": "An optional question to help personalise your support."
+    },
+    {
+      "id": "connection-peer",
+      "text": "What would you want from a student discussion space?",
+      "options": [
+        "Shared experiences",
+        "Practical university tips",
+        "A place to listen first",
+        "A small group around a topic"
+      ],
+      "topics": [
+        "connection"
+      ],
+      "facet": "connection-peer",
+      "priority": 0,
+      "reason": "An optional question to help personalise your support."
+    },
+    {
+      "id": "connection-reach-out",
+      "text": "Which way of reaching out feels most manageable?",
+      "options": [
+        "A short message",
+        "An invitation to study",
+        "Joining a small activity",
+        "Asking for a check-in",
+        "I am not ready yet"
+      ],
+      "topics": [
+        "connection"
+      ],
+      "facet": "connection-reach-out",
+      "priority": 0,
+      "reason": "An optional question to help personalise your support."
+    },
+    {
+      "id": "connection-listening",
+      "text": "What would you most want someone to hear about your experience?",
+      "options": [
+        "I would like company",
+        "I need space to explain",
+        "I do not want quick advice",
+        "I need help finding support"
+      ],
+      "topics": [
+        "connection"
+      ],
+      "facet": "connection-listening",
+      "priority": 0,
+      "reason": "An optional question to help personalise your support."
+    },
+    {
+      "id": "connection-study-link",
+      "text": "Does feeling disconnected affect how you take part in university work?",
+      "options": [
+        "I avoid asking questions",
+        "Group work feels difficult",
+        "I miss shared study time",
+        "It does not affect my study"
+      ],
+      "topics": [
+        "connection"
+      ],
+      "facet": "connection-study-link",
+      "priority": 0,
+      "reason": "An optional question to help personalise your support.",
+      "signals": [
+        {
+          "answer": "I avoid asking questions",
+          "topics": [
+            "study"
+          ]
+        },
+        {
+          "answer": "Group work feels difficult",
+          "topics": [
+            "study"
+          ]
+        },
+        {
+          "answer": "I miss shared study time",
+          "topics": [
+            "study"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "connection-support-request",
+      "text": "Would you prefer support from peers, a professional, or both?",
+      "options": [
+        "A peer conversation",
+        "A professional conversation",
+        "Both could be useful",
+        "I would like to explore first"
+      ],
+      "topics": [
+        "connection"
+      ],
+      "facet": "connection-support-request",
+      "priority": 0,
+      "reason": "An optional question to help personalise your support."
+    }
+  ]
+}
