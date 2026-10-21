@@ -15,6 +15,15 @@ describe("C4 MentorMatch", () => {
     expect(fetchSpy).not.toHaveBeenCalled();
   });
 
+  it("labels the ranking metric as capacity-filtered and preserves the synthetic caveat", () => {
+    render(<MentorMatch />);
+    expect(screen.getByText("Capacity-filtered ranking quality (NDCG@5)")).toBeInTheDocument();
+    expect(screen.getByText(/Capacity-filtered ranking comparison on the synthetic cohort/)).toBeInTheDocument();
+    expect(screen.getByText(/SYNTHETIC DATA: validates the pipeline, not real-world accuracy/)).toBeInTheDocument();
+    expect(screen.getByText("0.54")).toBeInTheDocument();
+    expect(screen.getByText("0.86")).toBeInTheDocument();
+  });
+
   it("never lists a full mentor", () => {
     render(<MentorMatch />);
     const full = demoMentors.filter((m) => m.load >= m.capacity);

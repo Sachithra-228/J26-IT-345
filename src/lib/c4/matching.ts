@@ -24,7 +24,7 @@ export type MatchingModel = {
   maxSkillLevel: number;
   taxonomy: { skills: TaxonomyItem[]; interests: TaxonomyItem[]; languages: TaxonomyItem[]; slots: TaxonomyItem[] };
   results: {
-    ndcgBaseline: number;
+    ndcgBaselineCapacityFiltered: number;
     ndcgProposed: number;
     overloadBaseline: number;
     overloadProposed: number;

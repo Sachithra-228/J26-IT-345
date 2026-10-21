@@ -6,6 +6,7 @@ import { getMongoDatabase } from "@/lib/mongodb";
 import { createNotification } from "@/lib/notifications";
 import { requireSession } from "@/lib/session-auth";
 import type { MentorshipSession } from "@/types";
+import { canTransitionMentorshipStatus, sessionBelongsToUser } from "@/lib/mentorship-session";
 
 export async function PATCH(
   request: NextRequest,
@@ -17,7 +18,7 @@ export async function PATCH(
   }
 
   const body = await request.json().catch(() => ({}));
-  const { status, scheduledTime, rating, review } = body;
+  const { status, scheduledTime, rating, review, archiveForStudent } = body;
 
   if (isDemoMode()) {
     const session = await requireSession(request);
@@ -31,23 +32,29 @@ export async function PATCH(
     if (!existing) {
       return jsonResponse({ message: "Session not found" }, 404);
     }
-    const isStudent = existing.studentId === currentUserId || existing.studentId === uid;
-    const isMentor = existing.mentorId === currentUserId || existing.mentorId === uid;
+    const isStudent = sessionBelongsToUser({ studentId: existing.studentId }, currentUserId, uid);
+    const isMentor = sessionBelongsToUser({ mentorId: existing.mentorId }, currentUserId, uid);
     if (!isStudent && !isMentor && !isAdmin) {
       return jsonResponse({ message: "Forbidden" }, 403);
     }
     const updates: Partial<MentorshipSession> = {};
 
-    if (status !== undefined) {
-      if (isAdmin && (status === "pending" || status === "confirmed" || status === "scheduled" || status === "completed" || status === "cancelled")) {
-        updates.status = status;
-      } else if (status === "cancelled" && (isStudent || isMentor)) {
-        updates.status = "cancelled";
-      } else if ((status === "confirmed" || status === "scheduled" || status === "completed") && isMentor) {
-        updates.status = status;
-      } else if (status === "scheduled" && isStudent) {
-        updates.status = "scheduled";
+    if (archiveForStudent !== undefined) {
+      if (typeof archiveForStudent !== "boolean" || !isStudent) {
+        return jsonResponse({ message: "Only the student can archive this session." }, 403);
       }
+      if (archiveForStudent && !["completed", "cancelled"].includes(String(existing.status).toLowerCase())) {
+        return jsonResponse({ message: "Only completed or cancelled sessions can be archived." }, 409);
+      }
+      updates.studentArchivedAt = archiveForStudent ? new Date().toISOString() : null;
+    }
+
+    if (status !== undefined) {
+      const actor = isAdmin ? "admin" : isMentor ? "mentor" : isStudent ? "student" : null;
+      if (typeof status !== "string" || !actor || !canTransitionMentorshipStatus(existing.status, status, actor)) {
+        return jsonResponse({ message: "This status transition is not allowed." }, 403);
+      }
+      updates.status = status as MentorshipSession["status"];
     }
     const canSetScheduledTime =
       isAdmin ||
@@ -94,12 +101,22 @@ export async function PATCH(
     }
     const updates: Partial<MentorshipSession> = {};
 
+    if (archiveForStudent !== undefined) {
+      if (typeof archiveForStudent !== "boolean" || !isStudent) {
+        return jsonResponse({ message: "Only the student can archive this session." }, 403);
+      }
+      if (archiveForStudent && !["completed", "cancelled"].includes(String(existing.status).toLowerCase())) {
+        return jsonResponse({ message: "Only completed or cancelled sessions can be archived." }, 409);
+      }
+      updates.studentArchivedAt = archiveForStudent ? new Date().toISOString() : null;
+    }
+
     if (status !== undefined) {
-      if (isAdmin && (status === "pending" || status === "confirmed" || status === "scheduled" || status === "completed" || status === "cancelled")) {
-        updates.status = status;
-      } else if (status === "cancelled" && (isStudent || isMentor)) updates.status = "cancelled";
-      else if ((status === "confirmed" || status === "scheduled" || status === "completed") && isMentor) updates.status = status;
-      else if (status === "scheduled" && isStudent) updates.status = "scheduled";
+      const actor = isAdmin ? "admin" : isMentor ? "mentor" : isStudent ? "student" : null;
+      if (typeof status !== "string" || !actor || !canTransitionMentorshipStatus(existing.status, status, actor)) {
+        return jsonResponse({ message: "This status transition is not allowed." }, 403);
+      }
+      updates.status = status as MentorshipSession["status"];
     }
     const canSetScheduledTime =
       isAdmin ||
@@ -136,21 +153,29 @@ export async function PATCH(
   }
 
   const uid = authResult.session.firebase.uid;
-  const isMentor = sessionDoc.mentorFirebaseUid === uid;
-  const isStudent = sessionDoc.studentFirebaseUid === uid;
+  const userId = authResult.session.user?._id;
+  const isMentor = sessionBelongsToUser({ mentorId: String(sessionDoc.mentorId ?? ""), mentorFirebaseUid: String(sessionDoc.mentorFirebaseUid ?? "") }, userId, uid);
+  const isStudent = sessionBelongsToUser({ studentId: String(sessionDoc.studentId ?? ""), studentFirebaseUid: String(sessionDoc.studentFirebaseUid ?? "") }, userId, uid);
   if (!isMentor && !isStudent && !isAdmin) {
     return jsonResponse({ message: "Forbidden" }, 403);
   }
 
   const update: Record<string, unknown> = { updatedAt: new Date() };
-  if (status !== undefined) {
-    if (isAdmin && (status === "pending" || status === "confirmed" || status === "scheduled" || status === "completed" || status === "cancelled")) {
-      update.status = status;
-    } else if (status === "cancelled") update.status = "cancelled";
-    else if (status === "confirmed" || status === "scheduled" || status === "completed") {
-      if (isMentor) update.status = status;
-      else if (isStudent && status === "scheduled") update.status = "scheduled";
+  if (archiveForStudent !== undefined) {
+    if (typeof archiveForStudent !== "boolean" || !isStudent) {
+      return jsonResponse({ message: "Only the student can archive this session." }, 403);
     }
+    if (archiveForStudent && !["completed", "cancelled"].includes(String(sessionDoc.status ?? "").toLowerCase())) {
+      return jsonResponse({ message: "Only completed or cancelled sessions can be archived." }, 409);
+    }
+    update.studentArchivedAt = archiveForStudent ? new Date() : null;
+  }
+  if (status !== undefined) {
+    const actor = isAdmin ? "admin" : isMentor ? "mentor" : isStudent ? "student" : null;
+    if (typeof status !== "string" || !actor || !canTransitionMentorshipStatus(String(sessionDoc.status ?? "pending"), status, actor)) {
+      return jsonResponse({ message: "This status transition is not allowed." }, 403);
+    }
+    update.status = status;
   }
   const canSetScheduledTime =
     isAdmin ||

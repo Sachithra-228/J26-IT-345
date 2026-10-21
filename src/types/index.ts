@@ -89,4 +89,7 @@ export type MentorshipSession = {
   review?: string;
   createdAt?: string;
   updatedAt?: string;
+  lastMessageAt?: string | null;
+  /** Student-specific archive marker; does not alter the session lifecycle/status. */
+  studentArchivedAt?: string | null;
 };
