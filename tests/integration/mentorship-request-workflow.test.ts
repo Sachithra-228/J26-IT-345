@@ -45,7 +45,16 @@ function asStudent(id = studentId, uid = "student-firebase") {
 }
 
 function installDb(collections: Record<string, Record<string, jest.Mock>>) {
-  databaseMock.mockResolvedValue({ collection: jest.fn((name: string) => collections[name]) } as never);
+  // GET /api/mentorship-sessions reads each session's latest message with an aggregate;
+  // tests that do not care about messages get an empty result.
+  const withDefaults = {
+    ...collections,
+    mentorship_messages: {
+      aggregate: jest.fn(() => ({ toArray: jest.fn().mockResolvedValue([]) })),
+      ...collections.mentorship_messages
+    }
+  };
+  databaseMock.mockResolvedValue({ collection: jest.fn((name: string) => withDefaults[name]) } as never);
 }
 
 beforeEach(() => {

@@ -28,7 +28,13 @@ function cursor<T>(rows: T[]) {
 }
 
 function mockDb(collections: Record<string, Record<string, jest.Mock>>) {
-  databaseMock.mockResolvedValue({ collection: jest.fn((name: string) => collections[name]) } as never);
+  // GET /api/mentorship-sessions reads each session's latest message with an aggregate;
+  // tests that do not care about messages get an empty result.
+  const withDefaults = {
+    ...collections,
+    mentorship_messages: { aggregate: jest.fn(() => cursor([])), ...collections.mentorship_messages }
+  };
+  databaseMock.mockResolvedValue({ collection: jest.fn((name: string) => withDefaults[name]) } as never);
 }
 
 beforeEach(() => {
