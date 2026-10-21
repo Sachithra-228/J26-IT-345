@@ -4,11 +4,13 @@ import { isDemoMode, jsonResponse } from "@/lib/api";
 import { getDemoSessionById } from "@/lib/mentorship-demo-store";
 import {
   addDemoMentorshipMessage,
+  deleteDemoMentorshipMessage,
   listDemoMentorshipMessages
 } from "@/lib/mentorship-chat-demo-store";
 import { getMongoDatabase } from "@/lib/mongodb";
 import { createNotification } from "@/lib/notifications";
 import { requireSession } from "@/lib/session-auth";
+import { sessionBelongsToUser } from "@/lib/mentorship-session";
 
 type MentorshipSessionDocument = {
   _id: ObjectId;
@@ -58,10 +60,13 @@ export async function GET(request: NextRequest) {
     const session = getDemoSessionById(sessionId);
     if (!session) return jsonResponse({ message: "Session not found." }, 404);
 
-    const isMentor = session.mentorId === userId || session.mentorId === uid;
-    const isStudent = session.studentId === userId || session.studentId === uid;
+    const isMentor = sessionBelongsToUser({ mentorId: session.mentorId }, userId, uid);
+    const isStudent = sessionBelongsToUser({ studentId: session.studentId }, userId, uid);
     if (!isMentor && !isStudent && !isAdmin) {
       return jsonResponse({ message: "Forbidden" }, 403);
+    }
+    if (!canChat(session.status)) {
+      return jsonResponse({ message: "Chat is enabled after the mentor approves your request." }, 409);
     }
 
     return jsonResponse(listDemoMentorshipMessages(sessionId));
@@ -78,10 +83,13 @@ export async function GET(request: NextRequest) {
   const session = await sessionsCol.findOne({ _id: new ObjectId(sessionId) });
   if (!session) return jsonResponse({ message: "Session not found." }, 404);
 
-  const isMentor = session.mentorFirebaseUid === uid;
-  const isStudent = session.studentFirebaseUid === uid;
+  const isMentor = sessionBelongsToUser({ mentorId: session.mentorId, mentorFirebaseUid: session.mentorFirebaseUid }, userId, uid);
+  const isStudent = sessionBelongsToUser({ studentId: session.studentId, studentFirebaseUid: session.studentFirebaseUid }, userId, uid);
   if (!isMentor && !isStudent && !isAdmin) {
     return jsonResponse({ message: "Forbidden" }, 403);
+  }
+  if (!canChat(session.status)) {
+    return jsonResponse({ message: "Chat is enabled after the mentor approves your request." }, 409);
   }
 
   const messages = await messagesCol.find({ sessionId }).sort({ createdAt: 1 }).toArray();
@@ -113,8 +121,8 @@ export async function POST(request: NextRequest) {
     const session = getDemoSessionById(sessionId);
     if (!session) return jsonResponse({ message: "Session not found." }, 404);
 
-    const isMentor = session.mentorId === userId || session.mentorId === uid;
-    const isStudent = session.studentId === userId || session.studentId === uid;
+    const isMentor = sessionBelongsToUser({ mentorId: session.mentorId }, userId, uid);
+    const isStudent = sessionBelongsToUser({ studentId: session.studentId }, userId, uid);
     if (!isMentor && !isStudent && !isAdmin) {
       return jsonResponse({ message: "Forbidden" }, 403);
     }
@@ -142,8 +150,8 @@ export async function POST(request: NextRequest) {
   const session = await sessionsCol.findOne({ _id: new ObjectId(sessionId) });
   if (!session) return jsonResponse({ message: "Session not found." }, 404);
 
-  const isMentor = session.mentorFirebaseUid === uid;
-  const isStudent = session.studentFirebaseUid === uid;
+  const isMentor = sessionBelongsToUser({ mentorId: session.mentorId, mentorFirebaseUid: session.mentorFirebaseUid }, userId, uid);
+  const isStudent = sessionBelongsToUser({ studentId: session.studentId, studentFirebaseUid: session.studentFirebaseUid }, userId, uid);
   if (!isMentor && !isStudent && !isAdmin) {
     return jsonResponse({ message: "Forbidden" }, 403);
   }
@@ -200,5 +208,63 @@ export async function POST(request: NextRequest) {
     },
     201
   );
+}
+
+export async function DELETE(request: NextRequest) {
+  const payload = await request.json().catch(() => ({} as Record<string, unknown>));
+  const sessionId = String(payload.sessionId ?? "").trim();
+  const messageId = String(payload.messageId ?? "").trim();
+  if (!sessionId || !messageId) {
+    return jsonResponse({ message: "sessionId and messageId are required." }, 400);
+  }
+
+  const authResult = await requireSession(request);
+  if (authResult.error) return authResult.error;
+  const role = authResult.session.user?.role ?? "";
+  if (role !== "student" && role !== "mentor") {
+    return jsonResponse({ message: "Only the message sender can delete a chat message." }, 403);
+  }
+  const uid = authResult.session.firebase.uid;
+  const userId = authResult.session.user?._id;
+
+  if (isDemoMode()) {
+    const session = getDemoSessionById(sessionId);
+    if (!session) return jsonResponse({ message: "Session not found." }, 404);
+    const isMentor = role === "mentor" && sessionBelongsToUser({ mentorId: session.mentorId }, userId, uid);
+    const isStudent = role === "student" && sessionBelongsToUser({ studentId: session.studentId }, userId, uid);
+    if (!isMentor && !isStudent) return jsonResponse({ message: "Forbidden" }, 403);
+    if (!deleteDemoMentorshipMessage(sessionId, messageId, isMentor ? "mentor" : "student", userId, uid)) {
+      return jsonResponse({ message: "Message not found." }, 404);
+    }
+    return jsonResponse({ message: "Message deleted." });
+  }
+
+  if (!ObjectId.isValid(sessionId) || !ObjectId.isValid(messageId)) {
+    return jsonResponse({ message: "Invalid session or message id." }, 400);
+  }
+  const database = await getMongoDatabase();
+  const sessionsCol = database.collection<MentorshipSessionDocument>("mentorship_sessions");
+  const messagesCol = database.collection<MentorshipMessageDocument>("mentorship_messages");
+  const session = await sessionsCol.findOne({ _id: new ObjectId(sessionId) });
+  if (!session) return jsonResponse({ message: "Session not found." }, 404);
+
+  const isMentor = role === "mentor" && sessionBelongsToUser(
+    { mentorId: session.mentorId, mentorFirebaseUid: session.mentorFirebaseUid }, userId, uid
+  );
+  const isStudent = role === "student" && sessionBelongsToUser(
+    { studentId: session.studentId, studentFirebaseUid: session.studentFirebaseUid }, userId, uid
+  );
+  if (!isMentor && !isStudent) return jsonResponse({ message: "Forbidden" }, 403);
+
+  const message = await messagesCol.findOne({ _id: new ObjectId(messageId), sessionId });
+  if (!message) return jsonResponse({ message: "Message not found." }, 404);
+  const expectedSenderRole = isMentor ? "mentor" : "student";
+  const isSender = message.senderRole === expectedSenderRole && (
+    (Boolean(userId) && message.senderUserId === userId) || message.senderFirebaseUid === uid
+  );
+  if (!isSender) return jsonResponse({ message: "You can only delete messages you sent." }, 403);
+
+  await messagesCol.deleteOne({ _id: new ObjectId(messageId), sessionId });
+  return jsonResponse({ message: "Message deleted." });
 }
 

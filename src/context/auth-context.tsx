@@ -63,6 +63,27 @@ const VALID_USER_ROLES: UserRole[] = [
   "parent"
 ];
 
+const DEMO_SIGNED_OUT_KEY = "unicare:demo-signed-out";
+
+function wasDemoSignedOut() {
+  if (typeof window === "undefined") return false;
+  try {
+    return window.localStorage.getItem(DEMO_SIGNED_OUT_KEY) === "true";
+  } catch {
+    return false;
+  }
+}
+
+function setDemoSignedOut(signedOut: boolean) {
+  if (typeof window === "undefined") return;
+  try {
+    if (signedOut) window.localStorage.setItem(DEMO_SIGNED_OUT_KEY, "true");
+    else window.localStorage.removeItem(DEMO_SIGNED_OUT_KEY);
+  } catch {
+    // Ignore storage failures; demo auth can still work for the current page load.
+  }
+}
+
 function normalizeUserRole(role?: string | null): UserRole | null {
   if (!role) return null;
   const normalized = role.toLowerCase();
@@ -284,7 +305,7 @@ export function AuthProvider({ children }: AuthProviderProps) {
   useEffect(() => {
     const auth = getFirebaseAuth();
     if (!auth) {
-      setUser(demoUsers[0] ?? null);
+      setUser(wasDemoSignedOut() ? null : demoUsers[0] ?? null);
       setLoading(false);
       return;
     }
@@ -346,6 +367,7 @@ export function AuthProvider({ children }: AuthProviderProps) {
   const signInWithEmail = async (email: string, password: string) => {
     const auth = getFirebaseAuth();
     if (!auth) {
+      setDemoSignedOut(false);
       setUser(demoUsers[0] ?? null);
       return;
     }
@@ -391,6 +413,7 @@ export function AuthProvider({ children }: AuthProviderProps) {
   const signInWithGoogle = async () => {
     const auth = getFirebaseAuth();
     if (!auth) {
+      setDemoSignedOut(false);
       setUser(demoUsers[0] ?? null);
       return;
     }
@@ -413,6 +436,7 @@ export function AuthProvider({ children }: AuthProviderProps) {
   ) => {
     const auth = getFirebaseAuth();
     if (!auth) {
+      setDemoSignedOut(false);
       setUser(demoUsers[0] ?? null);
       return;
     }
@@ -503,6 +527,7 @@ export function AuthProvider({ children }: AuthProviderProps) {
   const signOutUser = async () => {
     const auth = getFirebaseAuth();
     if (!auth) {
+      setDemoSignedOut(true);
       setUser(null);
       await clearServerSession();
       return;

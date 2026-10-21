@@ -31,3 +31,24 @@ export function addDemoMentorshipMessage(
   return row;
 }
 
+export function deleteDemoMentorshipMessage(
+  sessionId: string,
+  messageId: string,
+  senderRole: "student" | "mentor",
+  userId: string | undefined,
+  firebaseUid: string
+): boolean {
+  const message = demoMentorshipMessages.find((item) => item.sessionId === sessionId && item._id === messageId);
+  if (!message || message.senderRole !== senderRole) return false;
+  if ((userId && message.senderUserId === userId) || message.senderFirebaseUid === firebaseUid) {
+    // Continue below to remove only this sender's message.
+  } else {
+    return false;
+  }
+  const existingLength = demoMentorshipMessages.length;
+  demoMentorshipMessages = demoMentorshipMessages.filter(
+    (item) => item.sessionId !== sessionId || item._id !== messageId
+  );
+  return demoMentorshipMessages.length !== existingLength;
+}
+

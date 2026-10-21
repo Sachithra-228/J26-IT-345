@@ -176,15 +176,17 @@ export function clearSessionCookie(response: NextResponse) {
 export async function getSessionFromRequest(request: NextRequest) {
   const sessionStart = shouldLogTiming ? Date.now() : 0;
   if (isDemoMode()) {
+    const requestedDemoUserId = request.headers.get("x-unicare-demo-user-id");
+    const demoUser = demoUsers.find((user) => user._id === requestedDemoUserId) ?? demoUsers[0] ?? null;
     return {
       idToken: "demo-session",
       firebase: {
-        uid: demoUsers[0]?._id ?? "demo-user",
-        email: demoUsers[0]?.email ?? null,
-        displayName: demoUsers[0]?.name ?? null,
+        uid: (demoUser as { firebaseUid?: string } | null)?.firebaseUid ?? demoUser?._id ?? "demo-user",
+        email: demoUser?.email ?? null,
+        displayName: demoUser?.name ?? null,
         emailVerified: true
       },
-      user: demoUsers[0] ?? null
+      user: demoUser
     };
   }
 

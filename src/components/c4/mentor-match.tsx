@@ -230,7 +230,7 @@ export function MentorMatch() {
             <div>
               <h3 className="text-base font-bold tracking-tight text-slate-900 dark:text-white">Why multi-criteria matching</h3>
               <p className="text-xs text-slate-500 dark:text-neutral-400">
-                Skill-only baseline vs proposed method, {r.intake} students assigned at once
+                Capacity-filtered ranking comparison on the synthetic cohort; assignment metrics below use {r.intake} students
               </p>
             </div>
           </div>
@@ -238,7 +238,7 @@ export function MentorMatch() {
         </div>
         <div className="grid grid-cols-1 gap-3 sm:grid-cols-3">
           {[
-            { label: "Ranking quality (NDCG@5)", base: r.ndcgBaseline.toFixed(2), prop: r.ndcgProposed.toFixed(2) },
+            { label: "Capacity-filtered ranking quality (NDCG@5)", base: r.ndcgBaselineCapacityFiltered.toFixed(2), prop: r.ndcgProposed.toFixed(2) },
             { label: "Students beyond mentor capacity", base: String(r.overloadBaseline), prop: String(r.overloadProposed) },
             { label: "Workload imbalance (Gini)", base: r.giniBaseline.toFixed(2), prop: r.giniProposed.toFixed(2) }
           ].map((s) => (

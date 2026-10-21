@@ -6,12 +6,43 @@
  * The TypeScript runtime must return the same mentor order and the same scores.
  */
 import fixture from "../../fixtures/c4/matching-parity.json";
+import evaluation from "../../../docs/c4/evidence/matching-eval.json";
 import { criteriaFor, demoMentors, matchingModel, rankMentors, type MentorProfile, type StudentNeeds } from "@/lib/c4/matching";
 
 type Case = {
   student: StudentNeeds;
   ranking: Array<{ mentorId: string; score: number; criteria: Record<string, number> }>;
 };
+
+describe("C4 evaluation panel source", () => {
+  it("uses the capacity-filtered baseline and proposed result from the same synthetic evaluation", () => {
+    const comparison = evaluation.ranking_comparison;
+    expect(comparison.baseline).toBe("baseline_skill_cosine_capacity_filter");
+    expect(comparison.proposed).toBe("proposed_ahp_multi_criteria");
+    expect(comparison.eligible_mentors).toBe("load < capacity for both methods");
+    expect(comparison.relevance_labels).toContain("same simulated expert relevance labels");
+    expect(comparison.students).toBe(evaluation.data.students);
+    expect(comparison.mentors).toBe(evaluation.data.mentors);
+    expect(comparison.seed).toBe(evaluation.seed);
+    expect(matchingModel.results.ndcgBaselineCapacityFiltered).toBe(
+      evaluation.ranking.baseline_skill_cosine_capacity_filter.ndcg_at_5
+    );
+    expect(matchingModel.results.ndcgProposed).toBe(evaluation.ranking.proposed_ahp_multi_criteria.ndcg_at_5);
+  });
+
+  it("keeps cohort assignment metrics on their existing assignment comparison", () => {
+    expect(matchingModel.results.overloadBaseline).toBe(
+      evaluation.assignment.baseline_top_skill_mentor.students_beyond_capacity
+    );
+    expect(matchingModel.results.overloadProposed).toBe(
+      evaluation.assignment.optimal_capacity_aware_hungarian.students_beyond_capacity
+    );
+    expect(matchingModel.results.giniBaseline).toBe(evaluation.assignment.baseline_top_skill_mentor.load_ratio_gini);
+    expect(matchingModel.results.giniProposed).toBe(
+      evaluation.assignment.optimal_capacity_aware_hungarian.load_ratio_gini
+    );
+  });
+});
 
 describe("C4 parity with the Python matcher", () => {
   it("uses the same model version", () => {
