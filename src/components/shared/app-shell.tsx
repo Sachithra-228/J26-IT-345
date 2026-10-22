@@ -42,8 +42,10 @@ export function AppShell({ children }: AppShellProps) {
     return () => window.clearTimeout(timer);
   }, [language]);
 
+  // Public and auth pages are always black, so force dark variants there;
+  // dashboard routes follow the user's light/dark theme instead.
   return (
-    <div className="flex min-h-screen flex-col bg-black text-slate-100">
+    <div className={`${isDashboardRoute(pathname) ? "" : "dark "}flex min-h-screen flex-col bg-black text-slate-100`}>
       {isInitialLoading ? (
         <div
           aria-hidden="true"

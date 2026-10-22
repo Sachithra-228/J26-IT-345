@@ -210,8 +210,8 @@ export function FeatureOrbit({ features = orbitFeatures, activeKey, onSelect, cl
                 type="button"
                 aria-label={feature.title}
                 onClick={() => onSelect?.(feature.key)}
-                className={`grid h-11 w-11 place-items-center rounded-full border bg-neutral-950 text-base font-semibold text-white shadow-lg transition-transform duration-300 hover:-translate-y-1 ${
-                  isActive ? "border-white ring-2 ring-white/40 bg-white text-black" : "border-white/25"
+                className={`grid h-11 w-11 place-items-center rounded-full border text-base font-semibold shadow-lg transition-transform duration-300 hover:-translate-y-1 ${
+                  isActive ? "border-white bg-white text-black ring-2 ring-white/40" : "border-white/25 bg-neutral-950 text-white"
                 }`}
               >
                 {feature.icon}
