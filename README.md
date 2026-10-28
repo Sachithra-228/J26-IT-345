@@ -18,7 +18,7 @@ Supervisor: Prof. Dasuni Nawinna - Co-supervisor: Ms. Aruni Premarathne
 4. [Repository structure](#4-repository-structure)
 5. [Quick start](#5-quick-start)
 6. [Component C1 - Transparent, AI-assisted financial aid](#6-component-c1---transparent-ai-assisted-financial-aid) (implemented)
-7. [Components C2, C3, C4](#7-components-c2-c3-c4) (structure ready, work in progress)
+7. [Components C2, C3, C4](#7-components-c2-c3-c4) (implemented on synthetic data; remaining work listed per component)
 8. [How to add a component to the platform](#8-how-to-add-a-component-to-the-platform)
 9. [Testing and quality](#9-testing-and-quality)
 10. [Ethics, privacy and AI-use disclosure](#10-ethics-privacy-and-ai-use-disclosure)
@@ -47,7 +47,7 @@ Supervisor: Prof. Dasuni Nawinna - Co-supervisor: Ms. Aruni Premarathne
 | Component | Owner | Research focus | Status in this repository |
 | --- | --- | --- | --- |
 | **C1** | Wijesinghe S K (IT23152700) - group leader | Blockchain-based transparent financial aid, AI financial-vulnerability assessment, AI scholarship matching, admin and donor monitoring | **Implemented** (section 6) |
-| **C2** | D. G. A. Indeepa (IT23273412) | AI-powered mental wellness support and early risk detection: bounded conversational assistant, PHQ-9 / GAD-7 self-assessments, optional facial-expression analysis, mood journaling, quality-aware multimodal fusion, confidential counselor referral | First text model and fictional reflection workspace implemented; remaining research in section 7 |
+| **C2** | D. G. A. Indeepa (IT23273412) | AI-powered mental wellness support and early risk detection: bounded conversational assistant, PHQ-9 / GAD-7 self-assessments, optional facial-expression analysis, mood journaling, quality-aware multimodal fusion, confidential counselor referral | **Implemented on synthetic data**: DistilBERT concern model (15 support topics), adaptive follow-ups and wellness plan; facial-expression fusion pending (section 7, C2) |
 | **C3** | K. K. T. C. Kamburugoda (IT23155084) | Explainable AI career guidance: NLP over Sri Lankan IT job advertisements, CV and questionnaire analysis, career-path recommendation with readiness scores, skill-gap prioritisation, Gap-to-Action knowledge graph | **Implemented on synthetic data** (section 7, C3) |
 | **C4** | L. L. E. Harshana (IT23195202) | AI mentor matching and student engagement: dynamic multi-criteria mentor matching, activity recommendation, privacy-aware parent/guardian communication, peer collaboration, engagement and mentorship analytics | Mentor matching implemented on synthetic data; other C4 parts open (section 7) |
 
@@ -89,18 +89,25 @@ UniCare Connect/
 ├── .env.example                  environment variable names (no secrets)
 ├── src/                          Next.js 14 web application
 │   ├── app/                      pages and API routes
-│   │   ├── api/c1/               C1 endpoints (ledger, assessments)
-│   │   ├── api/c2|c3|c4/         reserved for C2, C3, C4 (empty)
-│   │   ├── transparency/         C1 public audit ledger page
-│   │   └── aid-assessment/       C1 on-device assessment page
+│   │   ├── api/c1/               C1 endpoints (ledger + audit report, assessments)
+│   │   ├── api/c2/               C2 endpoints (follow-up questions, communities, professionals)
+│   │   ├── api/c3/               C3 endpoints (assessment, Gap-to-Action plan, roles)
+│   │   ├── api/c4/               C4 endpoints (mentor matches)
+│   │   ├── transparency/ aid-assessment/ financial-aid/   C1 pages
+│   │   ├── wellness/ career/ mentorship/                  C2, C3, C4 pages
+│   │   └── (dashboard)/dashboard/[role]/                  role dashboards (8 roles)
 │   ├── components/
-│   │   ├── c1/                   C1 UI (ledger explorer, assessment tool)
-│   │   ├── c2|c3|c4/             reserved (empty)
-│   │   ├── admin/ donor/ ...     existing role dashboards
-│   │   └── dashboard/student/    existing student dashboard sections
+│   │   ├── c1/                   C1 UI (ledger explorer, assessment tool, scholarship updates)
+│   │   ├── c2/                   C2 UI (wellness workspace, check-in, plan, chat, progress)
+│   │   ├── c3/                   C3 UI (career wizard, report, mock interview, assistant)
+│   │   ├── c4/                   C4 UI (mentor match)
+│   │   ├── admin/ donor/ ...     role dashboards
+│   │   └── dashboard/student/    student dashboard sections
 │   └── lib/
-│       ├── c1/                   C1 model runtime, matching, ledger, i18n, validation
-│       ├── c2|c3|c4/             reserved (empty)
+│       ├── c1/                   C1 model runtime, matching, ledger, encryption, notifications
+│       ├── c2/                   C2 questionnaires, DistilBERT runtime, follow-up bank, plans
+│       ├── c3/                   C3 skill extraction, readiness, gaps, knowledge graph, CV reading
+│       ├── c4/                   C4 multi-criteria matching and exported model
 │       └── ...                   auth, MongoDB, RBAC, demo stores
 ├── blockchain/                   C1 - Hardhat project: contracts, tests, deploy/benchmark scripts
 ├── ml/                           research code and data (never commit real data)
@@ -109,8 +116,10 @@ UniCare Connect/
 │   ├── c3/                       C3 - data/ notebooks/ models/ evaluation/ src/{job-ad-nlp, skill-extraction, knowledge-graph, recommender}
 │   └── c4/                       C4 - data/ notebooks/ models/ evaluation/ src/{mentor-matching, activity-recommendation, analytics}
 ├── tests/
-│   ├── unit/ integration/ fixtures/     C1 tests live here; c2/ c3/ c4/ sub-folders reserved
-├── scripts/                      evaluation scripts (c1 implemented; c2|c3|c4 reserved)
+│   ├── unit/ integration/        C1 tests at the top level; c2/ c3/ c4/ sub-folders per component
+│   ├── e2e/ fixtures/            Playwright tests; shared test data (e.g. Python/TypeScript parity)
+├── scripts/                      evaluation, report and seeding scripts per component (c1-c4)
+├── .github/workflows/            teams-notify.yml - posts a card to MS Teams when a pull request is merged
 └── docs/
     ├── openapi.yaml              API reference
     ├── c1/ c2/ c3/ c4/           per member: proposal/ evidence/ reports/
@@ -135,7 +144,7 @@ Public C1 pages that work without logging in: `/aid-assessment` (private, on-dev
 | --- | --- |
 | `npm run dev` / `build` / `start` | Develop / production build / serve |
 | `npm run lint` / `typecheck` | ESLint / `tsc --noEmit` |
-| `npm test` | Jest unit, component and API tests (78 tests) |
+| `npm test` | Jest unit, component and API tests (60 suites, 971 tests) |
 | `npm run test:e2e` | Playwright end-to-end tests |
 | `npm run c1:ml` | Regenerate C1 synthetic data and retrain the vulnerability model |
 | `npm run c1:eval-matching` | C1 scholarship-matching evaluation (NDCG) |
@@ -356,7 +365,9 @@ Local rehearsal without a testnet: `npm run node` + `npm run seed:local` in `blo
 | **Citation integrity** - a spot check found proposal references with wrong authors or that could not be located ([7] is a real IEEE Access 2024 paper credited to the wrong authors; [5] could not be found; [21]-[25] are non-specific) | Verify **every** reference against the publisher before the final report and paper |
 | Model bias | Report subgroup metrics on real data; keep the explainable second opinion; model supports, never replaces, officer judgement |
 
-**Roadmap.** (1) Receive the SLIIT dataset; retrain and re-evaluate. (2) Welfare-officer judgements for AHP weights and matching relevance. (3) Deploy to Sepolia; measure latency; add admin-wallet signing in the dashboard. (4) Usability study (SUS >= 75, n >= 30) and native-speaker review of Sinhala/Tamil. (5) Notifications from chain events (FR11), downloadable audit report (FR08). (6) Integrate with C2-C4; final report and research paper.
+**Done for PP1.** Sepolia deployment and latency measurement (NFR03, NFR06); wallet signing for donor and admin actions; notifications from chain events (FR11); downloadable audit report (FR08); 12 fictional demo cases.
+
+**Roadmap to PP2.** (1) Receive the SLIIT dataset; retrain and re-evaluate. (2) Welfare-officer judgements for AHP weights and matching relevance (matching NDCG@5 is 0.816 against a 0.88 target). (3) Usability study (SUS >= 75, n >= 30) and native-speaker review of Sinhala/Tamil. (4) Deeper integration with C2-C4 (next link: C3 skill gaps feeding C4 mentor matching); final report and research paper.
 
 ---
 
@@ -691,10 +702,11 @@ Data rules for every component: consent before storing anything personal; data m
 ## 9. Testing and quality
 
 - **Contracts (`blockchain/`):** 26 Hardhat tests (roles, funding, awards, milestones, revocation, pause, adversarial beneficiaries, accounting invariant). The reentrancy test was **mutation-checked**: removing the guard makes it fail with a double payout. Slither report in `docs/c1/evidence/`.
-- **Web (`npm test`):** 78 Jest tests - 55 for C1 (TypeScript/Python model parity, matching and NDCG maths, ledger conservation invariants, API authorisation / validation / consent / erasure, component behaviour in three languages) plus the existing suites (which were repaired: missing Jest dependencies and a stale integration test).
+- **Web (`npm test`):** **60 Jest suites, 971 tests, all passing** on `main` (22 Oct 2026), covering C1-C4 and the shared platform. C1 tests cover TypeScript/Python model parity, matching and NDCG maths, ledger conservation invariants, audit report, chain notifications, API authorisation / validation / consent / erasure, and component behaviour in three languages. C3 and C4 test counts are listed in their parts of section 7.
 - **Static checks:** TypeScript strict mode (0 errors), ESLint clean, production build passes.
 - **Standards:** role-based access control, Zod validation at API boundaries, data minimisation and consent, OpenZeppelin patterns, reproducible seeded experiments, accessible forms (labels, `aria-invalid`, focus management). Not yet done: formal WCAG audit, load test, penetration test.
-- **Known gap:** the role dashboards were verified by component and API tests, not yet live with real accounts.
+- **Readability check:** every public page and every section of all 8 role dashboards was opened in demo mode and checked for text/background contrast in both light and dark themes (22 Oct 2026).
+- **Known gap:** the role dashboards have not yet been used by real users with real accounts; that happens in the usability study after ethics approval.
 
 ## 10. Ethics, privacy and AI-use disclosure
 
